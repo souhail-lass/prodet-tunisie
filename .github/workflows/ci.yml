@@ -1,0 +1,33 @@
+name: CI
+
+# Placeholder workflow. Will become real once application code is added in Phase 1.
+# Steps below are commented out intentionally.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "No application code yet. CI placeholder."
+
+  # Will be enabled once package.json exists.
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: pnpm/action-setup@v3
+  #       with: { version: 9 }
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #         cache: pnpm
+  #     - run: pnpm install --frozen-lockfile
+  #     - run: pnpm typecheck
+  #     - run: pnpm lint
+  #     - run: pnpm test
+  #     - run: pnpm build
