@@ -164,7 +164,7 @@ See [open-questions.md](open-questions.md) — Batch 1 blocks PRD v1 sign-off.
 
 ## 11. Risks and tripwires
 
-Restated from [roadmap.md](roadmap.md#tripwires):
+Restated from [roadmap.md](roadmap.md#tripwires-cross-phase-summary):
 
 | Risk | Tripwire | Action |
 |---|---|---|

@@ -163,7 +163,7 @@ The MVP ships when **all** of the following are true. Each row needs a tick befo
 | A9 | Sentry, Logtail, daily DB backup all confirmed working with a test alert. | Souhail | Manual test. |
 | A10 | RGPD-aligned privacy policy and cookies notice live in FR (and AR/EN if budget). | Souhail | Manual review. |
 
-If any of A7 or A8 fails, **the MVP does not ship.** It means the operational thesis is unproven. Tripwires kick in (see [roadmap.md §Tripwires](roadmap.md#tripwires)).
+If any of A7 or A8 fails, **the MVP does not ship.** It means the operational thesis is unproven. Tripwires kick in (see [roadmap.md §Tripwires](roadmap.md#tripwires-cross-phase-summary)).
 
 ## Slice cadence
 
