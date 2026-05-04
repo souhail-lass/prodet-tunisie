@@ -11,6 +11,8 @@ import {
 } from '@/data/queries';
 import { Link } from '@/i18n/routing';
 import { isLocale } from '@/i18n/routing';
+import { ProductCard } from '@/components/catalog/product-card';
+import { ProductVisual } from '@/components/catalog/product-visual';
 import { Button } from '@/components/ui/button';
 import { WhatsAppLink } from '@/components/whatsapp-link';
 
@@ -55,6 +57,15 @@ export default async function ProductDetailPage({
     .map((key) => getSectorByKey(key))
     .filter((s): s is NonNullable<typeof s> => Boolean(s))
     .map((s) => ({ slug: s.slug, label: localizedSectorName(s, locale) }));
+  const relatedProducts = listProducts({ categoryKey: product.categoryKey })
+    .filter((candidate) => candidate.slug !== product.slug)
+    .slice(0, 3);
+  const relatedTitle =
+    locale === 'ar'
+      ? 'منتجات تُطلب معها غالبًا'
+      : locale === 'en'
+        ? 'Often requested with this product'
+        : 'Souvent demandé avec ce produit';
 
   const whatsappMessage =
     locale === 'ar'
@@ -64,7 +75,7 @@ export default async function ProductDetailPage({
         : `Bonjour, je souhaite un devis pour : ${product.code} — ${name}`;
 
   return (
-    <div className="mx-auto max-w-(--container-2xl) px-4 py-12 sm:px-6 lg:px-8">
+    <div className="section-shell py-12">
       <Link
         href="/catalogue"
         className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
@@ -73,55 +84,76 @@ export default async function ProductDetailPage({
         {tCommon('actions.backToCatalog')}
       </Link>
 
-      <div className="mt-6 grid gap-10 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <p className="text-primary text-xs font-medium tracking-wider uppercase">
-            {t('page.manufacturedBadge')}
-          </p>
-          <h1 className="text-foreground mt-2 text-3xl font-semibold sm:text-4xl">{name}</h1>
-          <p className="text-muted-foreground mt-2 text-sm">
-            {tCommon('labels.code')}&nbsp;: {product.code} · {tCommon('labels.conditionnement')}
-            &nbsp;: {product.conditionnement}
-          </p>
+      <div className="mt-6 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <div>
+          <ProductVisual product={product} locale={locale} priority className="aspect-[4/3]" />
 
-          <section className="mt-8">
-            <h2 className="text-foreground text-base font-semibold">
-              {t('detail.descriptionTitle')}
-            </h2>
-            <p className="text-muted-foreground mt-2 text-sm">{description}</p>
-            <p className="text-muted-foreground mt-3 text-sm">{longDescription}</p>
-          </section>
+          <div className="surface-panel mt-6 p-7 sm:p-8">
+            <p className="product-code text-primary">{product.code}</p>
+            <h1 className="mt-3 text-3xl font-semibold sm:text-4xl">{name}</h1>
+            <div className="text-muted-foreground mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+              <span>
+                {tCommon('labels.conditionnement')}&nbsp;: <strong>{product.conditionnement}</strong>
+              </span>
+              <span>
+                {tCommon('labels.unit')}&nbsp;: <strong>{product.unitOfSale}</strong>
+              </span>
+            </div>
 
-          <section className="mt-8">
-            <h2 className="text-foreground text-base font-semibold">{t('detail.specsTitle')}</h2>
-            <dl className="mt-3 grid gap-3 text-sm sm:grid-cols-2">
-              <div>
-                <dt className="text-muted-foreground">{tCommon('labels.code')}</dt>
-                <dd className="text-foreground font-medium">{product.code}</dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">{tCommon('labels.conditionnement')}</dt>
-                <dd className="text-foreground font-medium">{product.conditionnement}</dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">{tCommon('labels.unit')}</dt>
-                <dd className="text-foreground font-medium">{product.unitOfSale}</dd>
-              </div>
-            </dl>
-          </section>
-
-          {sectorNames.length > 0 ? (
             <section className="mt-8">
-              <h2 className="text-foreground text-base font-semibold">{t('detail.alsoInTitle')}</h2>
-              <ul className="mt-3 flex flex-wrap gap-2 text-sm">
-                {sectorNames.map((s) => (
-                  <li key={s.slug}>
-                    <Link
-                      href={`/secteurs/${s.slug}`}
-                      className="border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground inline-flex items-center rounded-full border px-3 py-1 transition-colors"
-                    >
-                      {s.label}
-                    </Link>
+              <h2 className="text-foreground text-base font-semibold">
+                {t('detail.descriptionTitle')}
+              </h2>
+              <p className="text-muted-foreground mt-3 text-sm leading-7">{description}</p>
+              <p className="text-muted-foreground mt-3 text-sm leading-7">{longDescription}</p>
+            </section>
+
+            <section className="mt-8">
+              <h2 className="text-foreground text-base font-semibold">{t('detail.specsTitle')}</h2>
+              <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+                <div className="border-border bg-secondary/55 rounded-[1rem] border p-4">
+                  <dt className="text-muted-foreground">{tCommon('labels.code')}</dt>
+                  <dd className="text-foreground tabular mt-1 font-medium">{product.code}</dd>
+                </div>
+                <div className="border-border bg-secondary/55 rounded-[1rem] border p-4">
+                  <dt className="text-muted-foreground">{tCommon('labels.conditionnement')}</dt>
+                  <dd className="text-foreground mt-1 font-medium">{product.conditionnement}</dd>
+                </div>
+                <div className="border-border bg-secondary/55 rounded-[1rem] border p-4">
+                  <dt className="text-muted-foreground">{tCommon('labels.unit')}</dt>
+                  <dd className="text-foreground mt-1 font-medium">{product.unitOfSale}</dd>
+                </div>
+              </dl>
+            </section>
+
+            {sectorNames.length > 0 ? (
+              <section className="mt-8">
+                <h2 className="text-foreground text-base font-semibold">
+                  {t('detail.alsoInTitle')}
+                </h2>
+                <ul className="mt-4 flex flex-wrap gap-2 text-sm">
+                  {sectorNames.map((s) => (
+                    <li key={s.slug}>
+                      <Link
+                        href={`/secteurs/${s.slug}`}
+                        className="border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground inline-flex items-center rounded-full border px-3 py-1 transition-colors"
+                      >
+                        {s.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+          </div>
+
+          {relatedProducts.length > 0 ? (
+            <section className="mt-8">
+              <h2 className="text-foreground text-2xl font-semibold">{relatedTitle}</h2>
+              <ul className="mt-5 grid gap-5 xl:grid-cols-3">
+                {relatedProducts.map((related) => (
+                  <li key={related.slug}>
+                    <ProductCard product={related} locale={locale} />
                   </li>
                 ))}
               </ul>
@@ -129,21 +161,21 @@ export default async function ProductDetailPage({
           ) : null}
         </div>
 
-        <aside className="lg:col-span-1">
-          <div className="border-border bg-card sticky top-24 rounded-lg border p-6 shadow-sm">
+        <aside>
+          <div className="surface-panel sticky top-28 p-6">
             <h2 className="text-card-foreground text-base font-semibold">
               {t('detail.addToQuoteTitle')}
             </h2>
             <p className="text-muted-foreground mt-2 text-sm">{t('detail.addToQuoteBody')}</p>
             <p className="text-muted-foreground mt-4 text-xs">{t('page.noStockNotice')}</p>
             <div className="mt-6 flex flex-col gap-2">
-              <Button asChild size="lg">
+              <Button asChild size="lg" className="rounded-full">
                 <Link href={`/devis?product=${product.slug}`}>
                   {tCommon('actions.requestQuote')}
                   <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
                 </Link>
               </Button>
-              <WhatsAppLink message={whatsappMessage} variant="outline" />
+              <WhatsAppLink message={whatsappMessage} variant="outline" className="rounded-full" />
             </div>
           </div>
         </aside>

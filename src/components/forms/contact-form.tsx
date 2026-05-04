@@ -172,7 +172,12 @@ export function ContactForm() {
               {serverError}
             </p>
           ) : null}
-          <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
+          <Button
+            type="submit"
+            size="lg"
+            className="rounded-full px-6"
+            disabled={form.formState.isSubmitting}
+          >
             {form.formState.isSubmitting ? tCommon('actions.submitting') : t('submit')}
           </Button>
         </form>

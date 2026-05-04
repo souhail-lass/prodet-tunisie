@@ -19,6 +19,8 @@ export interface ListProductsOptions {
   sectorKey?: SectorKey;
 }
 
+const HIDDEN_PUBLIC_SECTOR_KEYS = new Set<SectorKey>(['shops']);
+
 export function listProducts(options: ListProductsOptions = {}): readonly Product[] {
   let result: readonly Product[] = SEED_PRODUCTS;
   if (options.categoryKey) {
@@ -44,7 +46,9 @@ export function getCategoryByKey(key: ProductCategoryKey): ProductCategory | und
 }
 
 export function listSectors(): readonly Sector[] {
-  return [...SEED_SECTORS].sort((a, b) => a.displayOrder - b.displayOrder);
+  return [...SEED_SECTORS]
+    .filter((sector) => !HIDDEN_PUBLIC_SECTOR_KEYS.has(sector.key))
+    .sort((a, b) => a.displayOrder - b.displayOrder);
 }
 
 export function getSectorBySlug(slug: string): Sector | undefined {

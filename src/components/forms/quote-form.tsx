@@ -228,6 +228,7 @@ export function QuoteForm({ products, sectors, prefilledProductSlug }: QuoteForm
             type="button"
             variant="outline"
             size="sm"
+            className="rounded-full"
             onClick={() =>
               lineArray.append({
                 productSlug: undefined,
@@ -259,7 +260,12 @@ export function QuoteForm({ products, sectors, prefilledProductSlug }: QuoteForm
         </p>
       ) : null}
 
-      <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
+      <Button
+        type="submit"
+        size="lg"
+        className="rounded-full px-6"
+        disabled={form.formState.isSubmitting}
+      >
         {form.formState.isSubmitting ? tCommon('actions.submitting') : t('submit')}
       </Button>
     </form>
@@ -360,6 +366,7 @@ function QuoteLineRow({
             type="button"
             variant="ghost"
             size="icon"
+            className="rounded-full"
             onClick={onRemove}
             disabled={!canRemove}
             aria-label={t('removeLine')}

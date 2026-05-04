@@ -54,6 +54,7 @@ export interface Product {
   conditionnement: string;
   unitOfSale: string;
   isManufacturedByProdet: boolean;
+  imageUrl?: string;
   /** Sectors where this product is typically used. */
   sectorKeys: readonly SectorKey[];
 }

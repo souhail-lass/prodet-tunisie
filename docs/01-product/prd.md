@@ -4,6 +4,7 @@
 > Owner: Souhail Lassoued. Reviewers: Père (sponsor). Last updated: 2026-05.
 >
 > v0 is a working draft used to drive Phase 0 spikes and architectural commitments. v1 (sign-off) requires Batch 1 of [open-questions.md](open-questions.md) answered.
+> Execution note (2026-05-04): Souhail explicitly approved beginning implementation before PRD v1 sign-off and before Spikes 1, 2, 3 were documented as complete. This override allows execution to proceed; it does **not** mean the original gates were satisfied.
 
 This document is intentionally short. The detail lives in companion docs:
 

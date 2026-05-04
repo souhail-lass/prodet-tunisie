@@ -1,59 +1,48 @@
 @import 'tailwindcss';
 
-/*
- * Prodet Platform — design tokens (placeholder, pending real brand assets).
- * Replace with brand palette + typography once available.
- * Reference: docs/04-design/design-tokens.md
- */
-
 @theme {
-  /* Color palette (OKLCH for predictable light/dark behavior) */
-  --color-background: oklch(99% 0.005 250);
-  --color-foreground: oklch(20% 0.02 250);
-  --color-muted: oklch(96% 0.005 250);
-  --color-muted-foreground: oklch(45% 0.02 250);
-  --color-card: oklch(100% 0 0);
-  --color-card-foreground: oklch(20% 0.02 250);
-  --color-border: oklch(90% 0.01 250);
-  --color-input: oklch(90% 0.01 250);
-  --color-ring: oklch(55% 0.18 250);
+  --color-background: oklch(97.9% 0.008 83);
+  --color-foreground: oklch(28% 0.03 248);
+  --color-muted: oklch(95.6% 0.009 248);
+  --color-muted-foreground: oklch(48% 0.026 248);
+  --color-card: oklch(99.8% 0.004 85);
+  --color-card-foreground: oklch(28% 0.03 248);
+  --color-border: oklch(89% 0.014 247);
+  --color-input: oklch(89% 0.014 247);
+  --color-ring: oklch(52% 0.15 249);
 
-  /* Brand primary (placeholder deep industrial blue) */
-  --color-primary: oklch(40% 0.14 250);
-  --color-primary-foreground: oklch(99% 0.005 250);
+  --color-primary: oklch(50% 0.15 249);
+  --color-primary-foreground: oklch(99% 0.004 85);
+  --color-primary-strong: oklch(40% 0.13 254);
+  --color-secondary: oklch(94% 0.012 247);
+  --color-secondary-foreground: oklch(28% 0.03 248);
+  --color-accent: oklch(70% 0.12 227);
+  --color-accent-foreground: oklch(22% 0.03 248);
+  --color-support: oklch(62% 0.15 152);
 
-  /* Accent / secondary */
-  --color-secondary: oklch(94% 0.01 250);
-  --color-secondary-foreground: oklch(25% 0.02 250);
-  --color-accent: oklch(60% 0.18 50);
-  --color-accent-foreground: oklch(99% 0.005 250);
+  --color-destructive: oklch(58% 0.21 26);
+  --color-destructive-foreground: oklch(99% 0.004 85);
+  --color-success: oklch(63% 0.14 153);
+  --color-warning: oklch(75% 0.15 84);
 
-  /* Semantic */
-  --color-destructive: oklch(55% 0.22 25);
-  --color-destructive-foreground: oklch(99% 0.005 250);
-  --color-success: oklch(55% 0.16 145);
-  --color-warning: oklch(70% 0.18 75);
-
-  /* Typography */
   --font-sans:
-    'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial,
-    sans-serif;
-  --font-arabic: 'IBM Plex Sans Arabic', 'Noto Naskh Arabic', 'Geeza Pro', system-ui, sans-serif;
+    'IBM Plex Sans', 'Aptos', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-display:
+    'IBM Plex Sans', 'Aptos Display', 'Segoe UI', Arial, sans-serif;
+  --font-arabic:
+    'IBM Plex Sans Arabic', 'Noto Naskh Arabic', 'Geeza Pro', 'Arial Unicode MS', sans-serif;
   --font-mono:
-    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+    ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 
-  /* Radii */
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
 
-  /* Container */
   --container-2xl: 1280px;
 }
 
-/* Base reset and locale-direction-aware defaults */
 @layer base {
   :root {
     color-scheme: light;
@@ -66,6 +55,9 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    background-image:
+      radial-gradient(circle at top right, color-mix(in oklab, var(--color-accent) 16%, transparent), transparent 34%),
+      radial-gradient(circle at bottom left, color-mix(in oklab, var(--color-support) 10%, transparent), transparent 38%);
     font-family: var(--font-sans);
     font-feature-settings: 'cv11', 'ss01', 'ss03';
   }
@@ -74,14 +66,33 @@
     font-family: var(--font-arabic);
   }
 
-  /* Visible focus ring */
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  html[lang^='ar'] h1,
+  html[lang^='ar'] h2,
+  html[lang^='ar'] h3,
+  html[lang^='ar'] h4,
+  html[lang^='ar'] .font-display {
+    font-family: var(--font-arabic);
+  }
+
   *:focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }
 
-  /* Long-form prose readability */
+  ::selection {
+    background: color-mix(in oklab, var(--color-primary) 18%, white);
+    color: var(--color-foreground);
+  }
+
   p {
     text-wrap: pretty;
   }
@@ -91,5 +102,75 @@
   h3,
   h4 {
     text-wrap: balance;
+  }
+}
+
+@layer utilities {
+  .section-shell {
+    @apply mx-auto max-w-(--container-2xl) px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow-label {
+    @apply font-display text-primary text-[0.72rem] font-semibold tracking-[0.24em] uppercase;
+  }
+
+  .product-code {
+    @apply font-display text-[0.78rem] font-semibold tracking-[0.2em] uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .shadow-industrial {
+    box-shadow: 0 18px 44px -30px rgba(15, 42, 78, 0.34);
+  }
+
+  .surface-panel {
+    @apply border-border bg-card rounded-[var(--radius-xl)] border;
+    box-shadow: 0 18px 44px -30px rgba(15, 42, 78, 0.28);
+  }
+
+  .surface-panel-strong {
+    @apply rounded-[var(--radius-xl)] border text-white;
+    background:
+      linear-gradient(145deg, color-mix(in oklab, var(--color-primary) 92%, white), var(--color-primary-strong));
+    border-color: color-mix(in oklab, var(--color-primary-strong) 40%, white);
+    box-shadow: 0 24px 56px -34px rgba(15, 42, 78, 0.42);
+  }
+
+  .grid-blueprint {
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--color-border) 38%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--color-border) 38%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 24px 24px;
+  }
+
+  .catalog-divider {
+    position: relative;
+  }
+
+  .catalog-divider::after {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    height: 1px;
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in oklab, var(--color-primary) 42%, white),
+        transparent
+      );
+    content: '';
   }
 }

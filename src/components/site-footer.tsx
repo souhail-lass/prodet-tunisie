@@ -1,10 +1,31 @@
 import { useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { Logo } from '@/components/brand/logo';
 import { Separator } from '@/components/ui/separator';
+
+const footerCopy = {
+  fr: {
+    summary:
+      "Une présence web plus claire, plus produit et plus crédible pour les acheteurs B2B de Prodet.",
+    proofPills: ['Fabrication tunisienne', 'Devis sur demande', 'Grand Tunis'],
+  },
+  en: {
+    summary:
+      'A clearer, more product-led and more credible web presence for Prodet’s B2B buyers.',
+    proofPills: ['Made in Tunisia', 'Quote on request', 'Greater Tunis'],
+  },
+  ar: {
+    summary: 'حضور ويب أوضح وأكثر تركيزًا على المنتج وأكثر مصداقية لمشتري Prodet المهنيين.',
+    proofPills: ['تصنيع تونسي', 'عرض سعر عند الطلب', 'تونس الكبرى'],
+  },
+} as const;
 
 export function SiteFooter() {
   const t = useTranslations('common');
   const tFooter = useTranslations('footer');
+  const locale = useLocale() as keyof typeof footerCopy;
+  const copy = footerCopy[locale];
   const year = new Date().getFullYear();
 
   const columns = [
@@ -29,16 +50,27 @@ export function SiteFooter() {
   ] as const;
 
   return (
-    <footer className="border-border bg-secondary/30 mt-24 border-t">
-      <div className="mx-auto max-w-(--container-2xl) px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-4">
+    <footer className="border-border/80 bg-secondary/36 mt-20 border-t">
+      <div className="section-shell py-14">
+        <div className="grid gap-10 lg:grid-cols-[1.5fr_repeat(3,minmax(0,1fr))]">
           <div>
-            <p className="text-foreground text-base font-semibold">{t('site.name')}</p>
-            <p className="text-muted-foreground mt-3 text-sm">{tFooter('address')}</p>
+            <Logo size="md" />
+            <p className="text-muted-foreground mt-4 max-w-sm text-sm leading-7">{copy.summary}</p>
+            <ul className="mt-5 flex flex-wrap gap-2">
+              {copy.proofPills.map((pill) => (
+                <li
+                  key={pill}
+                  className="border-border bg-card rounded-full border px-3 py-1 text-xs text-muted-foreground"
+                >
+                  {pill}
+                </li>
+              ))}
+            </ul>
+            <p className="text-muted-foreground mt-5 text-sm">{tFooter('address')}</p>
           </div>
           {columns.map((col) => (
             <div key={col.title}>
-              <p className="text-foreground text-sm font-semibold">{col.title}</p>
+              <p className="font-display text-foreground text-sm font-semibold">{col.title}</p>
               <ul className="mt-3 space-y-2 text-sm">
                 {col.links.map((link) => (
                   <li key={link.href}>

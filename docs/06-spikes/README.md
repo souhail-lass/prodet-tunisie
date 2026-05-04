@@ -1,6 +1,7 @@
 # Spikes — Phase 0 proofs of concept
 
 > Status: All briefs drafted; none executed yet.
+> Execution note (2026-05-04): Souhail approved moving into implementation before the gating spikes were completed. The spike briefs remain active and still need written results; the implementation is proceeding at explicit sponsor risk.
 
 A **spike** is a time-boxed investigation whose only output is a documented decision. Spikes do not ship code to users. They retire risk before bulk build.
 

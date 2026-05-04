@@ -167,3 +167,7 @@ Full list: [docs/01-product/non-goals.md](docs/01-product/non-goals.md).
 ## Final reminder
 
 The whole point of Prodet Platform is to **measurably reduce family workload while building B2B credibility**, not to demonstrate technical sophistication. Choose the simpler path when in doubt. The successful agent is the one whose proposals make Mère's day easier on Monday morning.
+
+## Execution override log
+
+- **2026-05-04 — Sponsor override recorded by Souhail.** The repository originally documented "conception phase" guardrails that blocked Phase 1 execution until PRD v1 sign-off and Spikes 1, 2, 3 were completed. Souhail explicitly approved moving into implementation anyway. Agents may now continue execution in the existing codebase, but must keep the unresolved spike risks visible in documentation and must not pretend the original gates were completed.

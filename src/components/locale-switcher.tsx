@@ -39,6 +39,7 @@ export function LocaleSwitcher() {
         <Button
           variant="ghost"
           size="sm"
+          className="rounded-full border border-transparent px-3"
           aria-label={tHeader('languageMenuLabel')}
           disabled={isPending}
         >

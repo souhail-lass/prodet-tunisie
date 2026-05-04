@@ -2,16 +2,9 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Inter } from 'next/font/google';
 import { routing, isLocale, localeDirection, localeHtmlLang, type Locale } from '@/i18n/routing';
 import { getPublicEnv } from '@/lib/env';
 import '../globals.css';
-
-const inter = Inter({
-  subsets: ['latin', 'latin-ext'],
-  variable: '--font-sans-loaded',
-  display: 'swap',
-});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -76,7 +69,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={lang} dir={dir} suppressHydrationWarning>
-      <body className={inter.variable}>
+      <body>
         <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
         </NextIntlClientProvider>
