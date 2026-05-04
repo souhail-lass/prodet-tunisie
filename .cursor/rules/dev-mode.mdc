@@ -1,0 +1,48 @@
+---
+description: Conventions for the Prodet Platform repo while it is in active development (Phase 0 / Phase 1).
+alwaysApply: true
+---
+
+# Prodet Platform — Active development conventions
+
+The repository is in active development. Read [AGENTS.md](mdc:AGENTS.md) and [docs/02-architecture/system-overview.md](mdc:docs/02-architecture/system-overview.md) before substantive changes.
+
+## Architecture invariants (do not redesign)
+
+- **One Next.js App Router app.** Public site, admin console, future portal in the same codebase under `src/app/[locale]/{(public),admin,portal}`. No microservices.
+- **Postgres on Supabase + Drizzle.** Schema in `src/db/schema/`, migrations in `drizzle/migrations/` (forward-only).
+- **Three locales.** `fr` (default, complete), `ar` (RTL), `en`. i18n via `next-intl`.
+- **Swiver coexistence.** Manual export at MVP, API-driven at Phase 4.
+- **AI proposes, humans approve.** No autonomous push to Swiver. No customer chatbot.
+- **No public prices, stock, or payment** at MVP.
+- **Boring tech bias.** Use the stack in [docs/02-architecture/tech-stack.md](mdc:docs/02-architecture/tech-stack.md). New deps need an ADR.
+
+## Code conventions
+
+- TypeScript **strict**.
+- `snake_case` for DB tables/columns; `camelCase` for TS variables; `PascalCase` for types/components.
+- Server components by default; mark `'use client'` only when needed.
+- Server actions for mutations from the UI; route handlers for webhooks.
+- Zod-validate every external input (form, webhook, LLM output).
+- Forms via React Hook Form + Zod. No uncontrolled inputs.
+- RTL-safe: use Tailwind logical utilities (`ms-*`, `me-*`, `ps-*`, `pe-*`); avoid `ml-*` / `mr-*` outside legacy code.
+- Comments explain *why*, not *what*. No narrative comments.
+- **No emojis** anywhere — code, copy, commits.
+- shadcn/ui copied into `src/components/ui/` (full ownership). Composed components in `src/components/`.
+
+## Mutations and audit
+
+- Every state change writes a row to `audit_log`.
+- Service-role Supabase key NEVER ships to the client; only server actions / route handlers.
+- RLS enabled on all tables; admin paths use service-role with explicit `assertRole(...)`.
+
+## Workflow
+
+- Run `pnpm typecheck`, `pnpm lint`, `pnpm test` before declaring work done.
+- Drizzle migrations: forward-only. Generate via `pnpm db:generate`, apply via `pnpm db:migrate`.
+- Commit messages follow conventional commits style (`feat(scope): ...`, `fix(scope): ...`, `chore(scope): ...`, `docs(scope): ...`).
+- Souhail commits and pushes. Agents may stage when explicitly asked.
+
+## Out of scope (do not add)
+
+- Online payment, public price/stock display, customer portal (Phase 3), auto-push to Swiver (Phase 4), WhatsApp Business API, OCR, chatbot, blog. See [docs/01-product/non-goals.md](mdc:docs/01-product/non-goals.md).
