@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "eyebrow": "Tunisian manufacturer since 1996",
+    "title": "Professional cleaning and hygiene products, made in Tunisia.",
+    "subtitle": "Detergents, disinfectants and accessories for hotels, restaurants, cleaning companies, wholesalers and institutions. Greater Tunis delivery.",
+    "primaryCta": "Request a quote",
+    "secondaryCta": "View catalog"
+  },
+  "sectors": {
+    "title": "Solutions by sector",
+    "subtitle": "Products fit for your operation, recommended by our team."
+  },
+  "manufacturing": {
+    "eyebrow": "Our manufacturing",
+    "title": "Local production, controlled and traceable",
+    "body": "Our L'Aouina site in Tunis manufactures most of our detergent and disinfectant range. This vertical integration lets us guarantee quality, availability and price for professional buyers."
+  },
+  "trust": {
+    "yearsLabel": "years in business",
+    "manufacturedLabel": "products manufactured in-house",
+    "customersLabel": "active professional customers"
+  },
+  "ctaBand": {
+    "title": "Have a specific need?",
+    "subtitle": "Tell us your quantities and constraints; we reply within one business day.",
+    "cta": "Request a quote"
+  }
+}

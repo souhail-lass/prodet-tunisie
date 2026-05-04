@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "eyebrow": "Fabricant tunisien depuis 1996",
+    "title": "Produits d'hygiène et d'entretien professionnels, fabriqués en Tunisie.",
+    "subtitle": "Détergents, désinfectants et accessoires pour hôtels, restaurants, sociétés de nettoyage, grossistes et institutions. Livraison Grand Tunis.",
+    "primaryCta": "Demander un devis",
+    "secondaryCta": "Voir le catalogue"
+  },
+  "sectors": {
+    "title": "Solutions par secteur",
+    "subtitle": "Des produits adaptés à votre activité, recommandés par nos équipes."
+  },
+  "manufacturing": {
+    "eyebrow": "Notre fabrication",
+    "title": "Une production locale, contrôlée et traçable",
+    "body": "Notre site de L'Aouina à Tunis assure la fabrication de l'essentiel de notre gamme de détergents et désinfectants. Cette intégration nous permet de garantir la qualité, la disponibilité et le coût pour nos clients professionnels."
+  },
+  "trust": {
+    "yearsLabel": "ans d'activité",
+    "manufacturedLabel": "produits finis fabriqués chez nous",
+    "customersLabel": "clients professionnels actifs"
+  },
+  "ctaBand": {
+    "title": "Vous avez un besoin précis ?",
+    "subtitle": "Décrivez-nous vos quantités et vos contraintes, nous revenons vers vous sous 24h ouvrées.",
+    "cta": "Demander un devis"
+  }
+}

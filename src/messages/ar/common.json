@@ -1,0 +1,27 @@
+{
+  "site": {
+    "name": "Prodet Tunisie",
+    "tagline": "مُصنِّع تونسي لمنتجات النظافة والصيانة المهنية."
+  },
+  "actions": {
+    "requestQuote": "طلب عرض سعر",
+    "viewCatalog": "تصفّح الكتالوج",
+    "contactUs": "اتصل بنا",
+    "callUs": "اتصال هاتفي",
+    "openWhatsApp": "فتح واتساب",
+    "switchLanguage": "تغيير اللغة"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "catalog": "الكتالوج",
+    "sectors": "القطاعات",
+    "about": "من نحن",
+    "contact": "اتصال",
+    "quote": "عرض سعر"
+  },
+  "states": {
+    "loading": "جارٍ التحميل…",
+    "errorTitle": "حدث خطأ",
+    "tryAgain": "إعادة المحاولة"
+  }
+}

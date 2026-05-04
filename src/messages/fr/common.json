@@ -1,0 +1,27 @@
+{
+  "site": {
+    "name": "Prodet Tunisie",
+    "tagline": "Fabricant tunisien de produits d'hygiène et d'entretien professionnels."
+  },
+  "actions": {
+    "requestQuote": "Demander un devis",
+    "viewCatalog": "Voir le catalogue",
+    "contactUs": "Nous contacter",
+    "callUs": "Appeler",
+    "openWhatsApp": "Ouvrir WhatsApp",
+    "switchLanguage": "Changer de langue"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "catalog": "Catalogue",
+    "sectors": "Secteurs",
+    "about": "À propos",
+    "contact": "Contact",
+    "quote": "Devis"
+  },
+  "states": {
+    "loading": "Chargement…",
+    "errorTitle": "Une erreur est survenue",
+    "tryAgain": "Réessayer"
+  }
+}

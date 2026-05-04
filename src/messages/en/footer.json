@@ -1,0 +1,13 @@
+{
+  "company": "Company",
+  "catalog": "Catalog",
+  "sectors": "Sectors",
+  "contact": "Contact",
+  "address": "20 Rue de Somalie, L'Aouina, Tunis 2045, Tunisia",
+  "legalLinks": {
+    "mentions": "Legal notice",
+    "privacy": "Privacy policy",
+    "cookies": "Cookies"
+  },
+  "rights": "© {year} Prodet Tunisie. All rights reserved."
+}

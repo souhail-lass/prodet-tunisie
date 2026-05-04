@@ -1,0 +1,27 @@
+{
+  "site": {
+    "name": "Prodet Tunisie",
+    "tagline": "Tunisian manufacturer of professional cleaning and hygiene products."
+  },
+  "actions": {
+    "requestQuote": "Request a quote",
+    "viewCatalog": "View catalog",
+    "contactUs": "Contact us",
+    "callUs": "Call",
+    "openWhatsApp": "Open WhatsApp",
+    "switchLanguage": "Change language"
+  },
+  "navigation": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "sectors": "Sectors",
+    "about": "About",
+    "contact": "Contact",
+    "quote": "Quote"
+  },
+  "states": {
+    "loading": "Loading…",
+    "errorTitle": "Something went wrong",
+    "tryAgain": "Try again"
+  }
+}
