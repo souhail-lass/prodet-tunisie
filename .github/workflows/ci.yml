@@ -1,33 +1,60 @@
-name: CI
-
-# Placeholder workflow. Will become real once application code is added in Phase 1.
-# Steps below are commented out intentionally.
+name: ci
 
 on:
   push:
     branches: [main]
   pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  noop:
+  app:
+    name: App (lint + typecheck + build + tests)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Build needs *some* DATABASE_URL so the Drizzle config doesn't whine,
+      # and a SITE_URL so metadataBase() resolves. Real values come from
+      # Vercel/Supabase env at deploy time.
+      DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
+      NEXT_PUBLIC_SITE_URL: https://example.com
+      NEXT_TELEMETRY_DISABLED: '1'
+      CI: '1'
+
     steps:
       - uses: actions/checkout@v4
-      - run: echo "No application code yet. CI placeholder."
 
-  # Will be enabled once package.json exists.
-  # build:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: pnpm/action-setup@v3
-  #       with: { version: 9 }
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20
-  #         cache: pnpm
-  #     - run: pnpm install --frozen-lockfile
-  #     - run: pnpm typecheck
-  #     - run: pnpm lint
-  #     - run: pnpm test
-  #     - run: pnpm build
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Drizzle migrations drift check
+        # Fails CI if the schema in `src/db/schema/` is ahead of the
+        # committed migrations under `drizzle/migrations/`.
+        run: pnpm db:check
+
+      - name: Build
+        run: pnpm build
+
+      - name: Unit tests
+        run: pnpm test

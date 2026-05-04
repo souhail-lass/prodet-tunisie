@@ -2,7 +2,7 @@
 
 Digital platform for **Prodet Tunisie** — a Tunisian manufacturer and distributor of cleaning, hygiene, and detergent products.
 
-> Current state: **Conception phase.** This repository contains documentation only — no application code yet. Code starts after the PRD is signed off and the first three spikes (Swiver API, AI extraction, product matching) have been run.
+> Current state: **Phase 0 — Foundation.** The Next.js app is scaffolded, the homepage is wired in three locales (FR / AR / EN), and the database schema is defined. Spikes 1, 2, and 3 (Swiver API, AI extraction, product matching) are next, and gate Phase 1 feature work.
 
 ## What this is
 
@@ -32,29 +32,107 @@ Swiver remains the ERP / accounting source of truth. Prodet Platform owns acquis
 | Area | Status |
 | --- | --- |
 | Vision & strategy | Drafted |
-| PRD | v0 (pending answers to open questions) |
-| Architecture | Drafted at high level (ADRs in progress) |
-| Spikes | Briefs written, **not yet executed** |
-| Code | Not started |
+| PRD | v0 (pending Batch 2/3 of open questions) |
+| Architecture | Drafted; 10 ADRs in place |
+| Spikes | Briefs written; Spike 1 / 2 / 3 not yet executed |
+| Application scaffold | **Up** — Next.js 15 + Tailwind v4 + next-intl + Drizzle |
+| Public pages | Homepage v0 (FR/AR/EN); other public pages pending |
+| Order intake console | Not started (Slice B, Phase 1) |
 
 See [docs/01-product/open-questions.md](docs/01-product/open-questions.md) for the list of decisions blocking PRD v1.
 
+## Tech stack at a glance
+
+- **Next.js 15** App Router + **TypeScript** strict (`tsconfig.json` is strict + `noUncheckedIndexedAccess`).
+- **Tailwind CSS v4** + **shadcn/ui** primitives copied into `src/components/ui/`.
+- **next-intl 3** with `[locale]` URL segments — `fr` (default, complete), `ar` (RTL, complete), `en` (complete for MVP shell).
+- **Drizzle ORM** + **Postgres** (Supabase in production). Schema in `src/db/schema/`, migrations in `drizzle/migrations/` (forward-only).
+- **pgcrypto, unaccent, pg_trgm, pgvector** extensions enabled for the matching engine.
+- **Zod** for env + form + LLM-output validation; **React Hook Form** for forms.
+- **ESLint 9** flat config + **Prettier** with the Tailwind plugin.
+
+Full justification: [docs/02-architecture/tech-stack.md](docs/02-architecture/tech-stack.md).
+
+## Prerequisites
+
+- **Node.js 22 LTS** (or any `>=20`). `.nvmrc` pins 22.
+- **pnpm 9** (managed via Corepack). Run `corepack enable` once.
+- **PostgreSQL 16+** for local development (with `pgcrypto`, `unaccent`, `pg_trgm`, `pgvector`). Easiest: a Supabase local Docker stack or a plain Postgres container with the extensions installed.
+
 ## How to run
 
-There is nothing to run yet. This is intentional. The repository will be initialized as a Next.js application after Phase 0 spikes are completed and the architecture is signed off.
-
-When code arrives, the canonical command set will be:
-
 ```bash
+# 1. Install dependencies
+corepack enable
 pnpm install
-pnpm dev          # local dev server
-pnpm typecheck
-pnpm lint
-pnpm test
+
+# 2. Configure environment
+cp .env.example .env.local
+# edit .env.local — at minimum set DATABASE_URL
+
+# 3. Apply DB migrations (requires DATABASE_URL pointed at a running Postgres)
 pnpm db:migrate
+
+# 4. Start the dev server
+pnpm dev
+
+# Visit:
+#   http://localhost:3000        -> redirects to /fr
+#   http://localhost:3000/fr     -> French homepage
+#   http://localhost:3000/ar     -> Arabic homepage (RTL)
+#   http://localhost:3000/en     -> English homepage
 ```
 
-These scripts will be added in Phase 1 alongside the application bootstrap.
+### Useful scripts
+
+| Script | What it does |
+| --- | --- |
+| `pnpm dev` | Next.js dev server (Turbopack) |
+| `pnpm build` | Production build |
+| `pnpm start` | Run a production build |
+| `pnpm typecheck` | `tsc --noEmit` |
+| `pnpm lint` / `pnpm lint:fix` | ESLint |
+| `pnpm format` / `pnpm format:check` | Prettier |
+| `pnpm test` | Vitest unit tests |
+| `pnpm test:e2e` | Playwright E2E tests |
+| `pnpm db:generate` | Generate a new Drizzle migration from schema changes |
+| `pnpm db:migrate` | Apply pending migrations |
+| `pnpm db:push` | Push the schema directly (dev only — never in CI) |
+| `pnpm db:studio` | Open Drizzle Studio against the configured DB |
+
+## Repository layout
+
+```
+src/
+  app/
+    [locale]/
+      (public)/        # Public website route group
+      layout.tsx       # Locale-aware HTML wrapper (sets dir, lang, fonts)
+    layout.tsx         # Required root layout (no UI)
+    globals.css        # Tailwind v4 entry + design tokens
+    not-found.tsx
+  components/
+    ui/                # shadcn-style primitives we own
+    site-header.tsx
+    site-footer.tsx
+    locale-switcher.tsx
+    whatsapp-link.tsx
+  db/
+    client.ts
+    schema/            # Drizzle schema, one file per concern
+  i18n/
+    routing.ts         # locales, defaultLocale, navigation helpers
+    request.ts         # next-intl message loader
+  lib/
+    env.ts             # Zod-validated env access
+    utils.ts           # cn() and friends
+  messages/
+    {fr,ar,en}/{common,header,footer,home,legal}.json
+  middleware.ts        # next-intl middleware
+drizzle/
+  migrations/          # Forward-only SQL
+docs/                  # Vision, PRD, architecture, ADRs, spikes
+```
 
 ## License
 
