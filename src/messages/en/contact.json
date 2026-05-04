@@ -1,0 +1,35 @@
+{
+  "page": {
+    "title": "Contact us",
+    "subtitle": "Our team replies during business hours (Mon–Fri, 8am–5pm)."
+  },
+  "channels": {
+    "addressTitle": "Our address",
+    "address": "20 Rue de Somalie, L'Aouina, Tunis 2045, Tunisia",
+    "phoneTitle": "Phone",
+    "emailTitle": "Email",
+    "whatsappTitle": "WhatsApp",
+    "whatsappBody": "The fastest channel for a quick chat or a simple quote."
+  },
+  "form": {
+    "title": "Write to us",
+    "subtitle": "We reply within one business day.",
+    "fields": {
+      "company": "Company",
+      "name": "Your name",
+      "email": "Work email",
+      "phone": "Phone",
+      "subject": "Subject",
+      "message": "Your message"
+    },
+    "subjectOptions": {
+      "quote": "Quote request",
+      "info": "Product question",
+      "partnership": "Partnership / supply",
+      "other": "Other"
+    },
+    "successTitle": "Message sent.",
+    "successBody": "We reply within one business day.",
+    "submit": "Send"
+  }
+}

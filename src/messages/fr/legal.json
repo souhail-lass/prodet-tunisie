@@ -1,3 +1,15 @@
 {
-  "comingSoon": "Cette page sera publiée à la mise en production. Elle inscrira les mentions légales conformes au droit tunisien (loi 2004-63) et alignées RGPD."
+  "comingSoon": "Cette page sera publiée à la mise en production. Elle inscrira les mentions conformes au droit tunisien (loi 2004-63) et alignées sur les pratiques RGPD.",
+  "mentions": {
+    "title": "Mentions légales",
+    "intro": "Cette page est en cours de rédaction. À la mise en production, elle indiquera l'éditeur du site, le directeur de la publication, l'hébergeur, le numéro RNE et le numéro fiscal de Prodet Tunisie."
+  },
+  "privacy": {
+    "title": "Politique de confidentialité",
+    "intro": "Cette page est en cours de rédaction. À la mise en production, elle décrira les données personnelles collectées, leurs finalités, leurs durées de conservation, vos droits (accès, rectification, suppression, portabilité, opposition) et le contact du référent données."
+  },
+  "cookies": {
+    "title": "Cookies",
+    "intro": "Le site n'utilise pas de cookies de profilage publicitaire. Une analyse d'audience anonyme sera mise en place après la mise en production. Cette page sera mise à jour à ce moment-là."
+  }
 }

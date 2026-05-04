@@ -1,3 +1,15 @@
 {
-  "comingSoon": "This page will be published at launch. It will contain the legal notice aligned with Tunisian law (loi 2004-63) and GDPR practice."
+  "comingSoon": "This page will be published at launch. It will contain content aligned with Tunisian law (loi 2004-63) and GDPR practice.",
+  "mentions": {
+    "title": "Legal notice",
+    "intro": "This page is being drafted. At launch it will list the site publisher, the publication director, the host, the company registration number and the tax number for Prodet Tunisie."
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "intro": "This page is being drafted. At launch it will describe the personal data collected, the purposes, the retention periods, your rights (access, rectification, deletion, portability, objection) and the data contact."
+  },
+  "cookies": {
+    "title": "Cookies",
+    "intro": "The site uses no advertising tracking cookies. An anonymous audience analytics tool will be added after launch and this page will be updated then."
+  }
 }

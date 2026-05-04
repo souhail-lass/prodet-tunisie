@@ -1,0 +1,18 @@
+{
+  "page": {
+    "title": "Catalogue des produits Prodet",
+    "subtitle": "Notre gamme de produits d'hygiène et d'entretien fabriqués localement, conditionnés pour les professionnels.",
+    "manufacturedBadge": "Fabriqué par Prodet",
+    "noStockNotice": "Les prix et la disponibilité sont confirmés à la réception du devis.",
+    "emptyTitle": "Aucun produit dans cette catégorie",
+    "emptyBody": "Cette catégorie sera enrichie prochainement. Demandez-nous directement un produit en particulier."
+  },
+  "detail": {
+    "descriptionTitle": "Description",
+    "specsTitle": "Caractéristiques",
+    "useTitle": "Conseils d'utilisation",
+    "addToQuoteTitle": "Besoin de ce produit ?",
+    "addToQuoteBody": "Ajoutez-le à votre devis ou contactez-nous par WhatsApp pour échanger sur vos quantités.",
+    "alsoInTitle": "Aussi recommandé pour"
+  }
+}

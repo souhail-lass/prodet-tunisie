@@ -1,0 +1,46 @@
+{
+  "hero": {
+    "eyebrow": "About",
+    "title": "Tunisian manufacturing, built for professionals.",
+    "lead": "Prodet Tunisie has been designing, manufacturing and distributing professional cleaning and hygiene products since 1996, serving hotels, restaurants, cleaning companies, wholesalers, institutions and industry."
+  },
+  "story": {
+    "title": "Our story",
+    "p1": "The company was founded in Tunis on a simple conviction: a professional product must be effective, traceable and affordable. Thirty years on, that line has not changed.",
+    "p2": "Our L'Aouina site manufactures most of our detergent and disinfectant range. The rest of the catalog — mostly accessories — is sourced from carefully selected partners and resold."
+  },
+  "values": {
+    "title": "What we commit to",
+    "items": [
+      {
+        "title": "Local production",
+        "body": "Manufacturing in Tunisia means availability, quality control, and local jobs."
+      },
+      {
+        "title": "Compliance and traceability",
+        "body": "Technical sheets, safety data sheets, production batches — institutional and industrial customers get the documentation they need."
+      },
+      {
+        "title": "Professional pricing",
+        "body": "Packaging and terms shaped for real usage, with no marketing overhead."
+      },
+      {
+        "title": "Direct relationship",
+        "body": "No middleman between you and our team. Quotes, orders and follow-up are person-to-person."
+      }
+    ]
+  },
+  "factory": {
+    "title": "Our manufacturing",
+    "body": "Our L'Aouina site in Tunis manufactures most of our detergent and disinfectant range. This vertical integration lets us guarantee quality, availability and price for professional buyers.",
+    "addressLabel": "Address",
+    "address": "20 Rue de Somalie, L'Aouina, Tunis 2045, Tunisia",
+    "photoPlaceholder": "[Factory photo — to be added in Phase 0]"
+  },
+  "ctaBand": {
+    "title": "Want to talk?",
+    "subtitle": "We answer quote requests within one business day.",
+    "primary": "Request a quote",
+    "secondary": "Contact us"
+  }
+}

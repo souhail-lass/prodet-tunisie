@@ -1,0 +1,18 @@
+{
+  "page": {
+    "title": "Prodet product catalog",
+    "subtitle": "Our locally manufactured cleaning and hygiene range, packaged for professionals.",
+    "manufacturedBadge": "Manufactured by Prodet",
+    "noStockNotice": "Prices and availability are confirmed when we receive your quote request.",
+    "emptyTitle": "No products in this category yet",
+    "emptyBody": "This category will be expanded soon. Ask us about a specific product directly."
+  },
+  "detail": {
+    "descriptionTitle": "Description",
+    "specsTitle": "Specifications",
+    "useTitle": "How to use",
+    "addToQuoteTitle": "Need this product?",
+    "addToQuoteBody": "Add it to your quote or chat with us on WhatsApp about quantities.",
+    "alsoInTitle": "Also recommended for"
+  }
+}

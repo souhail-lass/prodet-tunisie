@@ -9,7 +9,16 @@
     "contactUs": "Nous contacter",
     "callUs": "Appeler",
     "openWhatsApp": "Ouvrir WhatsApp",
-    "switchLanguage": "Changer de langue"
+    "switchLanguage": "Changer de langue",
+    "backToCatalog": "Retour au catalogue",
+    "backToSectors": "Retour aux secteurs",
+    "addToQuote": "Ajouter au devis",
+    "viewDetails": "Voir le détail",
+    "viewProducts": "Voir les produits",
+    "submit": "Envoyer",
+    "submitting": "Envoi…",
+    "addLine": "Ajouter une ligne",
+    "removeLine": "Retirer"
   },
   "navigation": {
     "home": "Accueil",
@@ -22,6 +31,32 @@
   "states": {
     "loading": "Chargement…",
     "errorTitle": "Une erreur est survenue",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "noResults": "Aucun résultat",
+    "comingSoon": "Bientôt disponible"
+  },
+  "labels": {
+    "manufactured": "Fabriqué par Prodet",
+    "categoryAll": "Toutes les catégories",
+    "filterByCategory": "Filtrer par catégorie",
+    "conditionnement": "Conditionnement",
+    "code": "Référence",
+    "unit": "Unité",
+    "recommendedFor": "Recommandé pour",
+    "alsoUsedIn": "Aussi utilisé dans"
+  },
+  "form": {
+    "required": "Obligatoire",
+    "optional": "Facultatif",
+    "errors": {
+      "required": "Ce champ est obligatoire.",
+      "invalidEmail": "Adresse e-mail invalide.",
+      "invalidPhone": "Numéro de téléphone invalide.",
+      "tooShort": "Trop court.",
+      "tooLong": "Trop long.",
+      "invalidQuantity": "Quantité invalide.",
+      "atLeastOneItem": "Ajoutez au moins une ligne au devis.",
+      "submitFailed": "Impossible d'envoyer le formulaire pour le moment. Réessayez ou écrivez-nous directement."
+    }
   }
 }

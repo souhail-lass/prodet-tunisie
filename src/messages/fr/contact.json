@@ -1,0 +1,35 @@
+{
+  "page": {
+    "title": "Nous contacter",
+    "subtitle": "Notre équipe répond pendant les heures ouvrées (lun.–ven., 8h–17h)."
+  },
+  "channels": {
+    "addressTitle": "Notre adresse",
+    "address": "20 Rue de Somalie, L'Aouina, Tunis 2045, Tunisie",
+    "phoneTitle": "Téléphone",
+    "emailTitle": "E-mail",
+    "whatsappTitle": "WhatsApp",
+    "whatsappBody": "Le plus rapide pour un échange court ou pour un devis simple."
+  },
+  "form": {
+    "title": "Écrivez-nous",
+    "subtitle": "Réponse sous 24h ouvrées.",
+    "fields": {
+      "company": "Société",
+      "name": "Votre nom",
+      "email": "E-mail professionnel",
+      "phone": "Téléphone",
+      "subject": "Sujet",
+      "message": "Votre message"
+    },
+    "subjectOptions": {
+      "quote": "Demande de devis",
+      "info": "Question produit",
+      "partnership": "Partenariat / approvisionnement",
+      "other": "Autre"
+    },
+    "successTitle": "Message envoyé.",
+    "successBody": "Nous vous répondons sous 24h ouvrées.",
+    "submit": "Envoyer"
+  }
+}

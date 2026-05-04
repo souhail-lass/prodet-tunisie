@@ -1,0 +1,34 @@
+{
+  "page": {
+    "title": "Request a quote",
+    "subtitle": "Tell us what you need. We reply within one business day with a quote tailored to your volumes.",
+    "noStockNotice": "Prices and availability are confirmed when we receive your quote request.",
+    "alreadyClient": "Already a customer? Mention it in the message — we'll pull up your file."
+  },
+  "form": {
+    "contactTitle": "Your details",
+    "linesTitle": "Products requested",
+    "linesHelp": "Add each product. If you don't know the exact name, write what you know (e.g. \"5L bleach\") — our team handles the mapping.",
+    "messageTitle": "Notes",
+    "messageHelp": "Volumes, frequency, delivery constraints, HACCP context — anything that helps us prepare the quote.",
+    "fields": {
+      "company": "Company",
+      "name": "Your name",
+      "email": "Work email",
+      "phone": "Phone",
+      "sector": "Sector",
+      "product": "Product",
+      "productPlaceholder": "Pick one or type the name",
+      "quantity": "Quantity",
+      "unit": "Unit",
+      "message": "Message"
+    },
+    "sectorPlaceholder": "— Select —",
+    "addLine": "Add a product",
+    "removeLine": "Remove this line",
+    "submit": "Send request",
+    "successTitle": "Request sent.",
+    "successBody": "We will reply within one business day with a quote. A copy has been sent to your email.",
+    "successReference": "Reference: {ref}"
+  }
+}

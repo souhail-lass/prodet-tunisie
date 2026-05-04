@@ -1,0 +1,46 @@
+{
+  "hero": {
+    "eyebrow": "À propos",
+    "title": "Une fabrication tunisienne, pensée pour les professionnels.",
+    "lead": "Prodet Tunisie conçoit, fabrique et distribue depuis 1996 des produits d'hygiène et d'entretien destinés aux hôtels, restaurants, sociétés de nettoyage, grossistes, institutions et industries."
+  },
+  "story": {
+    "title": "Notre histoire",
+    "p1": "L'entreprise a été fondée à Tunis avec une conviction simple : un produit professionnel doit être à la fois efficace, traçable et abordable. Trente ans plus tard, cette ligne reste la même.",
+    "p2": "Notre site de L'Aouina abrite la production de l'essentiel de notre gamme de détergents et désinfectants. Le reste de notre catalogue, principalement des accessoires, est importé et revendu auprès de partenaires soigneusement sélectionnés."
+  },
+  "values": {
+    "title": "Nos engagements",
+    "items": [
+      {
+        "title": "Production locale",
+        "body": "Fabriquer en Tunisie, c'est garantir la disponibilité, contrôler la qualité, et créer de l'emploi local."
+      },
+      {
+        "title": "Conformité et traçabilité",
+        "body": "Fiches techniques, fiches de données de sécurité, lots de fabrication : nos clients institutionnels et industriels disposent de la documentation nécessaire."
+      },
+      {
+        "title": "Prix professionnel",
+        "body": "Nous travaillons avec des conditionnements et des conditions adaptés aux usages réels — pas de surcoût marketing."
+      },
+      {
+        "title": "Relation directe",
+        "body": "Pas de revendeur intermédiaire entre vous et notre équipe : devis, commandes et suivi se font de personne à personne."
+      }
+    ]
+  },
+  "factory": {
+    "title": "Notre fabrication",
+    "body": "Notre site de L'Aouina à Tunis assure la fabrication de l'essentiel de notre gamme de détergents et désinfectants. Cette intégration nous permet de garantir la qualité, la disponibilité et le coût pour nos clients professionnels.",
+    "addressLabel": "Adresse",
+    "address": "20 Rue de Somalie, L'Aouina, Tunis 2045, Tunisie",
+    "photoPlaceholder": "[Photo usine — à intégrer Phase 0]"
+  },
+  "ctaBand": {
+    "title": "Vous voulez en discuter ?",
+    "subtitle": "Notre équipe répond aux demandes de devis sous 24h ouvrées.",
+    "primary": "Demander un devis",
+    "secondary": "Nous contacter"
+  }
+}

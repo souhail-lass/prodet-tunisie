@@ -9,7 +9,16 @@
     "contactUs": "Contact us",
     "callUs": "Call",
     "openWhatsApp": "Open WhatsApp",
-    "switchLanguage": "Change language"
+    "switchLanguage": "Change language",
+    "backToCatalog": "Back to catalog",
+    "backToSectors": "Back to sectors",
+    "addToQuote": "Add to quote",
+    "viewDetails": "View details",
+    "viewProducts": "View products",
+    "submit": "Send",
+    "submitting": "Sending…",
+    "addLine": "Add a line",
+    "removeLine": "Remove"
   },
   "navigation": {
     "home": "Home",
@@ -22,6 +31,32 @@
   "states": {
     "loading": "Loading…",
     "errorTitle": "Something went wrong",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "noResults": "No results",
+    "comingSoon": "Coming soon"
+  },
+  "labels": {
+    "manufactured": "Manufactured by Prodet",
+    "categoryAll": "All categories",
+    "filterByCategory": "Filter by category",
+    "conditionnement": "Packaging",
+    "code": "Reference",
+    "unit": "Unit",
+    "recommendedFor": "Recommended for",
+    "alsoUsedIn": "Also used in"
+  },
+  "form": {
+    "required": "Required",
+    "optional": "Optional",
+    "errors": {
+      "required": "This field is required.",
+      "invalidEmail": "Invalid email address.",
+      "invalidPhone": "Invalid phone number.",
+      "tooShort": "Too short.",
+      "tooLong": "Too long.",
+      "invalidQuantity": "Invalid quantity.",
+      "atLeastOneItem": "Add at least one line to the quote.",
+      "submitFailed": "Could not submit the form right now. Try again or write to us directly."
+    }
   }
 }

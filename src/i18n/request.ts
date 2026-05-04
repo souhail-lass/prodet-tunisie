@@ -2,7 +2,18 @@ import { getRequestConfig } from 'next-intl/server';
 import type { AbstractIntlMessages } from 'next-intl';
 import { routing, isLocale, type Locale } from './routing';
 
-const namespaces = ['common', 'home', 'header', 'footer', 'legal'] as const;
+const namespaces = [
+  'common',
+  'home',
+  'header',
+  'footer',
+  'legal',
+  'catalogue',
+  'sectors',
+  'about',
+  'contact',
+  'devis',
+] as const;
 
 async function loadMessages(locale: Locale): Promise<AbstractIntlMessages> {
   const entries = await Promise.all(
