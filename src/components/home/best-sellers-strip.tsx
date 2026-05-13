@@ -1,34 +1,43 @@
-import type { Locale } from '@/i18n/routing';
+import { ArrowRight } from 'lucide-react';
+import { Link } from '@/i18n/routing';
 import type { Product } from '@/data/types';
+import { AnimateOnScroll } from '@/components/motion/animate-on-scroll';
+import { siteContent } from '@/data/site-content';
 import { ProductCard } from '@/components/catalog/product-card';
 import { LabelText } from '@/components/typography/label-text';
-import type { HomeContent } from './content';
 
-export function BestSellersStrip({
-  locale,
-  products,
-  content,
-}: {
-  locale: Locale;
-  products: readonly Product[];
-  content: HomeContent;
-}) {
+export function BestSellersStrip({ products }: { products: readonly Product[] }) {
+  const copy = siteContent.home.featured;
+
   return (
-    <section className="bg-secondary/45 border-border/70 border-b">
-      <div className="section-shell py-14">
-        <header className="max-w-3xl">
-          <LabelText>{content.featured.eyebrow}</LabelText>
-          <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">{content.featured.title}</h2>
-          <p className="text-muted-foreground mt-4">{content.featured.subtitle}</p>
+    <section className="bg-white">
+      <div className="section-shell py-18">
+        <header className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <div className="max-w-3xl">
+            <LabelText>{copy.label}</LabelText>
+            <h2 className="mt-4 text-3xl font-bold text-prodet-text sm:text-4xl">{copy.title}</h2>
+            <p className="mt-4 text-base leading-7 text-muted-foreground">{copy.subtitle}</p>
+          </div>
+          <Link
+            href="/catalogue"
+            className="inline-flex items-center gap-2 self-start rounded-full border border-border bg-[#FAF7F0] px-5 py-3 text-sm font-semibold text-prodet-text transition-colors hover:border-primary/45 hover:text-primary"
+          >
+            {copy.cta}
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
         </header>
 
-        <ul className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <AnimateOnScroll
+          as="ul"
+          staggerChildren
+          className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3"
+        >
           {products.map((product) => (
-            <li key={product.slug}>
-              <ProductCard product={product} locale={locale} />
+            <li key={product.slug} data-animate-child>
+              <ProductCard product={product} />
             </li>
           ))}
-        </ul>
+        </AnimateOnScroll>
       </div>
     </section>
   );

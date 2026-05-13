@@ -1,102 +1,118 @@
 import { describe, expect, it } from 'vitest';
 import {
+  getCategoryBySlug,
   getProductBySlug,
   getRecommendedProductsForSector,
+  getRelatedProducts,
   getSectorBySlug,
+  getUseCaseById,
+  getUseCaseProductCount,
   listCategories,
   listProducts,
   listSectors,
   localizedCategoryName,
   localizedProductName,
   localizedSectorName,
+  sanitizeProductQuery,
+  searchProducts,
 } from './queries';
 
-describe('public read layer (seed-backed)', () => {
-  it('returns products', () => {
-    expect(listProducts().length).toBeGreaterThan(0);
-  });
-
-  it('every product has a unique slug and code', () => {
+describe('public read layer', () => {
+  it('returns products with unique ids and slugs', () => {
     const products = listProducts();
-    const slugs = new Set(products.map((p) => p.slug));
-    const codes = new Set(products.map((p) => p.code));
-    expect(slugs.size).toBe(products.length);
-    expect(codes.size).toBe(products.length);
+    expect(products.length).toBeGreaterThan(0);
+    expect(new Set(products.map((product) => product.id)).size).toBe(products.length);
+    expect(new Set(products.map((product) => product.slug)).size).toBe(products.length);
   });
 
-  it('every product has FR/AR/EN names and descriptions', () => {
-    for (const product of listProducts()) {
-      expect(product.nameByLocale.fr).toBeTruthy();
-      expect(product.nameByLocale.ar).toBeTruthy();
-      expect(product.nameByLocale.en).toBeTruthy();
-      expect(product.shortDescByLocale.fr).toBeTruthy();
-      expect(product.shortDescByLocale.ar).toBeTruthy();
-      expect(product.shortDescByLocale.en).toBeTruthy();
-    }
-  });
+  it('filters by use case, sector, and category', () => {
+    const laundry = listProducts({ useCaseIds: ['linge-textiles'] });
+    expect(laundry.length).toBeGreaterThan(0);
+    expect(laundry.every((product) => product.useCases.includes('linge-textiles'))).toBe(true);
 
-  it('listProducts can filter by category and by sector', () => {
-    const desinfectants = listProducts({ categoryKey: 'desinfectants' });
-    expect(desinfectants.length).toBeGreaterThan(0);
-    expect(desinfectants.every((p) => p.categoryKey === 'desinfectants')).toBe(true);
-
-    const restaurants = listProducts({ sectorKey: 'restaurants' });
+    const restaurants = listProducts({ sectorId: 'restaurants-cafes' });
     expect(restaurants.length).toBeGreaterThan(0);
-    expect(restaurants.every((p) => p.sectorKeys.includes('restaurants'))).toBe(true);
+    expect(restaurants.every((product) => product.sectors.includes('restaurants-cafes'))).toBe(true);
+
+    const manufactured = listProducts({ category: 'manufactured' });
+    expect(manufactured.every((product) => product.category === 'manufactured')).toBe(true);
+
+    const commercialized = listProducts({ category: 'commercialized' });
+    expect(commercialized.length).toBeGreaterThan(0);
+    expect(commercialized.every((product) => product.category === 'commercialized')).toBe(true);
   });
 
-  it('getProductBySlug returns the product or undefined', () => {
-    expect(getProductBySlug('javel-prodet-bid-5kg')).toBeDefined();
-    expect(getProductBySlug('does-not-exist')).toBeUndefined();
+  it('gets products, sectors, and categories by slug or id', () => {
+    expect(getProductBySlug('prolax-liquide')?.name).toBe('Prolax Liquide');
+    expect(getSectorBySlug('hotels')?.label).toBe('Hôtels & hébergement');
+    expect(getCategoryBySlug('sols')?.label).toBe('Nettoyage des sols');
+    expect(getUseCaseById('surfaces-vitres')?.label).toBe('Surfaces & vitres');
   });
 
-  it('localized accessors fall back to FR for missing locales', () => {
-    const product = getProductBySlug('javel-prodet-bid-5kg');
-    expect(product).toBeDefined();
-    if (!product) return;
-    expect(localizedProductName(product, 'fr')).toBe(product.nameByLocale.fr);
-    expect(localizedProductName(product, 'ar')).toBe(product.nameByLocale.ar);
-    expect(localizedProductName(product, 'en')).toBe(product.nameByLocale.en);
-  });
-
-  it('every recommended sector slug resolves to a real product', () => {
-    for (const sector of listSectors()) {
-      const recommended = getRecommendedProductsForSector(sector);
-      expect(recommended.length).toBe(sector.recommendedProductSlugs.length);
-    }
-  });
-
-  it('sectors have unique keys and slugs', () => {
-    const sectors = listSectors();
-    expect(new Set(sectors.map((s) => s.key)).size).toBe(sectors.length);
-    expect(new Set(sectors.map((s) => s.slug)).size).toBe(sectors.length);
-  });
-
-  it('getSectorBySlug returns a sector or undefined', () => {
-    expect(getSectorBySlug('hotellerie')).toBeDefined();
-    expect(getSectorBySlug('does-not-exist')).toBeUndefined();
-  });
-
-  it('categories sort by displayOrder', () => {
-    const categories = listCategories();
-    for (let i = 1; i < categories.length; i += 1) {
-      expect((categories[i] as (typeof categories)[number]).displayOrder).toBeGreaterThanOrEqual(
-        (categories[i - 1] as (typeof categories)[number]).displayOrder,
-      );
-    }
-  });
-
-  it('localizedSectorName / localizedCategoryName work in all locales', () => {
-    const sector = getSectorBySlug('restaurants');
-    if (!sector) throw new Error('seed missing');
-    expect(localizedSectorName(sector, 'fr')).toBeTruthy();
-    expect(localizedSectorName(sector, 'ar')).toBeTruthy();
-    expect(localizedSectorName(sector, 'en')).toBeTruthy();
-
+  it('returns localized labels through the public accessors', () => {
+    const product = getProductBySlug('javel-prodet');
+    const sector = getSectorBySlug('institutions');
     const category = listCategories()[0];
-    if (!category) throw new Error('seed missing');
-    expect(localizedCategoryName(category, 'fr')).toBeTruthy();
-    expect(localizedCategoryName(category, 'ar')).toBeTruthy();
-    expect(localizedCategoryName(category, 'en')).toBeTruthy();
+
+    if (!product || !sector || !category) throw new Error('seed missing');
+
+    expect(localizedProductName(product, 'fr')).toBe(product.name);
+    expect(localizedSectorName(sector, 'fr')).toBe(sector.label);
+    expect(localizedCategoryName(category, 'fr')).toBe(category.label);
+  });
+
+  it('returns recommended products for a sector and related products for a product', () => {
+    const sector = getSectorBySlug('restaurants-cafes');
+    const product = getProductBySlug('prolav');
+
+    if (!sector || !product) throw new Error('seed missing');
+
+    const recommended = getRecommendedProductsForSector(sector, 4);
+    expect(recommended.length).toBeGreaterThan(0);
+    expect(recommended.every((candidate) => candidate.sectors.includes(sector.id))).toBe(true);
+
+    const related = getRelatedProducts(product, 4);
+    expect(related.length).toBeGreaterThan(0);
+    expect(related.some((candidate) => candidate.id === product.id)).toBe(false);
+  });
+
+  it('sanitizes and searches across names, formats, use cases, and sectors', () => {
+    expect(sanitizeProductQuery('  Dégraissant   ')).toBe('degraissant');
+    expect(searchProducts('Prolax').length).toBeGreaterThan(1);
+    expect(searchProducts('20 kg')).not.toHaveLength(0);
+    expect(searchProducts('restaurants')).not.toHaveLength(0);
+    expect(listProducts({ query: 'sanihand', sort: 'relevance' })[0]?.slug).toBe('sanihand');
+  });
+
+  it('sorts categories and sectors by display order', () => {
+    const categories = listCategories();
+    const sectors = listSectors();
+
+    for (let i = 1; i < categories.length; i += 1) {
+      const current = categories[i];
+      const previous = categories[i - 1];
+      if (!current || !previous) throw new Error('category order missing');
+      expect(current.displayOrder).toBeGreaterThanOrEqual(previous.displayOrder);
+    }
+
+    for (let i = 1; i < sectors.length; i += 1) {
+      const current = sectors[i];
+      const previous = sectors[i - 1];
+      if (!current || !previous) throw new Error('sector order missing');
+      expect(current.displayOrder).toBeGreaterThanOrEqual(previous.displayOrder);
+    }
+  });
+
+  it('exposes counts by use case', () => {
+    expect(getUseCaseProductCount('linge-textiles')).toBeGreaterThan(0);
+    expect(getUseCaseProductCount('surfaces-vitres')).toBeGreaterThan(0);
+  });
+
+  it('sorts products by name when requested', () => {
+    const asc = listProducts({ sort: 'name-asc' });
+    const desc = listProducts({ sort: 'name-desc' });
+
+    expect(asc[0]?.name.localeCompare(asc[1]?.name ?? '', 'fr')).toBeLessThanOrEqual(0);
+    expect(desc[0]?.name.localeCompare(desc[1]?.name ?? '', 'fr')).toBeGreaterThanOrEqual(0);
   });
 });

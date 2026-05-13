@@ -41,6 +41,7 @@ export function ContactForm() {
       phone: '',
       subject: 'quote',
       message: '',
+      website: '',
     },
   });
 
@@ -94,16 +95,29 @@ export function ContactForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-5">
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            className="hidden"
+            aria-hidden="true"
+            {...form.register('website')}
+          />
           <div className="grid gap-5 sm:grid-cols-2">
             <div>
               <Label htmlFor="contact-company">{t('fields.company')}</Label>
-              <Input id="contact-company" {...form.register('company')} />
+              <Input
+                id="contact-company"
+                autoComplete="organization"
+                {...form.register('company')}
+              />
               <FieldError message={form.formState.errors.company?.message} />
             </div>
             <div>
               <Label htmlFor="contact-name">{t('fields.name')} *</Label>
               <Input
                 id="contact-name"
+                autoComplete="name"
                 aria-invalid={Boolean(form.formState.errors.name)}
                 {...form.register('name')}
               />
@@ -162,6 +176,7 @@ export function ContactForm() {
             <Textarea
               id="contact-message"
               rows={5}
+              autoComplete="off"
               aria-invalid={Boolean(form.formState.errors.message)}
               {...form.register('message')}
             />

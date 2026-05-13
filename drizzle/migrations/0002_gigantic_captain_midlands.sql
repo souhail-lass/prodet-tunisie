@@ -1,0 +1,1 @@
+ALTER TABLE "product_sector" ADD CONSTRAINT "product_sector_product_id_product_id_fk" FOREIGN KEY ("product_id") REFERENCES "public"."product"("id") ON DELETE cascade ON UPDATE no action;

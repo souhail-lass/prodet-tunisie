@@ -11,6 +11,7 @@ export const ContactMessageSchema = z.object({
   phone: TunisianOrInternationalPhone.optional(),
   subject: z.enum(ContactSubjects),
   message: TrimmedString.pipe(z.string().min(10, 'tooShort').max(2000, 'tooLong')),
+  website: z.string().trim().max(200, 'tooLong').optional(),
 });
 
 export type ContactMessageInput = z.infer<typeof ContactMessageSchema>;

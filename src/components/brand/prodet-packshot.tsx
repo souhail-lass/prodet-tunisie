@@ -5,6 +5,7 @@ interface ProdetPackshotProps {
   title: string;
   subtitle: string;
   weightLabel: string;
+  manufacturedByLabel: string;
   className?: string;
   compact?: boolean;
 }
@@ -13,6 +14,7 @@ export function ProdetPackshot({
   title,
   subtitle,
   weightLabel,
+  manufacturedByLabel,
   className,
   compact = false,
 }: ProdetPackshotProps) {
@@ -43,7 +45,7 @@ export function ProdetPackshot({
         </div>
         <div className="absolute inset-x-[11%] bottom-[12%] flex items-end justify-between gap-4">
           <div>
-            <p className="product-code text-white/84">Fabriqué par Prodet</p>
+            <p className="product-code text-white/84">{manufacturedByLabel}</p>
             <Logo size="sm" className="mt-3 h-7 w-[110px]" />
           </div>
           <p className="font-display tabular text-[clamp(1.4rem,2vw,2rem)] font-semibold text-white">

@@ -17,7 +17,7 @@ import {
   localeEnum,
   productAssetKindEnum,
 } from './enums';
-import { category, family } from './taxonomy';
+import { category, family, sector } from './taxonomy';
 import { customer } from './customers';
 import { user } from './users';
 
@@ -157,3 +157,24 @@ export const productEmbedding = pgTable('product_embedding', {
     .notNull()
     .default(sql`now()`),
 });
+
+/**
+ * Product <-> sector many-to-many recommendation.
+ */
+export const productSector = pgTable(
+  'product_sector',
+  {
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => product.id, { onDelete: 'cascade' }),
+    sectorId: uuid('sector_id')
+      .notNull()
+      .references(() => sector.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .default(sql`now()`),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.productId, t.sectorId] }),
+  }),
+);

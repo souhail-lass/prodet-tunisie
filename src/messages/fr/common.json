@@ -16,6 +16,7 @@
     "viewDetails": "Voir le détail",
     "viewProducts": "Voir les produits",
     "submit": "Envoyer",
+    "search": "Rechercher",
     "submitting": "Envoi…",
     "addLine": "Ajouter une ligne",
     "removeLine": "Retirer"
@@ -43,7 +44,8 @@
     "code": "Référence",
     "unit": "Unité",
     "recommendedFor": "Recommandé pour",
-    "alsoUsedIn": "Aussi utilisé dans"
+    "alsoUsedIn": "Aussi utilisé dans",
+    "downloadFds": "Télécharger la FDS"
   },
   "form": {
     "required": "Obligatoire",

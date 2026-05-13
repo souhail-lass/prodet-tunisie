@@ -1,20 +1,17 @@
-import { ArrowRight } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link } from '@/i18n/routing';
-import { isLocale } from '@/i18n/routing';
-import { ProdetPackshot } from '@/components/brand/prodet-packshot';
+import { setRequestLocale } from 'next-intl/server';
+import { companyInfo } from '@/data/company';
+import { siteContent } from '@/data/site-content';
+import { Link, isLocale } from '@/i18n/routing';
+import { LabelText } from '@/components/typography/label-text';
 import { Button } from '@/components/ui/button';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  const safeLocale = isLocale(locale) ? locale : 'fr';
-  const t = await getTranslations({ locale: safeLocale, namespace: 'about.hero' });
-  return { title: t('title'), description: t('lead') };
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'À propos',
+    description: siteContent.about.intro,
+  };
 }
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -22,75 +19,79 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   if (!isLocale(locale)) return null;
   setRequestLocale(locale);
 
-  const t = await getTranslations({ locale, namespace: 'about' });
-  const valueItems = [0, 1, 2, 3] as const;
+  const copy = siteContent.about;
 
   return (
     <article className="section-shell py-12">
       <header className="surface-panel overflow-hidden p-7 sm:p-8">
-        <p className="eyebrow-label">{t('hero.eyebrow')}</p>
-        <h1 className="mt-4 max-w-4xl text-3xl font-semibold sm:text-4xl lg:text-5xl">
-          {t('hero.title')}
+        <LabelText>{copy.label}</LabelText>
+        <h1 className="public-display-title-compact mt-4 max-w-4xl">
+          {copy.title}
         </h1>
-        <p className="text-muted-foreground mt-4 max-w-3xl text-lg leading-8">{t('hero.lead')}</p>
+        <p className="mt-4 max-w-3xl text-lg leading-8 text-muted-foreground">{copy.intro}</p>
       </header>
 
-      <section className="mt-10 grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
-        <div>
-          <h2 className="text-foreground text-2xl font-semibold">{t('story.title')}</h2>
-          <p className="text-muted-foreground mt-4 leading-8">{t('story.p1')}</p>
-          <p className="text-muted-foreground mt-3 leading-8">{t('story.p2')}</p>
-        </div>
-        <div className="surface-panel overflow-hidden p-5">
-          <ProdetPackshot
-            title="PROLAX LIQUIDE"
-            subtitle={locale === 'ar' ? 'سائل للمنسوجات' : locale === 'en' ? 'Liquid textile care' : 'Liquide textile professionnel'}
-            weightLabel="20KG"
-          />
-        </div>
-      </section>
-
-      <section className="mt-16">
-        <h2 className="text-foreground text-2xl font-semibold">{t('values.title')}</h2>
-        <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {valueItems.map((i) => (
-            <li key={i} className="surface-panel p-6">
-              <p className="text-card-foreground text-base font-semibold">
-                {t(`values.items.${i}.title`)}
-              </p>
-              <p className="text-muted-foreground mt-2 text-sm leading-7">
-                {t(`values.items.${i}.body`)}
-              </p>
-            </li>
+      <section className="mt-10 grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
+        <div className="rounded-2xl border border-border bg-white p-7">
+          {copy.story.map((paragraph) => (
+            <p key={paragraph} className="text-sm leading-8 text-muted-foreground [&:not(:first-child)]:mt-4">
+              {paragraph}
+            </p>
           ))}
-        </ul>
+        </div>
+        <div className="factory-pattern brand-grid flex min-h-[320px] items-end rounded-[24px] border border-border p-6">
+          <p className="text-sm text-white/58">[Photo usine à venir]</p>
+        </div>
       </section>
 
-      <section className="surface-panel mt-16 p-8">
-        <h2 className="text-foreground text-2xl font-semibold">{t('factory.title')}</h2>
-        <p className="text-muted-foreground mt-3 max-w-3xl leading-8">{t('factory.body')}</p>
-        <p className="mt-6 text-sm">
-          <span className="text-foreground font-semibold">{t('factory.addressLabel')}&nbsp;:</span>{' '}
-          <span className="text-muted-foreground">{t('factory.address')}</span>
-        </p>
+      <section className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        {copy.values.map((value) => (
+          <div key={value.title} className="rounded-2xl border border-border bg-white p-6">
+            <h2 className="text-lg font-semibold text-prodet-text">{value.title}</h2>
+            <p className="mt-3 text-sm leading-7 text-muted-foreground">{value.body}</p>
+          </div>
+        ))}
       </section>
 
-      <section className="surface-panel mt-16 flex flex-col items-start gap-6 p-8 sm:flex-row sm:items-center sm:justify-between">
+      <section className="mt-10 rounded-2xl border border-border bg-secondary p-7">
+        <h2 className="text-2xl font-bold text-prodet-text">{copy.productionTitle}</h2>
+        <p className="mt-4 max-w-3xl text-sm leading-8 text-muted-foreground">{copy.productionBody}</p>
+        <p className="mt-4 text-sm font-medium text-prodet-text">{companyInfo.addressFull}</p>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-border bg-white p-7">
+        <h2 className="text-2xl font-bold text-prodet-text">{copy.documentsTitle}</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground">{copy.documentsBody}</p>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {companyInfo.documents.map((document) => (
+            <div key={document.id} className="rounded-2xl border border-border bg-secondary p-5">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-primary">
+                <FileText className="h-4 w-4" aria-hidden />
+                PDF
+              </span>
+              <h3 className="mt-4 text-lg font-semibold text-prodet-text">{document.label}</h3>
+              <p className="mt-2 text-sm leading-7 text-muted-foreground">{document.description}</p>
+              <Button asChild variant="outline" className="mt-5 rounded-full px-5">
+                <a href={document.href} download>
+                  Télécharger
+                </a>
+              </Button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="surface-panel-strong mt-10 flex flex-col gap-5 p-7 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-foreground text-2xl font-semibold">{t('ctaBand.title')}</h2>
-          <p className="text-muted-foreground mt-2">{t('ctaBand.subtitle')}</p>
+          <h2 className="text-2xl font-bold">Besoin d’une offre adaptée à votre activité ?</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-7 text-white/78">
+            Décrivez vos usages, vos formats et vos volumes. Nous revenons vers vous avec une
+            proposition claire.
+          </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button asChild size="lg" className="rounded-full">
-            <Link href="/devis">
-              {t('ctaBand.primary')}
-              <ArrowRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
-            </Link>
-          </Button>
-          <Button asChild size="lg" variant="outline" className="rounded-full">
-            <Link href="/contact">{t('ctaBand.secondary')}</Link>
-          </Button>
-        </div>
+        <Button asChild className="rounded-full bg-white px-6 text-sm font-semibold text-primary hover:bg-white/92">
+          <Link href="/devis">Demander un devis</Link>
+        </Button>
       </section>
     </article>
   );

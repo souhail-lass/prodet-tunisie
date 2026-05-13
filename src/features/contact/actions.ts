@@ -19,6 +19,10 @@ export interface ContactSubmitResult {
 export async function submitContactMessage(
   input: ContactMessageInput,
 ): Promise<ContactSubmitResult> {
+  if (input.website?.trim()) {
+    return { ok: true, referenceCode: generateReferenceCode('CTC') };
+  }
+
   const parsed = ContactMessageSchema.safeParse(input);
   if (!parsed.success) {
     const flat = parsed.error.flatten((issue) => issue.message);
@@ -35,8 +39,6 @@ export async function submitContactMessage(
   console.info('[contact-message:received]', {
     referenceCode,
     subject: parsed.data.subject,
-    name: parsed.data.name,
-    email: parsed.data.email,
     receivedAt: new Date().toISOString(),
   });
 

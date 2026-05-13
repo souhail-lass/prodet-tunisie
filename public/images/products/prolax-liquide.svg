@@ -1,0 +1,14 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="312" y="90" width="176" height="90" rx="26" fill="#F4F6F8" stroke="#D7DEE7" stroke-width="8"/>
+  <rect x="170" y="160" width="460" height="740" rx="76" fill="white" stroke="#D7DEE7" stroke-width="10"/>
+  <rect x="218" y="294" width="364" height="426" rx="34" fill="#F8FBFE" stroke="#D7DEE7" stroke-width="8"/>
+  <path d="M218 576H582V720H218V576Z" fill="#1B5FA7"/>
+  <path d="M470 576H582V720H362L470 576Z" fill="#0D3B73"/>
+  <rect x="246" y="210" width="182" height="36" rx="18" fill="#EFF6FF"/>
+  <text x="337" y="233" text-anchor="middle" fill="#1B5FA7" font-family="Arial, sans-serif" font-size="24" font-weight="700">PRODET</text>
+  <text x="260" y="392" fill="#1C2B3A" font-family="Arial, sans-serif" font-size="54" font-weight="700">PROLAX</text>
+  <text x="260" y="454" fill="#1C2B3A" font-family="Arial, sans-serif" font-size="54" font-weight="700">LIQUIDE</text>
+  <text x="260" y="518" fill="#5F6F82" font-family="Arial, sans-serif" font-size="26" font-weight="500">Lessive liquide professionnelle</text>
+  <text x="260" y="801" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="700">Fabrique par Prodet</text>
+  <text x="260" y="844" fill="white" font-family="Arial, sans-serif" font-size="74" font-weight="700">20 KG</text>
+</svg>

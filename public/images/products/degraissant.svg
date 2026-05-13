@@ -1,0 +1,13 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="312" y="96" width="176" height="86" rx="24" fill="#F4F6F8" stroke="#D7DEE7" stroke-width="8"/>
+  <rect x="172" y="160" width="456" height="740" rx="76" fill="white" stroke="#D7DEE7" stroke-width="10"/>
+  <rect x="220" y="292" width="360" height="428" rx="34" fill="#FBFDFF" stroke="#D7DEE7" stroke-width="8"/>
+  <path d="M220 574H580V720H220V574Z" fill="#0D3B73"/>
+  <path d="M470 574H580V720H352L470 574Z" fill="#1F9C49"/>
+  <rect x="248" y="212" width="182" height="36" rx="18" fill="#EFF6FF"/>
+  <text x="339" y="235" text-anchor="middle" fill="#1B5FA7" font-family="Arial, sans-serif" font-size="24" font-weight="700">PRODET</text>
+  <text x="260" y="394" fill="#1C2B3A" font-family="Arial, sans-serif" font-size="60" font-weight="700">DEGRAISSANT</text>
+  <text x="260" y="520" fill="#5F6F82" font-family="Arial, sans-serif" font-size="26" font-weight="500">Surfaces et equipements</text>
+  <text x="260" y="796" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="700">Interventions intensives</text>
+  <text x="260" y="840" fill="white" font-family="Arial, sans-serif" font-size="50" font-weight="700">5 L  10 L</text>
+</svg>

@@ -16,6 +16,7 @@
     "viewDetails": "View details",
     "viewProducts": "View products",
     "submit": "Send",
+    "search": "Search",
     "submitting": "Sending…",
     "addLine": "Add a line",
     "removeLine": "Remove"
@@ -43,7 +44,8 @@
     "code": "Reference",
     "unit": "Unit",
     "recommendedFor": "Recommended for",
-    "alsoUsedIn": "Also used in"
+    "alsoUsedIn": "Also used in",
+    "downloadFds": "Download SDS"
   },
   "form": {
     "required": "Required",

@@ -4,8 +4,15 @@
     "subtitle": "Our locally manufactured cleaning and hygiene range, packaged for professionals.",
     "manufacturedBadge": "Manufactured by Prodet",
     "noStockNotice": "Prices and availability are confirmed when we receive your quote request.",
+    "searchLabel": "Search the catalog",
+    "searchPlaceholder": "Code, name, packaging, sector…",
+    "searchClear": "Clear search",
+    "searchActive": "Search: {query}",
+    "resultsCount": "{count} product(s)",
     "emptyTitle": "No products in this category yet",
-    "emptyBody": "This category will be expanded soon. Ask us about a specific product directly."
+    "emptyBody": "This category will be expanded soon. Ask us about a specific product directly.",
+    "emptySearchTitle": "No product matches this search",
+    "emptySearchBody": "No results for “{query}”. Try a product code, name or sector."
   },
   "detail": {
     "descriptionTitle": "Description",

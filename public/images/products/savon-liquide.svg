@@ -1,0 +1,14 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="314" y="94" width="172" height="88" rx="24" fill="#F4F6F8" stroke="#D7DEE7" stroke-width="8"/>
+  <rect x="174" y="162" width="452" height="738" rx="76" fill="white" stroke="#D7DEE7" stroke-width="10"/>
+  <rect x="222" y="292" width="356" height="428" rx="34" fill="#FCFEFF" stroke="#D7DEE7" stroke-width="8"/>
+  <path d="M222 576H578V720H222V576Z" fill="#1B5FA7"/>
+  <path d="M468 576H578V720H358L468 576Z" fill="#1F9C49"/>
+  <rect x="250" y="212" width="182" height="36" rx="18" fill="#EFF6FF"/>
+  <text x="341" y="235" text-anchor="middle" fill="#1B5FA7" font-family="Arial, sans-serif" font-size="24" font-weight="700">PRODET</text>
+  <text x="260" y="390" fill="#1C2B3A" font-family="Arial, sans-serif" font-size="48" font-weight="700">SAVON</text>
+  <text x="260" y="450" fill="#1C2B3A" font-family="Arial, sans-serif" font-size="58" font-weight="700">LIQUIDE</text>
+  <text x="260" y="520" fill="#5F6F82" font-family="Arial, sans-serif" font-size="26" font-weight="500">Hygiene des mains</text>
+  <text x="260" y="796" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="700">Usage professionnel</text>
+  <text x="260" y="840" fill="white" font-family="Arial, sans-serif" font-size="50" font-weight="700">5 L  20 L</text>
+</svg>

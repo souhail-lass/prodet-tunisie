@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { listCategories, listProducts, listSectors } from '@/data/queries';
+import { listProducts, listSectors } from '@/data/queries';
 import { locales } from '@/i18n/routing';
 import { getPublicEnv } from '@/lib/env';
 
@@ -20,7 +20,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const dynamicPaths: string[] = [
-    ...listCategories().map((c) => `/catalogue/categorie/${c.slug}`),
     ...listProducts().map((p) => `/catalogue/${p.slug}`),
     ...listSectors().map((s) => `/secteurs/${s.slug}`),
   ];

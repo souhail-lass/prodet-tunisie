@@ -1,10 +1,25 @@
 import type { Metadata } from 'next';
+import { Bricolage_Grotesque, Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing, isLocale, localeDirection, localeHtmlLang, type Locale } from '@/i18n/routing';
 import { getPublicEnv } from '@/lib/env';
 import '../globals.css';
+
+const heading = Bricolage_Grotesque({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-heading',
+  display: 'swap',
+});
+
+const body = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-body',
+  display: 'swap',
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -17,19 +32,32 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const env = getPublicEnv();
+  const isFrench = locale === 'fr';
+  const defaultTitle = isFrench
+    ? "Prodet Tunisie — Produits d'entretien professionnels fabriqués en Tunisie"
+    : locale === 'ar'
+      ? 'بروديت تونس'
+      : 'Prodet Tunisie';
+  const description = isFrench
+    ? "Prodet fabrique et distribue des produits d'entretien et d'hygiène pour hôtels, restaurants, entreprises et institutions en Tunisie. Devis sur demande."
+    : locale === 'ar'
+      ? 'مُصنِّع تونسي لمنتجات النظافة والصيانة المهنية.'
+      : 'Tunisian manufacturer of professional cleaning and hygiene products.';
+  const ogTitle = isFrench
+    ? "Prodet Tunisie — Fournisseur B2B de produits d'entretien"
+    : defaultTitle;
+  const ogDescription = isFrench
+    ? 'Fabricant tunisien de produits d’entretien professionnels. Bidons 5L, 10L, 20L. Devis personnalisé.'
+    : description;
+  const ogLocale = isFrench ? 'fr_TN' : localeHtmlLang[locale as Locale] ?? 'fr-TN';
 
   return {
     metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
     title: {
-      default: 'Prodet Tunisie',
+      default: defaultTitle,
       template: '%s · Prodet Tunisie',
     },
-    description:
-      locale === 'ar'
-        ? 'مُصنِّع تونسي لمنتجات النظافة والصيانة المهنية.'
-        : locale === 'en'
-          ? 'Tunisian manufacturer of professional cleaning and hygiene products.'
-          : "Fabricant tunisien de produits d'hygiène et d'entretien professionnels.",
+    description,
     alternates: {
       canonical: `/${locale}`,
       languages: {
@@ -42,7 +70,14 @@ export async function generateMetadata({
     openGraph: {
       type: 'website',
       siteName: 'Prodet Tunisie',
-      locale: localeHtmlLang[locale as Locale] ?? 'fr-TN',
+      title: ogTitle,
+      description: ogDescription,
+      locale: ogLocale,
+    },
+    twitter: {
+      card: 'summary',
+      title: ogTitle,
+      description: ogDescription,
     },
     robots: {
       index: true,
@@ -68,7 +103,7 @@ export default async function LocaleLayout({
   const lang = localeHtmlLang[locale];
 
   return (
-    <html lang={lang} dir={dir} suppressHydrationWarning>
+    <html lang={lang} dir={dir} className={`${heading.variable} ${body.variable}`} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider messages={messages} locale={locale}>
           {children}

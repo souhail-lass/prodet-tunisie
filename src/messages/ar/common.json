@@ -16,6 +16,7 @@
     "viewDetails": "عرض التفاصيل",
     "viewProducts": "عرض المنتجات",
     "submit": "إرسال",
+    "search": "بحث",
     "submitting": "جارٍ الإرسال…",
     "addLine": "إضافة سطر",
     "removeLine": "حذف"
@@ -43,7 +44,8 @@
     "code": "المرجع",
     "unit": "الوحدة",
     "recommendedFor": "موصى به لـ",
-    "alsoUsedIn": "يُستعمل أيضًا في"
+    "alsoUsedIn": "يُستعمل أيضًا في",
+    "downloadFds": "تنزيل ورقة البيانات"
   },
   "form": {
     "required": "إلزامي",

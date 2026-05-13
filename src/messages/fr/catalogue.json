@@ -4,8 +4,15 @@
     "subtitle": "Notre gamme de produits d'hygiène et d'entretien fabriqués localement, conditionnés pour les professionnels.",
     "manufacturedBadge": "Fabriqué par Prodet",
     "noStockNotice": "Les prix et la disponibilité sont confirmés à la réception du devis.",
+    "searchLabel": "Rechercher dans le catalogue",
+    "searchPlaceholder": "Code, nom, conditionnement, secteur…",
+    "searchClear": "Effacer la recherche",
+    "searchActive": "Recherche : {query}",
+    "resultsCount": "{count} produit(s)",
     "emptyTitle": "Aucun produit dans cette catégorie",
-    "emptyBody": "Cette catégorie sera enrichie prochainement. Demandez-nous directement un produit en particulier."
+    "emptyBody": "Cette catégorie sera enrichie prochainement. Demandez-nous directement un produit en particulier.",
+    "emptySearchTitle": "Aucun produit ne correspond à cette recherche",
+    "emptySearchBody": "Aucun résultat pour « {query} ». Essayez un code produit, un nom ou un secteur."
   },
   "detail": {
     "descriptionTitle": "Description",

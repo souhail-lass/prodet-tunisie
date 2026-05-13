@@ -1,111 +1,97 @@
-import { useTranslations } from 'next-intl';
-import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { companyInfo } from '@/data/company';
 import { Logo } from '@/components/brand/logo';
-import { Separator } from '@/components/ui/separator';
-
-const footerCopy = {
-  fr: {
-    summary:
-      "Une présence web plus claire, plus produit et plus crédible pour les acheteurs B2B de Prodet.",
-    proofPills: ['Fabrication tunisienne', 'Devis sur demande', 'Grand Tunis'],
-  },
-  en: {
-    summary:
-      'A clearer, more product-led and more credible web presence for Prodet’s B2B buyers.',
-    proofPills: ['Made in Tunisia', 'Quote on request', 'Greater Tunis'],
-  },
-  ar: {
-    summary: 'حضور ويب أوضح وأكثر تركيزًا على المنتج وأكثر مصداقية لمشتري Prodet المهنيين.',
-    proofPills: ['تصنيع تونسي', 'عرض سعر عند الطلب', 'تونس الكبرى'],
-  },
-} as const;
 
 export function SiteFooter() {
-  const t = useTranslations('common');
-  const tFooter = useTranslations('footer');
-  const locale = useLocale() as keyof typeof footerCopy;
-  const copy = footerCopy[locale];
-  const year = new Date().getFullYear();
-
   const columns = [
     {
-      title: tFooter('company'),
+      title: 'Produits',
       links: [
-        { href: '/a-propos', label: t('navigation.about') },
-        { href: '/contact', label: t('navigation.contact') },
+        { href: '/catalogue?useCase=linge-textiles', label: 'Linge & textiles' },
+        { href: '/catalogue?useCase=cuisine-degraissage', label: 'Cuisine & dégraissage' },
+        { href: '/catalogue?useCase=surfaces-vitres', label: 'Surfaces & vitres' },
       ],
     },
     {
-      title: tFooter('catalog'),
+      title: 'Secteurs',
       links: [
-        { href: '/catalogue', label: t('navigation.catalog') },
-        { href: '/devis', label: t('navigation.quote') },
+        { href: '/catalogue?sector=hotels', label: 'Hôtels & hébergement' },
+        { href: '/catalogue?sector=restaurants-cafes', label: 'Restaurants & cafés' },
+        { href: '/secteurs', label: 'Voir tous les secteurs' },
       ],
     },
     {
-      title: tFooter('sectors'),
-      links: [{ href: '/secteurs', label: t('navigation.sectors') }],
+      title: 'Contact',
+      links: [
+        { href: '/a-propos', label: 'À propos' },
+        { href: '/contact', label: 'Contact' },
+      ],
     },
   ] as const;
 
   return (
-    <footer className="border-border/80 bg-secondary/36 mt-20 border-t">
+    <footer className="mt-20 bg-prodet-navy text-white">
       <div className="section-shell py-14">
-        <div className="grid gap-10 lg:grid-cols-[1.5fr_repeat(3,minmax(0,1fr))]">
+        <div className="grid gap-10 lg:grid-cols-[1.4fr_repeat(3,minmax(0,1fr))]">
           <div>
-            <Logo size="md" />
-            <p className="text-muted-foreground mt-4 max-w-sm text-sm leading-7">{copy.summary}</p>
-            <ul className="mt-5 flex flex-wrap gap-2">
-              {copy.proofPills.map((pill) => (
-                <li
-                  key={pill}
-                  className="border-border bg-card rounded-full border px-3 py-1 text-xs text-muted-foreground"
-                >
-                  {pill}
-                </li>
-              ))}
-            </ul>
-            <p className="text-muted-foreground mt-5 text-sm">{tFooter('address')}</p>
+            <Link href="/" className="inline-flex cursor-pointer items-center">
+              <Logo size="lg" variant="light" />
+            </Link>
+            <p className="mt-4 max-w-sm text-[13px] leading-6 text-white/60">{companyInfo.footerTagline}</p>
+            <p className="mt-5 max-w-sm text-sm leading-7 text-white/74">
+              Prodet Tunisie présente une gamme de produits d’entretien et d’hygiène pour les
+              professionnels, avec des formats lisibles, un contact direct et un devis sur
+              demande.
+            </p>
+            <div className="mt-6 rounded-[24px] border border-white/12 bg-white/8 p-4 text-sm text-white/82">
+              <p>{companyInfo.addressFull}</p>
+              <p className="mt-2">{companyInfo.phoneDisplay}</p>
+              <p className="mt-2">{companyInfo.email}</p>
+            </div>
           </div>
           {columns.map((col) => (
             <div key={col.title}>
-              <p className="font-display text-foreground text-sm font-semibold">{col.title}</p>
+              <p className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-white/82">
+                {col.title}
+              </p>
               <ul className="mt-3 space-y-2 text-sm">
                 {col.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      className="cursor-pointer text-white/72 transition-colors hover:text-white"
                     >
                       {link.label}
                     </Link>
                   </li>
                 ))}
               </ul>
+              {col.title === 'Contact' ? (
+                <Link
+                  href="/devis"
+                  className="mt-5 inline-flex h-10 cursor-pointer items-center justify-center rounded-xl border border-white/20 bg-white/10 px-5 text-sm font-medium text-white transition-colors hover:bg-white/18 hover:text-white"
+                >
+                  Demander un devis
+                </Link>
+              ) : null}
             </div>
           ))}
         </div>
-        <Separator className="my-8" />
-        <div className="text-muted-foreground flex flex-col gap-4 text-xs sm:flex-row sm:items-center sm:justify-between">
-          <p>{tFooter('rights', { year })}</p>
-          <ul className="flex flex-wrap items-center gap-4">
-            <li>
-              <Link href="/mentions-legales" className="hover:text-foreground">
-                {tFooter('legalLinks.mentions')}
-              </Link>
-            </li>
-            <li>
-              <Link href="/confidentialite" className="hover:text-foreground">
-                {tFooter('legalLinks.privacy')}
-              </Link>
-            </li>
-            <li>
-              <Link href="/cookies" className="hover:text-foreground">
-                {tFooter('legalLinks.cookies')}
-              </Link>
-            </li>
-          </ul>
+        <div className="mt-10 flex flex-col gap-4 border-t border-white/12 pt-6 text-xs text-white/62 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {companyInfo.copyrightYear} {companyInfo.name} · Tous droits réservés
+          </p>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/mentions-legales" className="cursor-pointer hover:text-white">
+              Mentions légales
+            </Link>
+            <Link href="/confidentialite" className="cursor-pointer hover:text-white">
+              Confidentialité
+            </Link>
+            <Link href="/cookies" className="cursor-pointer hover:text-white">
+              Cookies
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -9,6 +9,8 @@ export interface HomeContent {
     packshotTitle: string;
     packshotSubtitle: string;
     packshotWeight: string;
+    /** Factual caption under hero packshot — no unsubstantiated "certified" wording */
+    packshotCaption: string;
   };
   featured: {
     eyebrow: string;
@@ -57,6 +59,7 @@ export const HOME_CONTENT: Record<Locale, HomeContent> = {
       packshotTitle: 'PROLAX LIQUIDE',
       packshotSubtitle: 'Lessive liquide pour textiles',
       packshotWeight: '20KG',
+      packshotCaption: 'Gamme illustrative · même logique etiquetage que vos references',
     },
     featured: {
       eyebrow: 'Références repères',
@@ -133,6 +136,7 @@ export const HOME_CONTENT: Record<Locale, HomeContent> = {
       packshotTitle: 'PROLAX LIQUIDE',
       packshotSubtitle: 'Liquid laundry detergent',
       packshotWeight: '20KG',
+      packshotCaption: 'Illustrative range · labeling logic matches real SKUs',
     },
     featured: {
       eyebrow: 'Key references',
@@ -209,6 +213,7 @@ export const HOME_CONTENT: Record<Locale, HomeContent> = {
       packshotTitle: 'PROLAX LIQUIDE',
       packshotSubtitle: 'سائل غسيل للمنسوجات',
       packshotWeight: '20KG',
+      packshotCaption: 'تشكيلة توضيحية · نفس منطق البطاقة كالمراجع الفعلية',
     },
     featured: {
       eyebrow: 'مراجع أساسية',

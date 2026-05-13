@@ -19,6 +19,7 @@ export type ServerEnv = z.infer<typeof ServerEnvSchema>;
 export type PublicEnv = z.infer<typeof PublicEnvSchema>;
 
 let cachedServer: ServerEnv | null = null;
+let cachedPublic: PublicEnv | null = null;
 
 export function getServerEnv(): ServerEnv {
   if (cachedServer) return cachedServer;
@@ -34,8 +35,10 @@ export function getServerEnv(): ServerEnv {
 }
 
 export function getPublicEnv(): PublicEnv {
-  return PublicEnvSchema.parse({
+  if (cachedPublic) return cachedPublic;
+  cachedPublic = PublicEnvSchema.parse({
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
     NEXT_PUBLIC_DEFAULT_WHATSAPP_E164: process.env.NEXT_PUBLIC_DEFAULT_WHATSAPP_E164,
   });
+  return cachedPublic;
 }

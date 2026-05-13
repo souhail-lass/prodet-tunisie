@@ -1,46 +1,50 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-background: oklch(97.9% 0.008 83);
-  --color-foreground: oklch(28% 0.03 248);
-  --color-muted: oklch(95.6% 0.009 248);
-  --color-muted-foreground: oklch(48% 0.026 248);
-  --color-card: oklch(99.8% 0.004 85);
-  --color-card-foreground: oklch(28% 0.03 248);
-  --color-border: oklch(89% 0.014 247);
-  --color-input: oklch(89% 0.014 247);
-  --color-ring: oklch(52% 0.15 249);
+  --color-background: #F8F7F4;
+  --color-foreground: #13293D;
+  --color-muted: #F4F6F8;
+  --color-muted-foreground: #55697D;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #13293D;
+  --color-border: #D7DFE7;
+  --color-input: #D7DFE7;
+  --color-ring: #0F5DA8;
 
-  --color-primary: oklch(50% 0.15 249);
-  --color-primary-foreground: oklch(99% 0.004 85);
-  --color-primary-strong: oklch(40% 0.13 254);
-  --color-secondary: oklch(94% 0.012 247);
-  --color-secondary-foreground: oklch(28% 0.03 248);
-  --color-accent: oklch(70% 0.12 227);
-  --color-accent-foreground: oklch(22% 0.03 248);
-  --color-support: oklch(62% 0.15 152);
+  --color-primary: #0F5DA8;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-strong: #0B3D73;
+  --color-secondary: #F4F6F8;
+  --color-secondary-foreground: #13293D;
+  --color-accent: #25A6E6;
+  --color-accent-foreground: #FFFFFF;
+  --color-support: #1E9153;
 
-  --color-destructive: oklch(58% 0.21 26);
-  --color-destructive-foreground: oklch(99% 0.004 85);
-  --color-success: oklch(63% 0.14 153);
-  --color-warning: oklch(75% 0.15 84);
+  --color-destructive: #C53A3A;
+  --color-destructive-foreground: #FFFFFF;
+  --color-success: #1E9153;
+  --color-warning: #D97706;
 
-  --font-sans:
-    'IBM Plex Sans', 'Aptos', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  --font-display:
-    'IBM Plex Sans', 'Aptos Display', 'Segoe UI', Arial, sans-serif;
-  --font-arabic:
-    'IBM Plex Sans Arabic', 'Noto Naskh Arabic', 'Geeza Pro', 'Arial Unicode MS', sans-serif;
+  --color-prodet-blue: #0F5DA8;
+  --color-prodet-green: #1E9153;
+  --color-prodet-navy: #0B3D73;
+  --color-prodet-sky: #25A6E6;
+  --color-prodet-surface: #F4F6F8;
+  --color-prodet-text: #13293D;
+
+  --font-sans: var(--font-body), 'Segoe UI', Arial, sans-serif;
+  --font-display: var(--font-heading), 'Segoe UI', Arial, sans-serif;
+  --font-arabic: 'Noto Naskh Arabic', 'Geeza Pro', 'Arial Unicode MS', sans-serif;
   --font-mono:
     ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 
   --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  --radius-xl: 14px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
 
-  --container-2xl: 1280px;
+  --container-2xl: 1340px;
 }
 
 @layer base {
@@ -51,29 +55,27 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
-    background-image:
-      radial-gradient(circle at top right, color-mix(in oklab, var(--color-accent) 16%, transparent), transparent 34%),
-      radial-gradient(circle at bottom left, color-mix(in oklab, var(--color-support) 10%, transparent), transparent 38%);
-    font-family: var(--font-sans);
-    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    font-family: var(--font-body);
+    font-feature-settings: 'cv11', 'ss01';
+    background-color: #F8F7F4;
   }
 
-  html[lang^='ar'] body {
-    font-family: var(--font-arabic);
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 200ms ease-out;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  .font-display {
-    font-family: var(--font-display);
+  a:hover {
+    color: var(--color-primary-strong);
   }
 
+  html[lang^='ar'] body,
   html[lang^='ar'] h1,
   html[lang^='ar'] h2,
   html[lang^='ar'] h3,
@@ -82,14 +84,34 @@
     font-family: var(--font-arabic);
   }
 
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+  }
+
+  .font-display {
+    font-family: var(--font-heading);
+  }
+
   *:focus-visible {
     outline: 2px solid var(--color-ring);
     outline-offset: 2px;
-    border-radius: var(--radius-sm);
+  }
+
+  button,
+  [role='button'],
+  a[href],
+  summary {
+    cursor: pointer;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--color-primary) 18%, white);
+    background: color-mix(in srgb, var(--color-prodet-blue) 18%, white);
     color: var(--color-foreground);
   }
 
@@ -107,11 +129,28 @@
 
 @layer utilities {
   .section-shell {
-    @apply mx-auto max-w-(--container-2xl) px-4 sm:px-6 lg:px-8;
+    @apply mx-auto max-w-(--container-2xl) px-5 sm:px-7 lg:px-10;
   }
 
   .eyebrow-label {
-    @apply font-display text-primary text-[0.72rem] font-semibold tracking-[0.24em] uppercase;
+    @apply font-display text-[0.7rem] font-semibold tracking-[0.24em] uppercase;
+    color: var(--color-prodet-blue);
+  }
+
+  .public-display-title {
+    @apply font-display text-prodet-text;
+    font-size: clamp(2.55rem, 6vw, 4.85rem);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.065em;
+  }
+
+  .public-display-title-compact {
+    @apply font-display text-prodet-text;
+    font-size: clamp(2.1rem, 4.4vw, 3.55rem);
+    font-weight: 800;
+    line-height: 0.94;
+    letter-spacing: -0.055em;
   }
 
   .product-code {
@@ -124,53 +163,116 @@
   }
 
   .shadow-industrial {
-    box-shadow: 0 18px 44px -30px rgba(15, 42, 78, 0.34);
+    box-shadow: 0 28px 64px -42px rgba(11, 61, 115, 0.42);
+  }
+
+  .shadow-card-hover {
+    box-shadow: 0 18px 40px -26px rgba(11, 61, 115, 0.28);
   }
 
   .surface-panel {
-    @apply border-border bg-card rounded-[var(--radius-xl)] border;
-    box-shadow: 0 18px 44px -30px rgba(15, 42, 78, 0.28);
+    @apply rounded-[28px] border bg-card;
+    border-color: var(--color-border);
+    box-shadow: 0 24px 54px -38px rgba(11, 61, 115, 0.2);
   }
 
   .surface-panel-strong {
-    @apply rounded-[var(--radius-xl)] border text-white;
+    @apply rounded-[30px] border text-white;
     background:
-      linear-gradient(145deg, color-mix(in oklab, var(--color-primary) 92%, white), var(--color-primary-strong));
-    border-color: color-mix(in oklab, var(--color-primary-strong) 40%, white);
-    box-shadow: 0 24px 56px -34px rgba(15, 42, 78, 0.42);
+      radial-gradient(circle at top left, rgba(37, 166, 230, 0.22), transparent 30%),
+      linear-gradient(160deg, rgba(11, 61, 115, 1), rgba(8, 41, 78, 1));
+    border-color: color-mix(in srgb, var(--color-prodet-blue) 78%, white);
+    box-shadow: 0 28px 60px -36px rgba(11, 61, 115, 0.48);
   }
 
-  .grid-blueprint {
+  .editorial-wash {
+    background:
+      radial-gradient(circle at top left, rgba(37, 166, 230, 0.18), transparent 32%),
+      linear-gradient(135deg, rgba(244, 246, 248, 0.92), rgba(255, 255, 255, 0.95));
+  }
+
+  .product-display-stage {
+    background:
+      radial-gradient(circle at 78% 18%, rgba(37, 166, 230, 0.22), transparent 24%),
+      radial-gradient(circle at 12% 82%, rgba(15, 93, 168, 0.14), transparent 28%),
+      linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(244, 246, 248, 0.98));
+  }
+
+  .ink-panel {
+    background:
+      radial-gradient(circle at top left, rgba(37, 166, 230, 0.18), transparent 28%),
+      linear-gradient(160deg, rgba(11, 61, 115, 1), rgba(7, 34, 66, 1));
+  }
+
+  .subtle-grid {
     background-image:
-      linear-gradient(
-        to right,
-        color-mix(in oklab, var(--color-border) 38%, transparent) 1px,
-        transparent 1px
-      ),
-      linear-gradient(
-        to bottom,
-        color-mix(in oklab, var(--color-border) 38%, transparent) 1px,
-        transparent 1px
-      );
-    background-size: 24px 24px;
+      linear-gradient(rgba(15, 93, 168, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 93, 168, 0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
 
-  .catalog-divider {
-    position: relative;
-  }
-
-  .catalog-divider::after {
+  .brand-diagonal-accent {
     position: absolute;
-    inset-inline: 0;
-    inset-block-end: 0;
-    height: 1px;
+    inset: 0;
+    pointer-events: none;
     background:
       linear-gradient(
-        90deg,
-        transparent,
-        color-mix(in oklab, var(--color-primary) 42%, white),
-        transparent
+        132deg,
+        transparent 0 48%,
+        color-mix(in srgb, var(--color-prodet-blue) 24%, transparent) 48% 72%,
+        transparent 72% 100%
       );
-    content: '';
+  }
+
+  .brand-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .hero-geometry {
+    position: absolute;
+    inset: 12% 6% 10% auto;
+    width: min(24rem, 78%);
+    border-radius: 24px;
+    background:
+      linear-gradient(135deg, rgba(51, 181, 246, 0.24), rgba(27, 95, 167, 0.08));
+    transform: skewX(-14deg);
+    filter: blur(0.4px);
+  }
+
+  .factory-pattern {
+    background:
+      linear-gradient(135deg, rgba(15, 93, 168, 0.2) 0 32%, transparent 32% 100%),
+      linear-gradient(225deg, rgba(30, 145, 83, 0.24) 0 22%, transparent 22% 100%),
+      linear-gradient(0deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08));
+  }
+
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 400ms ease-out,
+      transform 400ms ease-out;
+    transition-delay: var(--animate-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

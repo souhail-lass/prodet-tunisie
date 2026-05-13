@@ -20,6 +20,7 @@ export const QuoteRequestSchema = z.object({
   phone: TunisianOrInternationalPhone,
   sectorKey: z.string().optional(),
   message: z.string().trim().max(2000, 'tooLong').optional(),
+  website: z.string().trim().max(200, 'tooLong').optional(),
   lines: z.array(QuoteLineSchema).min(1, 'atLeastOneItem').max(40, 'tooLong'),
 });
 

@@ -26,6 +26,10 @@ export interface QuoteSubmitResult {
  *   - rate-limit per IP (Inngest or Vercel KV)
  */
 export async function submitQuoteRequest(input: QuoteRequestInput): Promise<QuoteSubmitResult> {
+  if (input.website?.trim()) {
+    return { ok: true, referenceCode: generateReferenceCode('QUO') };
+  }
+
   const parsed = QuoteRequestSchema.safeParse(input);
   if (!parsed.success) {
     const flat = parsed.error.flatten((issue) => issue.message);
@@ -41,9 +45,7 @@ export async function submitQuoteRequest(input: QuoteRequestInput): Promise<Quot
 
   console.info('[quote-request:received]', {
     referenceCode,
-    company: parsed.data.company,
-    email: parsed.data.email,
-    phone: parsed.data.phone,
+    sectorKey: parsed.data.sectorKey,
     lineCount: parsed.data.lines.length,
     receivedAt: new Date().toISOString(),
   });
