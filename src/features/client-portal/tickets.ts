@@ -1,6 +1,12 @@
 import 'server-only';
 import { and, asc, desc, eq } from 'drizzle-orm';
 import { requireClientPortalAccess } from './auth';
+import {
+  sanitizeIncomingAttachments,
+  viewAttachments,
+  type TicketAttachment,
+  type TicketAttachmentView,
+} from '@/features/support/attachments';
 
 export type TicketSummary = {
   id: string;
@@ -15,6 +21,7 @@ export type TicketMessageView = {
   authorRole: string;
   authorName: string | null;
   body: string;
+  attachments: TicketAttachmentView[];
   createdAt: Date;
 };
 
@@ -50,25 +57,36 @@ export async function getMyTicket(ticketId: string): Promise<TicketDetail | null
     .where(and(eq(schema.supportTicket.id, ticketId), eq(schema.supportTicket.customerId, access.customer.id)))
     .limit(1);
   if (!ticket) return null;
-  const messages = await db
+  const rows = await db
     .select({
       id: schema.ticketMessage.id,
       authorRole: schema.ticketMessage.authorRole,
       authorName: schema.ticketMessage.authorName,
       body: schema.ticketMessage.body,
+      attachments: schema.ticketMessage.attachments,
       createdAt: schema.ticketMessage.createdAt,
     })
     .from(schema.ticketMessage)
     .where(eq(schema.ticketMessage.ticketId, ticket.id))
     .orderBy(asc(schema.ticketMessage.createdAt));
+  const messages: TicketMessageView[] = rows.map((m) => ({
+    ...m,
+    attachments: viewAttachments(m.id, m.attachments),
+  }));
   return { id: ticket.id, subject: ticket.subject, status: ticket.status, messages };
 }
 
-export async function createMyTicket(subject: string, body: string): Promise<{ ok: boolean; id?: string }> {
+export async function createMyTicket(
+  subject: string,
+  body: string,
+  attachments: TicketAttachment[] = [],
+): Promise<{ ok: boolean; id?: string }> {
   const access = await requireClientPortalAccess();
   const s = subject.trim();
   const b = body.trim();
-  if (!s || !b) return { ok: false };
+  const files = sanitizeIncomingAttachments(attachments);
+  // A message needs either text or at least one attachment.
+  if (!s || (!b && files.length === 0)) return { ok: false };
   const { db, schema } = await import('@/db/client');
   const now = new Date();
   const name = access.appUser.fullName || access.customer.name;
@@ -91,15 +109,21 @@ export async function createMyTicket(subject: string, body: string): Promise<{ o
       authorRole: 'client',
       authorName: name,
       body: b,
+      attachments: files,
     });
     return { ok: true, id: ticket.id };
   });
 }
 
-export async function replyMyTicket(ticketId: string, body: string): Promise<{ ok: boolean }> {
+export async function replyMyTicket(
+  ticketId: string,
+  body: string,
+  attachments: TicketAttachment[] = [],
+): Promise<{ ok: boolean }> {
   const access = await requireClientPortalAccess();
   const b = body.trim();
-  if (!b) return { ok: false };
+  const files = sanitizeIncomingAttachments(attachments);
+  if (!b && files.length === 0) return { ok: false };
   const { db, schema } = await import('@/db/client');
   const [ticket] = await db
     .select({ id: schema.supportTicket.id })
@@ -114,6 +138,7 @@ export async function replyMyTicket(ticketId: string, body: string): Promise<{ o
     authorRole: 'client',
     authorName: access.appUser.fullName || access.customer.name,
     body: b,
+    attachments: files,
   });
   await db
     .update(schema.supportTicket)

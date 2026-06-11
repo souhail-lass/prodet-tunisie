@@ -1,5 +1,11 @@
 import 'server-only';
 import { asc, desc, eq } from 'drizzle-orm';
+import {
+  sanitizeIncomingAttachments,
+  viewAttachments,
+  type TicketAttachment,
+  type TicketAttachmentView,
+} from '@/features/support/attachments';
 
 export type AdminTicketSummary = {
   id: string;
@@ -20,6 +26,7 @@ export type AdminTicketDetail = {
     authorRole: string;
     authorName: string | null;
     body: string;
+    attachments: TicketAttachmentView[];
     createdAt: Date;
   }[];
 };
@@ -55,28 +62,32 @@ export async function getAdminTicket(ticketId: string): Promise<AdminTicketDetai
     .where(eq(schema.supportTicket.id, ticketId))
     .limit(1);
   if (!ticket) return null;
-  const messages = await db
+  const rows = await db
     .select({
       id: schema.ticketMessage.id,
       authorRole: schema.ticketMessage.authorRole,
       authorName: schema.ticketMessage.authorName,
       body: schema.ticketMessage.body,
+      attachments: schema.ticketMessage.attachments,
       createdAt: schema.ticketMessage.createdAt,
     })
     .from(schema.ticketMessage)
     .where(eq(schema.ticketMessage.ticketId, ticket.id))
     .orderBy(asc(schema.ticketMessage.createdAt));
+  const messages = rows.map((m) => ({ ...m, attachments: viewAttachments(m.id, m.attachments) }));
   return { ...ticket, messages };
 }
 
 export async function adminReply(input: {
   ticketId: string;
   body: string;
+  attachments?: TicketAttachment[];
   actorUserId?: string | null;
   authorName?: string | null;
 }): Promise<{ ok: boolean }> {
   const body = input.body.trim();
-  if (!body) return { ok: false };
+  const attachments = sanitizeIncomingAttachments(input.attachments ?? []);
+  if (!body && attachments.length === 0) return { ok: false };
   const { db, schema } = await import('@/db/client');
   const now = new Date();
   await db.insert(schema.ticketMessage).values({
@@ -85,6 +96,7 @@ export async function adminReply(input: {
     authorRole: 'admin',
     authorName: input.authorName ?? 'Prodet',
     body,
+    attachments,
   });
   await db
     .update(schema.supportTicket)

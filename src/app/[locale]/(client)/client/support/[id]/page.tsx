@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { getMyTicket } from '@/features/client-portal/tickets';
 import { TicketThread } from '@/components/support/ticket-thread';
 import { Link } from '@/i18n/routing';
-import { replyTicketAction } from '../actions';
+import { replyTicketAction, uploadTicketAttachmentAction } from '../actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,6 +34,7 @@ export default async function ClientTicketPage({ params }: { params: Promise<{ i
           viewerRole="client"
           closed={ticket.status === 'closed'}
           onReply={reply}
+          onUpload={uploadTicketAttachmentAction}
         />
       </section>
     </div>

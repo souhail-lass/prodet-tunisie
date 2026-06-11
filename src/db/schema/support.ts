@@ -1,7 +1,19 @@
 import { sql } from 'drizzle-orm';
-import { index, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { index, jsonb, pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { customer } from './customers';
 import { user } from './users';
+
+/** A file/photo attached to a support message (stored in Supabase Storage). */
+export type TicketAttachment = {
+  /** Storage object path in the customer-documents bucket. */
+  path: string;
+  /** Original file name (display only). */
+  name: string;
+  /** MIME type. */
+  type: string;
+  /** Byte size. */
+  size: number;
+};
 
 /**
  * Support tickets — a single place for a portal client to talk to Prodet,
@@ -45,6 +57,8 @@ export const ticketMessage = pgTable(
     authorRole: text('author_role').notNull(),
     authorName: text('author_name'),
     body: text('body').notNull(),
+    /** File/photo attachments — WhatsApp-style support chat. */
+    attachments: jsonb('attachments').$type<TicketAttachment[]>().notNull().default(sql`'[]'::jsonb`),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().default(sql`now()`),
   },
   (t) => ({

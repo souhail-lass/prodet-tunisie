@@ -3,7 +3,7 @@ import { ArrowLeft, Building2 } from 'lucide-react';
 import { getAdminTicket } from '@/features/admin/tickets';
 import { TicketThread } from '@/components/support/ticket-thread';
 import { Link } from '@/i18n/routing';
-import { adminReplyAction } from '../actions';
+import { adminReplyAction, uploadAdminTicketAttachmentAction } from '../actions';
 import { CloseButton } from './close-button';
 
 export const dynamic = 'force-dynamic';
@@ -35,6 +35,7 @@ export default async function AdminTicketPage({ params }: { params: Promise<{ id
           viewerRole="admin"
           closed={ticket.status === 'closed'}
           onReply={reply}
+          onUpload={uploadAdminTicketAttachmentAction}
           poll
         />
       </section>
