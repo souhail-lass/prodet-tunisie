@@ -244,8 +244,12 @@
   .contact__form-card { padding: 22px; }
   .about__body { padding-top: 36px; gap: 28px; }
 
-  /* quote drawer full-width */
+  /* quote drawer: full-width panel; footer stacks so "Envoyer" never clips */
   .qm__panel { width: 100%; }
+  .qm__foot { flex-direction: column; align-items: stretch; gap: 12px; }
+  .qm__total { text-align: center; }
+  .qm__foot-actions { width: 100%; }
+  .qm__foot-actions > *:last-child { flex: 1; justify-content: center; }
 }
 
 @media (max-width: 520px) {

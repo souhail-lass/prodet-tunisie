@@ -131,8 +131,34 @@ export async function grantClientAccess(input: {
     .values({ userId: appUser.id, customerId: customer.id, role: 'purchaser' })
     .onConflictDoNothing();
 
+  // Pre-create a CONFIRMED Supabase auth user. Without this, the client's first
+  // login (signInWithOtp) creates a brand-new unconfirmed user and Supabase
+  // sends a "confirm your email / finish signing up" email instead of a magic
+  // link — which never establishes a portal session. Pre-confirming means every
+  // future login gets a clean magic link. Idempotent: ignore "already exists".
+  await ensureConfirmedAuthUser(email, input.name);
+
   await audit('client_access.granted', appUser.id, { active: true }, input.actorUserId, { email, swiverId: input.swiverId });
   return { ok: true };
+}
+
+/** Create (or confirm) a Supabase auth user so magic-link login works. */
+export async function ensureConfirmedAuthUser(email: string, name?: string | null): Promise<void> {
+  try {
+    const { createSupabaseAdminClient } = await import('@/lib/supabase/admin');
+    const supabase = createSupabaseAdminClient();
+    const { error } = await supabase.auth.admin.createUser({
+      email,
+      email_confirm: true,
+      user_metadata: name ? { full_name: name } : undefined,
+    });
+    if (error && !/already.*registered|already.*exists|been registered/i.test(error.message)) {
+      console.error('[grant:auth-user-create]', { email: email.replace(/^(.{2}).*(@.*)$/, '$1…$2'), message: error.message });
+    }
+  } catch (err) {
+    // Never block the grant on auth provisioning — login can still self-create.
+    console.error('[grant:auth-user-error]', err instanceof Error ? err.message : err);
+  }
 }
 
 export async function revokeClientAccess(userId: string, actorUserId?: string | null): Promise<void> {

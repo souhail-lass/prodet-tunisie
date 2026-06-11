@@ -45,7 +45,8 @@ export function SiteHeader() {
   }, [menuOpen]);
 
   return (
-    <header className="site-header">
+    <>
+      <header className="site-header">
       <div className="site-header__inner">
         <Link href="/" className="site-header__logo" aria-label="Prodet Tunisie">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,6 +99,7 @@ export function SiteHeader() {
           </button>
         </div>
       </div>
+      </header>
 
       {menuOpen ? (
         <div className="site-menu" role="dialog" aria-modal="true">
@@ -140,7 +142,7 @@ export function SiteHeader() {
           </div>
         </div>
       ) : null}
-    </header>
+    </>
   );
 }
 
