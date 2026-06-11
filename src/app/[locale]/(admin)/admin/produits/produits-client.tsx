@@ -71,7 +71,7 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
 
   return (
     <div className="dash">
-      <div className="dash__stats" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+      <div className="dash__stats dash__stats--3">
         <Stat
           tone="blue"
           value={items.length}

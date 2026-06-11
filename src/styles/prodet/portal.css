@@ -389,7 +389,7 @@
   .reorder-result__qty, .reorder-tray__qty { width: 132px; }
 }
 @media (max-width: 560px) {
-  .reorder__grid, .quick-reorder, .dash__stats { grid-template-columns: 1fr; }
+  .reorder__grid, .quick-reorder, .dash__stats, .dash__stats--3 { grid-template-columns: 1fr; }
   .order-table__head { display: none; }
   .order-table__row { grid-template-columns: 1fr auto; gap: 4px 12px; }
   /* selection tray: keep the full product name readable, drop qty to its own line */

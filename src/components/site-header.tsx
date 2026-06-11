@@ -1,8 +1,8 @@
 'use client';
 
-import { FileText, UserRound } from 'lucide-react';
+import { FileText, Menu, UserRound, X } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useParams } from 'next/navigation';
 import { Link, usePathname, useRouter, locales, type Locale } from '@/i18n/routing';
 import { Button } from '@/components/ds';
@@ -16,6 +16,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const { totalProducts } = useQuoteSelection();
   const { open: openQuote } = useQuoteDrawer();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const nav = [
     { href: '/', label: t('navigation.home') },
@@ -30,11 +31,23 @@ export function SiteHeader() {
     return pathname === href || pathname.startsWith(`${href}/`);
   }
 
+  // Close the mobile menu on navigation, and lock body scroll while it is open.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [menuOpen]);
+
   return (
     <header className="site-header">
       <div className="site-header__inner">
         <Link href="/" className="site-header__logo" aria-label="Prodet Tunisie">
-          {/* Scalable SVG wordmark (53 KB, sharp at any DPI) — kit sizes it to 30px. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo/prodet-logo.svg" alt="Prodet Tunisie" />
         </Link>
@@ -62,7 +75,71 @@ export function SiteHeader() {
             {totalProducts > 0 ? ` · ${totalProducts}` : ''}
           </Button>
         </div>
+
+        {/* Mobile: compact quote button + hamburger */}
+        <div className="site-header__mobile">
+          <button
+            type="button"
+            className="site-header__quote-icon"
+            onClick={openQuote}
+            aria-label={t('navigation.quote')}
+          >
+            <FileText size={19} />
+            {totalProducts > 0 ? <span className="site-header__badge">{totalProducts}</span> : null}
+          </button>
+          <button
+            type="button"
+            className="site-header__burger"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
+
+      {menuOpen ? (
+        <div className="site-menu" role="dialog" aria-modal="true">
+          <nav className="site-menu__nav">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`site-menu__link${isActive(item.href) ? ' is-active' : ''}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="site-menu__actions">
+            <Link
+              href="/connexion-client"
+              className="pds-btn pds-btn--outline pds-btn--md pds-btn--block"
+            >
+              <UserRound size={16} />
+              <span>{t('navigation.clientSpace')}</span>
+            </Link>
+            <button
+              type="button"
+              className="pds-btn pds-btn--primary pds-btn--md pds-btn--block"
+              onClick={() => {
+                setMenuOpen(false);
+                openQuote();
+              }}
+            >
+              <FileText size={16} />
+              <span>
+                {t('navigation.quote')}
+                {totalProducts > 0 ? ` · ${totalProducts}` : ''}
+              </span>
+            </button>
+          </div>
+          <div className="site-menu__lang">
+            <LangSwitch />
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }

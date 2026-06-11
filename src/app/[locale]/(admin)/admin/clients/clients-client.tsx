@@ -59,7 +59,7 @@ export function ClientsClient({ clients }: { clients: AdminSwiverClient[] }) {
 
   return (
     <div className="dash">
-      <div className="dash__stats" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+      <div className="dash__stats dash__stats--3">
         <Stat tone="blue" value={clients.length} label="Clients Swiver" />
         <Stat tone="green" value={activeCount} label="Accès actifs" />
         <Stat tone="amber" value={withEmail} label="Avec email" />

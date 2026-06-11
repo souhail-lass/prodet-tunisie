@@ -6,11 +6,11 @@ import { Link, usePathname } from '@/i18n/routing';
 
 export type AdminShellAccount = { name: string; email: string; initials: string };
 
-const NAV: { href: string; label: string; icon: LucideIcon }[] = [
-  { href: '/admin/produits', label: 'Catalogue produits', icon: Boxes },
-  { href: '/admin/clients', label: 'Clients', icon: Users },
-  { href: '/admin/demandes-portail', label: 'Demandes portail', icon: Inbox },
-  { href: '/admin/support', label: 'Support', icon: LifeBuoy },
+const NAV: { href: string; label: string; short: string; icon: LucideIcon }[] = [
+  { href: '/admin/produits', label: 'Catalogue produits', short: 'Produits', icon: Boxes },
+  { href: '/admin/clients', label: 'Clients', short: 'Clients', icon: Users },
+  { href: '/admin/demandes-portail', label: 'Demandes portail', short: 'Demandes', icon: Inbox },
+  { href: '/admin/support', label: 'Support', short: 'Support', icon: LifeBuoy },
 ];
 
 const TITLES: { match: (p: string) => boolean; title: string; subtitle: string }[] = [
@@ -88,6 +88,29 @@ export function AdminShell({ account, children }: { account: AdminShellAccount; 
         </header>
         <div className="portal__content">{children}</div>
       </div>
+
+      <nav className="portal-bottomnav" aria-label="Administration">
+        {NAV.map((item) => {
+          const Icon = item.icon;
+          const active = isActive(item.href);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={active ? 'page' : undefined}
+              className={`portal-bottomnav__item${active ? ' is-active' : ''}`}
+            >
+              <Icon size={19} />
+              <span>{item.short}</span>
+            </Link>
+          );
+        })}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/auth/signout" className="portal-bottomnav__item" aria-label="Se déconnecter">
+          <LogOut size={19} />
+          <span>Quitter</span>
+        </a>
+      </nav>
     </div>
   );
 }
