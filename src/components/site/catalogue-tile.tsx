@@ -1,0 +1,54 @@
+'use client';
+
+import { memo } from 'react';
+import { useRouter } from '@/i18n/routing';
+import { ProductTile } from '@/components/ds';
+import type { QuoteSelectionProduct } from '@/lib/quote-cart-context';
+import type { CatalogueCardProduct } from '@/types/product';
+
+type CatalogueTileProps = {
+  product: CatalogueCardProduct;
+  quantity: number;
+  /** Stable setter from useQuoteSelection (setProductQuantity). */
+  onQuantityChange: (product: QuoteSelectionProduct, quantity: number) => void;
+};
+
+/**
+ * App-side wrapper around the design-system ProductTile (.pds-product).
+ * Quantity + setter come in as props (read once at the grid level) so a
+ * quote change only re-renders the affected tile, not the whole grid.
+ */
+export const CatalogueTile = memo(function CatalogueTile({
+  product,
+  quantity,
+  onQuantityChange,
+}: CatalogueTileProps) {
+  const router = useRouter();
+  const format = product.formats[0]?.label;
+
+  return (
+    <ProductTile
+      name={product.name}
+      tagline={product.tagline}
+      image={product.image}
+      format={format}
+      manufactured={product.category === 'manufactured'}
+      quantity={quantity}
+      onQuantityChange={(n) =>
+        onQuantityChange(
+          {
+            productId: product.id,
+            productName: product.name,
+            slug: product.slug,
+            imageUrl: product.image,
+            category: product.category,
+            format,
+          },
+          n,
+        )
+      }
+      onHover={() => router.prefetch(`/catalogue/${product.slug}`)}
+      onOpen={() => router.push(`/catalogue/${product.slug}`)}
+    />
+  );
+});

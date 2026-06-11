@@ -1,5 +1,5 @@
 ---
-description: Conventions for the Prodet Platform repo while it is in active development (Phase 0 / Phase 1).
+description: Conventions for the Prodet Platform repo in active development (public site + client portal + admin).
 alwaysApply: true
 ---
 
@@ -9,7 +9,7 @@ The repository is in active development. Read [AGENTS.md](mdc:AGENTS.md) and [do
 
 ## Architecture invariants (do not redesign)
 
-- **One Next.js App Router app.** Public site, admin console, future portal in the same codebase under `src/app/[locale]/{(public),admin,portal}`. No microservices.
+- **One Next.js App Router app.** Public site, admin console, and client portal in the same codebase under `src/app/[locale]/{(public),(auth),(client),admin}`. No microservices.
 - **Postgres on Supabase + Drizzle.** Schema in `src/db/schema/`, migrations in `drizzle/migrations/` (forward-only).
 - **Three locales.** `fr` (default, complete), `ar` (RTL), `en`. i18n via `next-intl`.
 - **Swiver coexistence.** Manual export at MVP, API-driven at Phase 4.
@@ -43,6 +43,12 @@ The repository is in active development. Read [AGENTS.md](mdc:AGENTS.md) and [do
 - Commit messages follow conventional commits style (`feat(scope): ...`, `fix(scope): ...`, `chore(scope): ...`, `docs(scope): ...`).
 - Souhail commits and pushes. Agents may stage when explicitly asked.
 
-## Out of scope (do not add)
+## Out of scope (do not add without explicit ask)
 
-- Online payment, public price/stock display, customer portal (Phase 3), auto-push to Swiver (Phase 4), WhatsApp Business API, OCR, chatbot, blog. See [docs/01-product/non-goals.md](mdc:docs/01-product/non-goals.md).
+- Online payment, public price/stock display, auto-push to Swiver, WhatsApp Business API, OCR, chatbot, blog, AI order intake (until Slice B scoped). See [docs/01-product/non-goals.md](mdc:docs/01-product/non-goals.md).
+
+## Handoff docs
+
+- [CLAUDE.md](mdc:CLAUDE.md) — Claude Code entry
+- [docs/05-ops/project-status.md](mdc:docs/05-ops/project-status.md) — build status
+- [docs/05-ops/claude-code-handoff.md](mdc:docs/05-ops/claude-code-handoff.md) — setup guide

@@ -47,12 +47,12 @@ Tags: `feat`, `chore`, `bug`, `perf`, `docs`, `infra`, `ux`, `seo`, `i18n`, `ai`
 
 ## Phase 3 (client portal)
 
-- [P3 | L | feat] Customer authentication and approval workflow. Source: roadmap.
-- [P3 | L | feat] Repeat-order flow ("reorder last month"). Source: roadmap.
-- [P3 | M | feat] Customer-scoped alias editing UI. Source: roadmap.
-- [P3 | M | feat] Order history (deduplicated against Swiver). Source: roadmap.
-- [P3 | M | feat] Quote-to-order conversion. Source: roadmap.
-- [P3 | M | feat] Optional client-specific pricing if Swiver supports. Source: roadmap.
+- [P3 | L | feat] `Espace client` public entry with `Déjà client` and `Devenir client Prodet`. Source: roadmap.
+- [P3 | L | feat] Validated access request, Prodet approval, invitation, and suspension workflow. Source: roadmap.
+- [P3 | L | feat] Usual-products reorder flow with quantity edits and notes. Source: roadmap.
+- [P3 | M | feat] Portal request history for authenticated clients. Source: roadmap.
+- [P3 | M | feat] Read-only company/contact/delivery profile with "request a change" path. Source: roadmap.
+- [P3 | M | feat] Quote-to-portal conversion path for validated customers. Source: roadmap.
 
 ## Phase 4 (deep integration + automation)
 
@@ -70,6 +70,7 @@ Tags: `feat`, `chore`, `bug`, `perf`, `docs`, `infra`, `ux`, `seo`, `i18n`, `ai`
 - [- | - | feat] Customer reviews / testimonials (deferred indefinitely).
 - [- | - | feat] AI customer-chat widget (decided no — see non-goals).
 - [- | - | feat] Multi-tenant white-label (decided no — see non-goals).
+- [- | - | feat] Client-specific portal pricing only if a later ADR explicitly approves it. Source: client portal spec.
 
 ## Related
 

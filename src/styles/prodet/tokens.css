@@ -1,0 +1,331 @@
+/* ============================================================
+   PRODET DESIGN SYSTEM — combined token stylesheet.
+   Colors, typography, spacing, radii, shadows, motion + base layer.
+   Drop this into your app and @import / link it ONCE, globally.
+   These are the SOURCE-OF-TRUTH values the standalone mockup uses.
+   Do not approximate — reference everything via var(--…).
+   ============================================================ */
+
+
+/* ===== tokens/fonts.css ===== */
+/* DM Sans — Prodet's single typeface. Weights 400 / 500 / 600 / 700. */
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/DMSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/DMSans-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/DMSans-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/DMSans-Bold.ttf') format('truetype');
+}
+
+/* Cairo — Arabic (and Latin) face for the AR locale. Weights 400 / 500 / 600 / 700. */
+
+@font-face {
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Cairo-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Cairo-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Cairo-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Cairo-Bold.ttf') format('truetype');
+}
+
+/* ===== tokens/colors.css ===== */
+/* ============================================================
+   PRODET — COLOR TOKENS
+   B2B cleaning & hygiene. Trustworthy, warm, operational.
+   One blue per surface. Green = local manufacturing & success.
+   Never pure-white page background.
+   ============================================================ */
+
+:root {
+  /* --- Brand primitives (from the Prodet logo) --- */
+  --prodet-blue: #095296;   /* wordmark — primary action, links, active nav */
+  --prodet-navy: #063561;   /* deep brand — hero, footer, sidebar, portal rail */
+  --prodet-sky: #41AAE2;    /* logo sparkle — highlights only, used sparingly */
+  --prodet-green: #24883E;  /* "Fabriqué par Prodet", success, local manufacturing */
+
+  /* Interaction shades (harmonious, oklch-tuned darken/lighten) */
+  --prodet-blue-hover: #074173;   /* primary button :hover */
+  --prodet-blue-press: #05335c;   /* primary button :active */
+  --prodet-blue-tint: #E7F0F8;    /* selected rows, soft fills, focus halo */
+  --prodet-blue-tint-strong: #D2E3F2;
+  --prodet-green-hover: #1C6E31;
+  --prodet-green-tint: #E5F1E8;
+
+  /* --- Surfaces --- */
+  --surface-page: #F7F6F3;     /* warm off-white — the canvas, NEVER #FFFFFF */
+  --surface-card: #FFFFFF;     /* cards, panels, inputs */
+  --surface-sunken: #F0EEEA;   /* product image stage, wells, inset areas */
+  --surface-navy: #063561;     /* dark sections */
+  --surface-navy-soft: #0A4173;/* raised elements on navy */
+
+  /* --- Text --- */
+  --text-primary: #1A1A18;     /* headings, body */
+  --text-secondary: #6B6B67;   /* supporting copy, taglines */
+  --text-tertiary: #A8A7A3;    /* meta, counts, captions */
+  --text-on-dark: #FFFFFF;     /* text on navy/blue */
+  --text-on-dark-soft: #B9CBDD;/* secondary text on navy */
+  --text-link: #095296;
+
+  /* --- Borders --- */
+  --border-default: #D8D7D3;   /* default hairline */
+  --border-strong: #BFBEB9;    /* emphasized dividers */
+  --border-on-dark: rgba(255, 255, 255, 0.14);
+  --border-focus: #095296;
+
+  /* --- Status (portal orders + system feedback) --- */
+  --status-progress-fg: #095296;  /* En cours */
+  --status-progress-bg: #E7F0F8;
+  --status-delivered-fg: #24883E; /* Livré */
+  --status-delivered-bg: #E5F1E8;
+  --status-prep-fg: #B26B04;      /* En préparation */
+  --status-prep-bg: #FBF0DC;
+  --status-cancelled-fg: #B23B3B; /* Annulé */
+  --status-cancelled-bg: #F7E7E5;
+
+  /* --- Semantic feedback --- */
+  --color-success: #24883E;
+  --color-success-bg: #E5F1E8;
+  --color-warning: #B26B04;
+  --color-warning-bg: #FBF0DC;
+  --color-danger: #B23B3B;
+  --color-danger-bg: #F7E7E5;
+  --color-info: #095296;
+  --color-info-bg: #E7F0F8;
+}
+
+/* ===== tokens/typography.css ===== */
+/* ============================================================
+   PRODET — TYPOGRAPHY TOKENS
+   Typeface: DM Sans (400 body / 500 medium / 600 semibold / 700 display-bold).
+   Sentence case everywhere — NEVER uppercase headings.
+   Small eyebrow/label caps are the one allowed exception.
+   ============================================================ */
+
+:root {
+  --font-sans: 'DM Sans', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  /* Arabic locale face — Cairo (Prodet ships FR / AR / EN) */
+  --font-arabic: 'Cairo', 'Noto Naskh Arabic', 'Geeza Pro', 'Arial Unicode MS', sans-serif;
+
+  /* Weights */
+  --fw-regular: 400; /* @kind other */
+  --fw-medium: 500; /* @kind other */
+  --fw-semibold: 600; /* @kind other */
+  --fw-bold: 700; /* @kind other */
+
+  /* Type scale (px → rem @16). Tight tracking on large display sizes. */
+  --text-display: 3rem;     /* 48 — homepage hero */
+  --text-h1: 2.25rem;       /* 36 — page titles */
+  --text-h2: 1.75rem;       /* 28 — section headers */
+  --text-h3: 1.375rem;      /* 22 — card / block titles */
+  --text-h4: 1.125rem;      /* 18 — sub-headers */
+  --text-lg: 1.0625rem;     /* 17 — lead paragraph */
+  --text-base: 0.9375rem;   /* 15 — body default */
+  --text-sm: 0.8125rem;     /* 13 — secondary / product name in grid */
+  --text-xs: 0.75rem;       /* 12 — captions, taglines */
+  --text-2xs: 0.6875rem;    /* 11 — eyebrow labels, badge text */
+
+  /* Line heights */
+  --leading-tight: 1.1;     /* display + headings */
+  --leading-snug: 1.3;
+  --leading-normal: 1.5;    /* body */
+  --leading-relaxed: 1.65;
+
+  /* Letter spacing */
+  --tracking-display: -0.02em;  /* big display only */
+  --tracking-tight: -0.01em;    /* h1–h3 */
+  --tracking-normal: 0;
+  --tracking-label: 0.14em;     /* eyebrow / overline caps */
+}
+
+/* ===== tokens/spacing.css ===== */
+/* ============================================================
+   PRODET — SPACING, RADII, SHADOWS, LAYOUT
+   4px base grid. Operational density — generous but not airy.
+   Radii: cards 12 / buttons 8 / inputs 8 / badges pill.
+   Shadows are soft and blue-tinted, never heavy drop shadows.
+   ============================================================ */
+
+:root {
+  /* Spacing — 4px base scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-button: 8px;
+  --radius-input: 8px;
+  --radius-card: 12px;
+  --radius-panel: 16px;
+  --radius-pill: 999px;
+
+  /* Shadows — soft, blue-tinted, low spread */
+  --shadow-xs: 0 1px 2px rgba(6, 53, 97, 0.06);
+  --shadow-sm: 0 1px 3px rgba(6, 53, 97, 0.08), 0 1px 2px rgba(6, 53, 97, 0.04);
+  --shadow-card: 0 2px 8px rgba(6, 53, 97, 0.06);
+  --shadow-card-hover: 0 6px 20px rgba(9, 82, 150, 0.12);
+  --shadow-panel: 0 8px 32px rgba(6, 53, 97, 0.10);
+  --shadow-focus: 0 0 0 3px rgba(9, 82, 150, 0.18);
+
+  /* Layout */
+  --container-max: 1280px;
+  --container-wide: 1400px;
+  --sidebar-w: 256px;
+  --portal-rail-w: 240px;
+  --header-h: 68px;
+
+  /* Motion — calm, operational. No bounce. */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1); /* @kind other */
+  --dur-fast: 130ms; /* @kind other */
+  --dur-base: 200ms; /* @kind other */
+  --dur-slow: 320ms; /* @kind other */
+}
+
+/* ===== tokens/base.css ===== */
+/* ============================================================
+   PRODET — BASE LAYER
+   Element defaults wired to the tokens. Keep this lean.
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--surface-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-weight: var(--fw-regular);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'ss01';
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+a:hover {
+  color: var(--prodet-blue-hover);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::selection {
+  background: var(--prodet-blue-tint-strong);
+  color: var(--text-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Arabic locale swaps the type stack (Prodet ships FR / AR / EN) */
+html[lang^='ar'] body,
+html[lang^='ar'] h1,
+html[lang^='ar'] h2,
+html[lang^='ar'] h3,
+html[lang^='ar'] h4 {
+  font-family: var(--font-arabic);
+}
+
+/* ---- Small shared helpers ---- */
+.eyebrow {
+  font-size: var(--text-2xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--prodet-blue);
+}

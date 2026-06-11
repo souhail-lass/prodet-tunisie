@@ -9,7 +9,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -p 3004",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
@@ -24,7 +24,9 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:check": "drizzle-kit check"
+    "db:check": "drizzle-kit check",
+    "db:seed:demo-portal": "node --env-file=.env.local scripts/seed-demo-portal.mjs",
+    "screenshots:portal": "node --env-file=.env.local scripts/screenshot-portal.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -33,11 +35,13 @@
     "@radix-ui/react-select": "^2.1.6",
     "@radix-ui/react-separator": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.2",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.105.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "drizzle-orm": "^0.39.3",
+    "drizzle-orm": "^0.45.2",
     "lucide-react": "^0.475.0",
-    "next": "^15.1.6",
+    "next": "^15.5.18",
     "next-intl": "^3.26.3",
     "postgres": "^3.4.5",
     "react": "^19.0.0",

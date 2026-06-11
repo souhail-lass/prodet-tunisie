@@ -50,16 +50,18 @@ Authorization checks happen in **server actions and route handlers**. Pages may 
 
 ### Customer signup
 
-- Self-serve signup: email + password.
-- Status `pending_approval` until an admin links the user to one or more `customer` records via `user_customer`.
-- An unlinked `customer_user` cannot see anything beyond their own profile.
+- No open self-registration. Public buyers submit an access request through `Devenir client Prodet`.
+- Prodet validates the company before creating or inviting the account.
+- Existing clients activate access through an invited email, magic link, password flow, or one-time access code issued by Prodet.
+- A portal user is inactive until linked to one or more validated `customer` records via `user_customer`.
+- An unlinked `customer_user` cannot see customer data.
 
 ### Customer authorization
 
-- `user_customer.role_at_customer` — `owner` | `purchaser` | `viewer`.
-- `purchaser` can submit reorders.
+- `user_customer.role_at_customer` — `org_admin` | `buyer` | `viewer`.
+- `buyer` can submit portal requests.
 - `viewer` is read-only.
-- `owner` (at-customer) can invite other users from their organization (up to N — TBD).
+- `org_admin` (client-side organization admin) can manage coworker access only in a later phase and only within Prodet-controlled limits.
 
 ### RLS in Phase 3
 
@@ -99,7 +101,7 @@ These hold across all phases.
 |---|---|
 | New admin onboarded | `owner` creates user + role grant via admin UI. Magic link sent. |
 | Admin leaves | `owner` revokes all roles. User row soft-deleted (`deleted_at`). Their alias-creation history retained for audit. |
-| Customer self-signup (Phase 3) | Status `pending_approval`. Admin approves and links to `customer`. |
+| Customer access request (Phase 3) | Public request is reviewed by Prodet. If approved, an invite or access code is issued and linked to `customer`. |
 | Customer revokes self | Self-serve "delete my data" — RGPD right of erasure honored. PII redacted, role revoked. |
 
 ## Secrets and integration auth

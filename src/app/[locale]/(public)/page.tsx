@@ -1,31 +1,24 @@
 import { setRequestLocale } from 'next-intl/server';
 import { isLocale } from '@/i18n/routing';
-import { ContactMap } from '@/components/home/ContactMap';
-import { FeaturedProducts } from '@/components/home/FeaturedProducts';
-import { FinalCTA } from '@/components/home/FinalCTA';
-import { HomeCategories } from '@/components/home/HomeCategories';
-import { HomeHero } from '@/components/home/HomeHero';
-import { HowItWorks } from '@/components/home/HowItWorks';
-import { TrustedClients } from '@/components/home/TrustedClients';
-import { TrustStrip } from '@/components/home/TrustStrip';
-import { WhyProdet } from '@/components/home/WhyProdet';
+import { HomePage } from '@/components/home/home-page';
+import { listSectors } from '@/data/queries';
+import { localizeSectors } from '@/data/i18n/content';
+import { getFeaturedCatalogue } from '@/features/catalogue/queries';
 
-export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+// Static + ISR: served from cache, regenerated in the background. Catalogue
+// edits in the admin revalidate the 'catalogue' tag, so updates are instant.
+export const revalidate = 300;
+
+export default async function HomeRoute({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) return null;
   setRequestLocale(locale);
 
-  return (
-    <>
-      <HomeHero />
-      <TrustStrip />
-      <WhyProdet />
-      <HomeCategories />
-      <FeaturedProducts />
-      <HowItWorks />
-      <TrustedClients />
-      <ContactMap />
-      <FinalCTA />
-    </>
-  );
+  const featured = await getFeaturedCatalogue(4);
+  const sectors = localizeSectors(listSectors(), locale).map((sector) => ({
+    id: sector.id,
+    label: sector.label,
+  }));
+
+  return <HomePage featured={featured} sectors={sectors} />;
 }

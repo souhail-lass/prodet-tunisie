@@ -1,0 +1,16 @@
+/* ============================================================
+   PRODET — intentional deviations from the vendored design kit.
+   Loaded LAST (after kit.css / kit-pages.css) so these win.
+   Keep the kit files pristine; document brand decisions here.
+   ============================================================ */
+
+/* Footer brand: dedicated white logo (o/d counters filled) directly on the
+   navy footer — the kit's white "chip" behind the logo was removed per brand pref. */
+.site-footer__logo-chip {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+.site-footer__logo-chip img {
+  height: 30px;
+}

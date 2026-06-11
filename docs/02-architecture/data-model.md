@@ -221,7 +221,7 @@ Admin (and Phase 3, customer) accounts. Linked to Supabase Auth user via `auth_i
 
 Links a `user` (with `customer_user` role) to a `customer`.
 
-- `user_id`, `customer_id`, `role_at_customer` (`owner` | `purchaser` | `viewer`)
+- `user_id`, `customer_id`, `role_at_customer` (`org_admin` | `buyer` | `viewer`)
 
 ### `audit_log`
 

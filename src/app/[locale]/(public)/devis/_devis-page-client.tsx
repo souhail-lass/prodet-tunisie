@@ -1,12 +1,25 @@
 'use client';
 
 import Image from 'next/image';
-import { Mail, Minus, Plus, Search, Trash2 } from 'lucide-react';
-import { useMemo, useState, type ReactNode } from 'react';
+import {
+  AlertCircle,
+  CheckCircle2,
+  Loader2,
+  Mail,
+  Minus,
+  PackageSearch,
+  Phone,
+  Plus,
+  Search,
+  Trash2,
+  X,
+} from 'lucide-react';
+import { useEffect, useMemo, useRef, useState, useTransition, type ReactNode } from 'react';
 import { Link, type Locale } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { SectionHeader } from '@/components/ui/section-header';
 import {
   Select,
   SelectContent,
@@ -18,6 +31,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { companyInfo } from '@/data/company';
 import { products } from '@/data/products';
 import { sectors } from '@/data/sectors';
+import { submitPublicDevisRequest } from '@/features/quote/actions';
 import {
   toQuoteSelectionProduct,
   useQuoteSelection,
@@ -40,6 +54,11 @@ type HydratedSelectionItem = QuoteSelectionItem & {
   href?: string;
 };
 
+type SubmissionState =
+  | { status: 'idle' }
+  | { status: 'success'; referenceCode?: string }
+  | { status: 'error'; message: string };
+
 const INITIAL_FORM_STATE: DevisFormState = {
   fullName: '',
   company: '',
@@ -51,19 +70,18 @@ const INITIAL_FORM_STATE: DevisFormState = {
 };
 
 const fallbackEmail = 'prodet.tunisie@gmail.com';
+const quoteSearchProducts = products.filter((product) => product.category === 'manufactured');
 
-// Public visitors stay on mailto. TODO(portal/Swiver): authenticated client requests
-// can later use a separate reviewed API bridge to Swiver.
 export function DevisPageClient({ locale }: { locale: Locale }) {
   const {
     items,
     addProduct,
     setProductQuantity,
     removeProduct,
-    totalItems,
-    totalProducts,
   } = useQuoteSelection();
   const [formState, setFormState] = useState<DevisFormState>(INITIAL_FORM_STATE);
+  const [submissionState, setSubmissionState] = useState<SubmissionState>({ status: 'idle' });
+  const [isPending, startTransition] = useTransition();
 
   const selectedItems = useMemo(() => hydrateSelectionItems([...items.values()]), [items]);
   const isEmpty = selectedItems.length === 0;
@@ -71,56 +89,104 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
 
   function updateField(field: keyof DevisFormState, value: string) {
     setFormState((current) => ({ ...current, [field]: value }));
+    setSubmissionState({ status: 'idle' });
   }
 
-  function prepareEmail() {
-    if (selectedItems.length === 0) return;
+  function submitDevis() {
+    if (selectedItems.length === 0 || isPending) return;
 
-    const mailPayload = buildMailPayload(formState, selectedItems);
-    window.location.href = `mailto:${companyInfo.email || fallbackEmail}?subject=${encodeURIComponent(
-      mailPayload.subject,
-    )}&body=${encodeURIComponent(mailPayload.body)}`;
+    setSubmissionState({ status: 'idle' });
+    startTransition(async () => {
+      try {
+        const result = await submitPublicDevisRequest({
+          ...formState,
+          lines: selectedItems.map((item) => ({
+            productId: item.productId,
+            productName: item.productName,
+            slug: item.slug,
+            format: item.format,
+            category: item.category ? formatCategory(item.category) : undefined,
+            quantity: item.quantity,
+          })),
+        });
+
+        if (result.ok) {
+          setSubmissionState({ status: 'success', referenceCode: result.referenceCode });
+          return;
+        }
+
+        setSubmissionState({
+          status: 'error',
+          message: result.formError ?? 'Impossible d’envoyer la demande maintenant.',
+        });
+      } catch {
+        setSubmissionState({
+          status: 'error',
+          message: 'Impossible d’envoyer la demande maintenant.',
+        });
+      }
+    });
   }
 
   return (
-    <div className="bg-[#F4F6F8] py-10 md:py-14">
-      <div className="mx-auto w-full max-w-[1400px] px-4 md:px-6">
-        <nav aria-label={isEnglish ? 'Breadcrumb' : 'Fil d’Ariane'} className="text-[12px] text-[#6B7280]">
-          <Link href="/" className="font-medium text-[#1B5FA7] hover:text-[#0D3B73]">
-            Accueil
-          </Link>
-          <span className="mx-2 text-[#9CA3AF]">/</span>
-          <span className="font-medium text-[#1C2B3A]">Demande de devis</span>
-        </nav>
+    <div className="bg-background">
+      <section className="border-b border-border bg-prodet-ink text-white">
+        <div className="section-shell py-10 lg:py-12">
+          <nav aria-label={isEnglish ? 'Breadcrumb' : 'Fil d’Ariane'} className="text-xs text-white/64">
+            <Link href="/" className="font-semibold text-prodet-sky hover:text-white">
+              Accueil
+            </Link>
+            <span className="mx-2">/</span>
+            <span>Demande de devis</span>
+          </nav>
 
-        <header className="mt-5 overflow-hidden rounded-[28px] border border-[#E5E7EB] bg-white p-6 shadow-[0_22px_70px_-56px_rgba(13,59,115,0.48)] md:p-8">
-          <div className="max-w-3xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#1B5FA7]">
-              Demande de devis
-            </p>
-            <h1 className="public-display-title-compact mt-3">
-              Votre demande de devis
-            </h1>
-            <p className="mt-4 text-[14px] leading-7 text-[#6B7280]">
-              Ajoutez les produits souhaités, ajustez les quantités, puis envoyez votre demande.
-              L’équipe Prodet vous contactera avec une offre adaptée.
-            </p>
+          <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-end">
+            <SectionHeader
+              eyebrow="Demande de devis"
+              title="Sélectionnez vos produits, envoyez votre demande."
+              description="Ajoutez les quantités et vos coordonnées. Prodet vous répond directement."
+              tone="inverse"
+              spacing="none"
+              level={1}
+              titleClassName="text-[2.35rem] sm:text-[3.3rem]"
+            />
+
+            <div className="rounded-lg border border-white/14 bg-white/8 p-4">
+              <p className="text-xs font-semibold uppercase text-prodet-sky">Contact Prodet</p>
+              <a
+                href={companyInfo.phoneHref}
+                className="mt-2 flex items-center gap-2 text-2xl font-bold text-white hover:text-prodet-sky"
+              >
+                <Phone className="h-5 w-5" aria-hidden />
+                {companyInfo.phoneDisplay}
+              </a>
+              <a
+                href={`mailto:${companyInfo.email || fallbackEmail}`}
+                className="mt-2 block text-sm text-white/72 hover:text-white"
+              >
+                {companyInfo.email || fallbackEmail}
+              </a>
+            </div>
           </div>
-        </header>
+        </div>
+      </section>
 
-        <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
-          <section className="rounded-[24px] border border-[#E5E7EB] bg-white p-4 md:p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E5E7EB] pb-4">
+      <div className="section-shell py-6 lg:py-8">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(380px,0.82fr)]">
+          <section className="rounded-lg border border-border bg-white p-4 md:p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
               <div>
-                <h2 className="text-[17px] font-semibold tracking-[-0.02em] text-[#1C2B3A]">
-                  Votre sélection
+                <p className="text-xs font-semibold uppercase text-primary">Produits</p>
+                <h2 className="mt-1 text-xl font-semibold text-prodet-text">
+                  Sélection
                 </h2>
-                <p className="mt-1 text-[12px] text-[#6B7280]">
-                  {totalProducts > 0
-                    ? `${totalProducts} produit${totalProducts > 1 ? 's' : ''} sélectionné${totalProducts > 1 ? 's' : ''} · ${totalItems} unité${totalItems > 1 ? 's' : ''}`
-                    : 'Aucun produit sélectionné pour le moment.'}
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Ajoutez depuis la recherche ou le catalogue.
                 </p>
               </div>
+              <Button asChild variant="neutral" size="sm">
+                <Link href="/catalogue">Retour catalogue</Link>
+              </Button>
             </div>
 
             <FastProductAdd
@@ -128,16 +194,15 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
             />
 
             {isEmpty ? (
-              <div className="mt-4 flex min-h-[220px] flex-col items-center justify-center rounded-[18px] border border-dashed border-[#D1D5DB] bg-[#F9FAFB] px-6 py-10 text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#EFF6FF] text-[#1B5FA7]">
-                  <Mail className="h-7 w-7" aria-hidden />
+              <div className="mt-4 flex min-h-[240px] flex-col items-center justify-center rounded-lg border border-dashed border-border bg-white px-6 py-10 text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-sm border border-[#DDE7EF] bg-white text-primary">
+                  <PackageSearch className="h-7 w-7" aria-hidden />
                 </div>
-                <h3 className="mt-5 text-[18px] font-semibold text-[#1C2B3A]">
-                  Aucun produit sélectionné pour le moment.
+                <h3 className="mt-5 text-lg font-semibold text-prodet-text">
+                  Aucun produit sélectionné.
                 </h3>
-                <p className="mt-2 max-w-sm text-[13px] leading-6 text-[#6B7280]">
-                  Utilisez la recherche ci-dessus pour ajouter rapidement les produits à inclure
-                  dans votre demande.
+                <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
+                  Recherchez un produit ci-dessus.
                 </p>
               </div>
             ) : (
@@ -156,91 +221,108 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
             )}
           </section>
 
-          <section className="rounded-[24px] border border-[#E5E7EB] bg-white p-5 md:p-6">
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#9CA3AF]">
-                Coordonnées
-              </p>
-              <h2 className="mt-2 text-[21px] font-semibold tracking-[-0.03em] text-[#1C2B3A]">
-                Informations de contact
-              </h2>
-              <p className="mt-2 text-[12px] leading-6 text-[#6B7280]">
-                Ces informations servent uniquement à préparer votre demande de devis.
-              </p>
-            </div>
+          <aside className="space-y-5 lg:sticky lg:top-[118px] lg:self-start">
+            <section className="rounded-lg border border-border bg-white p-5 md:p-6">
+              <div>
+                <p className="text-xs font-semibold uppercase text-primary">Coordonnées</p>
+                <h2 className="mt-2 text-2xl font-semibold text-prodet-text">Contact</h2>
+              </div>
 
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <FormField label="Nom / Prénom">
-                <Input
-                  value={formState.fullName}
-                  onChange={(event) => updateField('fullName', event.target.value)}
-                />
-              </FormField>
-              <FormField label="Société / Établissement">
-                <Input
-                  value={formState.company}
-                  onChange={(event) => updateField('company', event.target.value)}
-                />
-              </FormField>
-              <FormField label="Secteur d’activité">
-                <Select
-                  value={formState.sectorId}
-                  onValueChange={(value) => updateField('sectorId', value)}
+              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                <FormField label="Nom / Prénom">
+                  <Input
+                    value={formState.fullName}
+                    onChange={(event) => updateField('fullName', event.target.value)}
+                  />
+                </FormField>
+                <FormField label="Société / Établissement">
+                  <Input
+                    value={formState.company}
+                    onChange={(event) => updateField('company', event.target.value)}
+                  />
+                </FormField>
+                <FormField label="Secteur d’activité">
+                  <Select
+                    value={formState.sectorId}
+                    onValueChange={(value) => updateField('sectorId', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir un secteur" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sectors.map((sector) => (
+                        <SelectItem key={sector.id} value={sector.id}>
+                          {sector.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormField>
+                <FormField label="Téléphone">
+                  <Input
+                    type="tel"
+                    value={formState.phone}
+                    onChange={(event) => updateField('phone', event.target.value)}
+                  />
+                </FormField>
+                <FormField label="Email">
+                  <Input
+                    type="email"
+                    value={formState.email}
+                    onChange={(event) => updateField('email', event.target.value)}
+                  />
+                </FormField>
+                <FormField label="Ville / zone de livraison">
+                  <Input
+                    value={formState.city}
+                    onChange={(event) => updateField('city', event.target.value)}
+                  />
+                </FormField>
+                <FormField label="Message complémentaire" className="sm:col-span-2 lg:col-span-1 xl:col-span-2">
+                  <Textarea
+                    rows={5}
+                    value={formState.message}
+                    onChange={(event) => updateField('message', event.target.value)}
+                    placeholder="Précisez les usages, les formats ou les volumes si nécessaire."
+                  />
+                </FormField>
+              </div>
+
+              <div className="mt-5">
+                <Button
+                  type="button"
+                  disabled={isEmpty || isPending}
+                  onClick={submitDevis}
+                  variant="quote"
+                  size="xl"
+                  className="w-full"
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choisir un secteur" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sectors.map((sector) => (
-                      <SelectItem key={sector.id} value={sector.id}>
-                        {sector.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormField>
-              <FormField label="Téléphone">
-                <Input
-                  type="tel"
-                  value={formState.phone}
-                  onChange={(event) => updateField('phone', event.target.value)}
-                />
-              </FormField>
-              <FormField label="Email">
-                <Input
-                  type="email"
-                  value={formState.email}
-                  onChange={(event) => updateField('email', event.target.value)}
-                />
-              </FormField>
-              <FormField label="Ville / zone de livraison">
-                <Input
-                  value={formState.city}
-                  onChange={(event) => updateField('city', event.target.value)}
-                />
-              </FormField>
-              <FormField label="Message complémentaire" className="sm:col-span-2">
-                <Textarea
-                  rows={5}
-                  value={formState.message}
-                  onChange={(event) => updateField('message', event.target.value)}
-                  placeholder="Précisez les usages, les formats ou les volumes si nécessaire."
-                />
-              </FormField>
-            </div>
-
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <Button
-                type="button"
-                disabled={isEmpty}
-                onClick={prepareEmail}
-                className="h-11 flex-1 rounded-full bg-[#1B5FA7] text-[13px] font-semibold hover:bg-[#1650A0]"
-              >
-                <Mail className="h-4 w-4" aria-hidden />
-                Préparer le mail
-              </Button>
-            </div>
-          </section>
+                  {isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  ) : (
+                    <Mail className="h-4 w-4" aria-hidden />
+                  )}
+                  {isPending ? 'Envoi...' : 'Envoyer'}
+                </Button>
+                {submissionState.status === 'success' ? (
+                  <p className="mt-3 flex items-start gap-2 rounded-sm bg-support/10 px-3 py-2 text-xs font-medium leading-5 text-support">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+                    Demande envoyée à Prodet
+                    {submissionState.referenceCode ? ` · ${submissionState.referenceCode}` : null}
+                  </p>
+                ) : null}
+                {submissionState.status === 'error' ? (
+                  <p className="mt-3 flex items-start gap-2 rounded-sm bg-red-50 px-3 py-2 text-xs font-medium leading-5 text-red-700">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+                    {submissionState.message}
+                  </p>
+                ) : null}
+                <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                  Téléphone ou email requis. Prix confirmés directement par Prodet.
+                </p>
+              </div>
+            </section>
+          </aside>
         </div>
       </div>
     </div>
@@ -254,12 +336,14 @@ function FastProductAdd({
 }) {
   const [query, setQuery] = useState('');
   const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const normalizedQuery = normalizeSearchText(query);
 
   const matchingProducts = useMemo(() => {
     if (!normalizedQuery) return [];
 
-    return products
+    return quoteSearchProducts
       .filter((product) => productMatchesQuickSearch(product, normalizedQuery))
       .slice(0, 6);
   }, [normalizedQuery]);
@@ -275,59 +359,87 @@ function FastProductAdd({
     }));
   }
 
+  useEffect(() => {
+    if (!suggestionsOpen) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (!containerRef.current?.contains(event.target as Node)) {
+        setSuggestionsOpen(false);
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
+  }, [suggestionsOpen]);
+
   return (
-    <div className="mt-4 rounded-[18px] border border-[#E5E7EB] bg-[#F9FAFB] p-3">
+    <div ref={containerRef} className="mt-4">
       <label htmlFor="devis-product-search" className="sr-only">
         Rechercher un produit à ajouter
       </label>
       <div className="relative">
         <Search
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF]"
+          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
           aria-hidden
         />
         <input
           id="devis-product-search"
           type="search"
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setSuggestionsOpen(Boolean(event.target.value.trim()));
+          }}
+          onFocus={() => setSuggestionsOpen(Boolean(query.trim()))}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setSuggestionsOpen(false);
+              event.currentTarget.blur();
+            }
+          }}
           placeholder="Rechercher un produit à ajouter…"
-          className="h-10 w-full rounded-xl border border-[#E5E7EB] bg-white pl-9 pr-3 text-[13px] text-[#1C2B3A] outline-none transition-colors placeholder:text-[#9CA3AF] focus:border-[#1B5FA7] focus:ring-2 focus:ring-[#1B5FA7]/10"
+          className="h-11 w-full rounded-sm border border-border bg-white pl-9 pr-10 text-sm text-prodet-text outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10"
         />
+        {query ? (
+          <button
+            type="button"
+            onClick={() => {
+              setQuery('');
+              setSuggestionsOpen(false);
+            }}
+            aria-label="Effacer la recherche"
+            className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground hover:bg-prodet-wash hover:text-primary"
+          >
+            <X className="h-4 w-4" aria-hidden />
+          </button>
+        ) : null}
       </div>
 
-      {normalizedQuery ? (
-        <div className="mt-3 overflow-hidden rounded-[14px] border border-[#E5E7EB] bg-white">
+      {normalizedQuery && suggestionsOpen ? (
+        <div className="mt-3 overflow-hidden rounded-lg border border-border bg-white">
           {matchingProducts.length > 0 ? (
-            <ul className="divide-y divide-[#E5E7EB]">
+            <ul className="divide-y divide-border">
               {matchingProducts.map((product) => {
                 const quantity = getQuantity(product.id);
 
                 return (
                   <li
                     key={product.id}
-                    className="grid gap-3 p-3 sm:grid-cols-[44px_minmax(0,1fr)_auto] sm:items-center"
+                    className="grid gap-3 p-3 sm:grid-cols-[52px_minmax(0,1fr)_auto] sm:items-center"
                   >
-                    <div className="relative h-11 w-11 overflow-hidden rounded-[10px] bg-[#F4F6F8]">
-                      {product.image ? (
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          fill
-                          sizes="44px"
-                          className="object-contain p-1.5"
-                        />
-                      ) : (
-                        <span className="flex h-full w-full items-center justify-center text-[11px] font-semibold text-[#1B5FA7]">
-                          {getInitials(product.name)}
-                        </span>
-                      )}
-                    </div>
+                    <PlainProductThumb
+                      src={product.image}
+                      alt={product.name}
+                      name={product.name}
+                      className="h-[52px] w-[52px]"
+                      imageClassName="p-1.5"
+                    />
 
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-semibold text-[#1C2B3A]">
+                      <p className="truncate text-sm font-semibold text-prodet-text">
                         {product.name}
                       </p>
-                      <p className="mt-1 truncate text-[11px] text-[#6B7280]">
+                      <p className="mt-1 truncate text-xs text-muted-foreground">
                         {[product.formats[0]?.label, formatCategory(product.category)]
                           .filter(Boolean)
                           .join(' · ')}
@@ -335,24 +447,24 @@ function FastProductAdd({
                     </div>
 
                     <div className="flex items-center justify-between gap-2 sm:justify-end">
-                      <div className="inline-flex h-8 overflow-hidden rounded-full border border-[#D1D5DB] bg-white">
+                      <div className="inline-flex h-8 overflow-hidden rounded-sm border border-border bg-white">
                         <button
                           type="button"
                           aria-label="Diminuer la quantité"
                           disabled={quantity <= 1}
                           onClick={() => setQuickQuantity(product.id, quantity - 1)}
-                          className="inline-flex h-8 w-8 items-center justify-center text-[#1B5FA7] transition-colors hover:bg-[#EFF6FF] disabled:cursor-not-allowed disabled:text-[#D1D5DB]"
+                          className="inline-flex h-8 w-8 items-center justify-center text-primary transition-colors hover:bg-prodet-mist disabled:cursor-not-allowed disabled:text-border"
                         >
                           <Minus className="h-3 w-3" aria-hidden />
                         </button>
-                        <span className="flex min-w-9 items-center justify-center border-x border-[#E5E7EB] px-2 text-[12px] font-semibold text-[#1C2B3A]">
+                        <span className="flex min-w-9 items-center justify-center border-x border-border px-2 text-xs font-semibold text-prodet-text">
                           {quantity}
                         </span>
                         <button
                           type="button"
                           aria-label="Augmenter la quantité"
                           onClick={() => setQuickQuantity(product.id, quantity + 1)}
-                          className="inline-flex h-8 w-8 items-center justify-center text-[#1B5FA7] transition-colors hover:bg-[#EFF6FF]"
+                          className="inline-flex h-8 w-8 items-center justify-center text-primary transition-colors hover:bg-prodet-mist"
                         >
                           <Plus className="h-3 w-3" aria-hidden />
                         </button>
@@ -360,8 +472,12 @@ function FastProductAdd({
 
                       <button
                         type="button"
-                        onClick={() => onAdd(product, quantity)}
-                        className="inline-flex h-8 items-center justify-center rounded-full bg-[#1B5FA7] px-3 text-[11px] font-semibold text-white transition-colors hover:bg-[#1650A0]"
+                        onClick={() => {
+                          onAdd(product, quantity);
+                          setQuery('');
+                          setSuggestionsOpen(false);
+                        }}
+                        className="inline-flex h-8 items-center justify-center rounded-sm bg-primary px-3 text-xs font-semibold text-white transition-colors hover:bg-primary-strong"
                       >
                         Ajouter
                       </button>
@@ -371,7 +487,7 @@ function FastProductAdd({
               })}
             </ul>
           ) : (
-            <p className="px-3 py-4 text-[12px] text-[#6B7280]">
+            <p className="px-3 py-4 text-xs text-muted-foreground">
               Aucun produit correspondant.
             </p>
           )}
@@ -393,37 +509,31 @@ function SelectionRow({
   onRemove: () => void;
 }) {
   return (
-    <article className="grid gap-3 rounded-[18px] border border-[#E5E7EB] bg-white p-3 sm:grid-cols-[76px_minmax(0,1fr)_auto] sm:items-center">
+    <article className="grid gap-3 rounded-lg border border-border bg-white p-3 sm:grid-cols-[84px_minmax(0,1fr)_auto] sm:items-center">
       <Link
         href={item.href ?? '/catalogue'}
-        className="relative flex h-[76px] w-[76px] items-center justify-center overflow-hidden rounded-[14px] bg-[#F4F6F8]"
+        className="block"
         aria-label={`Voir ${item.productName}`}
       >
-        {item.imageUrl ? (
-          <Image
-            src={item.imageUrl}
-            alt={item.productName}
-            fill
-            sizes="76px"
-            className="object-contain p-2"
-          />
-        ) : (
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1B5FA7] text-[12px] font-semibold text-white">
-            {getInitials(item.productName)}
-          </span>
-        )}
+        <PlainProductThumb
+          src={item.imageUrl}
+          alt={item.productName}
+          name={item.productName}
+          className="h-[84px] w-[84px]"
+          imageClassName="p-2"
+        />
       </Link>
 
       <div className="min-w-0">
         <Link
           href={item.href ?? '/catalogue'}
-          className="line-clamp-2 text-[14px] font-semibold leading-5 text-[#1C2B3A] hover:text-[#1B5FA7]"
+          className="line-clamp-2 text-sm font-semibold leading-5 text-prodet-text hover:text-primary"
         >
           {item.productName}
         </Link>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {item.format ? (
-            <span className="rounded-full bg-[#F3F4F6] px-2.5 py-1 text-[10px] font-semibold text-[#374151]">
+            <span className="rounded-sm bg-prodet-wash px-2.5 py-1 text-[10px] font-semibold text-prodet-text">
               {item.format}
             </span>
           ) : null}
@@ -432,8 +542,8 @@ function SelectionRow({
               className={cn(
                 'rounded-full px-2.5 py-1 text-[10px] font-semibold',
                 item.category === 'manufactured'
-                  ? 'bg-[#EFF6FF] text-[#1B5FA7]'
-                  : 'bg-[#F0FDF4] text-[#1F9C49]',
+                  ? 'bg-primary/8 text-primary'
+                  : 'bg-support/8 text-support',
               )}
             >
               {formatCategory(item.category)}
@@ -443,24 +553,24 @@ function SelectionRow({
       </div>
 
       <div className="flex items-center justify-between gap-3 sm:justify-end">
-        <div className="inline-flex h-9 overflow-hidden rounded-full border border-[#D1D5DB] bg-white">
+        <div className="inline-flex h-9 overflow-hidden rounded-sm border border-border bg-white">
           <button
             type="button"
             aria-label="Diminuer la quantité"
             disabled={item.quantity <= 1}
             onClick={onDecrement}
-            className="inline-flex h-9 w-9 items-center justify-center text-[#1B5FA7] transition-colors hover:bg-[#EFF6FF] disabled:cursor-not-allowed disabled:text-[#D1D5DB]"
+            className="inline-flex h-9 w-9 items-center justify-center text-primary transition-colors hover:bg-prodet-mist disabled:cursor-not-allowed disabled:text-border"
           >
             <Minus className="h-3.5 w-3.5" aria-hidden />
           </button>
-          <span className="flex min-w-10 items-center justify-center border-x border-[#E5E7EB] px-3 text-[13px] font-semibold text-[#1C2B3A]">
+          <span className="flex min-w-10 items-center justify-center border-x border-border px-3 text-sm font-semibold text-prodet-text">
             {item.quantity}
           </span>
           <button
             type="button"
             aria-label="Augmenter la quantité"
             onClick={onIncrement}
-            className="inline-flex h-9 w-9 items-center justify-center text-[#1B5FA7] transition-colors hover:bg-[#EFF6FF]"
+            className="inline-flex h-9 w-9 items-center justify-center text-primary transition-colors hover:bg-prodet-mist"
           >
             <Plus className="h-3.5 w-3.5" aria-hidden />
           </button>
@@ -470,12 +580,49 @@ function SelectionRow({
           type="button"
           aria-label={`Retirer ${item.productName}`}
           onClick={onRemove}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#E5E7EB] text-[#6B7280] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-sm border border-border text-muted-foreground transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
         >
           <Trash2 className="h-4 w-4" aria-hidden />
         </button>
       </div>
     </article>
+  );
+}
+
+function PlainProductThumb({
+  src,
+  alt,
+  name,
+  className,
+  imageClassName,
+}: {
+  src?: string;
+  alt: string;
+  name: string;
+  className?: string;
+  imageClassName?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        'relative flex shrink-0 items-center justify-center overflow-hidden rounded-md border border-[#E3E7EC] bg-white',
+        className,
+      )}
+    >
+      {src ? (
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes="96px"
+          className={cn('object-contain', imageClassName)}
+        />
+      ) : (
+        <span className="flex h-10 w-10 items-center justify-center rounded-sm bg-primary text-xs font-semibold text-white">
+          {getInitials(name)}
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -490,7 +637,7 @@ function FormField({
 }) {
   return (
     <div className={cn('space-y-2', className)}>
-      <Label className="text-[12px] font-semibold text-[#1C2B3A]">{label}</Label>
+      <Label className="text-xs font-semibold text-prodet-text">{label}</Label>
       {children}
     </div>
   );
@@ -533,42 +680,6 @@ function normalizeSearchText(value: string): string {
     .replace(/[\u0300-\u036f]/gu, '')
     .toLowerCase()
     .trim();
-}
-
-function buildMailPayload(formState: DevisFormState, selectedItems: HydratedSelectionItem[]) {
-  const sectorLabel =
-    sectors.find((sector) => sector.id === formState.sectorId)?.label || formState.sectorId || 'Non précisé';
-  const requester = formState.company.trim() || formState.fullName.trim() || 'Site web';
-  const selectedProducts = selectedItems
-    .map((item) => {
-      const details = [
-        item.format ? `Format: ${item.format}` : null,
-        item.category ? `Type: ${formatCategory(item.category)}` : null,
-        `Quantité: ${item.quantity}`,
-      ].filter(Boolean);
-
-      return `- ${item.productName}${details.length > 0 ? ` — ${details.join(' — ')}` : ''}`;
-    })
-    .join('\n');
-
-  const subject = `Demande de devis - ${requester}`;
-  const body = [
-    'Bonjour Prodet Tunisie,',
-    '',
-    'Je souhaite recevoir un devis pour les produits suivants:',
-    selectedProducts,
-    '',
-    'Informations client:',
-    `Nom / Prénom: ${formState.fullName || 'Non précisé'}`,
-    `Société / Établissement: ${formState.company || 'Non précisé'}`,
-    `Secteur d'activité: ${sectorLabel}`,
-    `Téléphone: ${formState.phone || 'Non précisé'}`,
-    `Email: ${formState.email || 'Non précisé'}`,
-    `Ville / zone de livraison: ${formState.city || 'Non précisé'}`,
-    `Message complémentaire: ${formState.message || 'Aucun message complémentaire.'}`,
-  ].join('\n');
-
-  return { subject, body };
 }
 
 function formatCategory(category: ProductCategory): string {

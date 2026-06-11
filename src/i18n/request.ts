@@ -13,6 +13,7 @@ const namespaces = [
   'about',
   'contact',
   'devis',
+  'portal',
 ] as const;
 
 async function loadMessages(locale: Locale): Promise<AbstractIntlMessages> {

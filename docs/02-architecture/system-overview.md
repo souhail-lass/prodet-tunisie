@@ -98,7 +98,7 @@ flowchart TB
 ### Authentication (Supabase Auth)
 
 - MVP: email + password (or magic link) for ~4 admin accounts.
-- Phase 3: customer self-signup with admin-approval workflow.
+- Phase 3: client access requests and Prodet-issued invitations; no open self-registration.
 - Session via Supabase JWT in HTTP-only cookies.
 - Detail in [auth.md](auth.md).
 

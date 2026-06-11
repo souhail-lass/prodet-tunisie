@@ -1,0 +1,389 @@
+/* ============================================================
+   PRODET DESIGN SYSTEM — primitive component styles.
+   These .pds-* rules are injected at runtime by the oracle's JS
+   bundle (they are NOT in kit.css / kit-pages.css). Consolidated
+   here verbatim so the React primitives in src/components/ds/
+   render 1:1. Tokens come from tokens.css.
+   ============================================================ */
+
+/* ---------- Button (components/buttons/Button.jsx) ---------- */
+.pds-btn {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  border-radius: var(--radius-button);
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+  user-select: none;
+}
+.pds-btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.pds-btn:active { transform: translateY(0.5px); }
+.pds-btn[disabled] { opacity: 0.45; pointer-events: none; }
+.pds-btn svg { width: 1.05em; height: 1.05em; flex-shrink: 0; }
+
+/* sizes */
+.pds-btn--sm { height: 34px; padding: 0 14px; font-size: var(--text-sm); }
+.pds-btn--md { height: 42px; padding: 0 20px; font-size: var(--text-base); }
+.pds-btn--lg { height: 50px; padding: 0 28px; font-size: var(--text-lg); }
+.pds-btn--block { width: 100%; }
+
+/* primary */
+.pds-btn--primary { background: var(--prodet-blue); color: #fff; }
+.pds-btn--primary:hover { background: var(--prodet-blue-hover); }
+.pds-btn--primary:active { background: var(--prodet-blue-press); }
+
+/* outline */
+.pds-btn--outline { background: transparent; color: var(--prodet-blue); border-color: var(--prodet-blue); }
+.pds-btn--outline:hover { background: var(--prodet-blue); color: #fff; }
+
+/* ghost */
+.pds-btn--ghost { background: transparent; color: var(--text-primary); }
+.pds-btn--ghost:hover { background: var(--surface-sunken); }
+
+/* success */
+.pds-btn--success { background: var(--prodet-green); color: #fff; }
+.pds-btn--success:hover { background: var(--prodet-green-hover); }
+
+/* dark */
+.pds-btn--dark { background: var(--prodet-navy); color: #fff; }
+.pds-btn--dark:hover { background: var(--surface-navy-soft); }
+
+@media (prefers-reduced-motion: reduce) { .pds-btn { transition: none; } }
+
+/* ---------- IconButton (components/buttons/IconButton.jsx) ---------- */
+.pds-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-button);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease-out),
+              color var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out);
+}
+.pds-iconbtn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.pds-iconbtn[disabled] { opacity: 0.4; pointer-events: none; }
+.pds-iconbtn svg { width: 1.15em; height: 1.15em; }
+
+.pds-iconbtn--sm { width: 34px; height: 34px; font-size: var(--text-sm); }
+.pds-iconbtn--md { width: 42px; height: 42px; font-size: var(--text-base); }
+
+.pds-iconbtn--ghost:hover { background: var(--surface-sunken); color: var(--text-primary); }
+.pds-iconbtn--outline { border-color: var(--border-default); background: var(--surface-card); }
+.pds-iconbtn--outline:hover { border-color: var(--prodet-blue); color: var(--prodet-blue); }
+.pds-iconbtn--solid { background: var(--prodet-blue); color: #fff; }
+.pds-iconbtn--solid:hover { background: var(--prodet-blue-hover); }
+
+/* ---------- QuantityControl (components/catalog/QuantityControl.jsx) ---------- */
+.pds-qty { display: flex; height: 36px; width: 100%; font-family: var(--font-sans); }
+.pds-qty__add {
+  flex: 1; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--prodet-green);
+  background: transparent; color: var(--prodet-green);
+  border-radius: var(--radius-button);
+  font-size: var(--text-sm); font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.pds-qty__add svg { width: 15px; height: 15px; }
+.pds-qty__add:hover { background: var(--prodet-green); color: #fff; }
+
+.pds-qty__step {
+  width: 34px; height: 36px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--prodet-blue); color: #fff; border: none;
+  font-size: 17px; line-height: 1; cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.pds-qty__step:hover { background: var(--prodet-blue-hover); }
+.pds-qty__step--left { border-radius: var(--radius-button) 0 0 var(--radius-button); }
+.pds-qty__step--right { border-radius: 0 var(--radius-button) var(--radius-button) 0; }
+.pds-qty__step--trash { background: var(--color-danger-bg); color: var(--color-danger); }
+.pds-qty__step--trash:hover { background: #f3d9d6; }
+.pds-qty__step svg { width: 14px; height: 14px; }
+.pds-qty__field {
+  flex: 1; min-width: 0; height: 36px;
+  border: 1px solid var(--prodet-blue); border-left: none; border-right: none;
+  background: var(--surface-card);
+  text-align: center;
+  font-size: var(--text-base); font-weight: var(--fw-semibold);
+  color: var(--text-primary);
+  outline: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- ProductCard (components/catalog/ProductCard.jsx) ---------- */
+.pds-product {
+  display: flex; flex-direction: column;
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  font-family: var(--font-sans);
+  transition: box-shadow var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out);
+}
+.pds-product:hover {
+  border-color: var(--prodet-blue-tint-strong);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+.pds-product__stage {
+  position: relative;
+  height: 168px;
+  background: var(--surface-sunken);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  cursor: pointer;
+}
+.pds-product__stage img { max-height: 100%; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.pds-product__initials {
+  width: 64px; height: 64px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--text-h3); font-weight: var(--fw-semibold); color: #fff;
+  background: var(--prodet-blue);
+}
+.pds-product__initials--resold { background: var(--prodet-green); }
+.pds-product__badge {
+  position: absolute; top: 10px; left: 10px;
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 9px; border-radius: var(--radius-pill);
+  background: var(--prodet-green); color: #fff;
+  font-size: var(--text-2xs); font-weight: var(--fw-semibold); line-height: 1;
+}
+.pds-product__badge svg { width: 11px; height: 11px; }
+.pds-product__format {
+  position: absolute; top: 10px; right: 10px;
+  padding: 3px 8px; border-radius: var(--radius-pill);
+  background: var(--surface-card); border: 1px solid var(--border-default);
+  font-size: var(--text-2xs); font-weight: var(--fw-medium); color: var(--text-secondary); line-height: 1;
+}
+.pds-product__body { padding: 12px 14px 6px; cursor: pointer; }
+.pds-product__name {
+  font-size: var(--text-sm); font-weight: var(--fw-semibold); color: var(--text-primary);
+  line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  transition: color var(--dur-base) var(--ease-out);
+}
+.pds-product:hover .pds-product__name { color: var(--prodet-blue); }
+.pds-product__tagline {
+  font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.4;
+  margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  min-height: calc(var(--text-xs) * 1.4 * 2);
+}
+.pds-product__foot { margin-top: auto; padding: 8px 14px 14px; }
+@media (prefers-reduced-motion: reduce) { .pds-product { transition: none; } }
+
+/* ---------- Badge (components/feedback/Badge.jsx) ---------- */
+.pds-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-semibold);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  border: 1px solid transparent;
+  line-height: 1;
+}
+.pds-badge--sm { font-size: var(--text-2xs); padding: 4px 9px; }
+.pds-badge--md { font-size: var(--text-xs); padding: 5px 11px; }
+.pds-badge__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.pds-badge svg { width: 13px; height: 13px; }
+
+/* tones — soft (default) */
+.pds-badge--neutral { color: var(--text-secondary); background: var(--surface-sunken); }
+.pds-badge--blue   { color: var(--prodet-blue);  background: var(--prodet-blue-tint); }
+.pds-badge--green  { color: var(--prodet-green); background: var(--prodet-green-tint); }
+.pds-badge--amber  { color: var(--color-warning); background: var(--color-warning-bg); }
+.pds-badge--red    { color: var(--color-danger);  background: var(--color-danger-bg); }
+
+/* solid */
+.pds-badge--solid.pds-badge--neutral { color: #fff; background: var(--text-secondary); }
+.pds-badge--solid.pds-badge--blue  { color: #fff; background: var(--prodet-blue); }
+.pds-badge--solid.pds-badge--green { color: #fff; background: var(--prodet-green); }
+.pds-badge--solid.pds-badge--amber { color: #fff; background: var(--color-warning); }
+.pds-badge--solid.pds-badge--red   { color: #fff; background: var(--color-danger); }
+
+/* outline */
+.pds-badge--outline { background: transparent; }
+.pds-badge--outline.pds-badge--neutral { border-color: var(--border-strong); color: var(--text-secondary); }
+.pds-badge--outline.pds-badge--blue  { border-color: var(--prodet-blue);  color: var(--prodet-blue); }
+.pds-badge--outline.pds-badge--green { border-color: var(--prodet-green); color: var(--prodet-green); }
+
+/* ---------- StatusBadge (components/feedback/StatusBadge.jsx) ---------- */
+.pds-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-semibold);
+  font-size: var(--text-2xs);
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  line-height: 1;
+}
+.pds-status__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.pds-status--progress  { color: var(--status-progress-fg);  background: var(--status-progress-bg); }
+.pds-status--delivered { color: var(--status-delivered-fg); background: var(--status-delivered-bg); }
+.pds-status--prep      { color: var(--status-prep-fg);      background: var(--status-prep-bg); }
+.pds-status--cancelled { color: var(--status-cancelled-fg); background: var(--status-cancelled-bg); }
+
+/* ---------- Checkbox (components/forms/Checkbox.jsx) ---------- */
+.pds-check { display: inline-flex; align-items: center; gap: 9px; cursor: pointer; font-family: var(--font-sans); font-size: var(--text-sm); color: var(--text-secondary); user-select: none; }
+.pds-check input { position: absolute; opacity: 0; width: 0; height: 0; }
+.pds-check__box {
+  width: 18px; height: 18px; flex-shrink: 0;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 5px;
+  background: var(--surface-card);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+.pds-check__box svg { width: 12px; height: 12px; opacity: 0; transform: scale(0.6); transition: opacity var(--dur-fast), transform var(--dur-fast); }
+.pds-check input:checked + .pds-check__box { background: var(--prodet-blue); border-color: var(--prodet-blue); }
+.pds-check input:checked + .pds-check__box svg { opacity: 1; transform: scale(1); }
+.pds-check:hover .pds-check__box { border-color: var(--prodet-blue); }
+.pds-check input:focus-visible + .pds-check__box { box-shadow: var(--shadow-focus); }
+.pds-check input:disabled + .pds-check__box { background: var(--surface-sunken); border-color: var(--border-default); }
+.pds-check--radio .pds-check__box { border-radius: 50%; }
+.pds-check--radio input:checked + .pds-check__box { background: #fff; border-color: var(--prodet-blue); }
+.pds-check--radio input:checked + .pds-check__box svg { display: none; }
+.pds-check--radio .pds-check__dot { width: 9px; height: 9px; border-radius: 50%; background: var(--prodet-blue); opacity: 0; transform: scale(0.5); transition: opacity var(--dur-fast), transform var(--dur-fast); }
+.pds-check--radio input:checked + .pds-check__box .pds-check__dot { opacity: 1; transform: scale(1); }
+.pds-check__count { color: var(--text-tertiary); font-size: var(--text-xs); margin-left: 2px; }
+
+/* ---------- Input (components/forms/Input.jsx) ---------- */
+.pds-field { display: flex; flex-direction: column; gap: 6px; font-family: var(--font-sans); }
+.pds-field__label { font-size: var(--text-sm); font-weight: var(--fw-medium); color: var(--text-primary); }
+.pds-field__req { color: var(--color-danger); margin-left: 2px; }
+.pds-field__hint { font-size: var(--text-xs); color: var(--text-secondary); }
+.pds-field__error { font-size: var(--text-xs); color: var(--color-danger); }
+
+.pds-input-wrap { position: relative; display: flex; align-items: center; }
+.pds-input-wrap__icon { position: absolute; left: 12px; display: flex; color: var(--text-tertiary); pointer-events: none; }
+.pds-input-wrap__icon svg { width: 17px; height: 17px; }
+.pds-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 13px;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-input);
+  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+  outline: none;
+}
+.pds-input::placeholder { color: var(--text-tertiary); }
+.pds-input:hover { border-color: var(--border-strong); }
+.pds-input:focus { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+.pds-input--has-icon { padding-left: 38px; }
+.pds-input--error { border-color: var(--color-danger); }
+.pds-input--error:focus { box-shadow: 0 0 0 3px rgba(178,59,59,0.16); }
+.pds-input[disabled] { background: var(--surface-sunken); color: var(--text-tertiary); cursor: not-allowed; }
+
+/* ---------- Select (components/forms/Select.jsx) ---------- */
+.pds-select-wrap { position: relative; display: flex; align-items: center; }
+.pds-select {
+  width: 100%;
+  height: 42px;
+  padding: 0 38px 0 13px;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-input);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+  outline: none;
+}
+.pds-select:hover { border-color: var(--border-strong); }
+.pds-select:focus { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+.pds-select[disabled] { background: var(--surface-sunken); color: var(--text-tertiary); cursor: not-allowed; }
+.pds-select--placeholder { color: var(--text-tertiary); }
+.pds-select-wrap__chev { position: absolute; right: 13px; pointer-events: none; color: var(--text-secondary); display: flex; }
+.pds-select-wrap__chev svg { width: 16px; height: 16px; }
+
+/* ---------- Textarea (components/forms/Textarea.jsx) ---------- */
+.pds-textarea {
+  width: 100%;
+  min-height: 96px;
+  padding: 11px 13px;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-input);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+.pds-textarea::placeholder { color: var(--text-tertiary); }
+.pds-textarea:hover { border-color: var(--border-strong); }
+.pds-textarea:focus { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+.pds-textarea--error { border-color: var(--color-danger); }
+
+/* ---------- Card (components/surfaces/Card.jsx) ---------- */
+.pds-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--dur-base) var(--ease-out),
+              border-color var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out);
+}
+.pds-card--pad { padding: var(--space-6); }
+.pds-card--interactive { cursor: pointer; }
+.pds-card--interactive:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--prodet-blue-tint-strong);
+  transform: translateY(-2px);
+}
+.pds-card--flat { box-shadow: none; }
+.pds-card--navy {
+  background: var(--surface-navy);
+  border-color: var(--border-on-dark);
+  color: var(--text-on-dark);
+}
+.pds-card--navy .pds-card__title { color: var(--text-on-dark); }
+.pds-card__header { margin-bottom: var(--space-4); }
+.pds-card__title { font-size: var(--text-h3); font-weight: var(--fw-semibold); color: var(--text-primary); }
+.pds-card__subtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
+@media (prefers-reduced-motion: reduce) { .pds-card { transition: none; } }
+
+/* ============ SKELETON (route loading states) ============ */
+.pds-skeleton {
+  display: block;
+  border-radius: var(--radius-button);
+  background: linear-gradient(90deg, var(--surface-sunken) 25%, var(--border-default) 50%, var(--surface-sunken) 75%);
+  background-size: 200% 100%;
+  animation: pds-skeleton-wave 1.4s ease-in-out infinite;
+}
+.pds-skeleton--card { border-radius: var(--radius-card); }
+.pds-skeleton--text { height: 14px; }
+.pds-skeleton--title { height: 22px; }
+@keyframes pds-skeleton-wave {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) { .pds-skeleton { animation: none; } }

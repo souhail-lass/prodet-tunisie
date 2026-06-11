@@ -42,7 +42,7 @@ export function ProductHeroV2({
   return (
     <section className="grid gap-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)]">
       <div>
-        <div className="relative flex min-h-[340px] items-center justify-center overflow-hidden rounded-2xl bg-white sm:min-h-[420px] md:min-h-[560px] lg:min-h-[600px]">
+        <div className="relative flex min-h-[340px] items-center justify-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-white shadow-card sm:min-h-[420px] md:min-h-[560px] lg:min-h-[600px]">
           <Image
             src={activeImage.src}
             alt={activeImage.alt}
@@ -67,10 +67,10 @@ export function ProductHeroV2({
                 aria-label={image.alt}
                 onClick={() => setActiveImage(image)}
                 className={cn(
-                  'relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-white transition-colors md:h-20 md:w-20',
+                  'relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white transition-colors md:h-20 md:w-20',
                   isActive
-                    ? 'border-[#1F9C49] ring-2 ring-[#1F9C49]/10'
-                    : 'border-[#E5E7EB] hover:border-[#1B5FA7]',
+                    ? 'border-prodet-green ring-2 ring-prodet-green/10'
+                    : 'border-[var(--color-border)] hover:border-prodet-blue',
                 )}
               >
                 <Image
@@ -93,14 +93,14 @@ export function ProductHeroV2({
         <ProductBreadcrumb locale={locale} productName={product.name} />
 
         <div className="mt-9">
-          <h1 className="text-[30px] font-semibold leading-tight tracking-[-0.04em] text-[#55585E] md:text-[34px]">
+          <h1 className="text-[30px] font-semibold leading-tight tracking-[-0.02em] text-[var(--color-text-primary)] md:text-[34px]">
             {product.name}
           </h1>
-          <p className="mt-2 text-[13px] font-medium leading-5 text-[#8A8D93]">{product.tagline}</p>
+          <p className="mt-2 text-[var(--type-small)] font-medium leading-5 text-[var(--color-text-tertiary)]">{product.tagline}</p>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <span className="text-[13px] font-semibold text-[#55585E]">
+          <span className="text-[var(--type-small)] font-semibold text-[var(--color-text-secondary)]">
             {product.category === 'manufactured'
               ? isEnglish
                 ? 'Manufactured by Prodet.'
@@ -109,10 +109,10 @@ export function ProductHeroV2({
                 ? 'Selected commercial product.'
                 : 'Article commercialisé.'}
           </span>
-          <span className="text-[13px] font-semibold text-[#1F9C49]">{useCaseLabel}</span>
+          <span className="text-[var(--type-small)] font-semibold text-prodet-green">{useCaseLabel}</span>
         </div>
 
-        <div className="mt-5 space-y-4 text-[13px] leading-[1.55] text-[#4B4F57]">
+        <div className="mt-5 space-y-4 text-[13px] leading-[1.55] text-[var(--color-text-secondary)]">
           {splitDescription(product.description).map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
@@ -124,7 +124,7 @@ export function ProductHeroV2({
             icon={Info}
             defaultOpen={false}
           >
-            <p className="text-[13px] leading-6 text-[#4B4F57]">
+            <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
               {product.howToUse ?? (isEnglish ? 'Information to be completed.' : 'Information à compléter.')}
             </p>
           </ProductAccordion>
@@ -134,7 +134,7 @@ export function ProductHeroV2({
             defaultOpen={false}
           >
             {product.specs?.length ? (
-              <ul className="list-disc space-y-1 pl-5 text-[13px] leading-6 text-[#2F333A]">
+              <ul className="list-disc space-y-1 pl-5 text-[13px] leading-6 text-[var(--color-text-primary)]">
                 {product.specs.map((spec) => (
                   <li key={spec.label}>
                     <strong>{spec.label}:</strong> {spec.value}
@@ -142,7 +142,7 @@ export function ProductHeroV2({
                 ))}
               </ul>
             ) : (
-              <p className="text-[13px] leading-6 text-[#4B4F57]">
+              <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
                 {isEnglish ? 'Information to be completed.' : 'Information à compléter.'}
               </p>
             )}
@@ -153,7 +153,7 @@ export function ProductHeroV2({
             defaultOpen={false}
           >
             {product.dilutionRates?.length ? (
-              <ul className="list-disc space-y-1 pl-5 text-[13px] leading-6 text-[#2F333A]">
+              <ul className="list-disc space-y-1 pl-5 text-[13px] leading-6 text-[var(--color-text-primary)]">
                 {product.dilutionRates.map((rate) => (
                   <li key={rate.label}>
                     <strong>{rate.label}:</strong> {rate.rate}
@@ -161,7 +161,7 @@ export function ProductHeroV2({
                 ))}
               </ul>
             ) : (
-              <p className="text-[13px] leading-6 text-[#4B4F57]">
+              <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
                 {product.dosage ?? (isEnglish ? 'Information to be completed.' : 'Information à compléter.')}
               </p>
             )}
@@ -175,12 +175,12 @@ export function ProductHeroV2({
               <a
                 href={product.technicalSheetUrl}
                 download
-                className="text-[13px] font-semibold text-[#1F9C49] underline-offset-4 hover:underline"
+                className="text-[13px] font-semibold text-prodet-green underline-offset-4 hover:underline"
               >
                 {isEnglish ? 'Download technical sheet' : 'Télécharger la fiche technique'}
               </a>
             ) : (
-              <p className="text-[13px] leading-6 text-[#4B4F57]">
+              <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
                 {isEnglish
                   ? 'Technical sheet available on request.'
                   : 'Fiche technique disponible sur demande.'}
@@ -249,11 +249,11 @@ function ProductMetadataTable({
   ].filter((row) => row.value);
 
   return (
-    <dl className="mt-6 border-t border-[#E5E7EB] text-[13px]">
+    <dl className="mt-6 border-t border-[var(--color-border)] text-[var(--type-small)]">
       {rows.map((row) => (
-        <div key={row.label} className="grid grid-cols-[170px_minmax(0,1fr)] border-b border-[#E5E7EB] py-2">
-          <dt className="font-medium text-[#8A8D93]">{row.label}:</dt>
-          <dd className="text-[#6B7280]">{row.value}</dd>
+        <div key={row.label} className="grid grid-cols-[170px_minmax(0,1fr)] border-b border-[var(--color-border)] py-2">
+          <dt className="font-medium text-[var(--color-text-tertiary)]">{row.label}:</dt>
+          <dd className="text-[var(--color-text-secondary)]">{row.value}</dd>
         </div>
       ))}
     </dl>

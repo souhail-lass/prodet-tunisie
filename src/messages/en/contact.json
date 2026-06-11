@@ -31,5 +31,43 @@
     "successTitle": "Message sent.",
     "successBody": "We reply within one business day.",
     "submit": "Send"
+  },
+  "hero": {
+    "eyebrow": "Contact",
+    "title": "Let's talk about your hygiene needs",
+    "lead": "A question, a quote, product advice? Our team in Tunis answers within 24 working hours."
+  },
+  "fields": {
+    "company": "Establishment name",
+    "name": "Contact person",
+    "email": "Email",
+    "phone": "Phone",
+    "sector": "Sector",
+    "message": "Your message"
+  },
+  "placeholders": {
+    "company": "Hotel Carthage",
+    "name": "First and last name",
+    "email": "you@company.tn",
+    "phone": "71 000 000",
+    "sector": "Choose your sector",
+    "message": "Describe your needs: products, volumes, delivery frequency…"
+  },
+  "submit": "Send message",
+  "submitting": "Sending…",
+  "whatsapp": "WhatsApp",
+  "error": "Couldn't send the message. Check the fields and try again.",
+  "success": {
+    "title": "Message sent",
+    "body": "Thank you. Our team will get back to you within 24 working hours.",
+    "again": "Send another message"
+  },
+  "info": {
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Hours",
+    "hoursValue": "Mon – Fri · 8:30 – 17:30 · Sat · 8:30 – 13:00",
+    "mapLabel": "l'Aouina, Tunis"
   }
 }

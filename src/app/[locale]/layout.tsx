@@ -1,25 +1,17 @@
 import type { Metadata } from 'next';
-import { Bricolage_Grotesque, Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing, isLocale, localeDirection, localeHtmlLang, type Locale } from '@/i18n/routing';
 import { getPublicEnv } from '@/lib/env';
 import '../globals.css';
-
-const heading = Bricolage_Grotesque({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-heading',
-  display: 'swap',
-});
-
-const body = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-body',
-  display: 'swap',
-});
+// Prodet design-system stylesheets (source-of-truth — see design_handoff_website).
+// Order matters: tokens first, then primitives, then layout/page kits.
+import '@/styles/prodet/tokens.css';
+import '@/styles/prodet/primitives.css';
+import '@/styles/prodet/kit.css';
+import '@/styles/prodet/kit-pages.css';
+import '@/styles/prodet/overrides.css';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -103,7 +95,7 @@ export default async function LocaleLayout({
   const lang = localeHtmlLang[locale];
 
   return (
-    <html lang={lang} dir={dir} className={`${heading.variable} ${body.variable}`} suppressHydrationWarning>
+    <html lang={lang} dir={dir} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider messages={messages} locale={locale}>
           {children}

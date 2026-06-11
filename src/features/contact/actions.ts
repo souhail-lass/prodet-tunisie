@@ -1,6 +1,7 @@
 'use server';
 
 import { generateReferenceCode } from '@/lib/reference-code';
+import { consumeRateLimit, formatRetryAfterFr } from '@/lib/rate-limit';
 import { ContactMessageSchema, type ContactMessageInput } from './schema';
 
 export interface ContactSubmitResult {
@@ -21,6 +22,18 @@ export async function submitContactMessage(
 ): Promise<ContactSubmitResult> {
   if (input.website?.trim()) {
     return { ok: true, referenceCode: generateReferenceCode('CTC') };
+  }
+
+  const limit = await consumeRateLimit({
+    scope: 'contact',
+    limit: 5,
+    windowMs: 10 * 60_000,
+  });
+  if (!limit.ok) {
+    return {
+      ok: false,
+      formError: `Trop d'envois récents. Réessayez dans ${formatRetryAfterFr(limit.retryAfterMs)}.`,
+    };
   }
 
   const parsed = ContactMessageSchema.safeParse(input);

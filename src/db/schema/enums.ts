@@ -73,3 +73,38 @@ export const matchReasonEnum = pgEnum('match_reason', [
   'vector',
   'llm_rerank',
 ]);
+
+export const clientAccessRequestStatusEnum = pgEnum('client_access_request_status', [
+  'new',
+  'reviewing',
+  'approved',
+  'rejected',
+  'needs_info',
+]);
+
+export const clientAccessRequestSourceEnum = pgEnum('client_access_request_source', [
+  'espace_client',
+]);
+
+export const portalInviteStatusEnum = pgEnum('portal_invite_status', [
+  'prepared',
+  'sent',
+  'accepted',
+  'expired',
+  'revoked',
+]);
+
+/**
+ * Customer-owned documents uploaded by client portal users.
+ * Distinct from `order_attachment` which is the inbound-extraction-pipeline
+ * audit trail (emails, PDFs we extracted from). These are documents the
+ * client wants to share with Prodet alongside or independently of a request.
+ */
+export const customerDocumentKindEnum = pgEnum('customer_document_kind', [
+  'purchase_order',
+  'invoice',
+  'delivery_note',
+  'erp_export',
+  'spreadsheet',
+  'other',
+]);

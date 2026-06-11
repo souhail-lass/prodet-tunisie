@@ -133,23 +133,31 @@ These are **kill-switches**, not warnings. Hitting any of them triggers a re-sco
 
 ## Phase 3 — Client portal (6–10 weeks)
 
-**Goal.** Give the subset of digitally-comfortable clients a self-service repeat-order experience.
+**Goal.** Give the subset of digitally-comfortable, validated B2B clients a restricted repeat-request experience.
+
+The strategic model is documented in [../03-modules/client-portal.md](../03-modules/client-portal.md) and [../design/client-portal-ux.md](../design/client-portal-ux.md). The portal is not e-commerce: no public prices, no stock display, no checkout, and no open self-registration.
 
 ### Workstreams
 
-- **Customer auth.** Self-serve signup gated by an admin approval (no anonymous portal accounts). Password + magic link.
-- **Account model.** A customer organization can have multiple users.
-- **Repeat order.** "Reorder last month" landing page. Adjust quantities. Submit → lands in the same review queue (with a `source = portal` marker).
-- **Order history.** Lists past orders sourced from internal records and from Swiver export, deduplicated.
-- **Customer-scoped aliases.** Visible to the customer. Editable with admin approval.
-- **Optional client-specific pricing.** Only if [open question 14 (long-term Swiver posture)](open-questions.md) and Swiver capability allow. Otherwise: prices remain offline at this phase too.
-- **Quote-to-order conversion.** A devis approved by Père becomes a "ready to confirm" item in the customer portal.
+- **Public portal entry.** `Espace client` page with two clear paths: `Déjà client` and `Devenir client Prodet`. Public buyers can still request a quote without an account.
+- **Validated access model.** New professional buyers submit an access request. Prodet validates the company before creating or inviting the account. No instant account creation.
+- **Customer auth.** Login by invited email, magic link, password, or one-time access code. Access is active only after the user is linked to a validated `customer`.
+- **Account model.** A customer organization can have multiple users, but Prodet controls invitation and suspension.
+- **Usual products.** Client-specific reorder list based on Prodet configuration and, later, Swiver imports if the API/export supports it.
+- **Quick reorder.** Adjust quantities, add notes, submit. The result lands in the same internal review queue with `source = 'portal'`.
+- **Portal request history.** Show portal-originated requests and statuses. Imported Swiver history is later-phase unless the integration is proven.
+- **Company/contact/delivery info.** Read-only at first, with a "request a change" path to Prodet.
+- **Swiver preparation.** Store Swiver customer/product IDs when available, but do not auto-create official Swiver documents. Human review remains mandatory.
 
 ### Exit criteria
 
 - ≥ 5 real customers actively using the portal monthly.
-- Portal-sourced orders processed in the same console workflow as email-sourced orders, no special-case code paths.
-- Customer-scoped aliases editable by customers without breaking matching.
+- Every active portal user is linked to a validated `customer`.
+- Portal-sourced requests are processed in the same console workflow as email-sourced orders, no special-case code paths.
+- No public or portal screen displays prices, stock, checkout, or payment.
+- Access requests, invitations, approvals, suspensions, and portal submissions are audit-logged.
+- RLS tests prove that one client cannot access another client's usual products, contacts, or request history.
+- Swiver integration remains manual or human-approved unless a later ADR explicitly changes the rule.
 
 ---
 

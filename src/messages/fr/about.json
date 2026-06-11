@@ -1,8 +1,8 @@
 {
   "hero": {
     "eyebrow": "À propos",
-    "title": "Une fabrication tunisienne, pensée pour les professionnels.",
-    "lead": "Prodet Tunisie conçoit, fabrique et distribue depuis 1996 des produits d'hygiène et d'entretien destinés aux hôtels, restaurants, sociétés de nettoyage, grossistes, institutions et industries."
+    "title": "Un fabricant tunisien au service des professionnels",
+    "lead": "Depuis Tunis, Prodet formule, conditionne et distribue une gamme complète de produits d’hygiène et de détergence pour les métiers exigeants."
   },
   "story": {
     "title": "Notre histoire",
@@ -40,7 +40,31 @@
   "ctaBand": {
     "title": "Vous voulez en discuter ?",
     "subtitle": "Notre équipe répond aux demandes de devis sous 24h ouvrées.",
-    "primary": "Demander un devis",
+    "primary": "Devis",
     "secondary": "Nous contacter"
+  },
+  "body": {
+    "p1": "Prodet Tunisie accompagne hôtels, restaurants, cafés, sociétés de nettoyage et collectivités avec des produits pensés pour un usage professionnel intensif : dégraissants de cuisine, désinfectants de surfaces, lessives industrielles, hygiène des mains et consommables.",
+    "p2": "Notre fabrication locale garantit des délais courts, un réapprovisionnement fiable sur le Grand Tunis et un accompagnement technique sur les dosages et les protocoles. Chaque commande s’accompagne d’un conseil adapté à votre établissement.",
+    "p3": "Nous ne publions pas de prix en ligne : chaque devis est construit selon vos volumes, votre fréquence et votre secteur, pour une offre juste et durable."
+  },
+  "cta": "Demander un devis",
+  "stats": {
+    "references": {
+      "value": "160+",
+      "label": "Références au catalogue"
+    },
+    "services": {
+      "value": "4",
+      "label": "Services dédiés"
+    },
+    "experience": {
+      "value": "20 ans",
+      "label": "D’expérience métier"
+    },
+    "delay": {
+      "value": "24h",
+      "label": "Délai de réponse devis"
+    }
   }
 }

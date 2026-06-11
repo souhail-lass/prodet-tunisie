@@ -7,7 +7,6 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import type { Metadata } from 'next';
-import { Sora } from 'next/font/google';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
@@ -21,11 +20,9 @@ import {
   type PublicOffer,
   type PublicOfferSectionId,
 } from '@/data/public-offers';
-import {
-  getProductBySlug,
-  getSectorById,
-  getUseCaseById,
-} from '@/data/queries';
+import { getSectorById, getUseCaseById } from '@/data/queries';
+import { getCatalogueProductBySlug, getVisibleCatalogue } from '@/features/catalogue/queries';
+import { localizeProduct, localizeSector, localizeUseCase } from '@/data/i18n/content';
 import { products } from '@/data/products';
 import type { Product } from '@/data/types';
 import { siteContent } from '@/data/site-content';
@@ -34,12 +31,21 @@ import { Button } from '@/components/ui/button';
 import { ProductCard } from '@/components/catalogue/ProductCard';
 import { ProductHeroV2 } from '@/components/product/ProductHeroV2';
 
-const productDisplay = Sora({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-product-display',
-  display: 'swap',
-});
+// Static + ISR per slug: each product page is cached after first render and
+// regenerated in the background; admin edits revalidate the 'catalogue' tag.
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  // Prebuild the visible catalogue slugs (per locale, Next crosses them with
+  // the parent locale params). If the DB is unreachable at build time the
+  // pages simply render on demand and get cached then.
+  try {
+    const products = await getVisibleCatalogue();
+    return products.map((product) => ({ slug: product.slug }));
+  } catch {
+    return [];
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -56,12 +62,12 @@ export async function generateMetadata({
     };
   }
 
-  const product = getProductBySlug(slug);
+  const product = await getCatalogueProductBySlug(slug);
   if (!product) return {};
 
   return {
     title: product.name,
-    description: product.tagline,
+    description: product.tagline || undefined,
   };
 }
 
@@ -79,7 +85,7 @@ export default async function ProductDetailPage({
     return <PublicOfferDetailPage offer={publicOffer} />;
   }
 
-  const product = getProductBySlug(slug);
+  const product = await getCatalogueProductBySlug(slug);
   if (!product) notFound();
 
   return <LegacyProductDetailPage product={product} locale={locale} />;
@@ -100,19 +106,19 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
 
   return (
     <div className="section-shell py-12">
-      <nav className="text-sm text-muted-foreground">
-        <Link href="/catalogue" className="hover:text-primary">
+      <nav className="text-[var(--type-small)] text-[var(--color-text-tertiary)]">
+        <Link href="/catalogue" className="text-[var(--color-text-secondary)] hover:text-prodet-blue">
           Catalogue
         </Link>
         <span className="mx-2">›</span>
         <span>{section?.label ?? 'Offre Prodet'}</span>
         <span className="mx-2">›</span>
-        <span className="text-prodet-text">{offer.name}</span>
+        <span className="text-[var(--color-text-primary)]">{offer.name}</span>
       </nav>
 
       <section className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] xl:items-start">
-        <div className="surface-panel overflow-hidden p-5 sm:p-6">
-          <div className="product-display-stage relative overflow-hidden rounded-[28px]">
+        <div className="overflow-hidden rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-card sm:p-6">
+          <div className="relative overflow-hidden rounded-lg bg-white">
             <div className="relative aspect-[4/5]">
               <Image
                 src={publicOfferReferenceImage}
@@ -129,7 +135,7 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
             {offer.variants.map((variant, index) => (
               <span
                 key={`${offer.id}-format-${index}`}
-                className="rounded-full border border-border bg-white px-3 py-2 text-xs font-medium text-prodet-text"
+                className="rounded-full border border-[var(--color-border)] bg-white px-3 py-2 text-[var(--type-xs)] font-medium text-[var(--color-text-primary)]"
               >
                 {variant.unit ?? 'Format pro'}
               </span>
@@ -137,34 +143,34 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
           </div>
         </div>
 
-        <div className="surface-panel p-6 sm:p-7">
+        <div className="rounded-lg border border-[var(--color-border)] bg-white p-6 shadow-card sm:p-7">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-border bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+            <span className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-prodet-blue">
               {section?.anchorTitle ?? 'Offre Prodet'}
             </span>
-            <span className="rounded-full border border-border bg-white px-3 py-1 text-[11px] font-medium text-muted-foreground">
+            <span className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-[11px] font-medium text-[var(--color-text-tertiary)]">
               {offer.sectionKind === 'commercialized' ? 'Article commercialise' : 'Offre professionnelle'}
             </span>
           </div>
 
-          <h1 className="mt-4 text-3xl font-bold text-prodet-text sm:text-[2.2rem]">{offer.name}</h1>
-          <p className="mt-4 max-w-3xl text-base leading-8 text-muted-foreground">{detailDescription}</p>
+          <h1 className="mt-4 text-3xl font-bold text-[var(--color-text-primary)] sm:text-[2.2rem]">{offer.name}</h1>
+          <p className="mt-4 max-w-3xl text-base leading-8 text-[var(--color-text-secondary)]">{detailDescription}</p>
 
           <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
-            <div className="rounded-[24px] border border-border bg-white p-5">
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-primary/72">
+            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-5">
+              <p className="text-[var(--type-2xs)] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-tertiary)]">
                 Description
               </p>
-              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+              <p className="mt-3 text-[var(--type-small)] leading-7 text-[var(--color-text-secondary)]">
                 {legacyProduct?.howToUse ?? offer.usageSummary}
               </p>
             </div>
 
-            <div className="rounded-[24px] border border-border bg-white p-5">
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-primary/72">
+            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-5">
+              <p className="text-[var(--type-2xs)] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-tertiary)]">
                 Dosage
               </p>
-              <p className="mt-3 text-sm leading-7 text-prodet-text">{dosage}</p>
+              <p className="mt-3 text-[var(--type-small)] leading-7 text-[var(--color-text-primary)]">{dosage}</p>
             </div>
           </div>
 
@@ -174,16 +180,16 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
                 href={homologationDocument.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 rounded-[22px] border border-border bg-white px-4 py-3 transition-colors hover:border-primary/35 hover:text-primary"
+                className="inline-flex items-center gap-3 rounded-lg border border-[var(--color-border)] bg-white px-4 py-3 transition-colors hover:border-prodet-blue-tint-strong hover:text-prodet-blue"
               >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#EAF7EF] text-support">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-prodet-green-tint text-prodet-green">
                   <ShieldCheck className="h-5 w-5" aria-hidden />
                 </span>
                 <span>
-                  <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-primary/72">
+                  <span className="block text-[var(--type-2xs)] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-tertiary)]">
                     Document disponible
                   </span>
-                  <span className="mt-1 block text-sm font-medium text-prodet-text">
+                  <span className="mt-1 block text-[var(--type-small)] font-medium text-[var(--color-text-primary)]">
                     {homologationDocument.label}
                   </span>
                 </span>
@@ -191,14 +197,14 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
             ) : null}
 
             {legacyProduct?.biodegradability ? (
-              <span className="inline-flex items-center rounded-full bg-[#EAF7EF] px-3 py-2 text-xs font-semibold text-support">
+              <span className="inline-flex items-center rounded-full bg-prodet-green-tint px-3 py-2 text-[var(--type-xs)] font-semibold text-prodet-green">
                 Biodégradabilité {legacyProduct.biodegradability}
               </span>
             ) : null}
             {(legacyProduct?.certifications ?? []).map((label) => (
               <span
                 key={label}
-                className="inline-flex items-center rounded-full bg-[#EAF7EF] px-3 py-2 text-xs font-semibold text-support"
+                className="inline-flex items-center rounded-full bg-prodet-green-tint px-3 py-2 text-[var(--type-xs)] font-semibold text-prodet-green"
               >
                 {label}
               </span>
@@ -206,19 +212,19 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
           </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <Button asChild className="h-12 rounded-[18px] text-sm font-semibold">
+            <Button asChild className="h-12 text-sm font-semibold">
               <Link href="/devis">Demander un devis</Link>
             </Button>
 
             {legacyProduct?.technicalSheetUrl ? (
-              <Button asChild variant="outline" className="h-12 rounded-[18px] text-sm font-semibold">
+              <Button asChild variant="outline" className="h-12 text-sm font-semibold">
                 <a href={legacyProduct.technicalSheetUrl} download>
                   <FileDown className="h-4 w-4" aria-hidden />
                   Télécharger la fiche technique
                 </a>
               </Button>
             ) : (
-              <Button asChild variant="outline" className="h-12 rounded-[18px] text-sm font-semibold">
+              <Button asChild variant="outline" className="h-12 text-sm font-semibold">
                 <Link href="/devis">{siteContent.product.technicalSheetFallback}</Link>
               </Button>
             )}
@@ -231,9 +237,9 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
           icon={<FlaskConical className="h-5 w-5" aria-hidden />}
           title="Comment l utiliser"
         >
-          <ul className="space-y-3 text-sm leading-7 text-muted-foreground">
+          <ul className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
             {usageSteps.map((item) => (
-              <li key={item} className="rounded-[18px] bg-[#F4F6F8] px-4 py-3">
+              <li key={item} className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
                 {item}
               </li>
             ))}
@@ -241,9 +247,9 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
         </InfoCard>
 
         <InfoCard icon={<MapPinned className="h-5 w-5" aria-hidden />} title="Ou l utiliser">
-          <ul className="space-y-3 text-sm leading-7 text-muted-foreground">
+          <ul className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
             {whereToUse.map((item) => (
-              <li key={item} className="rounded-[18px] bg-[#F4F6F8] px-4 py-3">
+              <li key={item} className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
                 {item}
               </li>
             ))}
@@ -253,21 +259,21 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
         <InfoCard icon={<ShieldCheck className="h-5 w-5" aria-hidden />} title="Specifications">
           <dl className="space-y-4 text-sm">
             {specifications.map((item) => (
-              <div key={item.label} className="rounded-[18px] bg-[#F4F6F8] px-4 py-3">
-                <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/72">
+              <div key={item.label} className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
+                <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
                   {item.label}
                 </dt>
-                <dd className="mt-2 leading-6 text-prodet-text">{item.value}</dd>
+                <dd className="mt-2 leading-6 text-[var(--color-text-primary)]">{item.value}</dd>
               </div>
             ))}
           </dl>
         </InfoCard>
 
         <InfoCard icon={<Calculator className="h-5 w-5" aria-hidden />} title="Calcul d usage">
-          <div className="space-y-3 text-sm leading-7 text-muted-foreground">
-            <div className="rounded-[18px] bg-[#F4F6F8] px-4 py-3">{usageCalculation[0]}</div>
-            <div className="rounded-[18px] bg-[#F4F6F8] px-4 py-3">{usageCalculation[1]}</div>
-            <div className="rounded-[18px] bg-[#F4F6F8] px-4 py-3">{usageCalculation[2]}</div>
+          <div className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
+            <div className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">{usageCalculation[0]}</div>
+            <div className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">{usageCalculation[1]}</div>
+            <div className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">{usageCalculation[2]}</div>
           </div>
         </InfoCard>
       </section>
@@ -276,10 +282,10 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
         <section className="mt-10">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-primary/72">
+              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
                 Meme service
               </p>
-              <h2 className="mt-3 text-2xl font-bold text-prodet-text">Autres références proches</h2>
+              <h2 className="mt-3 text-2xl font-bold text-[var(--color-text-primary)]">Autres références proches</h2>
             </div>
             <Button asChild variant="outline" className="rounded-full px-5">
               <Link href={`/catalogue?section=${offer.sectionId}`}>Voir la section</Link>
@@ -291,13 +297,13 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
               <li key={relatedOffer.id}>
                 <Link
                   href={`/catalogue/${relatedOffer.slug}`}
-                  className="surface-panel block h-full rounded-[24px] p-5 transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-[2px] hover:border-primary/28 hover:shadow-card-hover"
+                  className="block h-full rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-card transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-prodet-blue-tint-strong hover:shadow-card-hover"
                 >
-                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-primary/68">
+                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
                     {section?.label}
                   </p>
-                  <h3 className="mt-3 text-base font-semibold text-prodet-text">{relatedOffer.name}</h3>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  <h3 className="mt-3 text-base font-semibold text-[var(--color-text-primary)]">{relatedOffer.name}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
                     {relatedOffer.shortDescription}
                   </p>
                 </Link>
@@ -312,15 +318,16 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
 
 function LegacyProductDetailPage({ product, locale }: { product: Product; locale: Locale }) {
   const primaryUseCaseId = product.useCases[0];
-  const primaryUseCase = primaryUseCaseId ? getUseCaseById(primaryUseCaseId) : undefined;
+  const primaryUseCaseBase = primaryUseCaseId ? getUseCaseById(primaryUseCaseId) : undefined;
+  const primaryUseCase = primaryUseCaseBase ? localizeUseCase(primaryUseCaseBase, locale) : undefined;
   const sectorLabels = product.sectors
     .map((sectorId) => getSectorById(sectorId))
     .filter((sector): sector is NonNullable<typeof sector> => Boolean(sector))
-    .map((sector) => sector.label);
-  const relatedProducts = getSimilarProducts(product);
+    .map((sector) => localizeSector(sector, locale).label);
+  const relatedProducts = getSimilarProducts(product).map((p) => localizeProduct(p, locale));
 
   return (
-    <div className={`${productDisplay.variable} bg-[#FFFFFF] py-6 md:py-8 [font-family:var(--font-product-display)]`}>
+    <div className="py-6 md:py-8">
       <div className="mx-auto w-full max-w-[1200px] px-6">
         <ProductHeroV2
           product={product}
@@ -332,8 +339,8 @@ function LegacyProductDetailPage({ product, locale }: { product: Product; locale
         {relatedProducts.length > 0 ? (
           <section className="pt-10">
             <div className="flex items-center gap-3">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#1B5FA7]" aria-hidden />
-              <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-[#1C2B3A]">
+              <span className="h-2.5 w-2.5 rounded-full bg-prodet-blue" aria-hidden />
+              <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-[var(--color-text-primary)]">
                 Produits similaires
               </h2>
             </div>
@@ -378,11 +385,11 @@ function InfoCard({
   children: ReactNode;
 }) {
   return (
-    <div className="surface-panel h-full p-5 sm:p-6">
-      <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#EAF2FA] text-primary">
+    <div className="h-full rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-card sm:p-6">
+      <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-prodet-blue-tint text-prodet-blue">
         {icon}
       </div>
-      <h2 className="mt-4 text-xl font-semibold text-prodet-text">{title}</h2>
+      <h2 className="mt-4 text-xl font-semibold text-[var(--color-text-primary)]">{title}</h2>
       <div className="mt-4">{children}</div>
     </div>
   );

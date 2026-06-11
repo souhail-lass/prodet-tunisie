@@ -16,6 +16,8 @@ Format: see [0001-record-format.md](0001-record-format.md).
 | [0008](0008-product-matching-engine.md) | Layered matching: alias → exact → trigram → vector → LLM rerank | Proposed |
 | [0009](0009-swiver-integration-strategy.md) | Swiver coexistence with manual export at v1, API-driven at Phase 4 | Proposed |
 | [0010](0010-jobs-and-queues.md) | Inngest for background jobs | Proposed |
+| [0011](0011-client-portal-access-and-request-model.md) | Client portal access and request model | Proposed |
+| [0012](0012-swiver-integration-architecture.md) | Swiver integration architecture (adapter, sync boundaries, prerequisites) | Proposed |
 
 ## When to write an ADR
 

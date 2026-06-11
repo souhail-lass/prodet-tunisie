@@ -4,7 +4,7 @@
     "tagline": "Fabricant tunisien de produits d'hygiène et d'entretien professionnels."
   },
   "actions": {
-    "requestQuote": "Demander un devis",
+    "requestQuote": "Devis",
     "viewCatalog": "Voir le catalogue",
     "contactUs": "Nous contacter",
     "callUs": "Appeler",
@@ -26,6 +26,7 @@
     "catalog": "Catalogue",
     "sectors": "Secteurs",
     "about": "À propos",
+    "clientSpace": "Espace client",
     "contact": "Contact",
     "quote": "Devis"
   },

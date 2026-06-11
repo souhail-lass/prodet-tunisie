@@ -18,12 +18,23 @@ export type ProductContextImage = {
   alt: string;
 };
 
+/**
+ * Slim projection of Product for the catalogue grid — only what a card
+ * renders and searches, so the page payload stays small.
+ */
+export type CatalogueCardProduct = Pick<
+  Product,
+  'id' | 'slug' | 'name' | 'tagline' | 'category' | 'categoryLabel' | 'image' | 'formats'
+>;
+
 export type Product = {
   id: string;
   slug: string;
   name: string;
   tagline: string;
   category: ProductCategory;
+  /** Raw Swiver category label (e.g. "PRODUITS FINIS PRODET") — drives the catalogue filter. */
+  categoryLabel?: string;
   useCases: UseCaseId[];
   sectors: SectorId[];
   description: string;

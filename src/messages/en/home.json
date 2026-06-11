@@ -1,14 +1,25 @@
 {
   "hero": {
-    "eyebrow": "Tunisian manufacturer since 1996",
-    "title": "Professional cleaning and hygiene products, made in Tunisia.",
+    "eyebrow": "Made in Tunisia",
+    "title": "Professional hygiene, delivered to your business.",
     "subtitle": "Detergents, disinfectants and accessories for hotels, restaurants, cleaning companies, wholesalers and institutions. Greater Tunis delivery.",
     "primaryCta": "Request a quote",
-    "secondaryCta": "View catalog"
+    "secondaryCta": "View catalog",
+    "sub": "Detergents, disinfectants and consumables for hotels, restaurants, cafés and communities. A complete catalogue, a quote within 24 hours.",
+    "ctaQuote": "Request a quote",
+    "ctaCatalogue": "View the catalogue",
+    "metaReferences": "references",
+    "metaServices": "dedicated services",
+    "metaExperience": "years of experience",
+    "madeBadge": "Made by Prodet",
+    "packTitle": "SIRAFAN",
+    "packSub": "All-surface disinfectant, no rinsing · biodegradable > 90%"
   },
   "sectors": {
-    "title": "Solutions by sector",
-    "subtitle": "Products fit for your operation, recommended by our team."
+    "title": "Designed for your trade",
+    "subtitle": "Products fit for your operation, recommended by our team.",
+    "eyebrow": "Sectors",
+    "lead": "Protocols and formats suited to every type of establishment."
   },
   "manufacturing": {
     "eyebrow": "Our manufacturing",
@@ -18,11 +29,38 @@
   "trust": {
     "yearsLabel": "years in business",
     "manufacturedLabel": "products manufactured in-house",
-    "customersLabel": "active professional customers"
+    "customersLabel": "active professional customers",
+    "local": {
+      "title": "Local manufacturing",
+      "body": "Products formulated and packaged in Tunisia."
+    },
+    "delivery": {
+      "title": "Greater Tunis delivery",
+      "body": "Fast restocking for your establishments."
+    },
+    "advice": {
+      "title": "Technical advice",
+      "body": "Dosage, safety and hygiene protocols."
+    },
+    "quote": {
+      "title": "Quote within 24h",
+      "body": "A clear answer to every request."
+    }
   },
   "ctaBand": {
     "title": "Have a specific need?",
     "subtitle": "Tell us your quantities and constraints; we reply within one business day.",
     "cta": "Request a quote"
+  },
+  "featured": {
+    "eyebrow": "Catalogue",
+    "title": "Most requested products",
+    "cta": "Full catalogue"
+  },
+  "cta": {
+    "title": "A regular need for your business?",
+    "body": "Build your list, request a quote, and get an answer within 24 hours.",
+    "quote": "Request a quote",
+    "contact": "Contact us"
   }
 }

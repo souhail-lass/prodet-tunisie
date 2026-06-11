@@ -4,7 +4,7 @@
     "tagline": "مُصنِّع تونسي لمنتجات النظافة والصيانة المهنية."
   },
   "actions": {
-    "requestQuote": "طلب عرض سعر",
+    "requestQuote": "عرض سعر",
     "viewCatalog": "تصفّح الكتالوج",
     "contactUs": "اتصل بنا",
     "callUs": "اتصال هاتفي",
@@ -26,6 +26,7 @@
     "catalog": "الكتالوج",
     "sectors": "القطاعات",
     "about": "من نحن",
+    "clientSpace": "مساحة العميل",
     "contact": "اتصال",
     "quote": "عرض سعر"
   },

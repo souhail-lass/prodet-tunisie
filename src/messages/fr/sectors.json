@@ -9,5 +9,24 @@
     "recommendedSubtitle": "Une base de départ adaptée à votre activité. Ajustons ensemble selon vos volumes et contraintes.",
     "ctaTitle": "Vous voulez un devis personnalisé ?",
     "ctaSubtitle": "Décrivez-nous votre activité et vos volumes, nous revenons vers vous sous 24h ouvrées."
+  },
+  "hero": {
+    "eyebrow": "Secteurs",
+    "title": "Une expertise par métier",
+    "lead": "Prodet accompagne chaque type d’établissement avec des produits, des formats et des conseils adaptés."
+  },
+  "cards": {
+    "hotels": "Étage, restauration, buanderie et spa — une gamme complète et un seul fournisseur.",
+    "restaurants-cafes": "Dégraissants cuisine, plonge, désinfection des surfaces et hygiène des mains.",
+    "societes-nettoyage": "Sols, vitres, sanitaires : des formats concentrés au meilleur rendement.",
+    "entreprises": "Bureaux, ateliers et réfectoires — entretien quotidien et consommables.",
+    "revendeurs-grossistes": "Approvisionnement régulier en gros conditionnements fabriqués localement.",
+    "institutions": "Écoles, cliniques et administrations — protocoles de désinfection fiables."
+  },
+  "viewProducts": "Voir les produits",
+  "cta": {
+    "title": "Vous ne trouvez pas votre secteur ?",
+    "body": "Décrivez-nous votre activité, nous construisons votre gamme.",
+    "quote": "Demander un devis"
   }
 }

@@ -31,5 +31,43 @@
     "successTitle": "Message envoyé.",
     "successBody": "Nous vous répondons sous 24h ouvrées.",
     "submit": "Envoyer"
+  },
+  "hero": {
+    "eyebrow": "Contact",
+    "title": "Parlons de vos besoins en hygiène",
+    "lead": "Une question, un devis, un conseil produit ? Notre équipe à Tunis vous répond sous 24 heures ouvrées."
+  },
+  "fields": {
+    "company": "Nom de l'établissement",
+    "name": "Personne à contacter",
+    "email": "Email",
+    "phone": "Téléphone",
+    "sector": "Secteur",
+    "message": "Votre message"
+  },
+  "placeholders": {
+    "company": "Hôtel Carthage",
+    "name": "Nom et prénom",
+    "email": "nom@societe.tn",
+    "phone": "71 000 000",
+    "sector": "Choisir votre secteur",
+    "message": "Décrivez vos besoins : produits, volumes, fréquence de livraison…"
+  },
+  "submit": "Envoyer le message",
+  "submitting": "Envoi…",
+  "whatsapp": "WhatsApp",
+  "error": "Impossible d’envoyer le message. Vérifiez les champs et réessayez.",
+  "success": {
+    "title": "Message envoyé",
+    "body": "Merci. Notre équipe revient vers vous sous 24 heures ouvrées.",
+    "again": "Envoyer un autre message"
+  },
+  "info": {
+    "address": "Adresse",
+    "phone": "Téléphone",
+    "email": "Email",
+    "hours": "Horaires",
+    "hoursValue": "Lun – Ven · 8h30 – 17h30 · Sam · 8h30 – 13h00",
+    "mapLabel": "l’Aouina, Tunis"
   }
 }

@@ -6,15 +6,21 @@
 
 ## Repository state
 
-This repository is currently in **conception phase**. There is **no application code yet**. Every file is documentation. The `.github/workflows/` files are placeholders. There is no `package.json`, no `pnpm-lock.yaml`, no Next.js scaffold.
+**Active implementation** (2026-06-06). Full Next.js 15 application in `src/`. See [docs/05-ops/project-status.md](docs/05-ops/project-status.md) for what is built vs pending.
 
-Code arrives **only after**:
+| Area | Status |
+|---|---|
+| Public site | Built (catalog still uses static fixtures) |
+| Client portal | Built (dashboard, requests, history, usual products, documents) |
+| Admin | Partial (access + portal request review) |
+| Order intake / AI | Not started |
+| Swiver live sync | Adapter shipped; default `disabled` |
 
-1. PRD v1 is signed off (Batch 1 of [docs/01-product/open-questions.md](docs/01-product/open-questions.md) answered).
-2. Spikes 1, 2, 3 in [docs/06-spikes/](docs/06-spikes/) have been run with documented decisions.
-3. Souhail explicitly approves "begin Phase 1."
+**Claude Code entry point:** [CLAUDE.md](CLAUDE.md) and [docs/05-ops/claude-code-handoff.md](docs/05-ops/claude-code-handoff.md).
 
-If a user asks you to "start coding," "set up the Next.js project," or "install dependencies" while the repo is still in conception phase, **stop and confirm** that they have completed the gates above. If not, push back: code that ships before the spikes is throwaway.
+**Developer guide:** [docs/00-overview/developer-guide.md](docs/00-overview/developer-guide.md).
+
+Spikes 1, 2, 3 were **not executed** before coding began (Souhail override — see Execution override log). Do not assume spike-validated Swiver API shapes, extraction accuracy, or matching quality.
 
 ## The load-bearing principle (do not violate)
 
@@ -42,27 +48,25 @@ These are decided. Changing them requires a new ADR superseding the relevant one
 7. **Boring tech bias.** Use the stack in [docs/02-architecture/tech-stack.md](docs/02-architecture/tech-stack.md). Do not add new dependencies casually. New SaaS only when the existing stack genuinely cannot do the job.
 8. **Modular code organization without over-engineering.** Route groups, `src/db/`, `src/ai/`, `src/jobs/` directories — not packages.
 
-## What you may do without explicit approval (during conception)
+## What you may do without explicit approval
 
 - Read any file in the repo.
-- Run grep / glob / list commands.
-- Edit and create markdown documentation under `docs/`.
-- Update `README.md`, `AGENTS.md`, ADRs, spike briefs, open questions.
+- Run grep / glob / list / test / lint / typecheck commands.
+- Edit application code following conventions below.
+- Edit and create markdown under `docs/`.
+- Update `README.md`, `AGENTS.md`, `CLAUDE.md`, ADRs, open questions.
 - Add diagrams (mermaid only, kept inside markdown).
-- Propose changes to the open-questions list.
 
-## What you must NOT do during conception
+## What you must NOT do without explicit approval
 
-- Initialize a Next.js / Node project (no `package.json`, no `pnpm install`).
-- Add or install dependencies of any kind.
-- Add real CI jobs that assume application code (the placeholders are intentional).
-- Create files outside the documented `docs/` tree without justification.
-- Commit, push, or otherwise mutate git state. Souhail commits manually.
+- Add npm dependencies (requires ADR).
+- Commit, push, or mutate git state — Souhail commits manually unless told otherwise.
 - Use emojis in any file or response.
 - Auto-translate documentation. Translations are reviewed by humans.
-- Make assertions about Swiver's API capabilities, real customer data, or actual extraction accuracy. Those are spike outputs, not knowledge.
+- Assert Swiver API capabilities, extraction accuracy, or matching quality as validated facts.
+- Redesign architecture invariants (requires superseding ADR).
 
-## What you may do once code is being written (Phase 1+)
+## Implementation rules (Phase 1+)
 
 - Add tests for any feature you modify.
 - Use the existing stack and patterns. Do not introduce GraphQL, Zustand, SWR, Prisma, or any other excluded library without an ADR.
@@ -138,6 +142,10 @@ Full list: [docs/01-product/non-goals.md](docs/01-product/non-goals.md).
 | Look up domain terms | [docs/00-overview/glossary.md](docs/00-overview/glossary.md) |
 | Read competitor analysis | [docs/07-research/competitors.md](docs/07-research/competitors.md) |
 | Find module specs | [docs/03-modules/](docs/03-modules/) |
+| Current build status | [docs/05-ops/project-status.md](docs/05-ops/project-status.md) |
+| Claude Code handoff | [docs/05-ops/claude-code-handoff.md](docs/05-ops/claude-code-handoff.md) |
+| Env / secrets setup | [docs/05-ops/secrets-checklist.md](docs/05-ops/secrets-checklist.md) |
+| Developer guide | [docs/00-overview/developer-guide.md](docs/00-overview/developer-guide.md) |
 
 ## When you are unsure
 

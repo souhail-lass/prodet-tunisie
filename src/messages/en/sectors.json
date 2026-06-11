@@ -9,5 +9,24 @@
     "recommendedSubtitle": "A starting point shaped for your operation. We tailor it to your volumes and constraints.",
     "ctaTitle": "Want a tailored quote?",
     "ctaSubtitle": "Tell us about your activity and volumes — we reply within one business day."
+  },
+  "hero": {
+    "eyebrow": "Sectors",
+    "title": "Expertise for every trade",
+    "lead": "Prodet supports every type of establishment with suitable products, formats and advice."
+  },
+  "cards": {
+    "hotels": "Housekeeping, catering, laundry and spa — a complete range from a single supplier.",
+    "restaurants-cafes": "Kitchen degreasers, dishwashing, surface disinfection and hand hygiene.",
+    "societes-nettoyage": "Floors, glass, sanitary areas: concentrated formats for the best yield.",
+    "entreprises": "Offices, workshops and canteens — daily upkeep and consumables.",
+    "revendeurs-grossistes": "Regular supply in large, locally made packaging.",
+    "institutions": "Schools, clinics and administrations — reliable disinfection protocols."
+  },
+  "viewProducts": "View products",
+  "cta": {
+    "title": "Can't find your sector?",
+    "body": "Tell us about your activity, and we'll build your range.",
+    "quote": "Request a quote"
   }
 }

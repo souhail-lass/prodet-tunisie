@@ -17,41 +17,33 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <article className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-[10px] border-[0.5px] border-[#E5E7EB] bg-white transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#1B5FA7] hover:shadow-[0_4px_16px_rgba(27,95,167,0.08)]">
+    <article className="group flex h-full min-h-[360px] flex-col overflow-hidden rounded-lg border border-[var(--color-border)] bg-white shadow-card transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-prodet-blue-tint-strong hover:shadow-card-hover">
       <Link href={`/catalogue/${product.slug}`} className="block">
-        <div className="relative flex h-[160px] items-center justify-center rounded-t-[10px] bg-[#F8F7F4] p-4">
+        <div className="relative flex h-[238px] items-center justify-center bg-white px-4 pt-4">
           {product.image ? (
             <Image
               src={product.image}
               alt={product.name}
-              width={240}
-              height={140}
-              sizes="(min-width: 1024px) 260px, (min-width: 768px) 50vw, 100vw"
-              className={cn(
-                'h-full w-full object-contain',
-                product.slug === 'deofresh' ||
-                  product.slug === 'deofresh-linge' ||
-                  product.slug === 'sirafan-desinfectant'
-                  ? 'translate-y-2 scale-[0.95]'
-                  : 'scale-[1.1]',
-              )}
+              fill
+              sizes="(min-width: 1280px) 245px, (min-width: 768px) 33vw, 100vw"
+              className="object-contain px-5 pb-2 pt-6 mix-blend-multiply transition-transform duration-200 group-hover:scale-[1.02]"
             />
           ) : (
             <ProductInitials product={product} />
           )}
         </div>
 
-        <div className="px-3.5 pb-0 pt-3">
-          <h3 className="truncate text-[13px] font-semibold leading-[1.3] text-[#1C2B3A] transition-colors group-hover:text-[#1B5FA7]">
+        <div className="px-4 pb-0 pt-2">
+          <h3 className="line-clamp-1 text-[var(--type-body)] font-semibold leading-tight text-prodet-blue transition-colors group-hover:text-prodet-blue-hover">
             {product.name}
           </h3>
-          <p className="mt-[3px] line-clamp-2 text-[11px] leading-[1.4] text-[#6B7280]">
+          <p className="mt-2 line-clamp-2 text-[var(--type-xs)] leading-snug text-[var(--color-text-secondary)]">
             {product.tagline}
           </p>
         </div>
       </Link>
 
-      <div className="mt-auto px-3.5 pb-3 pt-2.5">
+      <div className="mt-auto px-4 pb-4 pt-4">
         <QuoteQuantityControl product={product} />
       </div>
     </article>
@@ -80,7 +72,7 @@ export function QuoteQuantityControl({
         <button
           type="button"
           onClick={() => setProductQuantity(quoteProduct, 1)}
-          className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border-[0.5px] border-[#1B5FA7] bg-transparent px-3 text-center text-[12px] font-medium text-[#1B5FA7] transition-all duration-150 hover:bg-[#1B5FA7] hover:text-white"
+          className="flex h-8 w-full items-center justify-center gap-1.5 rounded-sm border border-prodet-blue bg-transparent px-3 text-center text-[var(--type-xs)] font-medium text-prodet-blue transition-colors duration-150 hover:bg-prodet-blue hover:text-white"
         >
           + Ajouter au devis
         </button>
@@ -109,8 +101,8 @@ export function QuoteQuantityControl({
         className={cn(
           'flex h-8 w-7 shrink-0 items-center justify-center transition-colors duration-150',
           showTrash
-            ? 'rounded-l-md border-[0.5px] border-[#FCA5A5] bg-[#FEF2F2] text-[#DC2626] hover:bg-[#FEE2E2]'
-            : 'rounded-l-md bg-[#1B5FA7] text-white hover:bg-[#1650A0]',
+            ? 'rounded-l-sm border border-[var(--color-danger-bg)] bg-[var(--color-danger-bg)] text-[var(--color-danger)] hover:opacity-80'
+            : 'rounded-l-sm bg-prodet-blue text-white hover:bg-prodet-blue-hover',
         )}
         aria-label={showTrash ? `Supprimer ${product.name} du devis` : `Retirer ${product.name} du devis`}
       >
@@ -142,12 +134,12 @@ export function QuoteQuantityControl({
           }
         }}
         aria-label={`Quantité de ${product.name}`}
-        className="h-8 min-w-0 flex-1 border-y-[0.5px] border-[#1B5FA7] border-x-0 bg-white px-2 text-center text-[13px] font-semibold text-[#1C2B3A] outline-none"
+        className="h-8 min-w-0 flex-1 border-y border-prodet-blue border-x-0 bg-white px-2 text-center text-[var(--type-small)] font-semibold outline-none"
       />
       <button
         type="button"
         onClick={() => setProductQuantity(quoteProduct, quantity + 1)}
-        className="flex h-8 w-7 shrink-0 items-center justify-center rounded-r-md bg-[#1B5FA7] text-[16px] font-normal leading-none text-white transition-colors duration-150 hover:bg-[#1650A0]"
+        className="flex h-8 w-7 shrink-0 items-center justify-center rounded-r-sm bg-prodet-blue text-[16px] font-normal leading-none text-white transition-colors duration-150 hover:bg-prodet-blue-hover"
         aria-label={`Ajouter ${product.name} au devis`}
       >
         +
@@ -168,8 +160,8 @@ function ProductInitials({ product }: { product: Product }) {
   return (
     <div
       className={cn(
-        'flex h-16 w-16 items-center justify-center rounded-full text-lg font-semibold text-white shadow-sm',
-        isManufactured ? 'bg-[#1B5FA7]' : 'bg-[#1F9C49]',
+        'flex h-16 w-16 items-center justify-center rounded-full text-lg font-semibold text-white',
+        isManufactured ? 'bg-prodet-blue' : 'bg-prodet-green',
       )}
     >
       {initials}

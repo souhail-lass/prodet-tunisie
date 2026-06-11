@@ -21,5 +21,42 @@
     "addToQuoteTitle": "Need this product?",
     "addToQuoteBody": "Add it to your quote or chat with us on WhatsApp about quantities.",
     "alsoInTitle": "Also recommended for"
+  },
+  "masthead": {
+    "eyebrow": "Catalogue",
+    "title": "Hygiene & cleaning products",
+    "lead": "Select your products and build your quote request. No prices shown — a personalised answer within 24h."
+  },
+  "chips": {
+    "all": "All products",
+    "manufactured": "Made by Prodet",
+    "commercialized": "Resold articles"
+  },
+  "filters": {
+    "label": "Filters",
+    "clear": "Clear all",
+    "usage": "By use",
+    "sector": "By sector",
+    "format": "Format",
+    "categories": "Categories"
+  },
+  "help": {
+    "title": "Need advice?",
+    "body": "Our team guides you to the right product and the right dosage."
+  },
+  "toolbar": {
+    "searchPlaceholder": "Search for a product…",
+    "sortRelevance": "Sort: relevance",
+    "sortAz": "Sort: A → Z"
+  },
+  "empty": {
+    "text": "No product matches your search.",
+    "reset": "Reset filters"
+  },
+  "pagination": {
+    "label": "Catalogue pages",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page {page}"
   }
 }

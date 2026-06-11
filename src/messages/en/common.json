@@ -4,7 +4,7 @@
     "tagline": "Tunisian manufacturer of professional cleaning and hygiene products."
   },
   "actions": {
-    "requestQuote": "Request a quote",
+    "requestQuote": "Quote",
     "viewCatalog": "View catalog",
     "contactUs": "Contact us",
     "callUs": "Call",
@@ -26,6 +26,7 @@
     "catalog": "Catalog",
     "sectors": "Sectors",
     "about": "About",
+    "clientSpace": "Client space",
     "contact": "Contact",
     "quote": "Quote"
   },

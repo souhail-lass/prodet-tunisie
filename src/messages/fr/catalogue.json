@@ -21,5 +21,42 @@
     "addToQuoteTitle": "Besoin de ce produit ?",
     "addToQuoteBody": "Ajoutez-le à votre devis ou contactez-nous par WhatsApp pour échanger sur vos quantités.",
     "alsoInTitle": "Aussi recommandé pour"
+  },
+  "masthead": {
+    "eyebrow": "Catalogue",
+    "title": "Produits d’hygiène & de détergence",
+    "lead": "Sélectionnez vos produits et constituez votre demande de devis. Aucun prix affiché — réponse personnalisée sous 24h."
+  },
+  "chips": {
+    "all": "Tous les produits",
+    "manufactured": "Fabriqué par Prodet",
+    "commercialized": "Articles commercialisés"
+  },
+  "filters": {
+    "label": "Filtres",
+    "clear": "Tout effacer",
+    "usage": "Par usage",
+    "sector": "Par secteur",
+    "format": "Format",
+    "categories": "Catégories"
+  },
+  "help": {
+    "title": "Besoin de conseil ?",
+    "body": "Notre équipe vous oriente vers le bon produit et le bon dosage."
+  },
+  "toolbar": {
+    "searchPlaceholder": "Rechercher un produit…",
+    "sortRelevance": "Trier : pertinence",
+    "sortAz": "Trier : A → Z"
+  },
+  "empty": {
+    "text": "Aucun produit ne correspond à votre recherche.",
+    "reset": "Réinitialiser les filtres"
+  },
+  "pagination": {
+    "label": "Pagination du catalogue",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "page": "Page {page}"
   }
 }

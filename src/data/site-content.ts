@@ -106,7 +106,7 @@ export const siteContent = {
   },
   product: {
     imageCaption: 'Image illustrative',
-    stickyCta: 'Demander un devis',
+    stickyCta: 'Devis',
     badgeManufactured: 'Fabriqué par Prodet',
     badgeCommercialized: 'Commercialisé',
     tabs: [
@@ -183,7 +183,7 @@ export const siteContent = {
       "Les horaires et le WhatsApp ne sont pas affichés ici tant qu'ils ne sont pas confirmés.",
   },
   quoteModal: {
-    title: 'Demander un devis',
+    title: 'Devis',
     subtitle:
       'Renseignez votre demande. Votre client e-mail s’ouvrira avec un message prêt à envoyer à Prodet Tunisie.',
     successTitle: 'Votre demande est prête.',

@@ -1,8 +1,8 @@
 {
   "hero": {
     "eyebrow": "About",
-    "title": "Tunisian manufacturing, built for professionals.",
-    "lead": "Prodet Tunisie has been designing, manufacturing and distributing professional cleaning and hygiene products since 1996, serving hotels, restaurants, cleaning companies, wholesalers, institutions and industry."
+    "title": "A Tunisian manufacturer serving professionals",
+    "lead": "From Tunis, Prodet formulates, packages and distributes a complete range of hygiene and cleaning products for demanding trades."
   },
   "story": {
     "title": "Our story",
@@ -42,5 +42,29 @@
     "subtitle": "We answer quote requests within one business day.",
     "primary": "Request a quote",
     "secondary": "Contact us"
+  },
+  "body": {
+    "p1": "Prodet Tunisia supports hotels, restaurants, cafés, cleaning companies and communities with products designed for intensive professional use: kitchen degreasers, surface disinfectants, industrial detergents, hand hygiene and consumables.",
+    "p2": "Our local manufacturing ensures short lead times, reliable restocking across Greater Tunis, and technical support on dosages and protocols. Every order comes with advice tailored to your establishment.",
+    "p3": "We do not publish prices online: each quote is built according to your volumes, frequency and sector, for a fair and sustainable offer."
+  },
+  "cta": "Request a quote",
+  "stats": {
+    "references": {
+      "value": "160+",
+      "label": "Catalogue references"
+    },
+    "services": {
+      "value": "4",
+      "label": "Dedicated services"
+    },
+    "experience": {
+      "value": "20 yrs",
+      "label": "Of trade experience"
+    },
+    "delay": {
+      "value": "24h",
+      "label": "Quote response time"
+    }
   }
 }
