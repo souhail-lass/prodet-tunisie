@@ -564,3 +564,33 @@
   .otable__row { animation: none; }
   .stat-card--filter:hover { transform: none; }
 }
+
+/* ============================================================
+   PORTAL/ADMIN MOBILE — appended last so these always win the
+   cascade over base rules defined earlier in this file.
+   ============================================================ */
+.portal-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+
+@media (max-width: 768px) {
+  /* document/invoice/devis rows: stack so the action button never overflows */
+  .portal-list-row { flex-direction: column; align-items: stretch; gap: 12px; }
+  .portal-list-row__actions { flex-wrap: wrap; justify-content: flex-start; gap: 10px; }
+  .portal-list-row__actions .pds-btn { flex: 1 1 auto; justify-content: center; }
+
+  /* orders toolbar: tabs scroll horizontally; search + button stack full width */
+  .otable-toolbar { flex-direction: column; align-items: stretch; }
+  .otable-tabs { display: flex; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .otable-tabs::-webkit-scrollbar { display: none; }
+  .otable-tab { flex-shrink: 0; }
+  .otable-toolbar__right { width: 100%; flex-wrap: wrap; }
+  .otable-toolbar__right .otable-search { flex: 1 1 100%; }
+  .otable-toolbar__right .pds-btn { flex: 1 1 100%; justify-content: center; }
+}
+
+@media (max-width: 560px) {
+  /* 3-up stat strips (factures, admin produits/clients) → 1 column.
+     Declared after the base .dash__stats--3 so this actually applies. */
+  .dash__stats--3 { grid-template-columns: 1fr; }
+  /* account / contact field pairs → single column */
+  .portal-fields { grid-template-columns: 1fr; }
+}

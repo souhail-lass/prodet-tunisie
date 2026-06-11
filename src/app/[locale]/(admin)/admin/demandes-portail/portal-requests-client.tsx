@@ -71,7 +71,7 @@ export function PortalRequestsClient({ requests }: { requests: PortalRequestRow[
 
   return (
     <div className="dash">
-      <div className="dash__stats" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+      <div className="dash__stats dash__stats--3">
         <div className="stat-card">
           <div className="stat-card__value">{requests.length}</div>
           <div className="stat-card__label">Demandes reçues</div>

@@ -43,7 +43,7 @@ export default async function ClientAccountPage({ params }: { params: Promise<{ 
               <CheckCircle2 size={15} /> {identity.matched ? t('swiver.linked') : t('swiver.demoNote')}
             </span>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
+          <div className="portal-fields">
             {swiverFields.map((field) => (
               <div key={field.label}>
                 <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 'var(--fw-semibold)' }}>
@@ -62,7 +62,7 @@ export default async function ClientAccountPage({ params }: { params: Promise<{ 
         <div className="panel__head">
           <h2 className="panel__title">{t('account.contactTitle')}</h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 18 }}>
+        <div className="portal-fields">
           {fields.map((field) => (
             <div key={field.label}>
               <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 'var(--fw-semibold)' }}>
