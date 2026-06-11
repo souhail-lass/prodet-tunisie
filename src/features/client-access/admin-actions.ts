@@ -1,9 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { headers } from 'next/headers';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
+import { resolveAuthOrigin } from '@/lib/site-origin';
 import { companyInfo } from '@/data/company';
 import {
   isAdminAuthUnavailableError,
@@ -531,14 +531,8 @@ async function requirePortalInviteAdmin(): Promise<
 }
 
 async function buildActivationLink(locale: 'fr' | 'ar' | 'en', rawToken: string): Promise<string> {
-  const headersList = await headers();
-  const origin =
-    headersList.get('origin') ||
-    (headersList.get('host')
-      ? `${headersList.get('x-forwarded-proto') ?? 'http'}://${headersList.get('host')}`
-      : process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3004');
-  const safeOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
-  return `${safeOrigin}/${locale}/activation-client?token=${encodeURIComponent(rawToken)}`;
+  const origin = await resolveAuthOrigin();
+  return `${origin}/${locale}/activation-client?token=${encodeURIComponent(rawToken)}`;
 }
 
 async function sendPortalInviteEmail(input: {

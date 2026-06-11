@@ -1,10 +1,10 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { consumeRateLimit } from '@/lib/rate-limit';
+import { resolveAuthOrigin } from '@/lib/site-origin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 const ClientLoginSchema = z.object({
@@ -64,19 +64,7 @@ export async function requestClientMagicLink(formData: FormData): Promise<never>
     redirect(`/${locale}/connexion-client?error=config`);
   }
 
-  // The magic-link redirect origin must NOT be derived from attacker-spoofable
-  // Host/Origin headers in production (host-header injection → poisoned login
-  // link). In production we trust the configured site URL; only in dev do we
-  // fall back to request headers so localhost ports keep working.
-  const headersList = await headers();
-  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL;
-  const origin =
-    process.env.NODE_ENV === 'production' && configuredOrigin
-      ? configuredOrigin
-      : headersList.get('origin') ||
-        (headersList.get('host')
-          ? `${headersList.get('x-forwarded-proto') ?? 'http'}://${headersList.get('host')}`
-          : configuredOrigin ?? 'http://localhost:3004');
+  const origin = await resolveAuthOrigin();
   const emailRedirectTo = `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`;
 
   const { error } = await supabase.auth.signInWithOtp({

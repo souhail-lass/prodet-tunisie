@@ -1,9 +1,9 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { consumeRateLimit } from '@/lib/rate-limit';
+import { resolveAuthOrigin } from '@/lib/site-origin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 const AdminLoginSchema = z.object({
@@ -53,15 +53,7 @@ export async function requestAdminMagicLink(formData: FormData): Promise<never> 
     redirect(`/${locale}/connexion-admin?error=config`);
   }
 
-  // Trust the configured site URL in production so a spoofed Host/Origin
-  // header cannot poison the admin magic-link email (host-header injection).
-  const headersList = await headers();
-  const configuredOrigin = process.env.NEXT_PUBLIC_SITE_URL;
-  const origin =
-    process.env.NODE_ENV === 'production' && configuredOrigin
-      ? configuredOrigin
-      : headersList.get('origin') ||
-        `${headersList.get('x-forwarded-proto') ?? 'http'}://${headersList.get('host')}`;
+  const origin = await resolveAuthOrigin();
   const emailRedirectTo = `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`;
 
   const { error } = await supabase.auth.signInWithOtp({
