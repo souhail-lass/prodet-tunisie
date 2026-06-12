@@ -82,10 +82,12 @@ async function fetchInvoicesFromSwiver(contactSwiverId: string): Promise<Invoice
  * Letting it throw means unstable_cache stores nothing on failure, so the very
  * next navigation retries — only genuine (successful) results are cached.
  */
+// Near-live: 20s window keeps the (heavy) dashboard snappy on rapid navigation
+// while a new Swiver invoice reflects in the spending hero within ~20s.
 const getCachedCustomerInvoices = unstable_cache(
   fetchInvoicesFromSwiver,
   ['portal-spending-invoices'],
-  { revalidate: 900, tags: ['swiver-documents'] },
+  { revalidate: 20, tags: ['swiver-documents'] },
 );
 
 /**
@@ -111,7 +113,7 @@ export const getCachedCustomerOrderTotals = unstable_cache(
     }
   },
   ['portal-order-doc-totals'],
-  { revalidate: 900, tags: ['swiver-documents'] },
+  { revalidate: 20, tags: ['swiver-documents'] },
 );
 
 function currentMonthKey(): string {

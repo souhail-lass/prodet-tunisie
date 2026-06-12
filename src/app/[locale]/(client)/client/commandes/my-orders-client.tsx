@@ -16,6 +16,8 @@ export type MyOrderRow = {
   cancellable: boolean;
   /** Real Swiver total, preformatted server-side ("123,456 TND"), or null. */
   totalLabel: string | null;
+  /** 'swiver' rows are created in Swiver → read-only (no detail page/cancel). */
+  origin: 'portal' | 'swiver';
 };
 
 const STATUS: Record<string, { label: string; tone: string }> = {
@@ -121,15 +123,26 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
             const s = STATUS[status] ?? { label: status, tone: 'neutral' };
             const isCanceled = status === 'rejected';
             const transmitted = o.swiverPushed && !isCanceled;
+            const fromSwiver = o.origin === 'swiver';
+            const refInner = (
+              <>
+                {transmitted ? (
+                  <CheckCircle2 size={14} className="otable__ref-check" aria-label="Enregistrée chez Prodet" />
+                ) : null}
+                <span>{o.reference}</span>
+              </>
+            );
             return (
               <div className="otable__row" key={o.id}>
                 <span className="otable__refcell">
-                  <Link href={`/client/commandes/${o.id}`} className="otable__ref">
-                    {transmitted ? (
-                      <CheckCircle2 size={14} className="otable__ref-check" aria-label="Transmise à Prodet" />
-                    ) : null}
-                    <span>{o.reference}</span>
-                  </Link>
+                  {fromSwiver ? (
+                    // Created in Swiver → read-only (no portal detail page).
+                    <span className="otable__ref otable__ref--static">{refInner}</span>
+                  ) : (
+                    <Link href={`/client/commandes/${o.id}`} className="otable__ref">
+                      {refInner}
+                    </Link>
+                  )}
                   <span className="otable__sub otable-only-sm">
                     {o.dateLabel}
                     {o.lineCount > 0 ? ` · ${o.lineCount} réf.` : ''}
@@ -144,25 +157,31 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
                   <span className={`otable-pill otable-pill--${s.tone}`}>{s.label}</span>
                 </span>
                 <span className="otable__actions">
-                  <Link
-                    href={`/client/commander?from=${o.id}`}
-                    className="otable-iconbtn"
-                    aria-label="Recommander"
-                    title="Recommander"
-                  >
-                    <Repeat size={15} />
-                  </Link>
-                  {o.cancellable && !isCanceled ? (
-                    <button
-                      className="otable-iconbtn otable-iconbtn--danger"
-                      onClick={() => setConfirming(o)}
-                      disabled={pending}
-                      aria-label="Annuler"
-                      title="Annuler"
-                    >
-                      <X size={15} />
-                    </button>
-                  ) : null}
+                  {fromSwiver ? (
+                    <span className="otable__origin" title="Commande enregistrée par Prodet">Prodet</span>
+                  ) : (
+                    <>
+                      <Link
+                        href={`/client/commander?from=${o.id}`}
+                        className="otable-iconbtn"
+                        aria-label="Recommander"
+                        title="Recommander"
+                      >
+                        <Repeat size={15} />
+                      </Link>
+                      {o.cancellable && !isCanceled ? (
+                        <button
+                          className="otable-iconbtn otable-iconbtn--danger"
+                          onClick={() => setConfirming(o)}
+                          disabled={pending}
+                          aria-label="Annuler"
+                          title="Annuler"
+                        >
+                          <X size={15} />
+                        </button>
+                      ) : null}
+                    </>
+                  )}
                 </span>
               </div>
             );

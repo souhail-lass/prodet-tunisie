@@ -1,8 +1,9 @@
 import 'server-only';
 import { and, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
-import { getSwiverAdapter } from '@/integrations/swiver';
+import { getSwiverAdapter, type SwiverDocumentSummary } from '@/integrations/swiver';
 import { requireClientPortalAccess } from './auth';
 import { getCachedCustomerOrderTotals } from './spending';
+import { fetchSwiverDocuments } from './swiver-documents';
 
 export type PortalOrderRow = {
   id: string;
@@ -14,10 +15,27 @@ export type PortalOrderRow = {
   cancellable: boolean;
   /** Real TND total from the pushed Swiver order document (null when unknown). */
   totalTtc: number | null;
+  /** 'portal' = client-submitted (actionable). 'swiver' = created in Swiver (read-only). */
+  origin: 'portal' | 'swiver';
 };
 
-/** The client's own portal orders (real order_draft), newest first. */
-export async function listMyOrders(): Promise<PortalOrderRow[]> {
+/** A Swiver CDC state mapped onto the portal's status vocabulary. */
+function swiverOrderStatus(s: SwiverDocumentSummary['status']): string {
+  if (s === 'cancelled') return 'rejected';
+  if (s === 'draft') return 'review';
+  return 'approved';
+}
+
+/**
+ * The client's orders, newest first. Always includes their portal-submitted
+ * orders; with `includeSwiverSaleOrders` it ALSO merges sale orders (bons de
+ * commande) created directly in Swiver — fetched LIVE and de-duplicated
+ * against portal orders already pushed to Swiver. The dashboard leaves it off
+ * (fast, cached totals); the Commandes page turns it on (complete + live).
+ */
+export async function listMyOrders(opts?: {
+  includeSwiverSaleOrders?: boolean;
+}): Promise<PortalOrderRow[]> {
   const access = await requireClientPortalAccess();
   const { db, schema } = await import('@/db/client');
   const rows = await db
@@ -41,13 +59,24 @@ export async function listMyOrders(): Promise<PortalOrderRow[]> {
     .orderBy(desc(schema.orderDraft.createdAt))
     .limit(100);
 
+  const wantSwiver = Boolean(opts?.includeSwiverSaleOrders && access.customer.swiverId);
   const hasPushed = rows.some((r) => r.swiverDocumentRef);
-  const totals =
-    hasPushed && access.customer.swiverId
-      ? await getCachedCustomerOrderTotals(access.customer.swiverId)
-      : {};
 
-  return rows.map((r) => ({
+  // One source for both portal totals and native-CDC rows.
+  let cdcs: SwiverDocumentSummary[] = [];
+  let totals: Record<string, number> = {};
+  if (wantSwiver) {
+    try {
+      cdcs = await fetchSwiverDocuments(access.customer.swiverId!, ['bon_de_commande'], { includeDrafts: true });
+      for (const d of cdcs) if (d.swiverId && d.totalTtc != null) totals[d.swiverId] = d.totalTtc;
+    } catch {
+      cdcs = [];
+    }
+  } else if (hasPushed && access.customer.swiverId) {
+    totals = await getCachedCustomerOrderTotals(access.customer.swiverId);
+  }
+
+  const portalRows: PortalOrderRow[] = rows.map((r) => ({
     id: r.id,
     reference: r.reference,
     status: r.status,
@@ -56,7 +85,30 @@ export async function listMyOrders(): Promise<PortalOrderRow[]> {
     swiverPushed: r.swiverExportStatus === 'api_pushed',
     cancellable: r.status !== 'rejected' && r.status !== 'exported',
     totalTtc: r.swiverDocumentRef ? (totals[r.swiverDocumentRef] ?? null) : null,
+    origin: 'portal',
   }));
+
+  let swiverRows: PortalOrderRow[] = [];
+  if (wantSwiver) {
+    const pushedRefs = new Set(rows.map((r) => r.swiverDocumentRef).filter(Boolean) as string[]);
+    swiverRows = cdcs
+      // Confirmed sale orders only: drafts are internal WIP (and portal-pushed
+      // orders, which live as drafts, are already shown via the portal rows).
+      .filter((d) => d.swiverId && d.status !== 'draft' && !pushedRefs.has(d.swiverId))
+      .map((d) => ({
+        id: d.swiverId,
+        reference: d.documentNumber || `CDC-${d.swiverId}`,
+        status: swiverOrderStatus(d.status),
+        createdAt: d.issueDate,
+        lineCount: 0,
+        swiverPushed: d.status !== 'cancelled',
+        cancellable: false,
+        totalTtc: d.totalTtc,
+        origin: 'swiver',
+      }));
+  }
+
+  return [...portalRows, ...swiverRows].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 }
 
 export type PortalOrderLineDetail = {
@@ -168,6 +220,7 @@ export async function getMyOrderDetail(orderDraftId: string): Promise<PortalOrde
     swiverPushed: order.swiverExportStatus === 'api_pushed',
     cancellable: order.status !== 'rejected' && order.status !== 'exported',
     totalTtc,
+    origin: 'portal',
     lines,
   };
 }

@@ -9,7 +9,7 @@ const moneyFmt = new Intl.NumberFormat('fr-TN', { minimumFractionDigits: 3, maxi
 export default async function ClientOrdersPage() {
   let rows: MyOrderRow[] = [];
   try {
-    const orders = await listMyOrders();
+    const orders = await listMyOrders({ includeSwiverSaleOrders: true });
     rows = orders.map((o) => ({
       id: o.id,
       reference: o.reference,
@@ -19,6 +19,7 @@ export default async function ClientOrdersPage() {
       swiverPushed: o.swiverPushed,
       cancellable: o.cancellable,
       totalLabel: o.totalTtc != null ? `${moneyFmt.format(o.totalTtc)} TND` : null,
+      origin: o.origin,
     }));
   } catch {
     rows = [];

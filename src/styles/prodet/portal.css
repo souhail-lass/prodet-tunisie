@@ -651,3 +651,8 @@
 .ticket-lightbox__close:hover { background: #f0f0f0; transform: scale(1.06); }
 .ticket-lightbox__close svg { stroke-width: 2.5; }
 @media (prefers-reduced-motion: reduce) { .ticket-spin { animation: none; } .ticket-att-img:hover { transform: none; } }
+
+/* Swiver-native (read-only) order rows on the Commandes table */
+.otable__ref--static { color: var(--text-primary); cursor: default; }
+.otable__ref--static:hover { text-decoration: none; }
+.otable__origin { font-size: var(--text-2xs); font-weight: var(--fw-semibold); color: var(--text-tertiary); background: var(--surface-sunken); padding: 4px 9px; border-radius: var(--radius-pill); white-space: nowrap; }
