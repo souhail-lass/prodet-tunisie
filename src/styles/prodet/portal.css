@@ -97,6 +97,7 @@
 .stat-card__label { font-size: var(--text-sm); color: var(--text-secondary); }
 
 .dash__cols { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; align-items: start; }
+.dash__cols > * { min-width: 0; }
 .dash__cols .panel--next { grid-column: 2; grid-row: 1; }
 .dash__cols .panel--quick { grid-column: 1 / -1; }
 

@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import { revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
 import { getServerEnv } from '@/lib/env';
 import { consumeRateLimit } from '@/lib/rate-limit';
@@ -145,6 +146,18 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   if (!insertion.ok) {
     return NextResponse.json({ ok: false, error: 'storage_error' }, { status: 503 });
+  }
+
+  // A Swiver change (new/updated/paid invoice, order, delivery…) just landed:
+  // bust the per-contact document/spending caches so the portal reflects it on
+  // the very next load. Documents are already fetched live; this clears the
+  // 20s spending + order-total windows immediately. (Real-time the moment
+  // Swiver delivers the webhook — requires SWIVER_MODE on + the URL configured
+  // in Swiver's integration panel.)
+  try {
+    revalidateTag('swiver-documents');
+  } catch {
+    // revalidation is best-effort; never fail the webhook ack on it
   }
 
   return NextResponse.json(
