@@ -9,7 +9,8 @@
     "newOrder": "New order",
     "help": "Help & advice",
     "search": "Search for a product…",
-    "support": "Support"
+    "support": "Support",
+    "deliveries": "Deliveries"
   },
   "titles": {
     "dashboard": "Dashboard",
@@ -27,7 +28,9 @@
     "account": "My account",
     "accountSub": "Contact details and preferences.",
     "support": "Support",
-    "supportSub": "Your conversations with the Prodet team."
+    "supportSub": "Your conversations with the Prodet team.",
+    "deliveries": "Deliveries",
+    "deliveriesSub": "Track your Prodet delivery notes."
   },
   "status": {
     "progress": "In progress",
@@ -173,7 +176,8 @@
     "reorder": "Order",
     "invoices": "Invoices",
     "support": "Support",
-    "quotes": "Quotes"
+    "quotes": "Quotes",
+    "deliveries": "Delivery"
   },
   "spending": {
     "greeting": "Hello",

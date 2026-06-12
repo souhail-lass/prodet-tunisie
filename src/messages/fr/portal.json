@@ -9,7 +9,8 @@
     "newOrder": "Nouvelle commande",
     "help": "Aide & conseil",
     "search": "Rechercher un produit…",
-    "support": "Support"
+    "support": "Support",
+    "deliveries": "Livraisons"
   },
   "titles": {
     "dashboard": "Tableau de bord",
@@ -27,7 +28,9 @@
     "account": "Mon compte",
     "accountSub": "Coordonnées et préférences.",
     "support": "Support",
-    "supportSub": "Vos échanges avec l'équipe Prodet."
+    "supportSub": "Vos échanges avec l'équipe Prodet.",
+    "deliveries": "Livraisons",
+    "deliveriesSub": "Le suivi de vos bons de livraison Prodet."
   },
   "status": {
     "progress": "En cours",
@@ -173,7 +176,8 @@
     "reorder": "Commander",
     "invoices": "Factures",
     "support": "Support",
-    "quotes": "Devis"
+    "quotes": "Devis",
+    "deliveries": "Livraison"
   },
   "spending": {
     "greeting": "Bonjour",

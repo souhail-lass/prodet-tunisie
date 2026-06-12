@@ -9,7 +9,8 @@
     "newOrder": "طلبية جديدة",
     "help": "مساعدة ونصح",
     "search": "ابحث عن منتج…",
-    "support": "الدعم"
+    "support": "الدعم",
+    "deliveries": "التسليمات"
   },
   "titles": {
     "dashboard": "لوحة القيادة",
@@ -27,7 +28,9 @@
     "account": "حسابي",
     "accountSub": "بيانات الاتصال والتفضيلات.",
     "support": "الدعم",
-    "supportSub": "مراسلاتك مع فريق Prodet."
+    "supportSub": "مراسلاتك مع فريق Prodet.",
+    "deliveries": "التسليمات",
+    "deliveriesSub": "متابعة أذون التسليم الخاصة بك."
   },
   "status": {
     "progress": "قيد التنفيذ",
@@ -173,7 +176,8 @@
     "reorder": "اطلب",
     "invoices": "الفواتير",
     "support": "الدعم",
-    "quotes": "عروض"
+    "quotes": "عروض",
+    "deliveries": "تسليم"
   },
   "spending": {
     "greeting": "مرحباً",

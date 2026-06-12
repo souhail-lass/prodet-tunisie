@@ -11,6 +11,7 @@ import {
   Plus,
   Repeat,
   Search,
+  Truck,
   type LucideIcon,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -27,16 +28,18 @@ const NAV: { href: string; key: string; icon: LucideIcon; exact?: boolean }[] = 
   { href: '/client/commandes', key: 'orders', icon: PackageCheck },
   { href: '/client/commander', key: 'reorder', icon: Repeat },
   { href: '/client/devis', key: 'quotes', icon: FileText },
+  { href: '/client/livraisons', key: 'deliveries', icon: Truck },
   { href: '/client/factures', key: 'invoices', icon: Download },
   { href: '/client/support', key: 'support', icon: LifeBuoy },
 ];
 
-/** Condensed nav for the mobile bottom bar — every section must stay reachable. */
+/** Mobile bottom bar — every section reachable. Flex slots, so it scales. */
 const MOBILE_NAV: { href: string; key: string; icon: LucideIcon; exact?: boolean }[] = [
   { href: '/client', key: 'dashboard', icon: Home, exact: true },
   { href: '/client/commander', key: 'reorder', icon: Repeat },
   { href: '/client/commandes', key: 'orders', icon: PackageCheck },
   { href: '/client/devis', key: 'quotes', icon: FileText },
+  { href: '/client/livraisons', key: 'deliveries', icon: Truck },
   { href: '/client/factures', key: 'invoices', icon: Download },
   { href: '/client/support', key: 'support', icon: LifeBuoy },
 ];
@@ -46,6 +49,7 @@ const TITLES: { match: (p: string) => boolean; key: string }[] = [
   { match: (p) => p.startsWith('/client/commandes'), key: 'orders' },
   { match: (p) => p.startsWith('/client/commander'), key: 'reorder' },
   { match: (p) => p.startsWith('/client/devis'), key: 'quotes' },
+  { match: (p) => p.startsWith('/client/livraisons'), key: 'deliveries' },
   { match: (p) => p.startsWith('/client/factures'), key: 'invoices' },
   { match: (p) => p.startsWith('/client/support'), key: 'support' },
   { match: (p) => p.startsWith('/client/documents'), key: 'documents' },
