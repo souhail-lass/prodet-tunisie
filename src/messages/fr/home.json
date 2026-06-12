@@ -62,5 +62,9 @@
     "body": "Constituez votre liste, demandez un devis, et recevez une réponse sous 24 heures.",
     "quote": "Demander un devis",
     "contact": "Nous contacter"
+  },
+  "clients": {
+    "eyebrow": "Références",
+    "title": "Ils nous font confiance"
   }
 }

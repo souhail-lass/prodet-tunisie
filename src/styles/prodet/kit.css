@@ -96,3 +96,45 @@
 .site-footer__legal { display: flex; gap: 20px; }
 .site-footer__legal a { cursor: pointer; }
 .site-footer__legal a:hover { color: #fff; }
+
+/* ============================================================
+   PRODUCT MARQUEE (auto-scrolling showcase)
+   ============================================================ */
+.pmarquee { position: relative; overflow: hidden; margin-top: 8px; padding: 6px 0; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.pmarquee__track { display: flex; gap: 18px; width: max-content; animation: pmarquee-scroll 55s linear infinite; }
+.pmarquee:hover .pmarquee__track { animation-play-state: paused; }
+@keyframes pmarquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.pmarquee__card { flex: 0 0 auto; width: 200px; background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 16px; text-decoration: none; color: inherit; transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+.pmarquee__card:hover { border-color: var(--prodet-blue-tint-strong); box-shadow: var(--shadow-card-hover); transform: translateY(-3px); }
+.pmarquee__stage { height: 130px; display: flex; align-items: center; justify-content: center; }
+.pmarquee__stage img { max-height: 100%; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.pmarquee__mono { width: 70px; height: 70px; border-radius: 50%; background: var(--prodet-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: var(--fw-semibold); }
+.pmarquee__name { display: block; margin-top: 10px; font-size: var(--text-sm); font-weight: var(--fw-semibold); color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ============================================================
+   TRUSTED CLIENTS WALL (auto-scrolling, grayscale wordmarks)
+   ============================================================ */
+.clients { padding-top: 40px; padding-bottom: 56px; }
+.clients__head { text-align: center; margin-bottom: 26px; }
+.clients__title { font-size: var(--text-h3); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-tight); margin-top: 6px; }
+.cwall { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.cwall__track { display: flex; align-items: center; gap: 56px; width: max-content; animation: cwall-scroll 38s linear infinite; }
+.cwall:hover .cwall__track { animation-play-state: paused; }
+@keyframes cwall-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.cwall__logo { flex: 0 0 auto; display: inline-flex; align-items: center; height: 48px; opacity: 0.55; filter: grayscale(1); transition: opacity var(--dur-base) var(--ease-out), filter var(--dur-base) var(--ease-out); }
+.cwall__logo:hover { opacity: 1; filter: grayscale(0); }
+.cwall__logo img { max-height: 40px; width: auto; object-fit: contain; }
+.cwall__wordmark { font-size: 1.5rem; font-weight: var(--fw-bold); letter-spacing: var(--tracking-tight); color: var(--text-secondary); white-space: nowrap; }
+
+@media (max-width: 860px) {
+  .pmarquee__card { width: 160px; padding: 12px; }
+  .pmarquee__stage { height: 104px; }
+  .cwall__track { gap: 40px; }
+  .cwall__wordmark { font-size: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* No motion: wrap the real items, hide the duplicated loop half. */
+  .pmarquee, .cwall { -webkit-mask-image: none; mask-image: none; }
+  .pmarquee__track, .cwall__track { animation: none; flex-wrap: wrap; justify-content: center; width: 100%; }
+  .pmarquee__card[aria-hidden='true'], .cwall__logo[aria-hidden='true'] { display: none; }
+}

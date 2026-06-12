@@ -62,5 +62,9 @@
     "body": "Build your list, request a quote, and get an answer within 24 hours.",
     "quote": "Request a quote",
     "contact": "Contact us"
+  },
+  "clients": {
+    "eyebrow": "References",
+    "title": "Trusted by leading businesses"
   }
 }

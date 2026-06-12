@@ -5,11 +5,11 @@ import { ArrowRight, Check, FileText, Factory, Shield, Truck, ChevronRight, Spar
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { Button } from '@/components/ds';
-import { CatalogueTile } from '@/components/site/catalogue-tile';
+import { ProductMarquee } from '@/components/home/product-marquee';
+import { ClientWall } from '@/components/home/client-wall';
 import { SECTOR_ICON } from '@/components/site/sector-icons';
 import { WhatsappIcon } from '@/components/site/whatsapp-icon';
 import { useQuoteDrawer } from '@/components/site/quote-drawer';
-import { useQuoteSelection } from '@/lib/quote-cart-context';
 import type { Product } from '@/types/product';
 import type { SectorId } from '@/types/sector';
 
@@ -22,11 +22,10 @@ const TRUST = [
   { key: 'quote', icon: FileText },
 ] as const;
 
-export function HomePage({ featured, sectors }: { featured: Product[]; sectors: SectorLink[] }) {
+export function HomePage({ showcase, sectors }: { showcase: Product[]; sectors: SectorLink[] }) {
   const t = useTranslations('home');
   const router = useRouter();
   const { open: openQuote } = useQuoteDrawer();
-  const { getQuantity, setProductQuantity } = useQuoteSelection();
 
   return (
     <div className="home">
@@ -130,16 +129,15 @@ export function HomePage({ featured, sectors }: { featured: Product[]; sectors: 
             {t('featured.cta')}
           </Button>
         </div>
-        <div className="featured-grid">
-          {featured.map((product) => (
-            <CatalogueTile
-              key={product.slug}
-              product={product}
-              quantity={getQuantity(product.id)}
-              onQuantityChange={setProductQuantity}
-            />
-          ))}
+        <ProductMarquee products={showcase} />
+      </section>
+
+      <section className="section-wrap clients">
+        <div className="clients__head">
+          <span className="eyebrow">{t('clients.eyebrow')}</span>
+          <h2 className="clients__title">{t('clients.title')}</h2>
         </div>
+        <ClientWall />
       </section>
 
       <section className="cta-band">

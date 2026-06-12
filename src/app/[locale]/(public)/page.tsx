@@ -14,11 +14,11 @@ export default async function HomeRoute({ params }: { params: Promise<{ locale: 
   if (!isLocale(locale)) return null;
   setRequestLocale(locale);
 
-  const featured = await getFeaturedCatalogue(4);
+  const showcase = await getFeaturedCatalogue(16);
   const sectors = localizeSectors(listSectors(), locale).map((sector) => ({
     id: sector.id,
     label: sector.label,
   }));
 
-  return <HomePage featured={featured} sectors={sectors} />;
+  return <HomePage showcase={showcase} sectors={sectors} />;
 }
