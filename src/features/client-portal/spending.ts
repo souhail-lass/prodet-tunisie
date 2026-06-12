@@ -1,6 +1,7 @@
 import 'server-only';
 import { unstable_cache } from 'next/cache';
 import { getSwiverAdapter } from '@/integrations/swiver';
+import { computePartnerTier, type PartnerTier } from './partner-tier';
 import { resolveCurrentPortalSwiverIdentity } from './swiver-identity';
 
 export type MonthlySpend = {
@@ -25,12 +26,18 @@ export type SpendingSummary = {
   /** This month vs previous month, in % (null when previous month is 0). */
   momDeltaPct: number | null;
   lastInvoice: { reference: string; dateISO: string; total: number } | null;
+  /** Earliest due date among unpaid invoices (`YYYY-MM-DD`), or null. */
+  nextDueISO: string | null;
+  /** Partner status based on YTD spend (null when not linked / no spend). */
+  tier: PartnerTier | null;
 };
 
 type InvoiceLite = {
   reference: string;
   /** `YYYY-MM-DD` */
   dateISO: string;
+  /** Due date `YYYY-MM-DD`, or null. */
+  dueISO: string | null;
   totalTtc: number | null;
   toPay: number | null;
   status: string;
@@ -60,6 +67,7 @@ async function fetchInvoicesFromSwiver(contactSwiverId: string): Promise<Invoice
         return {
           reference: d.documentNumber,
           dateISO: d.issueDate.toISOString().slice(0, 10),
+          dueISO: d.dueDate ? d.dueDate.toISOString().slice(0, 10) : null,
           totalTtc: d.totalTtc,
           toPay: parseMoney(raw?.amount_to_pay),
           status: d.status,
@@ -151,6 +159,8 @@ const EMPTY: SpendingSummary = {
   monthly: [],
   momDeltaPct: null,
   lastInvoice: null,
+  nextDueISO: null,
+  tier: null,
 };
 
 /**
@@ -178,6 +188,7 @@ export async function getMySpending(): Promise<SpendingSummary> {
     let outstanding = 0;
     let unpaidCount = 0;
     let lastInvoice: SpendingSummary['lastInvoice'] = null;
+    let nextDueISO: string | null = null;
 
     for (const inv of invoices) {
       const total = inv.totalTtc ?? 0;
@@ -189,6 +200,7 @@ export async function getMySpending(): Promise<SpendingSummary> {
       if (inv.toPay != null && inv.toPay > 0.001) {
         outstanding += inv.toPay;
         unpaidCount += 1;
+        if (inv.dueISO && (nextDueISO === null || inv.dueISO < nextDueISO)) nextDueISO = inv.dueISO;
       }
       if (!lastInvoice || inv.dateISO > lastInvoice.dateISO) {
         lastInvoice = { reference: inv.reference, dateISO: inv.dateISO, total };
@@ -212,6 +224,8 @@ export async function getMySpending(): Promise<SpendingSummary> {
       monthly: keys.map((k) => ({ key: k, total: byMonth.get(k) ?? 0 })),
       momDeltaPct,
       lastInvoice,
+      nextDueISO,
+      tier: computePartnerTier(thisYear),
     };
   } catch {
     return EMPTY;

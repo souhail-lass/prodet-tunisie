@@ -656,3 +656,22 @@
 .otable__ref--static { color: var(--text-primary); cursor: default; }
 .otable__ref--static:hover { text-decoration: none; }
 .otable__origin { font-size: var(--text-2xs); font-weight: var(--fw-semibold); color: var(--text-tertiary); background: var(--surface-sunken); padding: 4px 9px; border-radius: var(--radius-pill); white-space: nowrap; }
+
+/* ============ partner tier + outstanding reminder (dashboard) ============ */
+.fin-tier { display: inline-flex; align-items: center; gap: 5px; font-size: var(--text-xs); font-weight: var(--fw-semibold); padding: 4px 10px; border-radius: var(--radius-pill); background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.22); }
+.fin-tier svg { color: #ffd76a; }
+.fin-tier--gold svg { color: #ffd76a; }
+.fin-tier--silver svg { color: #e6ecf5; }
+.fin-tier--bronze svg { color: #e9b486; }
+.fin-tier-progress { margin-top: 12px; max-width: 320px; }
+.fin-tier-progress__bar { height: 6px; border-radius: 999px; background: rgba(255,255,255,0.18); overflow: hidden; }
+.fin-tier-progress__bar span { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #9CCBFF, #ffd76a); }
+.fin-tier-progress__label { display: block; margin-top: 6px; font-size: var(--text-2xs); color: var(--text-on-dark-soft); }
+
+.fin-reminder { display: flex; align-items: center; gap: 14px; text-decoration: none; background: var(--color-warning-bg, rgba(245,158,11,0.1)); border: 1px solid rgba(245,158,11,0.4); border-radius: var(--radius-card); padding: 14px 18px; transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+.fin-reminder:hover { border-color: var(--color-warning); transform: translateY(-1px); }
+.fin-reminder__icon { width: 42px; height: 42px; flex-shrink: 0; border-radius: var(--radius-button); background: var(--color-warning, #d97706); color: #fff; display: flex; align-items: center; justify-content: center; }
+.fin-reminder__body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.fin-reminder__body strong { font-size: var(--text-base); color: var(--text-primary); font-weight: var(--fw-semibold); }
+.fin-reminder__body span { font-size: var(--text-sm); color: var(--text-secondary); }
+.fin-reminder__arrow { color: var(--color-warning); flex-shrink: 0; }

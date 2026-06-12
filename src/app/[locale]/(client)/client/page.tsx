@@ -3,6 +3,7 @@ import {
   CheckCircle2,
   ChevronRight,
   Clock,
+  Crown,
   FileText,
   PackageCheck,
   Plus,
@@ -27,6 +28,7 @@ import { getMySpending } from '@/features/client-portal/spending';
 export const dynamic = 'force-dynamic';
 
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeZone: 'Africa/Tunis' });
+const dueDateFmt = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Africa/Tunis' });
 const moneyFmt = new Intl.NumberFormat('fr-TN', { maximumFractionDigits: 0 });
 
 const FALLBACK_TONE = { bg: 'var(--surface-sunken)', fg: 'var(--text-secondary)', label: 'Brouillon' };
@@ -94,9 +96,25 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
               <span className="fin-hero__currency">{spending.currency}</span>
             </p>
             <div className="fin-hero__meta">
+              {spending.tier?.label ? (
+                <span className={`fin-tier fin-tier--${spending.tier.id}`}>
+                  <Crown size={13} /> Partenaire {spending.tier.label}
+                </span>
+              ) : null}
               {deltaChip}
               <span className="fin-hero__count">{t('spending.invoiceCount', { count: spending.invoiceCount })}</span>
             </div>
+            {spending.tier?.nextLabel && spending.tier.remainingToNext > 0 ? (
+              <div className="fin-tier-progress" title={`Progression vers ${spending.tier.nextLabel}`}>
+                <div className="fin-tier-progress__bar">
+                  <span style={{ width: `${spending.tier.progressPct}%` }} />
+                </div>
+                <span className="fin-tier-progress__label">
+                  Plus que {moneyFmt.format(spending.tier.remainingToNext)} {spending.currency} avant le statut{' '}
+                  {spending.tier.nextLabel}
+                </span>
+              </div>
+            ) : null}
             <Link href="/client/factures" className="fin-hero__link">
               {t('spending.viewInvoices')} <ArrowRight size={15} />
             </Link>
@@ -110,6 +128,24 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
             />
           </div>
         </section>
+      ) : null}
+
+      {showFinances && spending.outstanding > 0 ? (
+        <Link href="/client/factures" className="fin-reminder">
+          <span className="fin-reminder__icon">
+            <ReceiptText size={20} />
+          </span>
+          <div className="fin-reminder__body">
+            <strong>
+              {moneyFmt.format(spending.outstanding)} {spending.currency} à régler
+            </strong>
+            <span>
+              {t('spending.unpaid', { count: spending.unpaidCount })}
+              {spending.nextDueISO ? ` · échéance ${dueDateFmt.format(new Date(spending.nextDueISO))}` : ''}
+            </span>
+          </div>
+          <ArrowRight size={18} className="fin-reminder__arrow" />
+        </Link>
       ) : null}
 
       <div className="dash__stats">
