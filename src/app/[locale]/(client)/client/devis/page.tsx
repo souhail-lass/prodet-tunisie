@@ -76,7 +76,7 @@ export default async function ClientQuotesPage({ params }: { params: Promise<{ l
             ) : null}
             {statusBadge(doc.status, t)}
             <a
-              className="pds-btn pds-btn--outline pds-btn--sm"
+              className="pds-btn pds-btn--ghost pds-btn--sm"
               href={`/api/client/factures/${doc.swiverId}/pdf`}
               target="_blank"
               rel="noopener"
@@ -84,6 +84,15 @@ export default async function ClientQuotesPage({ params }: { params: Promise<{ l
               <Download size={14} />
               <span>{t('invoices.download')}</span>
             </a>
+            {doc.status !== 'cancelled' ? (
+              <Link
+                href={`/client/commander?devis=${doc.swiverId}`}
+                className="pds-btn pds-btn--primary pds-btn--sm"
+              >
+                <Repeat size={14} />
+                <span>{t('quotes.reorder')}</span>
+              </Link>
+            ) : null}
           </div>
         </div>
       ))}

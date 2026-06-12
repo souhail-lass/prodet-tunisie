@@ -2,6 +2,7 @@ import { ReorderBuilder } from '@/components/portal/reorder-builder';
 import type { PortalProductRef } from '@/features/client-portal/mock/portal-mock';
 import { getOrderableCatalogue, type OrderableProduct } from '@/features/catalogue/queries';
 import { getMyOrderDetail, listMyFrequentProducts } from '@/features/client-portal/orders';
+import { getMyDocumentLines } from '@/features/client-portal/swiver-documents';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,17 +24,18 @@ function toRef(p: OrderableProduct): PortalProductRef {
 export default async function CommanderPage({
   searchParams,
 }: {
-  searchParams: Promise<{ from?: string; add?: string; q?: string }>;
+  searchParams: Promise<{ from?: string; add?: string; q?: string; devis?: string }>;
 }) {
-  const { from, add, q } = await searchParams;
+  const { from, add, q, devis } = await searchParams;
 
-  // Kick all three fetches off in parallel — catalogue is tag-cached, the
-  // other two hit the DB; serializing them cost a full round-trip each.
+  // Kick all fetches off in parallel — catalogue is tag-cached, the rest hit
+  // the DB / Swiver; serializing them cost a full round-trip each.
   const cataloguePromise = getOrderableCatalogue().then(
     (rows) => rows.map(toRef),
     () => [] as PortalProductRef[],
   );
   const orderPromise = from ? getMyOrderDetail(from).catch(() => null) : Promise.resolve(null);
+  const devisPromise = devis ? getMyDocumentLines(devis).catch(() => null) : Promise.resolve(null);
   const frequentPromise = listMyFrequentProducts(9).catch(() => []);
 
   const catalogue = await cataloguePromise;
@@ -60,6 +62,19 @@ export default async function CommanderPage({
       const p = line.sku ? bySlug.get(line.sku) : undefined;
       if (p && line.quantity > 0) {
         initialQty[p.slug] = Math.trunc(line.quantity);
+        if (!extra.some((e) => e.slug === p.slug)) extra.push(p);
+      }
+    }
+  }
+
+  // ?devis=<swiverDocId> — pre-fill from a Swiver quote (matched by Swiver id).
+  const quote = await devisPromise;
+  if (quote) {
+    noticeFrom = quote.reference;
+    for (const line of quote.lines) {
+      const p = catalogue.find((c) => c.swiverId === line.productSwiverId);
+      if (p) {
+        initialQty[p.slug] = (initialQty[p.slug] ?? 0) + line.quantity;
         if (!extra.some((e) => e.slug === p.slug)) extra.push(p);
       }
     }
