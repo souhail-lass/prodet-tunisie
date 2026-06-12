@@ -59,7 +59,7 @@ export async function GET(request: Request) {
       return jsonError(`No portal or admin access for ${email}`, 404);
     }
     const next =
-      nextParam || (user.is_admin && !user.is_client ? '/fr/admin/clients' : '/fr/client');
+      nextParam || (user.is_admin && !user.is_client ? '/fr/admin/overview' : '/fr/client');
 
     // Admin generateLink + verifyOtp bypasses the magic-link send rate limit
     // entirely (no email is sent — the token is returned to us directly).
@@ -145,7 +145,7 @@ async function renderPicker(dbUrl: string) {
   const adminCards = admins
     .map(
       (r) => `
-      <a class="card card--admin" href="/api/dev/session?email=${encodeURIComponent(r.email)}&next=/fr/admin/clients">
+      <a class="card card--admin" href="/api/dev/session?email=${encodeURIComponent(r.email)}&next=/fr/admin/overview">
         <div class="name">${esc(r.full_name || r.email)}</div>
         <div class="email">${esc(r.email)}</div>
         <div class="role">${esc(r.role)}</div>

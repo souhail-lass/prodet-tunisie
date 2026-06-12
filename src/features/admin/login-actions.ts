@@ -22,7 +22,7 @@ export async function requestAdminMagicLink(formData: FormData): Promise<never> 
   const locale = parsed.success ? parsed.data.locale : 'fr';
   const nextPath = parsed.success
     ? sanitizeAdminNext(locale, parsed.data.next)
-    : `/${locale}/admin/clients`;
+    : `/${locale}/admin/overview`;
 
   if (!parsed.success) {
     redirect(`/${locale}/connexion-admin?error=invalid`);
@@ -76,7 +76,7 @@ export async function requestAdminMagicLink(formData: FormData): Promise<never> 
 }
 
 function sanitizeAdminNext(locale: 'fr' | 'ar' | 'en', value?: string): string {
-  if (!value) return `/${locale}/admin/clients`;
+  if (!value) return `/${locale}/admin/overview`;
 
   try {
     const decoded = decodeURIComponent(value);
@@ -89,5 +89,5 @@ function sanitizeAdminNext(locale: 'fr' | 'ar' | 'en', value?: string): string {
 
   if (value.startsWith(`/${locale}/admin/`) && !value.startsWith('//')) return value;
 
-  return `/${locale}/admin/clients`;
+  return `/${locale}/admin/overview`;
 }

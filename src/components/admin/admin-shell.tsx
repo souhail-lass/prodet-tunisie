@@ -1,12 +1,13 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Boxes, Inbox, LifeBuoy, LogOut, ShieldCheck, Users, type LucideIcon } from 'lucide-react';
+import { Boxes, Inbox, LayoutDashboard, LifeBuoy, LogOut, ShieldCheck, Users, type LucideIcon } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 
 export type AdminShellAccount = { name: string; email: string; initials: string };
 
 const NAV: { href: string; label: string; short: string; icon: LucideIcon }[] = [
+  { href: '/admin/overview', label: 'Vue d’ensemble', short: 'Accueil', icon: LayoutDashboard },
   { href: '/admin/produits', label: 'Catalogue produits', short: 'Produits', icon: Boxes },
   { href: '/admin/clients', label: 'Clients', short: 'Clients', icon: Users },
   { href: '/admin/demandes-portail', label: 'Demandes portail', short: 'Demandes', icon: Inbox },
@@ -14,6 +15,7 @@ const NAV: { href: string; label: string; short: string; icon: LucideIcon }[] = 
 ];
 
 const TITLES: { match: (p: string) => boolean; title: string; subtitle: string }[] = [
+  { match: (p) => p.startsWith('/admin/overview'), title: 'Vue d’ensemble', subtitle: 'Ce qui demande votre attention aujourd’hui.' },
   { match: (p) => p.startsWith('/admin/catalogue-swiver'), title: 'Catalogue produits', subtitle: 'Gérez les produits synchronisés depuis Swiver — masquez ce que vous ne vendez pas.' },
   { match: (p) => p.startsWith('/admin/clients'), title: 'Clients', subtitle: 'Vos clients du portail, leurs connexions et leurs accès.' },
   { match: (p) => p.startsWith('/admin/demandes-portail'), title: 'Demandes portail', subtitle: 'Demandes envoyées depuis l’espace client.' },

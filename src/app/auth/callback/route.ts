@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
 }
 
 function sanitizeNext(value: string | null): string {
-  if (!value) return '/fr/admin/clients';
+  if (!value) return '/fr/admin/overview';
 
   try {
     const decoded = decodeURIComponent(value);
@@ -43,7 +43,7 @@ function sanitizeNext(value: string | null): string {
 
   if (isAllowedAuthRedirect(value)) return value;
 
-  return '/fr/admin/clients';
+  return '/fr/admin/overview';
 }
 
 function isAllowedAuthRedirect(value: string): boolean {

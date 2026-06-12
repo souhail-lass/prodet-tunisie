@@ -42,7 +42,7 @@ export default async function AdminLoginPage({
     const target =
       next && /^\/(fr|ar|en)\/admin\//u.test(next) && !next.startsWith('//')
         ? next
-        : `/${safeLocale}/admin/clients`;
+        : `/${safeLocale}/admin/overview`;
     redirect(target);
   }
 
@@ -65,7 +65,7 @@ export default async function AdminLoginPage({
           <input
             type="hidden"
             name="next"
-            value={next || `/${safeLocale}/admin/clients`}
+            value={next || `/${safeLocale}/admin/overview`}
           />
           <label className="block text-sm font-semibold text-prodet-text">
             Email admin
