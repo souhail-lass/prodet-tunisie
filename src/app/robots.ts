@@ -1,16 +1,11 @@
 import type { MetadataRoute } from 'next';
-import { getPublicEnv } from '@/lib/env';
+import { resolveAuthOrigin } from '@/lib/site-origin';
 
-export default function robots(): MetadataRoute.Robots {
-  const env = getPublicEnv();
-  const baseUrl = env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  // Derive the real deployment host (never the localhost-defaulted env).
+  const baseUrl = (await resolveAuthOrigin()).replace(/\/$/, '');
   return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-      },
-    ],
+    rules: [{ userAgent: '*', allow: '/' }],
     sitemap: `${baseUrl}/sitemap.xml`,
   };
 }

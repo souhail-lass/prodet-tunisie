@@ -1,5 +1,8 @@
 import 'server-only';
+import { after } from 'next/server';
 import { asc, desc, eq } from 'drizzle-orm';
+import { brandedHtml, sendEmail } from '@/lib/email';
+import { resolveAuthOrigin } from '@/lib/site-origin';
 import {
   sanitizeIncomingAttachments,
   viewAttachments,
@@ -102,6 +105,36 @@ export async function adminReply(input: {
     .update(schema.supportTicket)
     .set({ status: 'open', lastAuthorRole: 'admin', lastMessageAt: now, updatedAt: now })
     .where(eq(schema.supportTicket.id, input.ticketId));
+
+  // Email the client that Prodet replied — best-effort, after the response.
+  const [ticket] = await db
+    .select({ subject: schema.supportTicket.subject, email: schema.customer.email })
+    .from(schema.supportTicket)
+    .leftJoin(schema.customer, eq(schema.customer.id, schema.supportTicket.customerId))
+    .where(eq(schema.supportTicket.id, input.ticketId))
+    .limit(1);
+  if (ticket?.email) {
+    const origin = await resolveAuthOrigin();
+    const link = `${origin}/fr/client/support/${input.ticketId}`;
+    after(async () => {
+      await sendEmail({
+        to: ticket.email!,
+        subject: `Prodet a répondu — ${ticket.subject}`.slice(0, 120),
+        text: [
+          `Bonjour,`,
+          ``,
+          `Prodet a répondu à votre demande de support « ${ticket.subject} ».`,
+          ``,
+          `Consultez la réponse dans votre espace client : ${link}`,
+        ].join('\n'),
+        html: brandedHtml(
+          'Prodet a répondu à votre demande',
+          [`Votre demande : « ${ticket.subject} ».`, body ? `« ${body.slice(0, 160)} »` : 'Une pièce jointe vous a été envoyée.'],
+          { label: 'Voir la réponse', url: link },
+        ),
+      });
+    });
+  }
   return { ok: true };
 }
 

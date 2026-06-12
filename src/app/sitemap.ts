@@ -1,11 +1,10 @@
 import type { MetadataRoute } from 'next';
 import { listProducts, listSectors } from '@/data/queries';
 import { locales } from '@/i18n/routing';
-import { getPublicEnv } from '@/lib/env';
+import { resolveAuthOrigin } from '@/lib/site-origin';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const env = getPublicEnv();
-  const baseUrl = env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = (await resolveAuthOrigin()).replace(/\/$/, '');
 
   const staticPaths = [
     '',

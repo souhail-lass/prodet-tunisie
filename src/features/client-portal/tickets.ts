@@ -1,5 +1,7 @@
 import 'server-only';
+import { after } from 'next/server';
 import { and, asc, desc, eq } from 'drizzle-orm';
+import { prodetNotificationEmail, sendEmail } from '@/lib/email';
 import { requireClientPortalAccess } from './auth';
 import {
   sanitizeIncomingAttachments,
@@ -7,6 +9,20 @@ import {
   type TicketAttachment,
   type TicketAttachmentView,
 } from '@/features/support/attachments';
+
+/** Best-effort alert to Prodet when a client opens or replies on a ticket. */
+function notifyProdetSupport(subject: string, company: string, preview: string, replyTo?: string | null) {
+  const to = prodetNotificationEmail();
+  if (!to) return;
+  after(async () => {
+    await sendEmail({
+      to,
+      subject: `Support — ${company} : ${subject}`.slice(0, 120),
+      replyTo: replyTo ?? undefined,
+      text: [`Nouveau message support de ${company}.`, ``, `Sujet : ${subject}`, ``, preview].join('\n'),
+    });
+  });
+}
 
 export type TicketSummary = {
   id: string;
@@ -111,6 +127,7 @@ export async function createMyTicket(
       body: b,
       attachments: files,
     });
+    notifyProdetSupport(s, access.customer.name, b || `${files.length} pièce(s) jointe(s)`, access.appUser.email);
     return { ok: true, id: ticket.id };
   });
 }
@@ -126,7 +143,7 @@ export async function replyMyTicket(
   if (!b && files.length === 0) return { ok: false };
   const { db, schema } = await import('@/db/client');
   const [ticket] = await db
-    .select({ id: schema.supportTicket.id })
+    .select({ id: schema.supportTicket.id, subject: schema.supportTicket.subject })
     .from(schema.supportTicket)
     .where(and(eq(schema.supportTicket.id, ticketId), eq(schema.supportTicket.customerId, access.customer.id)))
     .limit(1);
@@ -140,6 +157,7 @@ export async function replyMyTicket(
     body: b,
     attachments: files,
   });
+  notifyProdetSupport(ticket.subject, access.customer.name, b || `${files.length} pièce(s) jointe(s)`, access.appUser.email);
   await db
     .update(schema.supportTicket)
     .set({ status: 'open', lastAuthorRole: 'client', lastMessageAt: now, updatedAt: now })

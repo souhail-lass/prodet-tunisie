@@ -1,8 +1,10 @@
 import 'server-only';
+import { after } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { generateReferenceCode } from '@/lib/reference-code';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { getSwiverAdapter } from '@/integrations/swiver';
+import { brandedHtml, prodetNotificationEmail, sendEmail } from '@/lib/email';
 import { requireClientPortalAccess } from './auth';
 
 export type QuoteLineInput = {
@@ -143,6 +145,35 @@ export async function submitPortalQuoteRequest(input: {
     diff: { lineCount: lines.length, swiverPushed },
     metadata: {},
   });
+
+  // Notify Prodet of the new order — after the response, never blocking it.
+  const notify = prodetNotificationEmail();
+  if (notify) {
+    const company = access.customer.name;
+    const units = lines.reduce((s, l) => s + l.quantity, 0);
+    after(async () => {
+      await sendEmail({
+        to: notify,
+        subject: `Nouvelle commande ${referenceCode} — ${company}`,
+        replyTo: access.appUser.email,
+        text: [
+          `Nouvelle commande reçue depuis l'espace client.`,
+          ``,
+          `Client : ${company}`,
+          `Référence : ${referenceCode}`,
+          `${lines.length} référence(s) · ${units} unité(s)`,
+          swiverPushed ? `Transmise à Swiver (brouillon de bon de commande).` : `Non transmise à Swiver — à traiter manuellement.`,
+        ].join('\n'),
+        html: brandedHtml(
+          `Nouvelle commande — ${company}`,
+          [
+            `Référence ${referenceCode} · ${lines.length} référence(s), ${units} unité(s).`,
+            swiverPushed ? 'Transmise à Swiver en brouillon.' : 'Non transmise à Swiver — à traiter manuellement.',
+          ],
+        ),
+      });
+    });
+  }
 
   return { ok: true, referenceCode, swiverPushed };
 }

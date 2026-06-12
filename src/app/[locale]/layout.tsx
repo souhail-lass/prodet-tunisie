@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -75,8 +75,23 @@ export async function generateMetadata({
       index: true,
       follow: true,
     },
+    appleWebApp: {
+      capable: true,
+      title: 'Prodet',
+      statusBarStyle: 'default',
+    },
+    icons: {
+      icon: '/images/logo/prodet-logo.svg',
+      apple: '/brand/logo-prodet.png',
+    },
   };
 }
+
+export const viewport: Viewport = {
+  themeColor: '#08233f',
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export default async function LocaleLayout({
   children,

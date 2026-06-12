@@ -1,9 +1,20 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { LifeBuoy, MessageSquarePlus, Plus, Send } from 'lucide-react';
+import { useRef, useState, useTransition } from 'react';
+import { FileText, Loader2, LifeBuoy, MessageSquarePlus, Paperclip, Plus, Send, X } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
-import { createTicketAction } from './actions';
+import { createTicketAction, uploadTicketAttachmentAction } from './actions';
+
+type Pending = {
+  localId: string;
+  name: string;
+  isImage: boolean;
+  previewUrl: string;
+  status: 'uploading' | 'ready' | 'error';
+  ref?: { path: string; name: string; type: string; size: number };
+};
+
+const ACCEPT = 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt';
 
 export type SupportRow = {
   id: string;
@@ -20,12 +31,48 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
   const [body, setBody] = useState('');
   const [pending, startTransition] = useTransition();
   const [createError, setCreateError] = useState(false);
+  const [files, setFiles] = useState<Pending[]>([]);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const ready = files.filter((f) => f.status === 'ready' && f.ref);
+  const uploading = files.some((f) => f.status === 'uploading');
+
+  function pickFiles(list: FileList | null) {
+    if (!list) return;
+    setCreateError(false);
+    for (const file of Array.from(list).slice(0, 6)) {
+      if (file.size === 0 || file.size > 25 * 1024 * 1024) {
+        setCreateError(true);
+        continue;
+      }
+      const localId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const isImage = file.type.startsWith('image/');
+      setFiles((p) => [
+        ...p,
+        { localId, name: file.name, isImage, previewUrl: isImage ? URL.createObjectURL(file) : '', status: 'uploading' },
+      ]);
+      const fd = new FormData();
+      fd.set('file', file);
+      void uploadTicketAttachmentAction(fd).then((res) => {
+        setFiles((p) =>
+          p.map((x) =>
+            x.localId === localId
+              ? res.ok
+                ? { ...x, status: 'ready', ref: res.attachment }
+                : { ...x, status: 'error' }
+              : x,
+          ),
+        );
+      });
+    }
+    if (fileRef.current) fileRef.current.value = '';
+  }
 
   function create() {
-    if (!subject.trim() || !body.trim()) return;
+    if (!subject.trim() || (!body.trim() && ready.length === 0) || uploading) return;
     setCreateError(false);
     startTransition(async () => {
-      const r = await createTicketAction({ subject, body });
+      const r = await createTicketAction({ subject, body, attachments: ready.map((f) => f.ref!) });
       if (r.ok && r.id) {
         router.push(`/client/support/${r.id}`);
         router.refresh();
@@ -69,15 +116,50 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
             placeholder="Décrivez votre demande…"
             style={{ ...inputStyle, marginTop: 10, resize: 'vertical' }}
           />
-          <div style={{ marginTop: 12, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12 }}>
-            {createError ? (
-              <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-danger)', fontWeight: 'var(--fw-medium)' }}>
-                L’envoi a échoué — reconnectez-vous à votre espace client et réessayez.
-              </span>
-            ) : null}
-            <button className="pds-btn pds-btn--primary pds-btn--md" onClick={create} disabled={pending}>
-              <Send size={15} /> <span>{pending ? 'Envoi…' : 'Envoyer'}</span>
+          {files.length > 0 ? (
+            <div className="ticket-tray">
+              {files.map((f) => (
+                <div key={f.localId} className={`ticket-chip${f.status === 'error' ? ' is-error' : ''}`}>
+                  {f.isImage && f.previewUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={f.previewUrl} alt="" className="ticket-chip__thumb" />
+                  ) : (
+                    <span className="ticket-chip__thumb ticket-chip__thumb--file"><FileText size={16} /></span>
+                  )}
+                  <span className="ticket-chip__name">{f.name}</span>
+                  {f.status === 'uploading' ? <Loader2 size={14} className="ticket-spin" /> : null}
+                  <button
+                    type="button"
+                    className="ticket-chip__x"
+                    onClick={() => setFiles((p) => p.filter((x) => x.localId !== f.localId))}
+                    aria-label="Retirer"
+                  >
+                    <X size={13} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : null}
+          <input ref={fileRef} type="file" accept={ACCEPT} multiple hidden onChange={(e) => pickFiles(e.target.files)} />
+          <div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+            <button
+              type="button"
+              className="pds-btn pds-btn--ghost pds-btn--md"
+              onClick={() => fileRef.current?.click()}
+              title="Joindre une photo ou un fichier"
+            >
+              <Paperclip size={16} /> <span>Joindre</span>
             </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              {createError ? (
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-danger)', fontWeight: 'var(--fw-medium)' }}>
+                  Échec — vérifiez la taille (max 25 Mo) et réessayez.
+                </span>
+              ) : null}
+              <button className="pds-btn pds-btn--primary pds-btn--md" onClick={create} disabled={pending || uploading}>
+                <Send size={15} /> <span>{pending ? 'Envoi…' : 'Envoyer'}</span>
+              </button>
+            </div>
           </div>
         </section>
       ) : null}
