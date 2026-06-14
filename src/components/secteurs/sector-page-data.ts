@@ -26,7 +26,7 @@ export const sectorPageCards: readonly SectorPageCard[] = [
   {
     id: 'hotels',
     name: 'Hôtels & hébergement',
-    image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80',
+    image: '/images/sectors/hotels.jpg',
     alt: "Couloir d'hôtel professionnel",
     icon: 'Hotel',
     summary: 'Linge, chambres, sanitaires, parfum textile.',
@@ -39,7 +39,7 @@ export const sectorPageCards: readonly SectorPageCard[] = [
   {
     id: 'restaurants-cafes',
     name: 'Restaurants & cafés',
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80',
+    image: '/images/sectors/restaurants-cafes.jpg',
     alt: 'Cuisine de restaurant professionnelle',
     icon: 'UtensilsCrossed',
     summary: 'Cuisine, plonge, fours, vaisselle machine.',
@@ -52,7 +52,7 @@ export const sectorPageCards: readonly SectorPageCard[] = [
   {
     id: 'societes-nettoyage',
     name: 'Sociétés de nettoyage',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+    image: '/images/sectors/societes-nettoyage.jpg',
     alt: 'Agent de nettoyage professionnel',
     icon: 'Sparkles',
     summary: 'Sols, surfaces, sanitaires, grands formats.',
@@ -65,7 +65,7 @@ export const sectorPageCards: readonly SectorPageCard[] = [
   {
     id: 'entreprises',
     name: 'Entreprises',
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
+    image: '/images/sectors/entreprises.jpg',
     alt: 'Bureaux et espaces de travail professionnels',
     icon: 'Building2',
     summary: 'Bureaux, vitres, sanitaires, hygiène mains.',
@@ -78,7 +78,7 @@ export const sectorPageCards: readonly SectorPageCard[] = [
   {
     id: 'revendeurs-grossistes',
     name: 'Revendeurs & grossistes',
-    image: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?w=800&q=80',
+    image: '/images/sectors/revendeurs-grossistes.jpg',
     alt: 'Stock de produits de nettoyage professionnels',
     icon: 'Boxes',
     summary: 'Gamme Prodet, formats lisibles, réassort.',
@@ -91,7 +91,7 @@ export const sectorPageCards: readonly SectorPageCard[] = [
   {
     id: 'institutions',
     name: 'Institutions & collectivités',
-    image: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&q=80',
+    image: '/images/sectors/institutions.jpg',
     alt: 'Établissement public et collectivité',
     icon: 'Landmark',
     summary: 'Sanitaires, mains, sols, espaces collectifs.',

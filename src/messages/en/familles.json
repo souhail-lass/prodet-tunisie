@@ -1,0 +1,73 @@
+{
+  "home": {
+    "eyebrow": "Our products",
+    "title": "Our products & hygiene supplies",
+    "lead": "Pick a universe to explore our ranges and references."
+  },
+  "catalogue": {
+    "title": "Browse by family"
+  },
+  "sidebar": {
+    "title": "Categories"
+  },
+  "page": {
+    "eyebrow": "Family",
+    "subEyebrow": "Sub-category",
+    "viewAll": "Full catalogue",
+    "viewProducts": "View products",
+    "productsCount": "{count} reference(s)",
+    "browseTitle": "Choose a sub-category",
+    "emptyTitle": "Coming soon",
+    "emptyBody": "This category is being expanded. Contact us for a specific reference.",
+    "ctaTitle": "Need a quote?",
+    "ctaBody": "Tell us your quantities and we'll get back to you within 24 business hours.",
+    "ctaQuote": "Request a quote"
+  },
+  "items": {
+    "produits-nettoyage": {
+      "label": "Cleaning products",
+      "tagline": "Detergents & disinfectants",
+      "description": "Detergents, disinfectants and degreasers made by Prodet, plus selected references — organised by use."
+    },
+    "materiel-hygiene": {
+      "label": "Cleaning equipment",
+      "tagline": "Brooms, tools, dispensers",
+      "description": "Brooms, brushes, squeegees, handles, mops, cloths, buckets and dispensers for everyday professional cleaning."
+    },
+    "papier-epi": {
+      "label": "Paper & disposable PPE",
+      "tagline": "Wiping, gloves, protection",
+      "description": "Toilet paper, wipes, napkins, cling film, gloves and disposable protective equipment for your teams."
+    },
+    "collecte-dechets": {
+      "label": "Waste collection",
+      "tagline": "Bins & bags",
+      "description": "Bins, containers and bin bags of every size to manage your site's waste."
+    },
+    "parfums-ambiance": {
+      "label": "Air fresheners",
+      "tagline": "Deodorisers & diffusers",
+      "description": "Deodorisers, sprays and diffusers to keep your reception areas and restrooms fresh."
+    }
+  },
+  "souscats": {
+    "sols": "Floor cleaning",
+    "cuisine-degraissage": "Kitchen & degreasing",
+    "sanitaires-desinfection": "Sanitary & disinfection",
+    "linge-textiles": "Laundry & textiles",
+    "hygiene-mains": "Hand hygiene",
+    "surfaces-vitres": "Surfaces & glass",
+    "autres-nettoyage": "Other cleaning products",
+    "balais-brosses": "Brooms, brushes & handles",
+    "lavettes-eponges": "Squeegees, cloths & sponges",
+    "seaux-chariots": "Buckets, carts & dispensers",
+    "papier-essuyage": "Paper & wiping",
+    "gants-jetables": "Disposable gloves",
+    "protections-jetables": "Disposable protection",
+    "poubelles": "Bins & containers",
+    "sacs-poubelle": "Bin bags & sacks",
+    "sprays-desodorisants": "Sprays & deodorisers",
+    "diffuseurs": "Diffusers & scents",
+    "autres": "Other articles"
+  }
+}

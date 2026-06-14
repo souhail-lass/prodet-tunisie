@@ -1,23 +1,23 @@
 /**
  * "Ils nous font confiance" — trusted-clients logo wall.
  *
- * EDIT THIS LIST to match the clients you want to showcase. To use a real
- * logo image instead of a styled wordmark, drop a file in
- * `public/brand/clients/` (SVG or transparent PNG works best) and set `logo`
- * to its path, e.g. `{ name: 'Vistaprint', logo: '/brand/clients/vistaprint.svg' }`.
- * Logos render in uniform grayscale and colour-in on hover.
+ * EDIT THIS LIST to match the clients you want to showcase. Logos live in
+ * `public/brand/clients/` — drop a new file there (transparent PNG or SVG works
+ * best) and add an entry below. Each logo is shown in a uniform white chip,
+ * grayscale by default, and colours in on hover.
  */
 type Client = { name: string; logo?: string };
 
 const CLIENTS: Client[] = [
-  { name: 'Vistaprint' },
-  { name: 'ETAP' },
-  { name: 'AGIL · SNDP' },
-  { name: 'The 716' },
-  { name: 'SATER' },
-  { name: 'MHIRI' },
-  { name: 'LAPEC' },
-  { name: 'Layla Feinkost' },
+  { name: 'Vistaprint', logo: '/brand/clients/vistaprint.png' },
+  { name: 'The Cliff', logo: '/brand/clients/the-cliff.png' },
+  { name: 'The 716', logo: '/brand/clients/the-716.jpg' },
+  { name: 'Hôtel Le Pacha', logo: '/brand/clients/hotel-le-pacha.png' },
+  { name: 'Gourmandise', logo: '/brand/clients/gourmandise.png' },
+  { name: 'The Big Dip', logo: '/brand/clients/big-dip.png' },
+  { name: 'Slayta', logo: '/brand/clients/slayta.jpg' },
+  { name: 'Tunisie Catering', logo: '/brand/clients/tunisie-catering.png' },
+  { name: 'Lycée Pierre Mendès France', logo: '/brand/clients/lycee-pmf.jpg' },
 ];
 
 export function ClientWall() {

@@ -5,6 +5,8 @@ import { ChevronDown, Layers, Search, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Button, Checkbox, Input, Select } from '@/components/ds';
 import { CatalogueTile } from '@/components/site/catalogue-tile';
+import { Link } from '@/i18n/routing';
+import { familles } from '@/data/familles';
 import { useQuoteSelection } from '@/lib/quote-cart-context';
 import type { CatalogueCardProduct } from '@/types/product';
 
@@ -42,6 +44,7 @@ export function CataloguePageClient({
   categories: string[];
 }) {
   const t = useTranslations('catalogue');
+  const tf = useTranslations('familles');
   const { getQuantity, setProductQuantity } = useQuoteSelection();
 
   const [query, setQuery] = useState('');
@@ -123,6 +126,16 @@ export function CataloguePageClient({
             <h1 className="catalogue__title">{t('masthead.title')}</h1>
             <p className="catalogue__lead">{t('masthead.lead')}</p>
           </div>
+          <nav className="famille-strip" aria-label={tf('catalogue.title')}>
+            <span className="famille-strip__label">{tf('catalogue.title')}</span>
+            <div className="famille-strip__chips">
+              {familles.map((famille) => (
+                <Link key={famille.id} href={`/produits/${famille.id}`} className="famille-chip">
+                  {tf(`items.${famille.id}.label`)}
+                </Link>
+              ))}
+            </div>
+          </nav>
         </div>
       </div>
 

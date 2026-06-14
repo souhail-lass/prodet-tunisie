@@ -9,6 +9,7 @@ const namespaces = [
   'footer',
   'legal',
   'catalogue',
+  'familles',
   'sectors',
   'about',
   'contact',

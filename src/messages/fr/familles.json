@@ -1,0 +1,73 @@
+{
+  "home": {
+    "eyebrow": "Nos produits",
+    "title": "Nos produits & articles d'hygiène",
+    "lead": "Choisissez un univers pour découvrir nos gammes et nos références."
+  },
+  "catalogue": {
+    "title": "Parcourir par famille"
+  },
+  "sidebar": {
+    "title": "Catégories"
+  },
+  "page": {
+    "eyebrow": "Famille",
+    "subEyebrow": "Sous-catégorie",
+    "viewAll": "Catalogue complet",
+    "viewProducts": "Voir les produits",
+    "productsCount": "{count} référence(s)",
+    "browseTitle": "Choisissez une sous-catégorie",
+    "emptyTitle": "Bientôt disponible",
+    "emptyBody": "Cette catégorie s'enrichit. Contactez-nous pour une référence précise.",
+    "ctaTitle": "Besoin d'un devis ?",
+    "ctaBody": "Décrivez-nous vos quantités, nous revenons vers vous sous 24h ouvrées.",
+    "ctaQuote": "Demander un devis"
+  },
+  "items": {
+    "produits-nettoyage": {
+      "label": "Produits de nettoyage",
+      "tagline": "Détergents & désinfectants",
+      "description": "Détergents, désinfectants et dégraissants fabriqués par Prodet, complétés par des références sélectionnées — organisés par usage."
+    },
+    "materiel-hygiene": {
+      "label": "Matériel d'hygiène",
+      "tagline": "Balais, accessoires, distributeurs",
+      "description": "Balais, brosses, raclettes, manches, serpillières, lavettes, seaux et distributeurs pour l'entretien professionnel au quotidien."
+    },
+    "papier-epi": {
+      "label": "Papier & EPI jetables",
+      "tagline": "Essuyage, gants, protections",
+      "description": "Papier hygiénique, essuie-tout, serviettes, film alimentaire, gants et protections jetables pour vos équipes."
+    },
+    "collecte-dechets": {
+      "label": "Collecte des déchets",
+      "tagline": "Poubelles & sacs",
+      "description": "Poubelles, conteneurs et sacs poubelle de toutes tailles pour la gestion des déchets de votre établissement."
+    },
+    "parfums-ambiance": {
+      "label": "Parfums d'ambiance",
+      "tagline": "Désodorisants & diffuseurs",
+      "description": "Désodorisants, sprays et diffuseurs pour parfumer durablement vos espaces d'accueil et sanitaires."
+    }
+  },
+  "souscats": {
+    "sols": "Nettoyage des sols",
+    "cuisine-degraissage": "Cuisine & dégraissage",
+    "sanitaires-desinfection": "Sanitaires & désinfection",
+    "linge-textiles": "Linge & textiles",
+    "hygiene-mains": "Hygiène des mains",
+    "surfaces-vitres": "Surfaces & vitres",
+    "autres-nettoyage": "Autres produits d'entretien",
+    "balais-brosses": "Balais, brosses & manches",
+    "lavettes-eponges": "Raclettes, lavettes & éponges",
+    "seaux-chariots": "Seaux, chariots & distributeurs",
+    "papier-essuyage": "Papier & essuyage",
+    "gants-jetables": "Gants jetables",
+    "protections-jetables": "Protections jetables",
+    "poubelles": "Poubelles & conteneurs",
+    "sacs-poubelle": "Sacs poubelle & sachets",
+    "sprays-desodorisants": "Sprays & désodorisants",
+    "diffuseurs": "Diffuseurs & senteurs",
+    "autres": "Autres articles"
+  }
+}

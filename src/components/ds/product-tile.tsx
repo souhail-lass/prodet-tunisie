@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import { QuantityControl } from './quantity-control';
 
+const PLACEHOLDER_LOGO = '/images/logo/prodet-logo.svg';
+
 export type ProductTileProps = {
   name: string;
   tagline?: string;
@@ -15,15 +17,6 @@ export type ProductTileProps = {
   className?: string;
 };
 
-function initials(name = '') {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase())
-    .join('');
-}
-
 const isRaster = (src: string) => /\.(png|jpe?g|webp|avif)$/i.test(src);
 
 /** Mirrors the design-system ProductCard (.pds-product) — the catalogue/home tile. */
@@ -31,7 +24,6 @@ export function ProductTile({
   name,
   tagline,
   image,
-  manufactured = false,
   quantity = 0,
   onQuantityChange,
   onOpen,
@@ -60,8 +52,11 @@ export function ProductTile({
             <img src={image} alt={name} />
           )
         ) : (
-          <span className={`pds-product__initials ${manufactured ? '' : 'pds-product__initials--resold'}`}>
-            {initials(name)}
+          // No photo yet (commercialized articles): sober branded placeholder
+          // rather than bare initials.
+          <span className="pds-product__placeholder" aria-hidden>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={PLACEHOLDER_LOGO} alt="" className="pds-product__placeholder-logo" />
           </span>
         )}
       </div>

@@ -2,6 +2,13 @@ import 'server-only';
 import { eq, type SQL } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 import type { Product, ProductCategory, ProductSpec } from '@/types/product';
+import {
+  classifyFamille,
+  classifySousCategorie,
+  familleIds,
+  getSousCategoriesForFamille,
+  type FamilleId,
+} from '@/data/familles';
 
 /**
  * Cache tag for everything derived from catalogue_product. Admin mutations
@@ -37,6 +44,14 @@ function mapCategory(label: string | null): ProductCategory {
   return (label ?? '').toUpperCase().includes('FINIS') ? 'manufactured' : 'commercialized';
 }
 
+/**
+ * Default packshot for Prodet-manufactured products that have no synced photo.
+ * Per product direction: Prodet solutions always show the SIRAFAN packshot;
+ * commercialized articles stay imageless (clean fallback tile) until a real
+ * photo is added.
+ */
+const PRODET_PACKSHOT = '/images/products/sirafan.png';
+
 /** Stable, URL-safe slug for a catalogue row (SKU preferred, falls back to id). */
 export function productSlug(row: { sku: string | null; id: string }): string {
   if (row.sku && /^[a-zA-Z0-9._-]+$/.test(row.sku)) return row.sku;
@@ -44,18 +59,20 @@ export function productSlug(row: { sku: string | null; id: string }): string {
 }
 
 function mapRowToProduct(row: AdminProductRow): Product {
+  const category = mapCategory(row.baseCategory);
+  const realImage = row.imageUrl || row.baseImageUrl || '';
   return {
     id: row.id,
     slug: productSlug(row),
     name: row.displayName || row.name,
     tagline: row.tagline ?? '',
-    category: mapCategory(row.baseCategory),
+    category,
     categoryLabel: row.baseCategory ?? undefined,
     useCases: [],
     sectors: [],
     description: row.description ?? row.baseDescription ?? '',
     formats: [],
-    image: row.imageUrl || row.baseImageUrl || '',
+    image: realImage || (category === 'manufactured' ? PRODET_PACKSHOT : ''),
     howToUse: row.howToUse ?? undefined,
     dosage: row.dosage ?? undefined,
     specs: row.specs ?? undefined,
@@ -120,6 +137,57 @@ export async function getVisibleCatalogue(): Promise<Product[]> {
 export async function getCatalogueCategories(): Promise<string[]> {
   const products = await getVisibleCatalogue();
   return Array.from(new Set(products.map((p) => p.categoryLabel).filter((c): c is string => Boolean(c)))).sort();
+}
+
+/**
+ * Number of visible products in each top-level famille. Drives the count badge
+ * on the home/catalogue famille cards. Familles are derived from product names
+ * (see classifyFamille) because the raw Swiver categories aren't browsable.
+ */
+export async function getFamilleCounts(): Promise<Record<FamilleId, number>> {
+  const products = await getVisibleCatalogue();
+  const counts = Object.fromEntries(familleIds.map((id) => [id, 0])) as Record<FamilleId, number>;
+  for (const p of products) counts[classifyFamille(p.name, p.categoryLabel)] += 1;
+  return counts;
+}
+
+/** Visible products belonging to a given famille, in catalogue order. */
+export async function getCatalogueByFamille(familleId: FamilleId): Promise<Product[]> {
+  const products = await getVisibleCatalogue();
+  return products.filter((p) => classifyFamille(p.name, p.categoryLabel) === familleId);
+}
+
+export type SousCategorieCount = { slug: string; count: number };
+
+/**
+ * Product counts per defined sous-catégorie of a famille, plus any leftover
+ * "autres" bucket. Drives the sous-catégorie cards on the famille page.
+ */
+export async function getSousCategorieCounts(familleId: FamilleId): Promise<SousCategorieCount[]> {
+  const products = await getCatalogueByFamille(familleId);
+  const counts = new Map<string, number>();
+  for (const p of products) {
+    const slug = classifySousCategorie(familleId, p.name);
+    counts.set(slug, (counts.get(slug) ?? 0) + 1);
+  }
+  const ordered: SousCategorieCount[] = getSousCategoriesForFamille(familleId)
+    .map((s) => ({ slug: s.slug, count: counts.get(s.slug) ?? 0 }))
+    .filter((s) => s.count > 0);
+  // Append any leftover bucket (autres-nettoyage / {famille}-autres) last.
+  const known = new Set(ordered.map((s) => s.slug));
+  for (const [slug, count] of counts) {
+    if (!known.has(slug)) ordered.push({ slug, count });
+  }
+  return ordered;
+}
+
+/** Visible products in a famille's sous-catégorie (incl. the "autres" bucket). */
+export async function getCatalogueBySousCategorie(
+  familleId: FamilleId,
+  sousCategorieSlug: string,
+): Promise<Product[]> {
+  const products = await getCatalogueByFamille(familleId);
+  return products.filter((p) => classifySousCategorie(familleId, p.name) === sousCategorieSlug);
 }
 
 export async function getCatalogueProductBySlug(slug: string): Promise<Product | null> {

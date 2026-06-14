@@ -12,8 +12,10 @@ import { WhatsappIcon } from '@/components/site/whatsapp-icon';
 import { useQuoteDrawer } from '@/components/site/quote-drawer';
 import type { Product } from '@/types/product';
 import type { SectorId } from '@/types/sector';
+import type { FamilleId } from '@/data/familles';
 
-type SectorLink = { id: SectorId; label: string };
+type SectorLink = { id: SectorId; label: string; image: string };
+type FamilleCard = { id: FamilleId; image: string; count: number };
 
 const TRUST = [
   { key: 'local', icon: Factory },
@@ -22,8 +24,17 @@ const TRUST = [
   { key: 'quote', icon: FileText },
 ] as const;
 
-export function HomePage({ showcase, sectors }: { showcase: Product[]; sectors: SectorLink[] }) {
+export function HomePage({
+  showcase,
+  sectors,
+  familles,
+}: {
+  showcase: Product[];
+  sectors: SectorLink[];
+  familles: FamilleCard[];
+}) {
   const t = useTranslations('home');
+  const tf = useTranslations('familles');
   const router = useRouter();
   const { open: openQuote } = useQuoteDrawer();
 
@@ -97,22 +108,69 @@ export function HomePage({ showcase, sectors }: { showcase: Product[]; sectors: 
         ))}
       </section>
 
+      <section className="section-wrap home-familles">
+        <div className="section-head">
+          <span className="eyebrow">{tf('home.eyebrow')}</span>
+          <h2 className="section-title">{tf('home.title')}</h2>
+          <p className="section-lead">{tf('home.lead')}</p>
+        </div>
+        <div className="famille-grid famille-grid--product">
+          {familles.map((famille) => (
+            <button
+              className="famille-card famille-card--product"
+              key={famille.id}
+              onClick={() => router.push(`/produits/${famille.id}`)}
+            >
+              <span className="famille-card__media">
+                {famille.image ? (
+                  <Image
+                    src={famille.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 700px) 45vw, 220px"
+                    style={{ objectFit: 'contain' }}
+                  />
+                ) : (
+                  <span className="famille-card__placeholder" aria-hidden>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/images/logo/prodet-logo.svg" alt="" />
+                  </span>
+                )}
+              </span>
+              <span className="famille-card__body">
+                <span className="famille-card__label">{tf(`items.${famille.id}.label`)}</span>
+                <span className="famille-card__tagline">{tf(`items.${famille.id}.tagline`)}</span>
+                {famille.count > 0 ? (
+                  <span className="famille-card__cta">
+                    {tf('page.productsCount', { count: famille.count })}
+                    <ChevronRight size={15} className="famille-card__arrow" />
+                  </span>
+                ) : null}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+
       <section className="section-wrap home-sectors">
         <div className="section-head">
           <span className="eyebrow">{t('sectors.eyebrow')}</span>
           <h2 className="section-title">{t('sectors.title')}</h2>
           <p className="section-lead">{t('sectors.lead')}</p>
         </div>
-        <div className="sector-grid">
+        <div className="sector-tile-grid">
           {sectors.map((sector) => {
             const Icon = SECTOR_ICON[sector.id];
             return (
-              <button className="sector-card" key={sector.id} onClick={() => router.push('/secteurs')}>
-                <span className="sector-card__icon">
-                  <Icon size={22} />
+              <button
+                className="sector-tile"
+                key={sector.id}
+                onClick={() => router.push(`/secteurs/${sector.id}`)}
+              >
+                <span className="sector-tile__media">
+                  <Icon strokeWidth={1.4} />
                 </span>
-                <span className="sector-card__label">{sector.label}</span>
-                <ChevronRight size={18} className="sector-card__arrow" />
+                <span className="sector-tile__label">{sector.label}</span>
               </button>
             );
           })}

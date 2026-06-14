@@ -1,6 +1,5 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/routing';
 import { Button } from '@/components/ds';
@@ -25,20 +24,21 @@ export function SectorsPage({ sectors }: { sectors: SectorLink[] }) {
         </div>
       </div>
 
-      <div className="section-wrap sectors-page__grid">
+      <div className="section-wrap sector-tile-grid sectors-index-grid">
         {sectors.map((sector) => {
           const Icon = SECTOR_ICON[sector.id];
           return (
-            <article className="sector-block" key={sector.id}>
-              <span className="sector-block__icon">
-                <Icon size={24} />
+            <button
+              className="sector-tile"
+              key={sector.id}
+              onClick={() => router.push(`/secteurs/${sector.id}`)}
+            >
+              <span className="sector-tile__media">
+                <Icon strokeWidth={1.4} />
               </span>
-              <h3>{sector.label}</h3>
-              <p>{t(`cards.${sector.id}`)}</p>
-              <button className="sector-block__link" onClick={() => router.push('/catalogue')}>
-                {t('viewProducts')} <ArrowRight size={16} />
-              </button>
-            </article>
+              <span className="sector-tile__label">{sector.label}</span>
+              <span className="sector-tile__hint">{t(`cards.${sector.id}`)}</span>
+            </button>
           );
         })}
       </div>
