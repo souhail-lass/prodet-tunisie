@@ -9,6 +9,7 @@ import {
   getSousCategoriesForFamille,
   type FamilleId,
 } from '@/data/familles';
+import { resolveResellImage } from '@/data/resell-images';
 
 /**
  * Cache tag for everything derived from catalogue_product. Admin mutations
@@ -61,6 +62,9 @@ export function productSlug(row: { sku: string | null; id: string }): string {
 function mapRowToProduct(row: AdminProductRow): Product {
   const category = mapCategory(row.baseCategory);
   const realImage = row.imageUrl || row.baseImageUrl || '';
+  // Photo precedence: real Swiver/admin image → committed resell packshot
+  // (matched by name) → SIRAFAN packshot for manufactured solutions → none.
+  const resellImage = realImage ? '' : resolveResellImage(row.displayName || row.name);
   return {
     id: row.id,
     slug: productSlug(row),
@@ -72,7 +76,7 @@ function mapRowToProduct(row: AdminProductRow): Product {
     sectors: [],
     description: row.description ?? row.baseDescription ?? '',
     formats: [],
-    image: realImage || (category === 'manufactured' ? PRODET_PACKSHOT : ''),
+    image: realImage || resellImage || (category === 'manufactured' ? PRODET_PACKSHOT : ''),
     howToUse: row.howToUse ?? undefined,
     dosage: row.dosage ?? undefined,
     specs: row.specs ?? undefined,
