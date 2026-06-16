@@ -7,10 +7,13 @@
 .section-wrap { max-width: var(--container-max); margin: 0 auto; padding-left: 32px; padding-right: 32px; width: 100%; }
 
 .eyebrow--ondark { color: var(--prodet-sky); }
-.section-head { margin-bottom: 28px; }
-.section-head--row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
-.section-title { font-size: var(--text-h2); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-tight); margin-top: 8px; }
-.section-lead { font-size: var(--text-lg); color: var(--text-secondary); margin-top: 8px; max-width: 52ch; }
+.section-head { margin-bottom: 32px; max-width: 60ch; }
+.section-head--row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; max-width: none; }
+/* Eyebrow carries the green "local manufacturing" keyline on light sections. */
+.section-head .eyebrow { display: inline-flex; align-items: center; gap: 9px; }
+.section-head .eyebrow::before { content: ''; width: 18px; height: 2px; border-radius: 2px; background: var(--rule-accent); }
+.section-title { font-size: clamp(1.75rem, 1.05rem + 2vw, 2.125rem); font-weight: var(--fw-bold); letter-spacing: var(--tracking-tight); line-height: 1.08; margin-top: 12px; }
+.section-lead { font-size: var(--text-lg); color: var(--text-secondary); margin-top: 12px; max-width: 56ch; line-height: var(--leading-relaxed); }
 .section-wrap.home-sectors, .section-wrap > section { }
 
 /* ---------- HEADER ---------- */
@@ -87,12 +90,12 @@
   aspect-ratio: 1 / 1;
   border-radius: 18px;
   padding: 12%;
-  background: radial-gradient(120% 90% at 50% 18%, #ffffff 0%, #f1f5fa 62%, #e7eef6 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 14px 30px -20px rgba(11, 46, 87, 0.45);
+  background: var(--pedestal-fill);
+  box-shadow: var(--pedestal-ring), var(--pedestal-shadow);
   transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
 }
 .famille-card--product .famille-card__media img { object-fit: contain; transition: transform var(--dur-slow, 0.5s) var(--ease-out, ease); }
-.famille-card--product:hover .famille-card__media { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 20px 38px -18px rgba(11, 46, 87, 0.5); transform: translateY(-4px); }
+.famille-card--product:hover .famille-card__media { box-shadow: var(--pedestal-ring), var(--pedestal-shadow-hover); transform: translateY(-4px); }
 .famille-card--product:hover .famille-card__media img { transform: scale(1.06); }
 .famille-card__placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .famille-card__placeholder img { width: 56%; height: auto; opacity: 0.38; filter: grayscale(1); }
@@ -148,7 +151,7 @@
 .pmarquee__track { display: flex; gap: 22px; width: max-content; }
 .pmarquee__card {
   flex: 0 0 auto; width: 248px; position: relative; isolation: isolate;
-  background: linear-gradient(180deg, #ffffff 0%, #f7fafd 100%);
+  background: var(--surface-card);
   border: 1px solid var(--border-default); border-radius: 20px; padding: 22px 22px 20px;
   text-decoration: none; color: inherit; overflow: hidden;
   box-shadow: 0 1px 2px rgba(11, 46, 87, 0.05), 0 18px 40px -28px rgba(11, 46, 87, 0.55);

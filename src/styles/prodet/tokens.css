@@ -224,6 +224,24 @@
   --shadow-panel: 0 8px 32px rgba(6, 53, 97, 0.10);
   --shadow-focus: 0 0 0 3px rgba(9, 82, 150, 0.18);
 
+  /* Section vertical rhythm — fluid. Creates focal contrast between rows:
+     tight = utility strips, base = standard, loose = the hero moment. */
+  --section-y-tight: clamp(2.5rem, 5vw, 3.5rem);
+  --section-y: clamp(3.5rem, 6vw, 5rem);
+  --section-y-loose: clamp(4.5rem, 8vw, 7rem);
+
+  /* The ONE sanctioned soft treatment: a packshot "pedestal". Defined once so
+     it is intentional and identical everywhere; every other surface stays flat
+     (see the "no gradients" rule the kit otherwise follows). */
+  --pedestal-fill: radial-gradient(120% 90% at 50% 18%, #ffffff 0%, #f1f5fa 62%, #e7eef6 100%);
+  --pedestal-ring: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --pedestal-shadow: 0 14px 30px -20px rgba(11, 46, 87, 0.45);
+  --pedestal-shadow-hover: 0 20px 38px -18px rgba(11, 46, 87, 0.5);
+
+  /* Green = local manufacturing thread. A 2px keyline accent that ties section
+     headers and focal cards back to "fabriqué en Tunisie". */
+  --rule-accent: var(--prodet-green);
+
   /* Layout */
   --container-max: 1280px;
   --container-wide: 1400px;

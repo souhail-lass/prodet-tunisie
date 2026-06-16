@@ -156,12 +156,12 @@
 .sector-tile__media {
   position: relative; width: 100%; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
   border-radius: 18px; color: var(--prodet-blue);
-  background: radial-gradient(120% 90% at 50% 18%, #ffffff 0%, #f1f5fa 62%, #e7eef6 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 14px 30px -20px rgba(11, 46, 87, 0.45);
+  background: var(--pedestal-fill);
+  box-shadow: var(--pedestal-ring), var(--pedestal-shadow);
   transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
 }
 .sector-tile__media svg { width: 42%; height: 42%; }
-.sector-tile:hover .sector-tile__media { transform: translateY(-4px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 20px 38px -18px rgba(11, 46, 87, 0.5); color: var(--prodet-blue-hover, var(--prodet-blue)); }
+.sector-tile:hover .sector-tile__media { transform: translateY(-4px); box-shadow: var(--pedestal-ring), var(--pedestal-shadow-hover); color: var(--prodet-blue-hover, var(--prodet-blue)); }
 .sector-tile__label { font-size: var(--text-base); font-weight: var(--fw-semibold); color: var(--text-primary); }
 .sector-tile__hint { font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.4; max-width: 26ch; }
 .sectors-index-grid { padding-top: 52px; padding-bottom: 56px; }
@@ -265,12 +265,12 @@
 .souscat-card--product:hover { border-color: transparent; box-shadow: none; transform: none; }
 .souscat-card--product .souscat-card__media {
   aspect-ratio: 1 / 1; border-radius: 18px; padding: 13%;
-  background: radial-gradient(120% 90% at 50% 18%, #ffffff 0%, #f1f5fa 62%, #e7eef6 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 14px 30px -20px rgba(11, 46, 87, 0.45);
+  background: var(--pedestal-fill);
+  box-shadow: var(--pedestal-ring), var(--pedestal-shadow);
   transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
 }
 .souscat-card--product .souscat-card__media img { object-fit: contain; transition: transform var(--dur-slow, 0.5s) var(--ease-out, ease); }
-.souscat-card--product:hover .souscat-card__media { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 20px 38px -18px rgba(11, 46, 87, 0.5); transform: translateY(-4px); }
+.souscat-card--product:hover .souscat-card__media { box-shadow: var(--pedestal-ring), var(--pedestal-shadow-hover); transform: translateY(-4px); }
 .souscat-card--product:hover .souscat-card__media img { transform: scale(1.06); }
 .souscat-card__placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .souscat-card__placeholder img { width: 52%; height: auto; opacity: 0.36; filter: grayscale(1); }

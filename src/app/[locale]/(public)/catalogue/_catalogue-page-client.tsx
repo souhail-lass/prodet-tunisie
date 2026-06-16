@@ -220,6 +220,7 @@ export function CataloguePageClient({
                     product={product}
                     quantity={getQuantity(product.id)}
                     onQuantityChange={setProductQuantity}
+                    madeLabel={t('page.manufacturedBadge')}
                   />
                 ))}
               </div>

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { Check } from 'lucide-react';
 import { QuantityControl } from './quantity-control';
 
 const PLACEHOLDER_LOGO = '/images/logo/prodet-logo.svg';
@@ -9,6 +10,8 @@ export type ProductTileProps = {
   image?: string;
   format?: string;
   manufactured?: boolean;
+  /** Localized "Fabriqué par Prodet" label — renders the green badge when set. */
+  madeLabel?: string;
   quantity?: number;
   onQuantityChange?: (next: number) => void;
   onOpen?: () => void;
@@ -24,6 +27,9 @@ export function ProductTile({
   name,
   tagline,
   image,
+  format,
+  manufactured = false,
+  madeLabel,
   quantity = 0,
   onQuantityChange,
   onOpen,
@@ -59,6 +65,12 @@ export function ProductTile({
             <img src={PLACEHOLDER_LOGO} alt="" className="pds-product__placeholder-logo" />
           </span>
         )}
+        {manufactured && madeLabel ? (
+          <span className="pds-product__badge">
+            <Check aria-hidden /> {madeLabel}
+          </span>
+        ) : null}
+        {format ? <span className="pds-product__format">{format}</span> : null}
       </div>
       <div className="pds-product__body" onClick={onOpen}>
         <h3 className="pds-product__name">{name}</h3>
