@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { ClipboardPlus, MessageCircle } from 'lucide-react';
-import { Link, useRouter, type Locale } from '@/i18n/routing';
+import { Link, type Locale } from '@/i18n/routing';
 import type { Product } from '@/data/types';
 import {
   toQuoteSelectionProduct,
   useQuoteSelection,
 } from '@/lib/quote-cart-context';
+import { useQuoteDrawer } from '@/components/site/quote-drawer';
 import { ProductQuantitySelector } from './ProductQuantitySelector';
 
 interface ProductQuoteBoxProps {
@@ -17,8 +18,8 @@ interface ProductQuoteBoxProps {
 
 export function ProductQuoteBox({ product, locale }: ProductQuoteBoxProps) {
   const [quantity, setQuantity] = useState(1);
-  const router = useRouter();
   const { addProduct } = useQuoteSelection();
+  const { open: openQuoteDrawer } = useQuoteDrawer();
   const isEnglish = locale === 'en';
 
   return (
@@ -40,7 +41,7 @@ export function ProductQuoteBox({ product, locale }: ProductQuoteBoxProps) {
           type="button"
           onClick={() => {
             addProduct(toQuoteSelectionProduct(product), quantity);
-            router.push('/devis');
+            openQuoteDrawer();
           }}
           className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-sm bg-prodet-blue px-5 text-[var(--type-small)] font-semibold text-white transition-colors hover:bg-prodet-blue-hover"
         >

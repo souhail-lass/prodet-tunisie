@@ -165,8 +165,12 @@
 .site-footer__col h4 { color: #fff; font-size: var(--text-sm); font-weight: var(--fw-semibold); margin-bottom: 14px; }
 .site-footer__col a { display: block; color: var(--text-on-dark-soft); font-size: var(--text-sm); padding: 5px 0; cursor: pointer; }
 .site-footer__col a:hover { color: #fff; }
-.site-footer__contact { display: flex; align-items: flex-start; gap: 9px; font-size: var(--text-sm); padding: 5px 0; line-height: 1.4; }
-.site-footer__contact svg { color: var(--prodet-sky); flex-shrink: 0; margin-top: 1px; }
+/* Higher specificity than `.site-footer__col a { display:block }` so the phone
+   and email links sit inline (icon + text) and align with the address. */
+.site-footer__col a.site-footer__contact,
+.site-footer__contact { display: flex; align-items: flex-start; gap: 10px; font-size: var(--text-sm); padding: 6px 0; line-height: 1.45; color: var(--text-on-dark-soft); }
+.site-footer__contact svg { color: var(--prodet-sky); flex-shrink: 0; margin-top: 2px; }
+.site-footer__col a.site-footer__contact:hover { color: #fff; }
 .site-footer__bar { border-top: 1px solid rgba(255,255,255,0.1); }
 .site-footer__bar > * { }
 .site-footer__bar { max-width: var(--container-max); margin: 0 auto; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; font-size: var(--text-xs); }
