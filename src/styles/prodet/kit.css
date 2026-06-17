@@ -247,8 +247,12 @@
   .cwall__wordmark { font-size: 1.25rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  /* No motion: wrap the real items, hide the duplicated loop half. */
-  .pmarquee, .cwall { -webkit-mask-image: none; mask-image: none; }
-  .pmarquee__track, .cwall__track { animation: none; flex-wrap: wrap; justify-content: center; width: 100%; }
-  .pmarquee__card[aria-hidden='true'], .cwall__logo[aria-hidden='true'] { display: none; }
+  /* Auto-scrolling logo wall → static, wrapped to a single centered set. */
+  .cwall { -webkit-mask-image: none; mask-image: none; }
+  .cwall__track { animation: none; flex-wrap: wrap; justify-content: center; width: 100%; }
+  .cwall__logo[aria-hidden='true'] { display: none; }
+  /* Product carousel → drop the auto-drift (handled in JS) but keep a usable
+     horizontal scroller: a single product set the arrows still scroll, NOT a
+     collapsed grid with dead arrows. */
+  .pmarquee__card[aria-hidden='true'] { display: none; }
 }
