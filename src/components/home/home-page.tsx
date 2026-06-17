@@ -3,11 +3,10 @@
 import Image from 'next/image';
 import { ArrowRight, Check, FileText, Factory, Shield, Truck, ChevronRight, Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { Button } from '@/components/ds';
 import { ProductMarquee } from '@/components/home/product-marquee';
 import { ClientWall } from '@/components/home/client-wall';
-import { SECTOR_ICON } from '@/components/site/sector-icons';
 import { WhatsappIcon } from '@/components/site/whatsapp-icon';
 import { useQuoteDrawer } from '@/components/site/quote-drawer';
 import type { Product } from '@/types/product';
@@ -49,10 +48,10 @@ export function HomePage({
             <h1 className="hero__title">{t('hero.title')}</h1>
             <p className="hero__sub">{t('hero.sub')}</p>
             <div className="hero__cta">
-              <Button variant="primary" size="lg" onClick={openQuote} iconRight={<ArrowRight size={18} />}>
+              <Button variant="primary" size="xl" onClick={openQuote} iconRight={<ArrowRight size={18} />}>
                 {t('hero.ctaQuote')}
               </Button>
-              <Button variant="dark" size="lg" onClick={() => router.push('/catalogue')}>
+              <Button variant="dark" size="xl" onClick={() => router.push('/catalogue')}>
                 {t('hero.ctaCatalogue')}
               </Button>
             </div>
@@ -152,28 +151,37 @@ export function HomePage({
         </div>
       </section>
 
-      <section className="section-wrap home-sectors">
-        <div className="section-head">
-          <span className="eyebrow">{t('sectors.eyebrow')}</span>
-          <h2 className="section-title">{t('sectors.title')}</h2>
-          <p className="section-lead">{t('sectors.lead')}</p>
-        </div>
-        <div className="sector-tile-grid">
-          {sectors.map((sector) => {
-            const Icon = SECTOR_ICON[sector.id];
-            return (
-              <button
-                className="sector-tile"
+      <section className="home-band home-band--white">
+        <div className="section-wrap">
+          <div className="section-head">
+            <span className="eyebrow">{t('sectors.eyebrow')}</span>
+            <h2 className="section-title">{t('sectors.title')}</h2>
+            <p className="section-lead">{t('sectors.lead')}</p>
+          </div>
+          <div className="home-sector-grid">
+            {sectors.map((sector) => (
+              <Link
                 key={sector.id}
-                onClick={() => router.push(`/secteurs/${sector.id}`)}
+                href={`/secteurs/${sector.id}`}
+                className="home-sector"
+                aria-label={sector.label}
               >
-                <span className="sector-tile__media">
-                  <Icon strokeWidth={1.4} />
+                {sector.image ? (
+                  <Image
+                    src={sector.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 620px) 100vw, (max-width: 1080px) 50vw, 33vw"
+                  />
+                ) : null}
+                <span className="home-sector__scrim" aria-hidden />
+                <span className="home-sector__name">
+                  {sector.label}
+                  <ChevronRight size={18} aria-hidden />
                 </span>
-                <span className="sector-tile__label">{sector.label}</span>
-              </button>
-            );
-          })}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

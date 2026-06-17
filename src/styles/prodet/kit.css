@@ -59,6 +59,39 @@
 /* generic section vertical rhythm */
 .home > .section-wrap, .sectors-page__grid { padding-top: 56px; padding-bottom: 56px; }
 
+/* ---------- HOME: full-bleed surface band (section rhythm) ---------- */
+/* Wraps a section so it owns the vertical rhythm and can carry a distinct
+   surface (white / sunken) against the warm wash page — gives focal contrast
+   between rows instead of one flat canvas. Inner .section-wrap keeps the
+   horizontal container. */
+.home-band { padding-block: var(--section-y); }
+.home-band--white { background: var(--surface-card); border-block: 1px solid var(--border-default); }
+.home-band--sunken { background: var(--surface-sunken); }
+
+/* ---------- HOME: sector photo covers (teaser → /secteurs) ---------- */
+.home-sector-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.home-sector {
+  position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden;
+  border-radius: var(--radius-card); border: 1px solid var(--border-default);
+  background: var(--surface-sunken); color: #fff; text-decoration: none;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.home-sector:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-3px); }
+.home-sector:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.home-sector img { object-fit: cover; transition: transform var(--dur-slow, 0.5s) var(--ease-out); }
+.home-sector:hover img { transform: scale(1.05); }
+.home-sector__scrim { position: absolute; inset: 0; background: var(--scrim-cover); pointer-events: none; }
+.home-sector__name {
+  position: absolute; left: 16px; right: 16px; bottom: 13px;
+  display: flex; align-items: center; gap: 7px;
+  font-size: var(--text-lg); font-weight: var(--fw-bold); letter-spacing: var(--tracking-tight);
+}
+.home-sector__name svg { opacity: 0; transform: translateX(-4px); transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+.home-sector:hover .home-sector__name svg { opacity: 1; transform: translateX(0); }
+@media (max-width: 1080px) { .home-sector-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 620px) { .home-sector-grid { grid-template-columns: 1fr; } }
+
 /* ---------- SECTORS (home) ---------- */
 .sector-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .sector-card { display: flex; align-items: center; gap: 14px; background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-card); padding: 18px 20px; cursor: pointer; text-align: left; box-shadow: var(--shadow-card); transition: border-color var(--dur-base), box-shadow var(--dur-base), transform var(--dur-base); }

@@ -191,13 +191,24 @@ export function ContactPage() {
               <span>{t('info.hoursValue')}</span>
             </div>
           </div>
-          <div className="contact__map" aria-hidden>
-            <div className="contact__map-grid" />
-            <span className="contact__map-pin">
-              <MapPin size={22} />
-            </span>
-            <span className="contact__map-label">{t('info.mapLabel')}</span>
+          <div className="contact__map">
+            <iframe
+              src={`https://www.google.com/maps?q=${encodeURIComponent(companyInfo.addressFull)}&output=embed`}
+              title={t('info.mapLabel')}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
           </div>
+          <a
+            href={companyInfo.mapHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="contact__map-link"
+          >
+            <MapPin size={14} aria-hidden />
+            {t('info.mapLabel')}
+          </a>
         </aside>
       </div>
     </div>
