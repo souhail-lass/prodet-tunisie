@@ -101,6 +101,7 @@
   background: transparent; color: var(--prodet-green);
   border-radius: var(--radius-button);
   font-size: var(--text-sm); font-weight: var(--fw-medium);
+  white-space: nowrap; min-width: 0;
   cursor: pointer;
   transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }

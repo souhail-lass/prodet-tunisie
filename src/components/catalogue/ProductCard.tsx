@@ -31,7 +31,7 @@ export function QuoteQuantityControl({
         <button
           type="button"
           onClick={() => setProductQuantity(quoteProduct, 1)}
-          className="flex h-8 w-full items-center justify-center gap-1.5 rounded-sm border border-prodet-blue bg-transparent px-3 text-center text-[var(--type-xs)] font-medium text-prodet-blue transition-colors duration-150 hover:bg-prodet-blue hover:text-white"
+          className="flex h-8 w-full items-center justify-center gap-1 whitespace-nowrap rounded-sm border border-prodet-blue bg-transparent px-2 text-center text-[11px] font-medium leading-none text-prodet-blue transition-colors duration-150 hover:bg-prodet-blue hover:text-white"
         >
           + Ajouter au devis
         </button>
