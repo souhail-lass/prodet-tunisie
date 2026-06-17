@@ -1,17 +1,22 @@
 'use client';
 
+import Image from 'next/image';
+import { ArrowRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ds';
-import { SECTOR_ICON } from '@/components/site/sector-icons';
 import { useQuoteDrawer } from '@/components/site/quote-drawer';
 import type { SectorId } from '@/types/sector';
 
-type SectorLink = { id: SectorId; label: string };
+type SectorCard = {
+  id: SectorId;
+  label: string;
+  image: string;
+  supplies: string[];
+};
 
-export function SectorsPage({ sectors }: { sectors: SectorLink[] }) {
+export function SectorsPage({ sectors }: { sectors: SectorCard[] }) {
   const t = useTranslations('sectors');
-  const router = useRouter();
   const { open: openQuote } = useQuoteDrawer();
 
   return (
@@ -24,24 +29,51 @@ export function SectorsPage({ sectors }: { sectors: SectorLink[] }) {
         </div>
       </div>
 
-      <div className="section-wrap sector-tile-grid sectors-index-grid">
-        {sectors.map((sector) => {
-          const Icon = SECTOR_ICON[sector.id];
-          return (
-            <button
-              className="sector-tile"
-              key={sector.id}
-              onClick={() => router.push(`/secteurs/${sector.id}`)}
-            >
-              <span className="sector-tile__media">
-                <Icon strokeWidth={1.4} />
-              </span>
-              <span className="sector-tile__label">{sector.label}</span>
-              <span className="sector-tile__hint">{t(`cards.${sector.id}`)}</span>
-            </button>
-          );
-        })}
-      </div>
+      <section className="section-wrap sectors-showcase">
+        <div className="sectors-grid">
+          {sectors.map((sector, index) => {
+            const feature = index === 0;
+            return (
+              <Link
+                key={sector.id}
+                href={`/secteurs/${sector.id}`}
+                className={`sector-cover${feature ? ' sector-cover--feature' : ''}`}
+              >
+                <span className="sector-cover__photo">
+                  <Image
+                    src={sector.image}
+                    alt=""
+                    fill
+                    sizes={
+                      feature
+                        ? '(max-width: 760px) 100vw, 46vw'
+                        : '(max-width: 760px) 100vw, (max-width: 1080px) 50vw, 33vw'
+                    }
+                  />
+                  <span className="sector-cover__scrim" aria-hidden />
+                  <span className="sector-cover__name">{sector.label}</span>
+                </span>
+                <span className="sector-cover__body">
+                  <span className="sector-cover__hint">{t(`cards.${sector.id}`)}</span>
+                  {sector.supplies.length > 0 ? (
+                    <span className="sector-cover__supplies">
+                      {sector.supplies.map((supply) => (
+                        <span className="sector-cover__chip" key={supply}>
+                          {supply}
+                        </span>
+                      ))}
+                    </span>
+                  ) : null}
+                  <span className="sector-cover__cta">
+                    {t('index.viewSector')}
+                    <ArrowRight size={15} aria-hidden />
+                  </span>
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
 
       <section className="cta-band">
         <div className="cta-band__inner">

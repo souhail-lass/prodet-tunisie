@@ -167,16 +167,68 @@
 .sectors-index-grid { padding-top: 52px; padding-bottom: 56px; }
 
 /* ============================================================
+   SECTORS INDEX — editorial, photo-led "covers" (showpiece)
+   A flagship feature card leads; the rest follow in a calm grid.
+   ============================================================ */
+.sectors-showcase { padding-top: clamp(2.25rem, 4vw, 3.25rem); padding-bottom: var(--section-y); }
+.sectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.sector-cover {
+  display: flex; flex-direction: column;
+  background: var(--surface-card); border: 1px solid var(--border-default);
+  border-radius: var(--radius-card); overflow: hidden;
+  color: inherit; text-decoration: none; box-shadow: var(--shadow-card);
+  transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.sector-cover:hover { border-color: var(--prodet-blue-tint-strong); box-shadow: var(--shadow-card-hover); transform: translateY(-3px); }
+.sector-cover:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.sector-cover__photo { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: var(--surface-sunken); }
+.sector-cover__photo img { object-fit: cover; transition: transform var(--dur-slow) var(--ease-out); }
+.sector-cover:hover .sector-cover__photo img { transform: scale(1.045); }
+.sector-cover__scrim { position: absolute; inset: 0; background: var(--scrim-cover); pointer-events: none; }
+.sector-cover__name { position: absolute; left: 18px; right: 18px; bottom: 14px; color: #fff; font-size: var(--text-h3); font-weight: var(--fw-bold); letter-spacing: var(--tracking-tight); line-height: 1.08; text-wrap: balance; }
+
+.sector-cover__body { display: flex; flex-direction: column; gap: 14px; padding: 18px; flex: 1; }
+.sector-cover__hint { font-size: var(--text-sm); color: var(--text-secondary); line-height: var(--leading-relaxed); }
+.sector-cover__supplies { display: flex; flex-wrap: wrap; gap: 6px; }
+.sector-cover__chip { font-size: var(--text-2xs); font-weight: var(--fw-medium); color: var(--text-secondary); background: var(--surface-sunken); border: 1px solid var(--border-default); padding: 4px 9px; border-radius: var(--radius-pill); white-space: nowrap; }
+.sector-cover__cta { margin-top: auto; display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-sm); font-weight: var(--fw-semibold); color: var(--prodet-blue); }
+.sector-cover__cta svg { transition: transform var(--dur-base) var(--ease-out); }
+.sector-cover:hover .sector-cover__cta svg { transform: translateX(3px); }
+
+/* Feature (first sector) — full width, horizontal, larger photo. */
+.sector-cover--feature { grid-column: 1 / -1; flex-direction: row; }
+.sector-cover--feature .sector-cover__photo { aspect-ratio: auto; flex: 0 0 46%; min-height: 320px; }
+.sector-cover--feature .sector-cover__name { font-size: clamp(1.75rem, 2.5vw, 2.25rem); left: 24px; right: 24px; bottom: 20px; }
+.sector-cover--feature .sector-cover__body { padding: 30px 32px; gap: 18px; justify-content: center; }
+.sector-cover--feature .sector-cover__hint { font-size: var(--text-lg); max-width: 48ch; }
+
+@media (max-width: 1080px) {
+  .sectors-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 760px) {
+  .sectors-grid { grid-template-columns: 1fr; gap: 16px; }
+  .sector-cover--feature { flex-direction: column; }
+  .sector-cover--feature .sector-cover__photo { flex: none; aspect-ratio: 4 / 3; min-height: 0; }
+  .sector-cover--feature .sector-cover__name { font-size: var(--text-h3); left: 18px; bottom: 14px; }
+  .sector-cover--feature .sector-cover__body { padding: 18px; }
+  .sector-cover--feature .sector-cover__hint { font-size: var(--text-sm); }
+}
+
+/* ============================================================
    SECTOR DETAIL — guided by zone / workflow (solutions only)
    ============================================================ */
-.sector-hero { position: relative; overflow: hidden; color: #fff; background: linear-gradient(120deg, #052a4d 0%, #074276 60%, #0a4e89 100%); }
-.sector-hero__decor { position: absolute; top: 50%; right: -2%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.05); pointer-events: none; line-height: 0; }
-.sector-hero__decor svg { width: 380px; height: 380px; }
-.sector-hero__inner { position: relative; padding-top: 26px; padding-bottom: 52px; }
+.sector-hero { position: relative; overflow: hidden; color: #fff; background: var(--surface-navy); }
+.sector-hero__photo { position: absolute; inset: 0; }
+.sector-hero__photo img { object-fit: cover; }
+.sector-hero__scrim { position: absolute; inset: 0; background: var(--scrim-hero); pointer-events: none; }
+.sector-hero__inner { position: relative; padding-top: 26px; padding-bottom: clamp(3rem, 6vw, 4.5rem); }
 .sector-hero__crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: var(--text-xs); color: var(--text-on-dark-soft); margin-bottom: 30px; }
 .sector-hero__crumb a { color: #fff; font-weight: var(--fw-semibold); }
 .sector-hero__crumb a:hover { color: var(--prodet-sky); }
-.sector-hero__main { display: flex; align-items: center; justify-content: space-between; gap: 36px; }
+.sector-hero__main { display: flex; align-items: flex-end; }
+.sector-hero__text { max-width: 620px; }
 .sector-hero__title { font-size: var(--text-h1); font-weight: var(--fw-bold); letter-spacing: var(--tracking-tight); margin-top: 8px; max-width: 16ch; line-height: 1.03; }
 .sector-hero__lead { font-size: var(--text-lg); color: var(--text-on-dark-soft); margin-top: 14px; max-width: 50ch; line-height: var(--leading-relaxed); }
 .sector-hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 26px; }
@@ -185,12 +237,6 @@
 .sector-hero__link:hover svg { transform: translateX(3px); }
 .sector-hero__meta { margin-top: 22px; font-size: var(--text-sm); color: var(--text-on-dark-soft); }
 .sector-hero__meta b { color: #fff; }
-.sector-hero__badge {
-  flex-shrink: 0; width: 150px; height: 150px; border-radius: 30px; display: flex; align-items: center; justify-content: center;
-  color: var(--prodet-blue); background: radial-gradient(120% 90% at 50% 16%, #ffffff, #eaf1f8);
-  box-shadow: 0 24px 50px -22px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
-.sector-hero__badge svg { width: 66px; height: 66px; }
 
 .sector-zones { padding-top: 56px; padding-bottom: 28px; }
 .sector-zones__list { display: flex; flex-direction: column; gap: 24px; }
@@ -214,9 +260,6 @@
 
 @media (max-width: 700px) {
   .sector-hero__main { flex-direction: column; align-items: flex-start; gap: 24px; }
-  .sector-hero__badge { width: 104px; height: 104px; border-radius: 22px; }
-  .sector-hero__badge svg { width: 46px; height: 46px; }
-  .sector-hero__decor svg { width: 240px; height: 240px; }
   .sector-zone__grid { grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 12px; }
   .sector-zone { padding: 20px 16px 22px; }
 }

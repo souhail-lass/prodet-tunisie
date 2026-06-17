@@ -6,7 +6,6 @@ import { getSectorBySlug, listProducts, listSectors } from '@/data/queries';
 import { localizeProducts, localizeSector } from '@/data/i18n/content';
 import { isLocale, Link } from '@/i18n/routing';
 import { QuoteQuantityControl } from '@/components/catalogue/ProductCard';
-import { SECTOR_ICON } from '@/components/site/sector-icons';
 import { sectorZones } from '@/components/secteurs/sector-solutions';
 import type { Product } from '@/types/product';
 
@@ -27,7 +26,6 @@ export default async function SectorPage({
   const sectorBase = getSectorBySlug(slug);
   if (!sectorBase) return notFound();
   const sector = localizeSector(sectorBase, locale);
-  const Icon = SECTOR_ICON[sector.id];
 
   // Only Prodet **solutions** (manufactured cleaning products) — no hygiene material.
   const solutions = localizeProducts(listProducts({ category: 'manufactured' }), locale);
@@ -47,9 +45,17 @@ export default async function SectorPage({
   return (
     <div className="sector-detail">
       <header className="sector-hero">
-        <span className="sector-hero__decor" aria-hidden>
-          <Icon strokeWidth={1} />
+        <span className="sector-hero__photo" aria-hidden>
+          <Image
+            src={`/images/sectors/${sector.id}.jpg`}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: 'cover' }}
+          />
         </span>
+        <span className="sector-hero__scrim" aria-hidden />
         <div className="section-wrap sector-hero__inner">
           <nav className="sector-hero__crumb">
             <Link href="/">{locale === 'ar' ? 'الرئيسية' : locale === 'en' ? 'Home' : 'Accueil'}</Link>
@@ -76,9 +82,6 @@ export default async function SectorPage({
                 <b>{solutionCount}</b> solutions Prodet · réponse sous 24h ouvrées
               </p>
             </div>
-            <span className="sector-hero__badge" aria-hidden>
-              <Icon strokeWidth={1.4} />
-            </span>
           </div>
         </div>
       </header>

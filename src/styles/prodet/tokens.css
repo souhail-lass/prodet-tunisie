@@ -242,6 +242,11 @@
      headers and focal cards back to "fabriqué en Tunisie". */
   --rule-accent: var(--prodet-green);
 
+  /* Photo legibility scrims (navy). Not decorative — they exist so white text
+     stays readable over photography. Cover = bottom-up; hero = left-weighted. */
+  --scrim-cover: linear-gradient(to top, rgba(6, 53, 97, 0.90) 0%, rgba(6, 53, 97, 0.12) 56%, rgba(6, 53, 97, 0) 100%);
+  --scrim-hero: linear-gradient(100deg, rgba(5, 33, 58, 0.94) 0%, rgba(5, 33, 58, 0.74) 46%, rgba(5, 33, 58, 0.40) 100%);
+
   /* Layout */
   --container-max: 1280px;
   --container-wide: 1400px;

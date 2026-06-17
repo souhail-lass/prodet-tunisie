@@ -25,6 +25,8 @@ export default async function SectorsIndexPage({
   const sectors = localizeSectors(listSectors(), locale).map((sector) => ({
     id: sector.id,
     label: sector.label,
+    image: `/images/sectors/${sector.id}.jpg`,
+    supplies: sector.supplyHighlights.slice(0, 3),
   }));
 
   return <SectorsPage sectors={sectors} />;
