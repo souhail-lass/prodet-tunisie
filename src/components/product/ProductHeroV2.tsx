@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { FileText, Info, Settings, SlidersHorizontal } from 'lucide-react';
+import { Clock, Factory, FileText, Info, ShieldCheck, SlidersHorizontal, Truck } from 'lucide-react';
 import type { Locale } from '@/i18n/routing';
 import type { Product } from '@/data/types';
 import { cn } from '@/lib/utils';
@@ -24,8 +24,8 @@ export function ProductHeroV2({
   sectorLabels,
 }: ProductHeroV2Props) {
   const galleryImages = useMemo(() => buildGalleryImages(product), [product]);
-  const primaryImage = galleryImages[0]!;
-  const [activeImage, setActiveImage] = useState<ProductGalleryImage>(primaryImage);
+  const primaryImage = galleryImages[0];
+  const [activeImage, setActiveImage] = useState<ProductGalleryImage | undefined>(primaryImage);
   const isEnglish = locale === 'en';
   const technicalSheetLabel = product.technicalSheetUrl
     ? isEnglish
@@ -43,24 +43,36 @@ export function ProductHeroV2({
     <section className="grid gap-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)]">
       <div>
         <div className="relative flex min-h-[340px] items-center justify-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-white shadow-card sm:min-h-[420px] md:min-h-[560px] lg:min-h-[600px]">
-          <Image
-            src={activeImage.src}
-            alt={activeImage.alt}
-            fill
-            priority
-            sizes="(min-width: 1024px) 46vw, 100vw"
-            className={cn(
-              'object-contain p-3 drop-shadow-sm md:p-4',
-              activeImage.kind === 'context' ? 'rounded-xl' : '',
-            )}
-          />
+          {activeImage ? (
+            <Image
+              src={activeImage.src}
+              alt={activeImage.alt}
+              fill
+              priority
+              sizes="(min-width: 1024px) 46vw, 100vw"
+              className={cn(
+                'object-contain p-3 drop-shadow-sm md:p-4',
+                activeImage.kind === 'context' ? 'rounded-xl' : '',
+              )}
+            />
+          ) : (
+            <span className="flex items-center justify-center" aria-hidden>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo/prodet-logo.svg"
+                alt=""
+                className="w-1/3 max-w-[180px] opacity-25 grayscale"
+              />
+            </span>
+          )}
         </div>
 
-        <div className="mt-5 flex gap-3 overflow-x-auto pb-1">
-          {galleryImages.map((image) => {
-            const isActive = image.src === activeImage.src;
+        {galleryImages.length > 1 ? (
+          <div className="mt-5 flex gap-3 overflow-x-auto pb-1">
+            {galleryImages.map((image) => {
+              const isActive = image.src === activeImage?.src;
 
-            return (
+              return (
               <button
                 type="button"
                 key={image.src}
@@ -83,10 +95,11 @@ export function ProductHeroV2({
                     image.kind === 'packshot' ? 'object-contain p-1.5' : 'object-cover',
                   )}
                 />
-              </button>
-            );
-          })}
-        </div>
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
 
       <div className="pb-8 lg:pt-3">
@@ -118,6 +131,28 @@ export function ProductHeroV2({
           ))}
         </div>
 
+        {product.specs && product.specs.length > 0 ? (
+          <div className="mt-7">
+            <h2 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">
+              {isEnglish ? 'Specifications' : 'Spécifications'}
+            </h2>
+            <dl className="mt-3 overflow-hidden rounded-lg border border-[var(--color-border)]">
+              {product.specs.map((spec, index) => (
+                <div
+                  key={spec.label}
+                  className={cn(
+                    'grid grid-cols-[42%_minmax(0,1fr)] gap-3 px-4 py-2.5 text-[13px]',
+                    index % 2 === 1 ? 'bg-white' : 'bg-[var(--color-surface-sunken)]',
+                  )}
+                >
+                  <dt className="font-medium text-[var(--color-text-secondary)]">{spec.label}</dt>
+                  <dd className="font-semibold text-[var(--color-text-primary)]">{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ) : null}
+
         <div className="mt-7 overflow-hidden rounded-[6px]">
           <ProductAccordion
             title={isEnglish ? 'How To Use' : 'Mode d’utilisation'}
@@ -127,25 +162,6 @@ export function ProductHeroV2({
             <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
               {product.howToUse ?? (isEnglish ? 'Information to be completed.' : 'Information à compléter.')}
             </p>
-          </ProductAccordion>
-          <ProductAccordion
-            title={isEnglish ? 'Specifications' : 'Spécifications'}
-            icon={Settings}
-            defaultOpen={false}
-          >
-            {product.specs?.length ? (
-              <ul className="list-disc space-y-1 pl-5 text-[13px] leading-6 text-[var(--color-text-primary)]">
-                {product.specs.map((spec) => (
-                  <li key={spec.label}>
-                    <strong>{spec.label}:</strong> {spec.value}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
-                {isEnglish ? 'Information to be completed.' : 'Information à compléter.'}
-              </p>
-            )}
           </ProductAccordion>
           <ProductAccordion
             title={isEnglish ? 'Dilution Rates' : 'Taux de dilution'}
@@ -191,6 +207,23 @@ export function ProductHeroV2({
 
         <div className="mt-6">
           <ProductQuoteBox product={product} locale={locale} />
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border border-[var(--color-border)] bg-white p-4">
+          {[
+            { icon: Factory, title: isEnglish ? 'Made in Tunisia' : 'Fabriqué en Tunisie', accent: true },
+            { icon: Truck, title: isEnglish ? 'Regular delivery' : 'Livraison régulière' },
+            { icon: ShieldCheck, title: isEnglish ? 'Dosage advice' : 'Conseil sur le dosage' },
+            { icon: Clock, title: isEnglish ? 'Reply within 24h' : 'Réponse sous 24h ouvrées' },
+          ].map(({ icon: TrustIcon, title, accent }) => (
+            <div key={title} className="flex items-center gap-2.5">
+              <TrustIcon
+                className={cn('h-4 w-4 shrink-0', accent ? 'text-prodet-green' : 'text-prodet-blue')}
+                aria-hidden
+              />
+              <span className="text-[12px] font-medium text-[var(--color-text-primary)]">{title}</span>
+            </div>
+          ))}
         </div>
 
         <ProductMetadataTable
@@ -267,7 +300,9 @@ type ProductGalleryImage = {
 };
 
 function buildGalleryImages(product: Product): ProductGalleryImage[] {
-  const packshotSources = Array.from(new Set([product.image, ...(product.galleryImages ?? [])]));
+  const packshotSources = Array.from(
+    new Set([product.image, ...(product.galleryImages ?? [])]),
+  ).filter(Boolean);
   const packshots = packshotSources.map((src, index) => ({
     src,
     alt: index === 0 ? `${product.name} - image produit` : `${product.name} - image ${index + 1}`,

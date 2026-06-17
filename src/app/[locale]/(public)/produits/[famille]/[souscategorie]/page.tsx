@@ -51,6 +51,7 @@ export default async function SousCategoriePage({
   if (products.length === 0) return notFound();
 
   const tf = await getTranslations({ locale, namespace: 'familles' });
+  const tc = await getTranslations({ locale, namespace: 'catalogue' });
   const sub = getSousCategorie(fam.id, souscategorie);
   const label = tf(`souscats.${sousCatLabelKey(souscategorie)}`);
 
@@ -92,7 +93,7 @@ export default async function SousCategoriePage({
       <div className="section-wrap famille-layout">
         <CategorySidebar locale={locale} activeFamille={fam.id} activeSousCat={souscategorie} />
         <main className="famille-main">
-          <ProductGrid products={cards} />
+          <ProductGrid products={cards} madeLabel={tc('page.manufacturedBadge')} />
         </main>
       </div>
 

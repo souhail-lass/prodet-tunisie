@@ -9,7 +9,7 @@ import {
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { companyInfo } from '@/data/company';
 import {
   getLegacyProductForPublicOffer,
@@ -21,14 +21,15 @@ import {
   type PublicOfferSectionId,
 } from '@/data/public-offers';
 import { getSectorById, getUseCaseById } from '@/data/queries';
+import { classifyFamille, classifySousCategorie } from '@/data/familles';
 import { getCatalogueProductBySlug, getVisibleCatalogue } from '@/features/catalogue/queries';
-import { localizeProduct, localizeSector, localizeUseCase } from '@/data/i18n/content';
-import { products } from '@/data/products';
+import { localizeSector, localizeUseCase } from '@/data/i18n/content';
 import type { Product } from '@/data/types';
+import type { CatalogueCardProduct } from '@/types/product';
 import { siteContent } from '@/data/site-content';
 import { Link, isLocale, type Locale } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
-import { ProductCard } from '@/components/catalogue/ProductCard';
+import { ProductGrid } from '@/components/catalogue/product-grid';
 import { ProductHeroV2 } from '@/components/product/ProductHeroV2';
 
 // Static + ISR per slug: each product page is cached after first render and
@@ -88,7 +89,28 @@ export default async function ProductDetailPage({
   const product = await getCatalogueProductBySlug(slug);
   if (!product) notFound();
 
-  return <LegacyProductDetailPage product={product} locale={locale} />;
+  // Related = same famille, with same sous-catégorie surfaced first. Live DB
+  // products carry no useCases, so the family/gamme is derived from the name.
+  const famille = classifyFamille(product.name, product.categoryLabel);
+  const sousCat = classifySousCategorie(famille, product.name);
+  const related = (await getVisibleCatalogue())
+    .filter((p) => p.slug !== product.slug && classifyFamille(p.name, p.categoryLabel) === famille)
+    .sort(
+      (a, b) =>
+        Number(classifySousCategorie(famille, b.name) === sousCat) -
+        Number(classifySousCategorie(famille, a.name) === sousCat),
+    )
+    .slice(0, 4);
+  const t = await getTranslations({ locale, namespace: 'catalogue' });
+
+  return (
+    <LegacyProductDetailPage
+      product={product}
+      locale={locale}
+      related={related}
+      madeLabel={t('page.manufacturedBadge')}
+    />
+  );
 }
 
 function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
@@ -316,7 +338,17 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
   );
 }
 
-function LegacyProductDetailPage({ product, locale }: { product: Product; locale: Locale }) {
+function LegacyProductDetailPage({
+  product,
+  locale,
+  related,
+  madeLabel,
+}: {
+  product: Product;
+  locale: Locale;
+  related: CatalogueCardProduct[];
+  madeLabel: string;
+}) {
   const primaryUseCaseId = product.useCases[0];
   const primaryUseCaseBase = primaryUseCaseId ? getUseCaseById(primaryUseCaseId) : undefined;
   const primaryUseCase = primaryUseCaseBase ? localizeUseCase(primaryUseCaseBase, locale) : undefined;
@@ -324,7 +356,6 @@ function LegacyProductDetailPage({ product, locale }: { product: Product; locale
     .map((sectorId) => getSectorById(sectorId))
     .filter((sector): sector is NonNullable<typeof sector> => Boolean(sector))
     .map((sector) => localizeSector(sector, locale).label);
-  const relatedProducts = getSimilarProducts(product).map((p) => localizeProduct(p, locale));
 
   return (
     <div className="py-6 md:py-8">
@@ -336,43 +367,22 @@ function LegacyProductDetailPage({ product, locale }: { product: Product; locale
           sectorLabels={sectorLabels}
         />
 
-        {relatedProducts.length > 0 ? (
+        {related.length > 0 ? (
           <section className="pt-10">
             <div className="flex items-center gap-3">
               <span className="h-2.5 w-2.5 rounded-full bg-prodet-blue" aria-hidden />
               <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-[var(--color-text-primary)]">
-                Produits similaires
+                {locale === 'en' ? 'Similar products' : 'Produits similaires'}
               </h2>
             </div>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedProducts.map((relatedProduct) => (
-                <ProductCard key={relatedProduct.id} product={relatedProduct} />
-              ))}
+            <div className="mt-4">
+              <ProductGrid products={related} madeLabel={madeLabel} />
             </div>
           </section>
         ) : null}
       </div>
     </div>
   );
-}
-
-function getSimilarProducts(product: Product): readonly Product[] {
-  if (product.relatedProductIds?.length) {
-    return product.relatedProductIds
-      .map((id) => products.find((candidate) => candidate.id === id))
-      .filter((candidate): candidate is Product => Boolean(candidate))
-      .slice(0, 3);
-  }
-
-  const primaryUseCaseId = product.useCases[0];
-  if (!primaryUseCaseId) return [];
-
-  return products
-    .filter(
-      (candidate) =>
-        candidate.id !== product.id && candidate.useCases.includes(primaryUseCaseId),
-    )
-    .slice(0, 3);
 }
 
 function InfoCard({

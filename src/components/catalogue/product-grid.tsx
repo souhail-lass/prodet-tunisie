@@ -9,7 +9,14 @@ import type { CatalogueCardProduct } from '@/types/product';
  * The catalogue page has its own grid because it also owns search/pagination;
  * this is the lightweight version for pre-filtered server-rendered lists.
  */
-export function ProductGrid({ products }: { products: CatalogueCardProduct[] }) {
+export function ProductGrid({
+  products,
+  madeLabel,
+}: {
+  products: CatalogueCardProduct[];
+  /** Localized "Fabriqué par Prodet" label for the manufactured badge. */
+  madeLabel?: string;
+}) {
   const { getQuantity, setProductQuantity } = useQuoteSelection();
   return (
     <div className="catalogue__grid">
@@ -19,6 +26,7 @@ export function ProductGrid({ products }: { products: CatalogueCardProduct[] }) 
           product={product}
           quantity={getQuantity(product.id)}
           onQuantityChange={setProductQuantity}
+          madeLabel={madeLabel}
         />
       ))}
     </div>
