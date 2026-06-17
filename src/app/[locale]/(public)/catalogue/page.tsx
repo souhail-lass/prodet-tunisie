@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { siteContent } from '@/data/site-content';
 import { isLocale } from '@/i18n/routing';
-import { getCatalogueCategories, getVisibleCatalogue } from '@/features/catalogue/queries';
-import { CataloguePageClient, type CatalogueCardProduct } from './_catalogue-page-client';
+import { familles, getSousCategorie } from '@/data/familles';
+import { getSousCategorieCounts, getVisibleCatalogue } from '@/features/catalogue/queries';
+import type { CatalogueCardProduct } from '@/types/product';
+import { CataloguePageClient, type CatalogueBrowseFamille } from './_catalogue-page-client';
 
 // Static + ISR: served from cache, regenerated in the background. Catalogue
 // edits in the admin revalidate the 'catalogue' tag, so updates are instant.
@@ -25,10 +27,28 @@ export default async function CataloguePage({
   if (!isLocale(locale)) return null;
   setRequestLocale(locale);
 
-  const [products, categories] = await Promise.all([getVisibleCatalogue(), getCatalogueCategories()]);
+  const products = await getVisibleCatalogue();
+  const tc = await getTranslations({ locale, namespace: 'catalogue' });
 
-  // Ship only what the grid renders/searches — long texts (description,
-  // usage, specs) stay on the detail page and out of the page payload.
+  // One browse model: every famille with its sous-catégories (counts derived
+  // from the live catalogue). Each sous-cat links to its product list.
+  const ordered = [...familles].sort((a, b) => a.displayOrder - b.displayOrder);
+  const browse: CatalogueBrowseFamille[] = [];
+  for (const fam of ordered) {
+    const sousCats = await getSousCategorieCounts(fam.id);
+    if (sousCats.length === 0) continue;
+    browse.push({
+      id: fam.id,
+      total: sousCats.reduce((sum, s) => sum + s.count, 0),
+      sousCats: sousCats.map(({ slug, count }) => ({
+        slug,
+        count,
+        packshot: getSousCategorie(fam.id, slug)?.packshot ?? '',
+      })),
+    });
+  }
+
+  // Shipped only for the in-page search (the grid renders matches on demand).
   const cards: CatalogueCardProduct[] = products.map((p) => ({
     id: p.id,
     slug: p.slug,
@@ -40,5 +60,11 @@ export default async function CataloguePage({
     formats: p.formats,
   }));
 
-  return <CataloguePageClient products={cards} categories={categories} />;
+  return (
+    <CataloguePageClient
+      familles={browse}
+      products={cards}
+      madeLabel={tc('page.manufacturedBadge')}
+    />
+  );
 }
