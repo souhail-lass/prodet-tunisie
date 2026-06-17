@@ -86,7 +86,10 @@
   position: absolute; left: 16px; right: 16px; bottom: 13px;
   display: flex; align-items: center; gap: 7px;
   font-size: var(--text-lg); font-weight: var(--fw-bold); letter-spacing: var(--tracking-tight);
+  color: #fff;
 }
+/* Stay white on hover — the global a:hover blue would make it unreadable. */
+.home-sector:hover .home-sector__name { color: #fff; }
 .home-sector__name svg { opacity: 0; transform: translateX(-4px); transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
 .home-sector:hover .home-sector__name svg { opacity: 1; transform: translateX(0); }
 @media (max-width: 1080px) { .home-sector-grid { grid-template-columns: repeat(2, 1fr); } }

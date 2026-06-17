@@ -51,8 +51,8 @@ export function ProductHeroV2({
               priority
               sizes="(min-width: 1024px) 46vw, 100vw"
               className={cn(
-                'object-contain p-3 drop-shadow-sm md:p-4',
-                activeImage.kind === 'context' ? 'rounded-xl' : '',
+                'object-contain p-3 md:p-4',
+                activeImage.kind === 'context' ? 'rounded-xl' : 'mix-blend-multiply',
               )}
             />
           ) : (

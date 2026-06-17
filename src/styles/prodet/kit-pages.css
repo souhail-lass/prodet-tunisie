@@ -203,7 +203,7 @@
 .sector-hero__crumb a:hover { color: var(--prodet-sky); }
 .sector-hero__main { display: flex; align-items: flex-end; }
 .sector-hero__text { max-width: 620px; }
-.sector-hero__title { font-size: var(--text-h1); font-weight: var(--fw-bold); letter-spacing: var(--tracking-tight); margin-top: 8px; max-width: 16ch; line-height: 1.03; }
+.sector-hero__title { font-size: var(--text-h1); font-weight: var(--fw-bold); letter-spacing: var(--tracking-tight); margin-top: 8px; max-width: 16ch; line-height: 1.03; color: #fff; }
 .sector-hero__lead { font-size: var(--text-lg); color: var(--text-on-dark-soft); margin-top: 14px; max-width: 50ch; line-height: var(--leading-relaxed); }
 .sector-hero__cta { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 26px; }
 .sector-hero__link { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-sm); font-weight: var(--fw-semibold); color: #fff; }
