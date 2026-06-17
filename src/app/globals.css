@@ -373,4 +373,20 @@
     transform: none;
     transition: none;
   }
+
+  /* Photo covers (sectors index + home) — no hover lift / zoom. */
+  .sector-cover,
+  .sector-cover__photo img,
+  .home-sector,
+  .home-sector img,
+  .sector-cover__cta svg,
+  .home-sector__name svg {
+    transition: none;
+  }
+  .sector-cover:hover,
+  .home-sector:hover,
+  .sector-cover:hover .sector-cover__photo img,
+  .home-sector:hover img {
+    transform: none;
+  }
 }

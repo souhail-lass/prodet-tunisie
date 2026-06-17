@@ -139,33 +139,6 @@
 .sectors-page__hero { background: var(--surface-navy); color: #fff; padding: 56px 0 64px; }
 .sectors-page__title { font-size: var(--text-h1); font-weight: var(--fw-bold); color: #fff; margin-top: 10px; letter-spacing: var(--tracking-tight); }
 .sectors-page__lead { font-size: var(--text-lg); color: var(--text-on-dark-soft); margin-top: 12px; max-width: 54ch; }
-.sectors-page__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.sector-block { background: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-card); padding: 26px; box-shadow: var(--shadow-card); transition: border-color var(--dur-base), box-shadow var(--dur-base), transform var(--dur-base); }
-.sector-block:hover { border-color: var(--prodet-blue-tint-strong); box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
-.sector-block__icon { width: 52px; height: 52px; border-radius: var(--radius-button); background: var(--surface-navy); color: #fff; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
-.sector-block h3 { font-size: var(--text-h4); font-weight: var(--fw-semibold); }
-.sector-block p { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 8px; line-height: var(--leading-relaxed); }
-.sector-block__link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; border: none; background: none; color: var(--prodet-blue); font-size: var(--text-sm); font-weight: var(--fw-semibold); cursor: pointer; padding: 0; }
-.sector-block__link svg { transition: transform var(--dur-base); }
-.sector-block__link:hover svg { transform: translateX(3px); }
-
-/* ============================================================
-   MINIMALIST SECTOR TILES (home + index) — icon on soft pedestal
-   ============================================================ */
-.sector-tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
-.sector-tile { display: flex; flex-direction: column; align-items: center; gap: 10px; background: none; border: none; padding: 0; cursor: pointer; text-align: center; }
-.sector-tile__media {
-  position: relative; width: 100%; aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
-  border-radius: 18px; color: var(--prodet-blue);
-  background: var(--pedestal-fill);
-  box-shadow: var(--pedestal-ring), var(--pedestal-shadow);
-  transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
-}
-.sector-tile__media svg { width: 42%; height: 42%; }
-.sector-tile:hover .sector-tile__media { transform: translateY(-4px); box-shadow: var(--pedestal-ring), var(--pedestal-shadow-hover); color: var(--prodet-blue-hover, var(--prodet-blue)); }
-.sector-tile__label { font-size: var(--text-base); font-weight: var(--fw-semibold); color: var(--text-primary); }
-.sector-tile__hint { font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.4; max-width: 26ch; }
-.sectors-index-grid { padding-top: 52px; padding-bottom: 56px; }
 
 /* ============================================================
    SECTORS INDEX — editorial, photo-led "covers" (showpiece)

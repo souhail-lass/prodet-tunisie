@@ -1,7 +1,6 @@
 'use client';
 
 import { memo } from 'react';
-import { useRouter } from '@/i18n/routing';
 import { ProductTile } from '@/components/ds';
 import type { QuoteSelectionProduct } from '@/lib/quote-cart-context';
 import type { CatalogueCardProduct } from '@/types/product';
@@ -26,7 +25,6 @@ export const CatalogueTile = memo(function CatalogueTile({
   onQuantityChange,
   madeLabel,
 }: CatalogueTileProps) {
-  const router = useRouter();
   const format = product.formats[0]?.label;
 
   return (
@@ -51,8 +49,7 @@ export const CatalogueTile = memo(function CatalogueTile({
           n,
         )
       }
-      onHover={() => router.prefetch(`/catalogue/${product.slug}`)}
-      onOpen={() => router.push(`/catalogue/${product.slug}`)}
+      href={`/catalogue/${product.slug}`}
     />
   );
 });

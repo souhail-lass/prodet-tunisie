@@ -115,10 +115,10 @@ export function HomePage({
         </div>
         <div className="famille-grid famille-grid--product">
           {familles.map((famille) => (
-            <button
-              className="famille-card famille-card--product"
+            <Link
               key={famille.id}
-              onClick={() => router.push(`/produits/${famille.id}`)}
+              href={`/produits/${famille.id}`}
+              className="famille-card famille-card--product"
             >
               <span className="famille-card__media">
                 {famille.image ? (
@@ -146,7 +146,7 @@ export function HomePage({
                   </span>
                 ) : null}
               </span>
-            </button>
+            </Link>
           ))}
         </div>
       </section>

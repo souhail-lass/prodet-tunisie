@@ -31,8 +31,27 @@ sector specifically for the detail-page hero, since the cover crop is tighter.
 
 ---
 
-## Later phases (placeholders to be filled as we build)
+The same 6 files now appear in **three** places — sectors index covers, the
+sector detail hero, and the homepage "Pensé pour vos métiers" covers — so a
+quality upgrade here lifts the whole site.
 
-- **Homepage hero (Phase 4):** an environment / range shot — TBD.
-- **Contact (Phase 4):** real map embed or a clean static map of the Tunis
-  location, replacing the current decorative CSS grid.
+---
+
+## Homepage — Phase 4
+
+- `// ASSET NEEDED` (optional): the hero still uses the SIRAFAN packshot
+  (`public/images/products/sirafan.png`). A wide environment/range shot
+  (shelf of Prodet products, or a facility) could replace or sit behind it
+  later — not required; the current hero is clean.
+
+## Contact — Phase 4 (done, no asset needed)
+
+- The fake CSS-grid "map" was replaced with a live Google Maps embed of
+  `companyInfo.addressFull`. No image asset required.
+
+## Product packshots — ongoing
+
+- Resold/commercialized articles without a photo now fall back to a branded
+  placeholder everywhere (grid + PDP). Dropping real packshots into
+  `public/images/products/resell/` (matched by name) lights them up. 44 are
+  done; the rest degrade gracefully until supplied.

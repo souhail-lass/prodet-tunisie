@@ -1,54 +1,13 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { Trash2 } from 'lucide-react';
-import { Link } from '@/i18n/routing';
 import {
   toQuoteSelectionProduct,
   useQuoteSelection,
 } from '@/lib/quote-cart-context';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types/product';
-
-interface ProductCardProps {
-  product: Product;
-}
-
-export function ProductCard({ product }: ProductCardProps) {
-  return (
-    <article className="group flex h-full min-h-[360px] flex-col overflow-hidden rounded-lg border border-[var(--color-border)] bg-white shadow-card transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-prodet-blue-tint-strong hover:shadow-card-hover">
-      <Link href={`/catalogue/${product.slug}`} className="block">
-        <div className="relative flex h-[238px] items-center justify-center bg-white px-4 pt-4">
-          {product.image ? (
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              sizes="(min-width: 1280px) 245px, (min-width: 768px) 33vw, 100vw"
-              className="object-contain px-5 pb-2 pt-6 mix-blend-multiply transition-transform duration-200 group-hover:scale-[1.02]"
-            />
-          ) : (
-            <ProductInitials product={product} />
-          )}
-        </div>
-
-        <div className="px-4 pb-0 pt-2">
-          <h3 className="line-clamp-1 text-[var(--type-body)] font-semibold leading-tight text-prodet-blue transition-colors group-hover:text-prodet-blue-hover">
-            {product.name}
-          </h3>
-          <p className="mt-2 line-clamp-2 text-[var(--type-xs)] leading-snug text-[var(--color-text-secondary)]">
-            {product.tagline}
-          </p>
-        </div>
-      </Link>
-
-      <div className="mt-auto px-4 pb-4 pt-4">
-        <QuoteQuantityControl product={product} />
-      </div>
-    </article>
-  );
-}
 
 export function QuoteQuantityControl({
   product,
@@ -144,27 +103,6 @@ export function QuoteQuantityControl({
       >
         +
       </button>
-    </div>
-  );
-}
-
-function ProductInitials({ product }: { product: Product }) {
-  const initials = product.name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join('');
-  const isManufactured = product.category === 'manufactured';
-
-  return (
-    <div
-      className={cn(
-        'flex h-16 w-16 items-center justify-center rounded-full text-lg font-semibold text-white',
-        isManufactured ? 'bg-prodet-blue' : 'bg-prodet-green',
-      )}
-    >
-      {initials}
     </div>
   );
 }
