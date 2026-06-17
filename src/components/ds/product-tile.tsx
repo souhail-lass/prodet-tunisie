@@ -14,6 +14,9 @@ export type ProductTileProps = {
   manufactured?: boolean;
   /** Localized "Fabriqué par Prodet" label — renders the green badge when set. */
   madeLabel?: string;
+  /** Quantity-control add-button label. Defaults to "Ajouter au devis"; the
+   *  portal order builder overrides it with "Ajouter" (real order, not a quote). */
+  addLabel?: string;
   quantity?: number;
   onQuantityChange?: (next: number) => void;
   /** Detail route. When set, the image + title become real links (a11y/SEO). */
@@ -35,6 +38,7 @@ export function ProductTile({
   format,
   manufactured = false,
   madeLabel,
+  addLabel,
   quantity = 0,
   onQuantityChange,
   href,
@@ -109,7 +113,7 @@ export function ProductTile({
         </>
       )}
       <div className="pds-product__foot">
-        <QuantityControl value={quantity} onChange={onQuantityChange} />
+        <QuantityControl value={quantity} onChange={onQuantityChange} addLabel={addLabel} />
       </div>
     </article>
   );

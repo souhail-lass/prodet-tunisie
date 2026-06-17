@@ -82,10 +82,10 @@ export function PortalShell({ account, children }: { account: PortalShellAccount
     <div className="portal">
       <aside className="portal__rail" aria-label={t('nav.tag')}>
         <div className="portal__rail-logo">
-          <span className="portal__logo-chip">
+          <Link href="/" className="portal__logo-chip" aria-label="Prodet — accueil">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/images/logo/prodet-logo-white.svg" alt="Prodet" />
-          </span>
+          </Link>
           <span className="portal__rail-tag">{t('nav.tag')}</span>
         </div>
 

@@ -1,6 +1,5 @@
 import { Building2, CheckCircle2, Download, FileText, LogOut } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/routing';
 import { account, documents } from '@/features/client-portal/mock/portal-mock';
 import { resolveCurrentPortalSwiverIdentity } from '@/features/client-portal/swiver-identity';
 
@@ -106,10 +105,15 @@ export default async function ClientAccountPage({ params }: { params: Promise<{ 
         <div className="panel__head">
           <h2 className="panel__title">{t('account.sessionTitle')}</h2>
         </div>
-        <Link href="/connexion-client" className="pds-btn pds-btn--outline pds-btn--md">
+        {/* Route handler clears the Supabase session, then returns to the
+            client login. Plain <a> (full navigation), not a client Link. */}
+        <a
+          href={`/auth/signout?next=/${locale}/connexion-client`}
+          className="pds-btn pds-btn--outline pds-btn--md"
+        >
           <LogOut size={16} />
           <span>{t('account.logout')}</span>
-        </Link>
+        </a>
       </section>
     </div>
   );

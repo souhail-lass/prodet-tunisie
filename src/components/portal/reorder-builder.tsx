@@ -337,6 +337,7 @@ export function ReorderBuilder({
                     tagline={product.last ?? product.category ?? product.sku ?? ''}
                     image={product.image}
                     manufactured={product.made}
+                    addLabel={t('reorder.add')}
                     quantity={qty[product.slug] ?? 0}
                     onQuantityChange={(n) => changeQty(product, n)}
                     className={(qty[product.slug] ?? 0) > 0 ? 'is-selected' : ''}
