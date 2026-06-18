@@ -41,11 +41,28 @@ export async function submitClientAccessRequest(
     return { ok: false, fieldErrors, formError: mapAccessRequestError(fieldErrors) };
   }
 
+  // Swiver-creation fields aren't dedicated columns yet — keep them with the
+  // request (so the admin has everything to create the customer) by folding a
+  // structured block into the stored message. Proper columns + a Swiver
+  // "create customer" push are a follow-up backend step.
+  const swiverDetails = [
+    `Matricule fiscal : ${parsed.data.vatNumber}`,
+    `Adresse : ${parsed.data.addressLine}`,
+    `Code postal : ${parsed.data.postalCode}`,
+  ].join('\n');
+  const userMessage = parsed.data.message?.trim() || null;
+  const combinedMessage = [
+    `— Données société (création Swiver) —\n${swiverDetails}`,
+    userMessage ? `— Message —\n${userMessage}` : null,
+  ]
+    .filter(Boolean)
+    .join('\n\n');
+
   const normalized = {
     ...parsed.data,
     email: parsed.data.email.toLowerCase(),
     prodetReferenceOptional: parsed.data.prodetReferenceOptional || null,
-    message: parsed.data.message || null,
+    message: combinedMessage || null,
   };
 
   let requestId: string;
@@ -81,7 +98,20 @@ export async function submitClientAccessRequest(
     };
   }
 
-  const emailNotification = await notifyProdet(requestId, normalized);
+  const emailNotification = await notifyProdet(requestId, {
+    name: normalized.name,
+    companyName: normalized.companyName,
+    vatNumber: parsed.data.vatNumber,
+    addressLine: parsed.data.addressLine,
+    postalCode: parsed.data.postalCode,
+    sector: normalized.sector,
+    phone: normalized.phone,
+    email: normalized.email,
+    cityOrZone: normalized.cityOrZone,
+    needType: normalized.needType,
+    prodetReferenceOptional: normalized.prodetReferenceOptional,
+    message: userMessage,
+  });
 
   console.info('[client-access:received]', {
     requestId,
@@ -108,6 +138,9 @@ async function notifyProdet(
   input: {
     name: string;
     companyName: string;
+    vatNumber: string;
+    addressLine: string;
+    postalCode: string;
     sector: string;
     phone: string;
     email: string;
@@ -138,10 +171,13 @@ async function notifyProdet(
     'Coordonnées:',
     `Nom / Prénom: ${input.name}`,
     `Société / Établissement: ${input.companyName}`,
+    `Matricule fiscal: ${input.vatNumber}`,
     `Secteur: ${input.sector}`,
     `Téléphone: ${input.phone}`,
     `Email: ${input.email}`,
+    `Adresse: ${input.addressLine}`,
     `Ville / zone: ${input.cityOrZone}`,
+    `Code postal: ${input.postalCode}`,
     `Type de besoin: ${input.needType}`,
     `Référence client Prodet, facture ou BL: ${
       input.prodetReferenceOptional || 'Non précisé'

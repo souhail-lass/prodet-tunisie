@@ -21,10 +21,13 @@ import { cn } from '@/lib/utils';
 type AccessRequestFormState = {
   fullName: string;
   company: string;
+  vatNumber: string;
   sectorId: string;
   phone: string;
   email: string;
+  address: string;
   city: string;
+  postalCode: string;
   clientReference: string;
   needType: string;
   message: string;
@@ -38,10 +41,13 @@ type FormStatus =
 const initialFormState: AccessRequestFormState = {
   fullName: '',
   company: '',
+  vatNumber: '',
   sectorId: '',
   phone: '',
   email: '',
+  address: '',
   city: '',
+  postalCode: '',
   clientReference: '',
   needType: '',
   message: '',
@@ -82,10 +88,13 @@ export function AccessRequestForm() {
     const result = await submitClientAccessRequest({
       name: formState.fullName,
       companyName: formState.company,
+      vatNumber: formState.vatNumber,
       sector: selectedSectorLabel,
       phone: formState.phone,
       email: formState.email,
+      addressLine: formState.address,
       cityOrZone: formState.city,
+      postalCode: formState.postalCode,
       needType: formState.needType,
       prodetReferenceOptional: formState.clientReference,
       message: formState.message,
@@ -143,6 +152,13 @@ export function AccessRequestForm() {
             autoComplete="organization"
           />
         </FormField>
+        <FormField label="Matricule fiscal" required>
+          <Input
+            value={formState.vatNumber}
+            onChange={(event) => updateField('vatNumber', event.target.value)}
+            placeholder="Ex : 1234567/A/M/000"
+          />
+        </FormField>
         <FormField label="Secteur d'activité" required>
           <Select value={formState.sectorId} onValueChange={(value) => updateField('sectorId', value)}>
             <SelectTrigger>
@@ -173,11 +189,27 @@ export function AccessRequestForm() {
             autoComplete="email"
           />
         </FormField>
+        <FormField label="Adresse" required className="md:col-span-2">
+          <Input
+            value={formState.address}
+            onChange={(event) => updateField('address', event.target.value)}
+            autoComplete="street-address"
+            placeholder="Rue, numéro, zone industrielle…"
+          />
+        </FormField>
         <FormField label="Ville / zone" required>
           <Input
             value={formState.city}
             onChange={(event) => updateField('city', event.target.value)}
             autoComplete="address-level2"
+          />
+        </FormField>
+        <FormField label="Code postal" required>
+          <Input
+            value={formState.postalCode}
+            onChange={(event) => updateField('postalCode', event.target.value)}
+            autoComplete="postal-code"
+            placeholder="Ex : 2045"
           />
         </FormField>
         <FormField
@@ -278,10 +310,13 @@ function validateForm(formState: AccessRequestFormState): string | null {
   const requiredFields: Array<keyof AccessRequestFormState> = [
     'fullName',
     'company',
+    'vatNumber',
     'sectorId',
     'phone',
     'email',
+    'address',
     'city',
+    'postalCode',
     'needType',
   ];
 

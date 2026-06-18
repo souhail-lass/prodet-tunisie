@@ -98,8 +98,7 @@ export default async function ClientLoginPage({
           Connexion espace client
         </h1>
         <p style={{ marginTop: 10, fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
-          Entrez l’email utilisé pour votre accès Prodet. Le lien de connexion est envoyé uniquement si cet email
-          dispose déjà d’un accès client activé par Prodet (invitation ou activation).
+          Entrez votre email professionnel pour recevoir votre lien de connexion sécurisé.
         </p>
 
         <form action={requestClientMagicLink} style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -135,8 +134,7 @@ export default async function ClientLoginPage({
             }}
           >
             <MailCheck size={16} style={{ flexShrink: 0, marginTop: 2 }} aria-hidden />
-            Merci. Si cet email dispose d’un accès client activé chez Prodet, vous recevrez sous peu un lien de
-            connexion — vérifiez aussi les courriers indésirables.
+            Lien envoyé. Vérifiez votre boîte mail (pensez aux courriers indésirables).
           </p>
         ) : null}
 

@@ -3,6 +3,10 @@ import { z } from 'zod';
 export const ClientAccessRequestSchema = z.object({
   name: z.string().trim().min(1, 'required').max(120, 'tooLong'),
   companyName: z.string().trim().min(1, 'required').max(160, 'tooLong'),
+  // Fields needed to create the customer in Swiver.
+  vatNumber: z.string().trim().min(1, 'required').max(40, 'tooLong'),
+  addressLine: z.string().trim().min(1, 'required').max(200, 'tooLong'),
+  postalCode: z.string().trim().min(1, 'required').max(20, 'tooLong'),
   sector: z.string().trim().min(1, 'required').max(120, 'tooLong'),
   phone: z.string().trim().min(1, 'required').max(60, 'tooLong'),
   email: z.string().trim().email('invalidEmail').max(160, 'tooLong'),
