@@ -47,6 +47,8 @@ const CAT_IMG = (slug: string) => `/images/categories/${slug}.jpg`;
 /** Transparent product packshots for the home tiles (swap freely, keep the name). */
 const FAM_PACK = (file: string) => `/images/familles/${file}`;
 const PROD_IMG = (file: string) => `/images/products/${file}`;
+/** Reused resell photos — stand-in tile art until dedicated packshots exist. */
+const RESELL = (file: string) => `/images/products/resell/${file}`;
 
 /** Transparent packshot used to illustrate each cleaning usage gamme (the 6 sous-cats). */
 const USE_CASE_PACK: Record<UseCaseId, string> = {
@@ -62,7 +64,7 @@ export const familles: readonly Famille[] = [
   { id: 'produits-nettoyage', slug: 'produits-nettoyage', image: CAT_IMG('produits-nettoyage'), packshot: FAM_PACK('produits-nettoyage.png'), displayOrder: 10 },
   { id: 'materiel-hygiene', slug: 'materiel-hygiene', image: CAT_IMG('materiel-hygiene'), packshot: FAM_PACK('materiel-hygiene.png'), displayOrder: 20 },
   { id: 'papier-epi', slug: 'papier-epi', image: CAT_IMG('papier-epi'), packshot: FAM_PACK('papier-epi.png'), displayOrder: 30 },
-  { id: 'collecte-dechets', slug: 'collecte-dechets', image: CAT_IMG('collecte-dechets'), packshot: '', displayOrder: 40 },
+  { id: 'collecte-dechets', slug: 'collecte-dechets', image: CAT_IMG('collecte-dechets'), packshot: RESELL('sac-poubelle-geant.jpg'), displayOrder: 40 },
   { id: 'parfums-ambiance', slug: 'parfums-ambiance', image: CAT_IMG('parfums-ambiance'), packshot: FAM_PACK('parfums-ambiance.png'), displayOrder: 50 },
 ] as const;
 
@@ -187,16 +189,16 @@ const cleaningSousCats: SousCategorie[] = CLEANING_USE_CASES.map(({ useCaseId, o
 
 const otherSousCats: SousCategorie[] = [
   // matériel d'hygiène
-  { slug: 'balais-brosses', familleId: 'materiel-hygiene', image: CAT_IMG('balais-brosses'), packshot: '', displayOrder: 10, keywords: ['BALAI', 'BROSSE', 'MANCHE', 'PERCHE', 'TETE DE LOUP', 'FRANGE', 'PINCE A LINGE'] },
-  { slug: 'lavettes-eponges', familleId: 'materiel-hygiene', image: CAT_IMG('lavettes-eponges'), packshot: '', displayOrder: 20, keywords: ['RACLETTE', 'LAVETTE', 'EPONGE', 'CHAMOISINE', 'CACHEMIRE', 'COTE BOULANGER', 'TAMPON', 'SERPILL'] },
+  { slug: 'balais-brosses', familleId: 'materiel-hygiene', image: CAT_IMG('balais-brosses'), packshot: RESELL('tete-de-loup.webp'), displayOrder: 10, keywords: ['BALAI', 'BROSSE', 'MANCHE', 'PERCHE', 'TETE DE LOUP', 'FRANGE', 'PINCE A LINGE'] },
+  { slug: 'lavettes-eponges', familleId: 'materiel-hygiene', image: CAT_IMG('lavettes-eponges'), packshot: RESELL('lavette-microfibre.png'), displayOrder: 20, keywords: ['RACLETTE', 'LAVETTE', 'EPONGE', 'CHAMOISINE', 'CACHEMIRE', 'COTE BOULANGER', 'TAMPON', 'SERPILL'] },
   { slug: 'seaux-chariots', familleId: 'materiel-hygiene', image: CAT_IMG('seaux-chariots'), packshot: FAM_PACK('materiel-hygiene.png'), displayOrder: 30, keywords: ['SEAU', 'PELLE', 'PULVERISAT', 'POMPE', 'DISTRIBUTEUR', 'GLACIERE', 'BOUTEILLE', 'GANT DE MENAGE', 'GANT MENAGE', 'FLACON POUSSE'] },
   // papier & EPI jetables
   { slug: 'papier-essuyage', familleId: 'papier-epi', image: CAT_IMG('papier-essuyage'), packshot: FAM_PACK('papier-epi.png'), displayOrder: 10, keywords: ['ESSUIE', 'PAPIER', 'SERVIETTE', 'JUMBO', 'JAMBO', 'ROULEAU', 'FILM', 'CURE', 'DISTRIBUTEUR A PAPIER'] },
-  { slug: 'gants-jetables', familleId: 'papier-epi', image: CAT_IMG('gants-jetables'), packshot: '', displayOrder: 20, keywords: ['GANT'] },
+  { slug: 'gants-jetables', familleId: 'papier-epi', image: CAT_IMG('gants-jetables'), packshot: RESELL('gant-latex.jpg'), displayOrder: 20, keywords: ['GANT'] },
   { slug: 'protections-jetables', familleId: 'papier-epi', image: CAT_IMG('protections-jetables'), packshot: '', displayOrder: 30, keywords: ['BLOUZE', 'SURBLOUSE', 'CALOT', 'COIFFE', 'BAVETTE', 'SUR CHAUSSURE', 'CHARLOTTE'] },
   // collecte des déchets
-  { slug: 'poubelles', familleId: 'collecte-dechets', image: CAT_IMG('poubelles'), packshot: '', displayOrder: 10, keywords: ['POUBELLE', 'CORBEILLE', 'CONTENEUR'] },
-  { slug: 'sacs-poubelle', familleId: 'collecte-dechets', image: CAT_IMG('sacs-poubelle'), packshot: '', displayOrder: 20, keywords: ['SAC POUB', 'SACS POUB', 'SAC BRETELLE', 'SACHET', 'SAC DE CONG'] },
+  { slug: 'poubelles', familleId: 'collecte-dechets', image: CAT_IMG('poubelles'), packshot: RESELL('sac-poubelle-geant.jpg'), displayOrder: 10, keywords: ['POUBELLE', 'CORBEILLE', 'CONTENEUR'] },
+  { slug: 'sacs-poubelle', familleId: 'collecte-dechets', image: CAT_IMG('sacs-poubelle'), packshot: RESELL('sac-poubelle-mm-noir.jpg'), displayOrder: 20, keywords: ['SAC POUB', 'SACS POUB', 'SAC BRETELLE', 'SACHET', 'SAC DE CONG'] },
   // parfums d'ambiance
   { slug: 'sprays-desodorisants', familleId: 'parfums-ambiance', image: CAT_IMG('sprays-desodorisants'), packshot: FAM_PACK('parfums-ambiance.png'), displayOrder: 10, keywords: ['AIR FRESH', 'SPRAY', 'BOMBE', 'DIPTOX', 'DESODOR', 'FATEK'] },
   { slug: 'diffuseurs', familleId: 'parfums-ambiance', image: CAT_IMG('diffuseurs'), packshot: '', displayOrder: 20, keywords: ['DIFFUSEUR', 'DIFFISEUR', 'DEOFRESH', 'MECHE', 'TIGE'] },

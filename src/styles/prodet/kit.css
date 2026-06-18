@@ -130,7 +130,7 @@
   box-shadow: var(--pedestal-ring), var(--pedestal-shadow);
   transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
 }
-.famille-card--product .famille-card__media img { object-fit: contain; transition: transform var(--dur-slow, 0.5s) var(--ease-out, ease); }
+.famille-card--product .famille-card__media img { object-fit: contain; mix-blend-mode: multiply; transition: transform var(--dur-slow, 0.5s) var(--ease-out, ease); }
 .famille-card--product:hover .famille-card__media { box-shadow: var(--pedestal-ring), var(--pedestal-shadow-hover); transform: translateY(-4px); }
 .famille-card--product:hover .famille-card__media img { transform: scale(1.06); }
 .famille-card__placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }

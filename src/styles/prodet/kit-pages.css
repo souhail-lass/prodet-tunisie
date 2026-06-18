@@ -308,7 +308,7 @@
   box-shadow: var(--pedestal-ring), var(--pedestal-shadow);
   transition: box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
 }
-.souscat-card--product .souscat-card__media img { object-fit: contain; transition: transform var(--dur-slow, 0.5s) var(--ease-out, ease); }
+.souscat-card--product .souscat-card__media img { object-fit: contain; mix-blend-mode: multiply; transition: transform var(--dur-slow, 0.5s) var(--ease-out, ease); }
 .souscat-card--product:hover .souscat-card__media { box-shadow: var(--pedestal-ring), var(--pedestal-shadow-hover); transform: translateY(-4px); }
 .souscat-card--product:hover .souscat-card__media img { transform: scale(1.06); }
 .souscat-card__placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
