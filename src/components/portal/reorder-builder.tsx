@@ -168,7 +168,7 @@ export function ReorderBuilder({
               justifyContent: 'center',
             }}
           >
-            <Link href="/client/commandes" className="pds-btn pds-btn--primary pds-btn--md">
+            <Link href="/client/devis" className="pds-btn pds-btn--primary pds-btn--md">
               <span>{t('reorder.viewOrders')}</span>
             </Link>
             <Link href="/client" className="pds-btn pds-btn--ghost pds-btn--md">
