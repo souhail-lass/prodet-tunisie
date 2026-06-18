@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, ChevronRight, Search } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Input } from '@/components/ds';
 import { CatalogueTile } from '@/components/site/catalogue-tile';
@@ -13,6 +13,7 @@ import type { CatalogueCardProduct } from '@/types/product';
 
 export type CatalogueBrowseFamille = {
   id: FamilleId;
+  packshot: string;
   total: number;
   sousCats: { slug: string; count: number; packshot: string }[];
 };
@@ -90,9 +91,44 @@ export function CataloguePageClient({
             )}
           </>
         ) : (
-          familles.map((famille) => (
-            <section className="cat-famille" key={famille.id}>
-              <div className="cat-famille__head">
+          <>
+            {/* Univers picker — choose a famille, jump to its sous-catégories. */}
+            <nav className="cat-univers famille-grid famille-grid--product" aria-label={t('masthead.title')}>
+              {familles.map((famille) => (
+                <a key={famille.id} href={`#fam-${famille.id}`} className="famille-card famille-card--product">
+                  <span className="famille-card__media">
+                    {famille.packshot ? (
+                      <Image
+                        src={famille.packshot}
+                        alt=""
+                        fill
+                        sizes="(max-width: 620px) 45vw, (max-width: 1080px) 30vw, 200px"
+                        style={{ objectFit: 'contain' }}
+                      />
+                    ) : (
+                      <span className="famille-card__placeholder" aria-hidden>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/images/logo/prodet-logo.svg" alt="" />
+                      </span>
+                    )}
+                  </span>
+                  <span className="famille-card__body">
+                    <span className="famille-card__label">{tf(`items.${famille.id}.label`)}</span>
+                    <span className="famille-card__tagline">{tf(`items.${famille.id}.tagline`)}</span>
+                    {famille.total > 0 ? (
+                      <span className="famille-card__cta">
+                        {tf('page.productsCount', { count: famille.total })}
+                        <ChevronRight size={15} className="famille-card__arrow" aria-hidden />
+                      </span>
+                    ) : null}
+                  </span>
+                </a>
+              ))}
+            </nav>
+
+            {familles.map((famille) => (
+              <section className="cat-famille" id={`fam-${famille.id}`} key={famille.id}>
+                <div className="cat-famille__head">
                 <div>
                   <h2 className="cat-famille__title">{tf(`items.${famille.id}.label`)}</h2>
                   <p className="cat-famille__desc">{tf(`items.${famille.id}.description`)}</p>
@@ -132,8 +168,9 @@ export function CataloguePageClient({
                   </Link>
                 ))}
               </div>
-            </section>
-          ))
+              </section>
+            ))}
+          </>
         )}
       </div>
     </div>

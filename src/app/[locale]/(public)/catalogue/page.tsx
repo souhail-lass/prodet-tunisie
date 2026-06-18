@@ -39,6 +39,7 @@ export default async function CataloguePage({
     if (sousCats.length === 0) continue;
     browse.push({
       id: fam.id,
+      packshot: fam.packshot,
       total: sousCats.reduce((sum, s) => sum + s.count, 0),
       sousCats: sousCats.map(({ slug, count }) => ({
         slug,

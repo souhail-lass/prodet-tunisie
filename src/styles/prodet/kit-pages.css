@@ -16,6 +16,9 @@
 .cat-famille__all { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; font-size: var(--text-sm); font-weight: var(--fw-semibold); color: var(--prodet-blue); white-space: nowrap; }
 .cat-famille__all svg { transition: transform var(--dur-base) var(--ease-out); }
 .cat-famille__all:hover svg { transform: translateX(3px); }
+/* Univers picker jumps to a famille section — clear the sticky header. */
+.cat-famille { scroll-margin-top: 92px; }
+.cat-univers { margin-bottom: 4px; }
 @media (max-width: 700px) {
   .catalogue__browse { gap: 32px; padding-top: 24px; }
   .cat-famille__head { flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 14px; }
