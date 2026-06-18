@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import {
   ArrowLeft,
   BadgeCheck,
-  ChevronRight,
   FileText,
   LayoutDashboard,
   MailCheck,
@@ -22,11 +21,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const STEPS = [
-  { icon: FileText, title: 'Votre demande', body: 'Renseignez vos informations société et professionnelles.' },
+  { icon: FileText, title: 'Votre demande', body: 'Vos informations société et professionnelles.' },
   { icon: PhoneCall, title: 'Vérification & appel', body: 'Notre équipe vérifie le dossier et vous appelle.' },
   { icon: BadgeCheck, title: 'Approbation', body: 'Prodet valide votre compte client.' },
   { icon: MailCheck, title: "Email d'activation", body: 'Vous recevez un lien pour activer votre accès.' },
-  { icon: LayoutDashboard, title: 'Accès au portail', body: 'Commandes, devis, factures et livraisons en ligne.' },
+  { icon: LayoutDashboard, title: 'Accès au portail', body: 'Commandes, devis, factures et livraisons.' },
 ] as const;
 
 export default async function DevenirClientPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -45,57 +44,51 @@ export default async function DevenirClientPage({ params }: { params: Promise<{ 
           Retour espace client
         </Link>
 
-        <div className="mx-auto mt-8 max-w-4xl">
-          <div className="mb-6 rounded-sm border border-border bg-white p-5 md:p-6">
-            <div className="flex items-start gap-4">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-prodet-ink text-white">
-                <ShieldCheck className="h-5 w-5" aria-hidden />
-              </span>
-              <div>
-                <p className="eyebrow-label">Accès contrôlé</p>
-                <h1 className="mt-2 font-display text-3xl font-bold leading-tight text-prodet-text">
-                  Demander un accès client Prodet
-                </h1>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Réservé aux professionnels. Prodet vérifie chaque demande avant d&apos;ouvrir l&apos;accès.
-                </p>
-              </div>
-            </div>
-          </div>
+        <div className="mt-8 grid items-start gap-8 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)] lg:gap-12">
+          {/* LEFT — the procedure. Sticky on desktop so it stays in view while
+              the form (right) scrolls. Vertical timeline = the enhanced schema. */}
+          <aside className="lg:sticky lg:top-24">
+            <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-prodet-ink text-white">
+              <ShieldCheck className="h-5 w-5" aria-hidden />
+            </span>
+            <p className="eyebrow-label mt-5">Accès contrôlé</p>
+            <h1 className="mt-2 font-display text-[28px] font-bold leading-tight text-prodet-text">
+              Demander un accès client Prodet
+            </h1>
+            <p className="mt-2.5 text-sm leading-6 text-muted-foreground">
+              Réservé aux professionnels. Prodet vérifie chaque demande avant d&apos;ouvrir l&apos;accès.
+            </p>
 
-          {/* Process graphic — from request to portal access, in 5 steps. */}
-          <div className="mb-6 rounded-sm border border-border bg-white p-5 md:p-6">
-            <p className="eyebrow-label">Comment ça marche</p>
-            <h2 className="mt-2 font-display text-xl font-bold text-prodet-text">
-              De la demande à l&apos;accès, en 5 étapes
-            </h2>
-            <ol className="mt-6 grid gap-6 md:grid-cols-5">
+            <ol className="relative mt-8 space-y-6">
               {STEPS.map((step, index) => {
                 const Icon = step.icon;
+                const isLast = index === STEPS.length - 1;
                 return (
-                  <li key={step.title} className="relative flex gap-4 md:flex-col md:gap-3">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-prodet-blue-tint text-prodet-blue">
-                      <Icon className="h-5 w-5" aria-hidden />
+                  <li key={step.title} className="relative flex gap-4">
+                    {/* Connector rail between nodes */}
+                    {!isLast ? (
+                      <span
+                        className="absolute left-[21px] top-[44px] h-[calc(100%+4px)] w-px bg-border"
+                        aria-hidden
+                      />
+                    ) : null}
+                    <span className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-prodet-blue/15 bg-prodet-blue-tint text-prodet-blue">
+                      <Icon className="h-[18px] w-[18px]" aria-hidden />
                     </span>
-                    <div className="md:mt-1">
+                    <div className="pt-1">
                       <span className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-prodet-blue">
                         Étape {index + 1}
                       </span>
                       <h3 className="mt-0.5 text-sm font-semibold text-prodet-text">{step.title}</h3>
-                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{step.body}</p>
+                      <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{step.body}</p>
                     </div>
-                    {index < STEPS.length - 1 ? (
-                      <ChevronRight
-                        className="absolute -right-3 top-2.5 hidden h-5 w-5 text-border-strong md:block"
-                        aria-hidden
-                      />
-                    ) : null}
                   </li>
                 );
               })}
             </ol>
-          </div>
+          </aside>
 
+          {/* RIGHT — the form (infos professionnelles). */}
           <AccessRequestForm />
         </div>
       </section>
