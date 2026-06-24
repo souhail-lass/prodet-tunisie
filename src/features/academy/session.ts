@@ -15,6 +15,20 @@ export const ACADEMY_COOKIE = 'prodet_academy';
 /** Session lifetime: 8 hours. */
 export const ACADEMY_SESSION_MS = 8 * 60 * 60 * 1000;
 
+/**
+ * Default access code used when `PRODET_ACADEMY_CODE` is not set in the
+ * environment (e.g. a deployment where the env var was never configured). This
+ * is not a real secret — the route is already gated behind admin auth and this
+ * value is the documented default in `.env.example`. Set `PRODET_ACADEMY_CODE`
+ * to override it.
+ */
+const DEFAULT_ACADEMY_CODE = 'Prodet65';
+
+/** The effective access code: env override first, documented default otherwise. */
+function academyCode(): string {
+  return process.env.PRODET_ACADEMY_CODE || DEFAULT_ACADEMY_CODE;
+}
+
 function constantTimeEqual(a: string, b: string): boolean {
   const ba = Buffer.from(a, 'utf8');
   const bb = Buffer.from(b, 'utf8');
@@ -28,27 +42,24 @@ function constantTimeEqual(a: string, b: string): boolean {
  * rotating `PRODET_ACADEMY_CODE` automatically invalidates every live session.
  */
 function signingKey(): string {
-  const code = process.env.PRODET_ACADEMY_CODE;
-  if (!code) {
-    throw new Error('PRODET_ACADEMY_CODE is not set');
-  }
-  return process.env.PRODET_ACADEMY_SECRET || `prodet-academy:${code}`;
+  return process.env.PRODET_ACADEMY_SECRET || `prodet-academy:${academyCode()}`;
 }
 
 function sign(payload: string): string {
   return createHmac('sha256', signingKey()).update(payload).digest('hex');
 }
 
-/** Whether the academy code is configured at all (env present and non-empty). */
+/**
+ * Whether the academy code is available. Always true now that a documented
+ * default ({@link DEFAULT_ACADEMY_CODE}) is used when no env override is set.
+ */
 export function isAcademyConfigured(): boolean {
-  return Boolean(process.env.PRODET_ACADEMY_CODE);
+  return Boolean(academyCode());
 }
 
 /** Compares a user-submitted code to the configured one, in constant time. */
 export function verifyCode(input: string): boolean {
-  const code = process.env.PRODET_ACADEMY_CODE;
-  if (!code) return false;
-  return constantTimeEqual(input, code);
+  return constantTimeEqual(input, academyCode());
 }
 
 /** Issues a signed session token valid for {@link ACADEMY_SESSION_MS}. */
