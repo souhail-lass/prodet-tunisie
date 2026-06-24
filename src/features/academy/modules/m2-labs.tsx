@@ -220,8 +220,8 @@ export function BleachLab() {
   return (
     <div className="academy-lab">
       <div className="academy-bleach-toggle">
-        <button type="button" className={`academy-bleach-opt${b === 'cl' ? ' on' : ''}`} onClick={() => setB('cl')}>Chloré (javel)</button>
-        <button type="button" className={`academy-bleach-opt${b === 'ox' ? ' on' : ''}`} onClick={() => setB('ox')}>Oxygéné (percarbonate)</button>
+        <button type="button" className={`academy-bleach-opt${b === 'cl' ? ' on' : ''}`} onClick={() => setB('cl')} aria-pressed={b === 'cl'}>Chloré (javel)</button>
+        <button type="button" className={`academy-bleach-opt${b === 'ox' ? ' on' : ''}`} onClick={() => setB('ox')} aria-pressed={b === 'ox'}>Oxygéné (percarbonate)</button>
       </div>
       <div className="academy-bleach-grid">
         {Object.entries(d).map(([k, val]) => (

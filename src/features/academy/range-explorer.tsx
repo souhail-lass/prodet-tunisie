@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronRight, Lock, Search, X } from 'lucide-react';
 import type { AcademyFamily, AcademyFamilyKey, AcademyProduct, FormulaRow } from './types';
@@ -73,8 +73,8 @@ export function RangeExplorer({
         </div>
         <div className="academy-range__bar-right">
           <div className="academy-lang" role="group" aria-label="Langue">
-            <button className={lang === 'fr' ? 'on' : ''} onClick={() => setLang('fr')} type="button">FR</button>
-            <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')} type="button">EN</button>
+            <button className={lang === 'fr' ? 'on' : ''} onClick={() => setLang('fr')} type="button" aria-pressed={lang === 'fr'}>FR</button>
+            <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')} type="button" aria-pressed={lang === 'en'}>EN</button>
           </div>
           <button type="button" className="academy-lock-btn" onClick={lock}>
             <Lock size={14} aria-hidden /> {L(lang, 'Verrouiller', 'Lock')}
@@ -83,7 +83,7 @@ export function RangeExplorer({
       </div>
 
       <div className="academy-fchips">
-        <button className={`academy-fchip${fam === 'all' ? ' on' : ''}`} type="button" onClick={() => setFam('all')}>
+        <button className={`academy-fchip${fam === 'all' ? ' on' : ''}`} type="button" onClick={() => setFam('all')} aria-pressed={fam === 'all'}>
           {L(lang, 'Tous', 'All')} <span className="ct">{products.length}</span>
         </button>
         {families.map((f) => (
@@ -92,6 +92,7 @@ export function RangeExplorer({
             type="button"
             className={`academy-fchip${fam === f.key ? ' on' : ''}`}
             onClick={() => setFam(f.key)}
+            aria-pressed={fam === f.key}
           >
             <span aria-hidden>{f.emoji}</span> {lang === 'en' ? f.en : f.fr} <span className="ct">{counts[f.key]}</span>
           </button>
@@ -149,12 +150,49 @@ function ProductModal({
   lang: Lang;
   onClose: () => void;
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Focus management: trap focus inside the dialog, restore it to the trigger
+  // on close, and lock background scroll while open.
   useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const dialog = dialogRef.current;
+    const focusables = () =>
+      Array.from(
+        dialog?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, summary, [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      ).filter((el) => el.offsetParent !== null);
+
+    focusables()[0]?.focus();
+
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0]!;
+      const last = items[items.length - 1]!;
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
+
     document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prevOverflow;
+      previouslyFocused?.focus?.();
+    };
   }, [onClose]);
 
   const r = p.reform;
@@ -166,6 +204,7 @@ function ProductModal({
   return (
     <div className="academy-modal-bg" onClick={onClose}>
       <div
+        ref={dialogRef}
         className={`academy-modal${r ? ' academy-modal--wide' : ''}`}
         role="dialog"
         aria-modal="true"
