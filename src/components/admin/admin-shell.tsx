@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Boxes, Inbox, LayoutDashboard, LifeBuoy, LogOut, ShieldCheck, Users, type LucideIcon } from 'lucide-react';
+import { Boxes, GraduationCap, Inbox, LayoutDashboard, LifeBuoy, LogOut, ShieldCheck, Users, type LucideIcon } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 
 export type AdminShellAccount = { name: string; email: string; initials: string };
@@ -12,6 +12,7 @@ const NAV: { href: string; label: string; short: string; icon: LucideIcon }[] = 
   { href: '/admin/clients', label: 'Clients', short: 'Clients', icon: Users },
   { href: '/admin/demandes-portail', label: 'Demandes portail', short: 'Demandes', icon: Inbox },
   { href: '/admin/support', label: 'Support', short: 'Support', icon: LifeBuoy },
+  { href: '/admin/academie', label: 'Académie / Formation', short: 'Académie', icon: GraduationCap },
 ];
 
 const TITLES: { match: (p: string) => boolean; title: string; subtitle: string }[] = [
@@ -20,6 +21,7 @@ const TITLES: { match: (p: string) => boolean; title: string; subtitle: string }
   { match: (p) => p.startsWith('/admin/clients'), title: 'Clients', subtitle: 'Vos clients du portail, leurs connexions et leurs accès.' },
   { match: (p) => p.startsWith('/admin/demandes-portail'), title: 'Demandes portail', subtitle: 'Demandes envoyées depuis l’espace client.' },
   { match: (p) => p.startsWith('/admin/support'), title: 'Support', subtitle: 'Les tickets de vos clients — répondez en direct.' },
+  { match: (p) => p.startsWith('/admin/academie'), title: 'Académie / Formation', subtitle: 'Formation détergence et référence de la gamme — formules protégées par code.' },
 ];
 
 export function AdminShell({ account, children }: { account: AdminShellAccount; children: ReactNode }) {

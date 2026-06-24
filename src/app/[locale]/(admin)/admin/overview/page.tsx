@@ -1,4 +1,4 @@
-import { ArrowRight, Boxes, CheckCircle2, Inbox, LifeBuoy, Users } from 'lucide-react';
+import { ArrowRight, Boxes, CheckCircle2, GraduationCap, Inbox, LifeBuoy, Users } from 'lucide-react';
 import { getAdminOverview } from '@/features/admin/overview';
 import { Link } from '@/i18n/routing';
 
@@ -16,6 +16,21 @@ export default async function AdminOverviewPage() {
         <Stat icon={<LifeBuoy size={20} />} tone={o.openTickets > 0 ? 'amber' : 'blue'} value={o.openTickets} label="Tickets ouverts" href="/admin/support" />
         <Stat icon={<Boxes size={20} />} tone="green" value={o.visibleProducts} label="Produits en ligne" href="/admin/produits" />
       </div>
+
+      <Link
+        href="/admin/academie"
+        className="panel"
+        style={{ display: 'flex', alignItems: 'center', gap: 16, textDecoration: 'none', color: 'inherit' }}
+      >
+        <span className="stat-card__icon stat-card__icon--blue" aria-hidden>
+          <GraduationCap size={20} />
+        </span>
+        <span style={{ flex: 1, minWidth: 0 }}>
+          <strong style={{ display: 'block', fontSize: 'var(--text-base)' }}>Académie / Formation</strong>
+          <span className="panel__sub">Formation détergence et référence de la gamme — formules protégées par code.</span>
+        </span>
+        <ArrowRight size={18} aria-hidden />
+      </Link>
 
       <div className="dash__cols">
         <section className="panel">
