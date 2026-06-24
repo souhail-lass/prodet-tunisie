@@ -1,5 +1,6 @@
 import { ChevronRight, GraduationCap, Lock } from 'lucide-react';
 import { Link } from '@/i18n/routing';
+import { ModuleNav } from '@/features/academy/modules/chrome';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +54,7 @@ const MODULES: {
 export default function AcademyHomePage() {
   return (
     <div>
+      <ModuleNav active="/admin/academie" />
       <div className="academy-intro">
         <p>
           Formation interne sur la détergence et outil de référence sur la gamme. Les trois premiers modules

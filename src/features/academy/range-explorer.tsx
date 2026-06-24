@@ -8,7 +8,12 @@ import type { AcademyFamily, AcademyFamilyKey, AcademyProduct, FormulaRow } from
 type Lang = 'fr' | 'en';
 const L = (lang: Lang, fr: string, en: string) => (lang === 'en' ? en : fr);
 
-type ReformTab = 'why' | 'new' | 'old' | 'proc' | 'cost';
+/** Parse a FR/EN decimal string ("1,49" / "1.49") to a number, or null. */
+function parseCost(v: string | undefined): number | null {
+  if (!v) return null;
+  const n = Number(v.replace(',', '.'));
+  return Number.isFinite(n) ? n : null;
+}
 
 export function RangeExplorer({
   products,
@@ -144,8 +149,6 @@ function ProductModal({
   lang: Lang;
   onClose: () => void;
 }) {
-  const [tab, setTab] = useState<ReformTab>('why');
-
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose();
@@ -155,12 +158,15 @@ function ProductModal({
   }, [onClose]);
 
   const r = p.reform;
-  const hasCost = Boolean(r && r.unitOld && r.unitNew);
+  const oldCost = parseCost(r?.unitOld);
+  const newCost = parseCost(r?.unitNew);
+  const hasCost = oldCost !== null && newCost !== null;
+  const deltaPct = hasCost && oldCost > 0 ? Math.round(((newCost - oldCost) / oldCost) * 100) : null;
 
   return (
     <div className="academy-modal-bg" onClick={onClose}>
       <div
-        className="academy-modal"
+        className={`academy-modal${r ? ' academy-modal--wide' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-label={p.n}
@@ -198,76 +204,70 @@ function ProductModal({
 
           {r ? (
             <div className="academy-reform">
-              <div className="academy-reform__label">{L(lang, 'Détail de la reformulation', 'Reformulation detail')}</div>
-              <div className="academy-reform__tabs" role="tablist">
-                <ReformTabBtn id="why" cur={tab} set={setTab}>{L(lang, 'Pourquoi', 'Why')}</ReformTabBtn>
-                <ReformTabBtn id="new" cur={tab} set={setTab}>{L(lang, 'Nouvelle', 'New')}</ReformTabBtn>
-                <ReformTabBtn id="old" cur={tab} set={setTab}>{L(lang, 'Ancienne', 'Old')}</ReformTabBtn>
-                <ReformTabBtn id="proc" cur={tab} set={setTab}>{L(lang, 'Procédure', 'Procedure')}</ReformTabBtn>
-                {hasCost ? <ReformTabBtn id="cost" cur={tab} set={setTab}>{L(lang, 'Coûts', 'Cost')}</ReformTabBtn> : null}
-              </div>
+              <div className="academy-reform__label">{L(lang, 'Reformulation — ancienne vs nouvelle', 'Reformulation — old vs new')}</div>
 
-              {tab === 'why' ? (
-                <ul className="academy-why">
-                  {r.why.map((w, i) => (
-                    <li key={i}>
-                      <span className="academy-why__ico" aria-hidden>✓</span>
-                      <span>{lang === 'en' ? w.en : w.fr}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
+              <ul className="academy-why">
+                {r.why.map((w, i) => (
+                  <li key={i}>
+                    <span className="academy-why__ico" aria-hidden>✓</span>
+                    <span>{lang === 'en' ? w.en : w.fr}</span>
+                  </li>
+                ))}
+              </ul>
 
-              {tab === 'new' ? (
-                <>
-                  <FormulaTable
-                    rows={lang === 'en' ? r.newF_en : r.newF}
-                    caption={L(lang, 'NOUVELLE FORMULE — lot 5 kg', 'NEW FORMULA — 5 kg batch')}
-                    tone="new"
-                    highlightChanged
-                  />
-                  <p className="academy-tablenote">
-                    {L(lang, 'Surligné = ajouté/modifié vs ancienne', 'Highlighted = added/changed vs old')}
-                  </p>
-                </>
-              ) : null}
-
-              {tab === 'old' ? (
-                <FormulaTable
-                  rows={lang === 'en' ? r.oldF_en : r.oldF}
-                  caption={L(lang, 'ANCIENNE FORMULE (réf. 2021)', 'OLD FORMULA (2021 ref.)')}
+              <div className="academy-compare">
+                <FormulaColumn
                   tone="old"
+                  title={L(lang, 'Ancienne (réf. 2021)', 'Old (2021 ref.)')}
+                  cost={hasCost ? `${r.unitOld} DT/kg` : undefined}
+                  rows={lang === 'en' ? r.oldF_en : r.oldF}
                 />
-              ) : null}
+                <FormulaColumn
+                  tone="new"
+                  title={L(lang, 'Nouvelle — lot 5 kg', 'New — 5 kg batch')}
+                  cost={hasCost ? `${r.unitNew} DT/kg` : undefined}
+                  rows={lang === 'en' ? r.newF_en : r.newF}
+                  highlightChanged
+                />
+              </div>
+              <p className="academy-tablenote">
+                <span className="academy-changed-dot" aria-hidden />{' '}
+                {L(lang, 'ajouté ou modifié vs ancienne', 'added or changed vs old')}
+              </p>
 
-              {tab === 'proc' ? (
-                <ol className="academy-proc">
-                  {r.proc.map((s, i) => (
-                    <li key={i}>
-                      <span className="academy-proc__num">{i + 1}</span>
-                      <span>{lang === 'en' ? s.en : s.fr}</span>
-                    </li>
-                  ))}
-                </ol>
-              ) : null}
-
-              {tab === 'cost' && hasCost ? (
-                <>
-                  <div className="academy-cost">
-                    <div className="academy-cost__box old">
-                      <div className="cl">{L(lang, 'Ancienne', 'Old')}</div>
-                      <div className="cv">{r.unitOld}</div>
-                      <div className="cu">DT/kg</div>
-                    </div>
-                    <div className="academy-cost__box new">
-                      <div className="cl">{L(lang, 'Nouvelle', 'New')}</div>
-                      <div className="cv">{r.unitNew}</div>
-                      <div className="cu">DT/kg</div>
-                    </div>
+              {hasCost ? (
+                <div className="academy-costband">
+                  <div className="academy-costband__pair">
+                    <span className="academy-costband__v old">{r.unitOld}</span>
+                    <span aria-hidden>→</span>
+                    <span className="academy-costband__v new">{r.unitNew}</span>
+                    <span className="academy-costband__unit">DT/kg</span>
                   </div>
-                  <div className="academy-verdict">{lang === 'en' ? r.verdict_en : r.verdict_fr}</div>
-                </>
+                  {deltaPct !== null ? (
+                    <span className={`academy-costband__delta ${deltaPct <= 0 ? 'down' : 'up'}`}>
+                      {deltaPct > 0 ? '+' : ''}{deltaPct}%
+                    </span>
+                  ) : null}
+                </div>
               ) : null}
+              <div className="academy-verdict">{lang === 'en' ? r.verdict_en : r.verdict_fr}</div>
+
+              <details className="academy-details">
+                <summary>
+                  {L(lang, 'Procédure de fabrication', 'Manufacturing procedure')}
+                  <ChevronRight size={15} aria-hidden />
+                </summary>
+                <div className="academy-details__body">
+                  <ol className="academy-proc">
+                    {r.proc.map((s, i) => (
+                      <li key={i}>
+                        <span className="academy-proc__num">{i + 1}</span>
+                        <span>{lang === 'en' ? s.en : s.fr}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              </details>
             </div>
           ) : null}
         </div>
@@ -276,59 +276,39 @@ function ProductModal({
   );
 }
 
-function ReformTabBtn({
-  id,
-  cur,
-  set,
-  children,
-}: {
-  id: ReformTab;
-  cur: ReformTab;
-  set: (t: ReformTab) => void;
-  children: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      role="tab"
-      aria-selected={cur === id}
-      className={`academy-reform__tab${cur === id ? ' on' : ''}`}
-      onClick={() => set(id)}
-    >
-      {children}
-    </button>
-  );
-}
-
-function FormulaTable({
+function FormulaColumn({
   rows,
-  caption,
+  title,
   tone,
+  cost,
   highlightChanged = false,
 }: {
   rows: FormulaRow[];
-  caption: string;
+  title: string;
   tone: 'new' | 'old';
+  cost?: string;
   highlightChanged?: boolean;
 }) {
   return (
-    <table className="academy-ftable">
-      <thead>
-        <tr>
-          <th className={tone} colSpan={4}>{caption}</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div className="academy-fcol">
+      <div className={`academy-fcol__head ${tone}`}>
+        <span>{title}</span>
+        {cost ? <span className="academy-fcol__cost">{cost}</span> : null}
+      </div>
+      <div className="academy-fcol__rows">
         {rows.map((row, i) => (
-          <tr key={i} className={highlightChanged && row.changed ? 'hl' : ''}>
-            <td className="ing">{row.ing}</td>
-            <td className="qty">{row.qty}</td>
-            <td className="pct">{row.pct}</td>
-            <td className="role">{row.role}</td>
-          </tr>
+          <div key={i} className={`academy-frow${highlightChanged && row.changed ? ' changed' : ''}`}>
+            <span className="academy-frow__ing">
+              {row.ing}
+              {highlightChanged && row.changed ? <span className="academy-changed-dot" aria-hidden /> : null}
+            </span>
+            <span className="academy-frow__qty">{row.qty}</span>
+            <span className="academy-frow__role">{row.role}</span>
+            <span className="academy-frow__pct">{row.pct}</span>
+          </div>
         ))}
-      </tbody>
-    </table>
+      </div>
+    </div>
   );
 }
 
