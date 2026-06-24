@@ -22,7 +22,7 @@ const ORDER: { ico: string; bg: string; t: string; d: string }[] = [
 export default function M3Page() {
   return (
     <div className="academy-mod">
-      <ModuleNav active="/admin/academie/m3" />
+      <ModuleNav active="/admin/academie/apprendre/m3" />
       <ModuleHero
         eyebrow="MODULE 3 — FORMULATION"
         title={<>Construire une <em>formule</em>, étape par étape</>}
@@ -80,7 +80,7 @@ export default function M3Page() {
             <><strong>Toujours tester petit</strong>, observer 24-48h, comparer, puis scaler.</>,
           ]}
         />
-        <ModuleFooter prevHref="/admin/academie/m2" nextHref="/admin/academie/gamme" nextLabel="Module 4 — La gamme Prodet" />
+        <ModuleFooter prevHref="/admin/academie/apprendre/m2" nextHref="/admin/academie" nextLabel="Module 4 — La gamme Prodet" />
       </Section>
     </div>
   );

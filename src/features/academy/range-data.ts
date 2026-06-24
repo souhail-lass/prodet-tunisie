@@ -6,7 +6,7 @@
  * bundle. The runtime guard below throws immediately if that ever happens.
  *
  * Client components receive this data as props ONLY after the academy code has
- * been verified server-side (see `src/app/[locale]/(admin)/admin/academie/gamme`).
+ * been verified server-side (see `src/app/[locale]/(admin)/admin/academie/page.tsx`).
  * Client components must import shapes from `./types` with `import type`.
  */
 

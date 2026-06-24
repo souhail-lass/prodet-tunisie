@@ -15,7 +15,7 @@ const FAMILIES: { ico: string; bg: string; name: string; desc: string; role: str
 export default function M2Page() {
   return (
     <div className="academy-mod">
-      <ModuleNav active="/admin/academie/m2" />
+      <ModuleNav active="/admin/academie/apprendre/m2" />
       <ModuleHero
         eyebrow="MODULE 2 — MATIÈRES PREMIÈRES"
         title={<>Les <em>ingrédients</em> et ce qu’ils font vraiment</>}
@@ -72,7 +72,7 @@ export default function M2Page() {
             </div>
           ))}
         </div>
-        <ModuleFooter prevHref="/admin/academie/m1" nextHref="/admin/academie/m3" nextLabel="Module 3 — Construire une formule" />
+        <ModuleFooter prevHref="/admin/academie/apprendre/m1" nextHref="/admin/academie/apprendre/m3" nextLabel="Module 3 — Construire une formule" />
       </Section>
     </div>
   );

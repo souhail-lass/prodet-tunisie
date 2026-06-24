@@ -5,11 +5,10 @@ import { Link } from '@/i18n/routing';
 /** Shared, presentational building blocks for Modules 1–3 (server-safe). */
 
 const MODNAV: { href: string; label: string }[] = [
-  { href: '/admin/academie', label: 'Accueil' },
-  { href: '/admin/academie/m1', label: '1 · Fondamentaux' },
-  { href: '/admin/academie/m2', label: '2 · Matières premières' },
-  { href: '/admin/academie/m3', label: 'Construire une formule' },
-  { href: '/admin/academie/gamme', label: '4 · La gamme' },
+  { href: '/admin/academie/apprendre', label: 'Vue d’ensemble' },
+  { href: '/admin/academie/apprendre/m1', label: '1 · Fondamentaux' },
+  { href: '/admin/academie/apprendre/m2', label: '2 · Matières premières' },
+  { href: '/admin/academie/apprendre/m3', label: '3 · Construire une formule' },
 ];
 
 export function ModuleNav({ active }: { active: string }) {

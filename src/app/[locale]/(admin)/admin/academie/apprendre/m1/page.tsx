@@ -13,7 +13,7 @@ const SOILS: { emoji: string; bg: string; name: string; ex: string; sol: string 
 export default function M1Page() {
   return (
     <div className="academy-mod">
-      <ModuleNav active="/admin/academie/m1" />
+      <ModuleNav active="/admin/academie/apprendre/m1" />
       <ModuleHero
         eyebrow="MODULE 1 — FONDAMENTAUX"
         title={<>Comprendre ce que veut dire <em>nettoyer</em></>}
@@ -118,7 +118,7 @@ export default function M1Page() {
             <><strong>Eau dure tunisienne</strong> = facteur n°1. Le séquestrant (EDTA) est souvent la clé.</>,
           ]}
         />
-        <ModuleFooter nextHref="/admin/academie/m2" nextLabel="Module 2 — Matières premières" />
+        <ModuleFooter nextHref="/admin/academie/apprendre/m2" nextLabel="Module 2 — Matières premières" />
       </Section>
     </div>
   );
