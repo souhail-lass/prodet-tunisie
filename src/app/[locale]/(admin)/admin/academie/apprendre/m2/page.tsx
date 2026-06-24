@@ -19,7 +19,6 @@ export default function M2Page() {
       <ModuleHero
         eyebrow="MODULE 2 — MATIÈRES PREMIÈRES"
         title={<>Les <em>ingrédients</em> et ce qu’ils font vraiment</>}
-        lead="Manipule plutôt que lire : glisse les curseurs et regarde la chimie réagir."
       />
 
       <Section num="01" title="Les tensioactifs — le héros de tes formules">

@@ -17,7 +17,6 @@ export default function M1Page() {
       <ModuleHero
         eyebrow="MODULE 1 — FONDAMENTAUX"
         title={<>Comprendre ce que veut dire <em>nettoyer</em></>}
-        lead="Les bases que toutes les formules Prodet utilisent : les 4 forces du nettoyage, pourquoi l’eau seule échoue, les 5 salissures et leurs armes, et l’eau dure tunisienne."
       />
 
       <Section num="01" title="Le cercle de Sinner : les 4 forces de tout nettoyage">

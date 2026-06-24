@@ -33,11 +33,8 @@ export default function ApprendreHubPage() {
     <div className="academy-mod">
       <ModuleNav active="/admin/academie/apprendre" />
       <div className="academy-intro" style={{ maxWidth: 640 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 700, margin: '0 0 10px' }}>Apprendre la détergence</h1>
-        <p>
-          Trois modules courts et interactifs : la science derrière chaque produit Prodet. Manipule, comprends, puis
-          retrouve la mise en pratique dans <strong>La Gamme</strong>.
-        </p>
+        <h1 style={{ fontSize: 24, fontWeight: 700, margin: '0 0 6px' }}>Apprendre la détergence</h1>
+        <p>La science derrière chaque produit Prodet, en 3 modules interactifs.</p>
       </div>
       <div className="learn-cards">
         {MODULES.map((m) => (

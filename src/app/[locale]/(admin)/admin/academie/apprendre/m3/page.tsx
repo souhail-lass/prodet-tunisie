@@ -26,7 +26,6 @@ export default function M3Page() {
       <ModuleHero
         eyebrow="MODULE 3 — FORMULATION"
         title={<>Construire une <em>formule</em>, étape par étape</>}
-        lead="Une formule est une réponse logique à une question : quelle salissure, quelle eau, quel support, quel usage ?"
       />
 
       <Section num="01" title="La méthode : 4 questions avant tout">

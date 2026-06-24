@@ -23,12 +23,12 @@ export function ModuleNav({ active }: { active: string }) {
   );
 }
 
-export function ModuleHero({ eyebrow, title, lead }: { eyebrow: string; title: ReactNode; lead: string }) {
+export function ModuleHero({ eyebrow, title, lead }: { eyebrow: string; title: ReactNode; lead?: string }) {
   return (
     <header>
       <div className="academy-modcard__num" style={{ marginBottom: 8 }}>{eyebrow}</div>
       <h1>{title}</h1>
-      <p className="lead">{lead}</p>
+      {lead ? <p className="lead">{lead}</p> : null}
     </header>
   );
 }
