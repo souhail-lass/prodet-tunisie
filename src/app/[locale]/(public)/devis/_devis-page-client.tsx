@@ -69,7 +69,7 @@ const INITIAL_FORM_STATE: DevisFormState = {
   message: '',
 };
 
-const fallbackEmail = 'prodet.tunisie@gmail.com';
+const fallbackEmail = 'contact@prodet.com.tn';
 const quoteSearchProducts = products.filter((product) => product.category === 'manufactured');
 
 export function DevisPageClient({ locale }: { locale: Locale }) {

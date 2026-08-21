@@ -4,13 +4,23 @@ export const companyInfo = {
   addressFull: "20 Rue de Somalie, L'Aouina, Tunis 2045, Tunisie",
   phoneDisplay: '71 758 468',
   phoneHref: 'tel:+21671758468',
-  email: 'prodet.tunisie@gmail.com',
-  emailHref: 'mailto:prodet.tunisie@gmail.com',
+  email: 'contact@prodet.com.tn',
+  emailHref: 'mailto:contact@prodet.com.tn',
   footerTagline: "Fabricant et distributeur de produits d'entretien professionnels · Tunis, Tunisie",
   deliveryZoneLabel: null,
   hoursLabel: null,
   whatsappNumber: null,
   copyrightYear: 2025,
+  // SEO entity signals. Fill these in as the brand's official profiles go live —
+  // they feed the `sameAs` array in the Organization JSON-LD, which is what links
+  // every Prodet profile into one entity for Google's Knowledge Panel.
+  social: {
+    facebook: null as string | null,
+    instagram: null as string | null,
+    linkedin: null as string | null,
+  },
+  // Area the business actually serves — surfaced in LocalBusiness structured data.
+  areaServed: 'Tunisie',
   documents: [
     {
       id: 'attestation-1',
