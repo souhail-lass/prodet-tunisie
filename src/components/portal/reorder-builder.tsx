@@ -52,7 +52,9 @@ export function ReorderBuilder({
   const [submitted, setSubmitted] = useState(false);
   const [reference, setReference] = useState<string | null>(null);
   const [pushed, setPushed] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  // Which button is mid-flight ('order' | 'devis' | null) and what was submitted.
+  const [submitting, setSubmitting] = useState<'order' | 'devis' | null>(null);
+  const [submittedKind, setSubmittedKind] = useState<'order' | 'devis'>('order');
   const [submitError, setSubmitError] = useState(false);
 
   const bySlug = useMemo(() => {
@@ -113,8 +115,9 @@ export function ReorderBuilder({
     setQuery('');
   }
 
-  async function handleSubmit() {
-    setSubmitting(true);
+  async function handleSubmit(kind: 'order' | 'devis') {
+    if (submitting) return;
+    setSubmitting(kind);
     setSubmitError(false);
     try {
       const result = await submitPortalQuoteAction(
@@ -125,10 +128,12 @@ export function ReorderBuilder({
           quantity: qty[p.slug] ?? 0,
           unitPrice: p.unitPrice ?? null,
         })),
+        kind,
       );
       if (result.ok) {
         if (result.referenceCode) setReference(result.referenceCode);
         setPushed(Boolean(result.swiverPushed));
+        setSubmittedKind(kind);
         setSubmitted(true);
       } else {
         setSubmitError(true);
@@ -136,7 +141,7 @@ export function ReorderBuilder({
     } catch {
       setSubmitError(true);
     } finally {
-      setSubmitting(false);
+      setSubmitting(null);
     }
   }
 
@@ -148,7 +153,7 @@ export function ReorderBuilder({
             <Check size={26} />
           </span>
           <h2 className="panel__title" style={{ marginTop: 16 }}>
-            {t('reorder.successTitle')}
+            {submittedKind === 'devis' ? t('reorder.successTitleDevis') : t('reorder.successTitleOrder')}
           </h2>
           <p className="panel__sub" style={{ marginTop: 6 }}>
             {t('reorder.successBody', { count: lines.length, units: totalUnits })}
@@ -168,8 +173,11 @@ export function ReorderBuilder({
               justifyContent: 'center',
             }}
           >
-            <Link href="/client/devis" className="pds-btn pds-btn--primary pds-btn--md">
-              <span>{t('reorder.viewOrders')}</span>
+            <Link
+              href={submittedKind === 'devis' ? '/client/devis' : '/client/commandes'}
+              className="pds-btn pds-btn--primary pds-btn--md"
+            >
+              <span>{submittedKind === 'devis' ? t('reorder.viewDevis') : t('reorder.viewOrders')}</span>
             </Link>
             <Link href="/client" className="pds-btn pds-btn--ghost pds-btn--md">
               <span>{t('reorder.backToDashboard')}</span>
@@ -252,16 +260,28 @@ export function ReorderBuilder({
           </span>
         </div>
         {submitError ? <span className="desk-cart__error">{t('reorder.submitError')}</span> : null}
-        <Button
-          variant="primary"
-          size="lg"
-          className="desk-cart__submit"
-          disabled={!lines.length || submitting}
-          onClick={handleSubmit}
-          iconRight={submitting ? undefined : <ArrowRight size={18} />}
-        >
-          {submitting ? t('reorder.submitting') : t('reorder.requestQuote')}
-        </Button>
+        <div className="desk-cart__actions">
+          <Button
+            variant="primary"
+            size="lg"
+            className="desk-cart__submit"
+            disabled={!lines.length || submitting !== null}
+            onClick={() => handleSubmit('order')}
+            iconRight={submitting ? undefined : <ArrowRight size={18} />}
+          >
+            {submitting === 'order' ? t('reorder.submitting') : t('reorder.submitOrder')}
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            className="desk-cart__submit"
+            disabled={!lines.length || submitting !== null}
+            onClick={() => handleSubmit('devis')}
+            iconRight={submitting ? undefined : <FileText size={17} />}
+          >
+            {submitting === 'devis' ? t('reorder.submitting') : t('reorder.submitDevis')}
+          </Button>
+        </div>
         <p className="desk-cart__note">{t('reorder.reviewNote')}</p>
       </div>
     </>
@@ -374,15 +394,25 @@ export function ReorderBuilder({
             {lines.length ? t('reorder.barRefs', { count: refsCount, units: totalUnits }) : t('reorder.barEmpty')}
           </span>
         </a>
-        <Button
-          variant="primary"
-          size="md"
-          disabled={!lines.length || submitting}
-          onClick={handleSubmit}
-          iconRight={submitting ? undefined : <ArrowRight size={17} />}
-        >
-          {submitting ? t('reorder.submitting') : t('reorder.requestQuote')}
-        </Button>
+        <div className="desk-bar__actions">
+          <Button
+            variant="outline"
+            size="md"
+            disabled={!lines.length || submitting !== null}
+            onClick={() => handleSubmit('devis')}
+          >
+            {submitting === 'devis' ? t('reorder.submitting') : t('reorder.submitDevis')}
+          </Button>
+          <Button
+            variant="primary"
+            size="md"
+            disabled={!lines.length || submitting !== null}
+            onClick={() => handleSubmit('order')}
+            iconRight={submitting ? undefined : <ArrowRight size={17} />}
+          >
+            {submitting === 'order' ? t('reorder.submitting') : t('reorder.submitOrder')}
+          </Button>
+        </div>
       </div>
     </div>
   );

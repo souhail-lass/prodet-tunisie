@@ -133,7 +133,10 @@ export async function submitPublicDevisRequest(
 
   const referenceCode = generateReferenceCode('QUO');
   const emailPayload = buildPublicDevisEmail(referenceCode, parsed.data);
-  const delivery = await sendOperatorEmail(emailPayload);
+  const delivery = await sendOperatorEmail({
+    ...emailPayload,
+    replyTo: parsed.data.email?.trim() || undefined,
+  });
 
   console.info('[public-devis:received]', {
     referenceCode,
@@ -193,19 +196,89 @@ function buildPublicDevisEmail(
     input.message || 'Aucun message complémentaire.',
   ].join('\n');
 
-  const html = `<pre style="font-family:Inter,Arial,sans-serif;white-space:pre-wrap;line-height:1.55;color:#102033">${escapeHtml(text)}</pre>`;
+  const totalUnits = input.lines.reduce((sum, line) => sum + line.quantity, 0);
+  const html = buildPublicDevisHtml(referenceCode, requester, input, totalUnits);
 
   return { subject, text, html };
+}
+
+/** On-brand HTML for the operator devis notification (product table + contact card). */
+function buildPublicDevisHtml(
+  referenceCode: string,
+  requester: string,
+  input: z.output<typeof PublicDevisRequestSchema>,
+  totalUnits: number,
+): string {
+  const rows = input.lines
+    .map((line, index) => {
+      const meta = [line.format, line.category].filter(Boolean).join(' · ');
+      const bg = index % 2 === 0 ? '#ffffff' : '#f6f8fb';
+      return `<tr style="background:${bg}">
+        <td style="padding:9px 12px;border-bottom:1px solid #e6e8ec;font-size:13px;color:#102033">
+          <strong style="font-weight:600">${escapeHtml(line.productName)}</strong>
+          ${meta ? `<br /><span style="font-size:11px;color:#7a869a">${escapeHtml(meta)}</span>` : ''}
+        </td>
+        <td style="padding:9px 12px;border-bottom:1px solid #e6e8ec;font-size:13px;color:#102033;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums">${line.quantity}</td>
+      </tr>`;
+    })
+    .join('');
+
+  const contactRow = (label: string, value: string | undefined) =>
+    `<tr>
+      <td style="padding:4px 0;font-size:12px;color:#7a869a;width:150px;vertical-align:top">${escapeHtml(label)}</td>
+      <td style="padding:4px 0;font-size:13px;color:#102033">${escapeHtml(value?.trim() || '—')}</td>
+    </tr>`;
+
+  return `<div style="font-family:Inter,Arial,sans-serif;line-height:1.55;color:#102033;max-width:600px;margin:0 auto;padding:8px">
+    <div style="font-weight:800;font-size:18px;color:#08233f;margin-bottom:4px">Prodet</div>
+    <h1 style="font-size:18px;font-weight:700;margin:0 0 4px;color:#08233f">Nouvelle demande de devis</h1>
+    <p style="margin:0 0 18px;font-size:13px;color:#7a869a">
+      Réf. <strong style="color:#0B5FAE">${escapeHtml(referenceCode)}</strong> · ${escapeHtml(requester)} ·
+      ${input.lines.length} référence(s), ${totalUnits} unité(s)
+    </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border:1px solid #e6e8ec;border-radius:8px;overflow:hidden;margin-bottom:20px">
+      <thead>
+        <tr style="background:#08233f">
+          <th style="padding:9px 12px;text-align:left;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#cfe0f0">Produit</th>
+          <th style="padding:9px 12px;text-align:right;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#cfe0f0">Qté</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+
+    <h2 style="font-size:13px;font-weight:700;margin:0 0 8px;color:#08233f">Coordonnées</h2>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:18px">
+      ${contactRow('Nom / Prénom', input.fullName)}
+      ${contactRow('Société / Établissement', input.company)}
+      ${contactRow('Secteur', input.sectorId)}
+      ${contactRow('Téléphone', input.phone)}
+      ${contactRow('Email', input.email)}
+      ${contactRow('Ville / zone de livraison', input.city)}
+    </table>
+
+    ${
+      input.message?.trim()
+        ? `<h2 style="font-size:13px;font-weight:700;margin:0 0 6px;color:#08233f">Message</h2>
+           <p style="margin:0 0 18px;font-size:13px;color:#102033;background:#f6f8fb;border-radius:8px;padding:12px 14px;white-space:pre-wrap">${escapeHtml(input.message.trim())}</p>`
+        : ''
+    }
+
+    <hr style="border:none;border-top:1px solid #e6e8ec;margin:8px 0 12px" />
+    <p style="font-size:12px;color:#7a869a;margin:0">Demande envoyée depuis le site prodet.com.tn · Répondez à cet email pour contacter directement le demandeur.</p>
+  </div>`;
 }
 
 async function sendOperatorEmail({
   subject,
   text,
   html,
+  replyTo,
 }: {
   subject: string;
   text: string;
   html: string;
+  replyTo?: string;
 }): Promise<{ ok: true } | { ok: false; error: string }> {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   if (!apiKey) return { ok: false, error: 'missing-provider' };
@@ -229,6 +302,7 @@ async function sendOperatorEmail({
         subject,
         text,
         html,
+        ...(replyTo ? { reply_to: replyTo } : {}),
       }),
     });
 

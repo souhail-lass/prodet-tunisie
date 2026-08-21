@@ -15,16 +15,26 @@ export type QuoteLineInput = {
   unitPrice: number | null;
 };
 
+/** Which Swiver document the client wants to raise. */
+export type PortalSubmitKind = 'order' | 'devis';
+
+/** Swiver numeric document type per kind (4 = bon de commande, 6 = devis). */
+const SWIVER_TYPE_BY_KIND: Record<PortalSubmitKind, number> = { order: 4, devis: 6 };
+
 /**
- * Submit a portal order from the catalogue. Creates a real `order_draft`
- * (source=portal) + `order_line`s, then AUTO-PUSHES it to Swiver as a draft
- * sales order (type 4) when the client is linked to a Swiver contact. The push
- * is best-effort: on failure the order is kept (swiver_export_status='none')
+ * Submit a portal order or devis from the catalogue. Creates a real
+ * `order_draft` (source=portal) + `order_line`s, then AUTO-PUSHES it to Swiver
+ * as a draft — a sales order (type 4) for `kind='order'` or a devis (type 6)
+ * for `kind='devis'` — when the client is linked to a Swiver contact. The push
+ * is best-effort: on failure the record is kept (swiver_export_status='none')
  * so nothing is lost and an operator can retry from the admin.
  */
 export async function submitPortalQuoteRequest(input: {
   lines: QuoteLineInput[];
+  kind?: PortalSubmitKind;
 }): Promise<{ ok: boolean; referenceCode?: string; swiverPushed?: boolean; error?: string }> {
+  const kind: PortalSubmitKind = input.kind === 'devis' ? 'devis' : 'order';
+  const swiverType = SWIVER_TYPE_BY_KIND[kind];
   const lines = input.lines.filter((l) => l.quantity > 0 && l.name);
   if (lines.length === 0) return { ok: false, error: 'empty' };
 
@@ -45,7 +55,7 @@ export async function submitPortalQuoteRequest(input: {
   if (!limit.ok) return { ok: false, error: 'rate-limited' };
 
   const { db, schema } = await import('@/db/client');
-  const referenceCode = generateReferenceCode('ORD');
+  const referenceCode = generateReferenceCode(kind === 'devis' ? 'DEV' : 'ORD');
   const now = new Date();
 
   // 1) Persist the order_draft + lines.
@@ -67,7 +77,7 @@ export async function submitPortalQuoteRequest(input: {
         status: 'review',
         swiverExportStatus: 'none',
         rawInbound: {
-          kind: 'portal_quote',
+          kind: kind === 'devis' ? 'portal_devis' : 'portal_order',
           submittedByAppUserId: access.appUser.id,
           submittedByEmail: access.appUser.email,
           lineCount: lines.length,
@@ -97,12 +107,13 @@ export async function submitPortalQuoteRequest(input: {
   if (access.customer.swiverId && pushableLines.length > 0) {
     try {
       const swiver = getSwiverAdapter();
-      const created = await swiver.documents.createDraftDocument(4);
+      const created = await swiver.documents.createDraftDocument(swiverType);
       if (created) {
         const ok = await swiver.documents.updateDocument(created.swiverId, {
           contactSwiverId: access.customer.swiverId,
           version: created.version,
           warehouseId: created.warehouseId,
+          type: swiverType,
           lines: pushableLines.map((l) => ({
             productSwiverId: l.swiverId as string,
             quantity: l.quantity,
@@ -142,7 +153,7 @@ export async function submitPortalQuoteRequest(input: {
     action: swiverPushed ? 'order_draft.portal_submitted_pushed' : 'order_draft.portal_submitted',
     entityType: 'order_draft',
     entityId: draftId,
-    diff: { lineCount: lines.length, swiverPushed },
+    diff: { lineCount: lines.length, swiverPushed, kind },
     metadata: {},
   });
 
@@ -151,24 +162,28 @@ export async function submitPortalQuoteRequest(input: {
   if (notify) {
     const company = access.customer.name;
     const units = lines.reduce((s, l) => s + l.quantity, 0);
+    const isDevis = kind === 'devis';
+    const docWord = isDevis ? 'demande de devis' : 'commande';
+    const docWordCap = isDevis ? 'Demande de devis' : 'Nouvelle commande';
+    const swiverDocWord = isDevis ? 'devis' : 'bon de commande';
     after(async () => {
       await sendEmail({
         to: notify,
-        subject: `Nouvelle commande ${referenceCode} — ${company}`,
+        subject: `${docWordCap} ${referenceCode} — ${company}`,
         replyTo: access.appUser.email,
         text: [
-          `Nouvelle commande reçue depuis l'espace client.`,
+          `Nouvelle ${docWord} reçue depuis l'espace client.`,
           ``,
           `Client : ${company}`,
           `Référence : ${referenceCode}`,
           `${lines.length} référence(s) · ${units} unité(s)`,
-          swiverPushed ? `Transmise à Swiver (brouillon de bon de commande).` : `Non transmise à Swiver — à traiter manuellement.`,
+          swiverPushed ? `Transmise à Swiver (brouillon de ${swiverDocWord}).` : `Non transmise à Swiver — à traiter manuellement.`,
         ].join('\n'),
         html: brandedHtml(
-          `Nouvelle commande — ${company}`,
+          `${docWordCap} — ${company}`,
           [
             `Référence ${referenceCode} · ${lines.length} référence(s), ${units} unité(s).`,
-            swiverPushed ? 'Transmise à Swiver en brouillon.' : 'Non transmise à Swiver — à traiter manuellement.',
+            swiverPushed ? `Transmise à Swiver en brouillon de ${swiverDocWord}.` : 'Non transmise à Swiver — à traiter manuellement.',
           ],
         ),
       });

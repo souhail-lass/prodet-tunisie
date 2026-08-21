@@ -135,6 +135,8 @@ export interface SwiverDocumentPort {
       lines: SwiverOrderLineInput[];
       version?: number;
       warehouseId?: number | null;
+      /** Swiver document type code (4 = sale order, 6 = devis). Defaults to 4. */
+      type?: number;
     },
   ): Promise<boolean>;
   /** PUT /open_api/document/state/{id} {transition} — e.g. 'to_canceled'. */

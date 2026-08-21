@@ -7,7 +7,7 @@
  * Not cryptographically strong; only meant to be guessable enough to
  * be useful when humans quote it on the phone.
  */
-export function generateReferenceCode(prefix: 'QUO' | 'CTC' | 'ORD'): string {
+export function generateReferenceCode(prefix: 'QUO' | 'CTC' | 'ORD' | 'DEV'): string {
   const year = new Date().getUTCFullYear();
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let suffix = '';
