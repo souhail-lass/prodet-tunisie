@@ -592,6 +592,8 @@ class HttpDocumentPort implements SwiverDocumentPort {
       lines: SwiverOrderLineInput[];
       version?: number;
       warehouseId?: number | null;
+      /** Swiver document type code (4 = sale order, 6 = devis). Defaults to 4. */
+      type?: number;
     },
   ): Promise<boolean> {
     try {
@@ -648,7 +650,7 @@ class HttpDocumentPort implements SwiverDocumentPort {
 
       const body = {
         id: Number(swiverId),
-        type: '4',
+        type: String(input.type ?? 4),
         version,
         warehouse: warehouseId ?? undefined,
         contact: Number(input.contactSwiverId),

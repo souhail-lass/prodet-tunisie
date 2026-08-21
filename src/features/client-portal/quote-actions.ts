@@ -1,7 +1,14 @@
 'use server';
 
-import { submitPortalQuoteRequest, type QuoteLineInput } from './quote-submit';
+import {
+  submitPortalQuoteRequest,
+  type PortalSubmitKind,
+  type QuoteLineInput,
+} from './quote-submit';
 
-export async function submitPortalQuoteAction(lines: QuoteLineInput[]) {
-  return submitPortalQuoteRequest({ lines });
+export async function submitPortalQuoteAction(
+  lines: QuoteLineInput[],
+  kind: PortalSubmitKind = 'order',
+) {
+  return submitPortalQuoteRequest({ lines, kind });
 }
