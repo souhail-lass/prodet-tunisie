@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import type { Product } from '@/types/product';
@@ -102,8 +103,17 @@ export function ProductMarquee({ products }: { products: Product[] }) {
               >
                 <div className="pmarquee__stage">
                   {p.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.image} alt={p.name} loading="lazy" />
+                    // Card content box is 204px (248 - 2x22 padding), 136px on
+                    // mobile; the stage is 168px tall. object-fit:contain comes
+                    // from .pmarquee__stage img.
+                    <Image
+                      src={p.image}
+                      alt={p.name}
+                      width={204}
+                      height={168}
+                      sizes="(max-width: 860px) 136px, 204px"
+                      loading="lazy"
+                    />
                   ) : (
                     <span className="pmarquee__mono">{initials(p.name)}</span>
                   )}
