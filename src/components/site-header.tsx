@@ -50,7 +50,7 @@ export function SiteHeader() {
       <div className="site-header__inner">
         <Link href="/" className="site-header__logo" aria-label="Prodet Tunisie">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo/prodet-logo.svg" alt="Prodet Tunisie" />
+          <img src="/images/logo/prodet-logo.svg" alt="Prodet Tunisie" width={2117} height={1148} />
         </Link>
 
         <nav className="site-header__nav" aria-label={t('navigation.home')}>

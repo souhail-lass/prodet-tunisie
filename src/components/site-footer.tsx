@@ -13,7 +13,7 @@ export async function SiteFooter() {
         <div className="site-footer__brand">
           <div className="site-footer__logo-chip">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/prodet-logo-white.svg" alt="Prodet Tunisie" />
+            <img src="/images/logo/prodet-logo-white.svg" alt="Prodet Tunisie" width={2117} height={1148} />
           </div>
           <p className="site-footer__tag">{companyInfo.footerTagline}</p>
           <span className="site-footer__made">
