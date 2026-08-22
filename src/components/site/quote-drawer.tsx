@@ -11,7 +11,7 @@ import {
 } from 'react';
 import Image from 'next/image';
 import { useLocale } from 'next-intl';
-import { ArrowRight, Check, ChevronLeft, FileText, Shield, X } from 'lucide-react';
+import { ArrowRight, Check, ChevronLeft, FileText, Shield, Trash2, X } from 'lucide-react';
 import { Button, Input, QuantityControl, Select } from '@/components/ds';
 import { listSectors } from '@/data/queries';
 import { localizeSectors } from '@/data/i18n/content';
@@ -59,7 +59,7 @@ export function useQuoteDrawer() {
 }
 
 function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { items, setProductQuantity } = useQuoteSelection();
+  const { items, setProductQuantity, clearSelection } = useQuoteSelection();
   const locale = useLocale() as Locale;
   const [step, setStep] = useState<'list' | 'form'>('list');
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
@@ -169,12 +169,18 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                 </span>
                 <p>Votre liste de devis est vide.</p>
                 <Button variant="outline" onClick={onClose}>
-                  <Link href="/catalogue">Parcourir le catalogue</Link>
+                  <Link href="/produits/produits-nettoyage">Parcourir le catalogue</Link>
                 </Button>
               </div>
             ) : (
-              <div className="qm__lines">
-                {lines.map((line) => (
+              <>
+                <div className="qm__actions-top">
+                  <button type="button" className="qm__clear" onClick={clearSelection}>
+                    <Trash2 size={14} /> Vider la liste
+                  </button>
+                </div>
+                <div className="qm__lines">
+                  {lines.map((line) => (
                   <div className="qm__line" key={line.productId}>
                     <div className="qm__line-thumb">
                       {line.imageUrl ? (
@@ -182,9 +188,9 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                           <Image
                             src={line.imageUrl}
                             alt=""
-                            width={56}
-                            height={56}
-                            sizes="56px"
+                            width={48}
+                            height={48}
+                            sizes="48px"
                             style={{ width: 'auto', height: 'auto', maxWidth: '80%', maxHeight: '80%', objectFit: 'contain' }}
                           />
                         ) : (
@@ -204,6 +210,7 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                     </div>
                     <div className="qm__line-qty">
                       <QuantityControl
+                        className="pds-qty--compact"
                         value={line.quantity}
                         onChange={(n) =>
                           setProductQuantity({ productId: line.productId, productName: line.productName }, n)
@@ -211,8 +218,9 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                       />
                     </div>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         ) : (

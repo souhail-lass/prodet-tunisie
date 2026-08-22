@@ -32,6 +32,9 @@ const config = [
       'test-results/**',
       'next-env.d.ts',
       'prodet-agents/**',
+      // Scraped reference material (price lists, client logos) — not app source.
+      'pictures-resell/**',
+      'clients-logos/**',
     ],
   },
 ];

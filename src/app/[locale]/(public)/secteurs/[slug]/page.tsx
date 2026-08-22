@@ -74,7 +74,7 @@ export default async function SectorPage({
                 <Link href="/devis" className="pds-btn pds-btn--primary pds-btn--lg">
                   <FileText size={17} /> Demander un devis
                 </Link>
-                <Link href={`/catalogue?sector=${sector.id}`} className="sector-hero__link">
+                <Link href="/produits/produits-nettoyage" className="sector-hero__link">
                   Voir le catalogue <ArrowRight size={15} />
                 </Link>
               </div>
@@ -127,7 +127,7 @@ export default async function SectorPage({
               Demander un devis
             </Link>
             <Link
-              href={`/catalogue?sector=${sector.id}`}
+              href="/produits/produits-nettoyage"
               className="pds-btn pds-btn--ghost pds-btn--lg cta-band__ghost"
             >
               Voir tout le catalogue <ArrowRight size={16} />

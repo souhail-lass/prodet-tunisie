@@ -20,7 +20,7 @@ export function SiteHeader() {
 
   const nav = [
     { href: '/', label: t('navigation.home') },
-    { href: '/catalogue', label: t('navigation.catalog') },
+    { href: '/produits/produits-nettoyage', label: t('navigation.catalog') },
     { href: '/secteurs', label: t('navigation.sectors') },
     { href: '/a-propos', label: t('navigation.about') },
     { href: '/contact', label: t('navigation.contact') },
@@ -28,6 +28,8 @@ export function SiteHeader() {
 
   function isActive(href: string) {
     if (href === '/') return pathname === '/';
+    // "Catalogue" covers the whole browse surface: /produits/* and legacy /catalogue/*.
+    if (href.startsWith('/produits')) return pathname.startsWith('/produits') || pathname.startsWith('/catalogue');
     return pathname === href || pathname.startsWith(`${href}/`);
   }
 

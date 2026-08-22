@@ -78,6 +78,7 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
     addProduct,
     setProductQuantity,
     removeProduct,
+    clearSelection,
   } = useQuoteSelection();
   const [formState, setFormState] = useState<DevisFormState>(INITIAL_FORM_STATE);
   const [submissionState, setSubmissionState] = useState<SubmissionState>({ status: 'idle' });
@@ -184,9 +185,20 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
                   Ajoutez depuis la recherche ou le catalogue.
                 </p>
               </div>
-              <Button asChild variant="neutral" size="sm">
-                <Link href="/catalogue">Retour catalogue</Link>
-              </Button>
+              <div className="flex items-center gap-2">
+                {!isEmpty ? (
+                  <button
+                    type="button"
+                    onClick={clearSelection}
+                    className="inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-700"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" aria-hidden /> Vider la liste
+                  </button>
+                ) : null}
+                <Button asChild variant="neutral" size="sm">
+                  <Link href="/produits/produits-nettoyage">Retour catalogue</Link>
+                </Button>
+              </div>
             </div>
 
             <FastProductAdd
