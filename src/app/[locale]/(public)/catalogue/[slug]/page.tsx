@@ -31,6 +31,8 @@ import { Link, isLocale, type Locale } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { ProductGrid } from '@/components/catalogue/product-grid';
 import { ProductHeroV2 } from '@/components/product/ProductHeroV2';
+import { JsonLd } from '@/components/seo/json-ld';
+import { breadcrumbSchema, productSchema } from '@/lib/seo/structured-data';
 
 // Static + ISR per slug: each product page is cached after first render and
 // regenerated in the background; admin edits revalidate the 'catalogue' tag.
@@ -104,12 +106,31 @@ export default async function ProductDetailPage({
   const t = await getTranslations({ locale, namespace: 'catalogue' });
 
   return (
-    <LegacyProductDetailPage
-      product={product}
-      locale={locale}
-      related={related}
-      madeLabel={t('page.manufacturedBadge')}
-    />
+    <>
+      <JsonLd
+        data={productSchema({
+          name: product.name,
+          description: product.tagline || product.description,
+          slug: product.slug,
+          image: product.image,
+          category: product.categoryLabel,
+          manufactured: product.category === 'manufactured',
+        })}
+      />
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: 'Accueil', path: `/${locale}` },
+          { name: 'Catalogue', path: `/${locale}/catalogue` },
+          { name: product.name, path: `/${locale}/catalogue/${product.slug}` },
+        ])}
+      />
+      <LegacyProductDetailPage
+        product={product}
+        locale={locale}
+        related={related}
+        madeLabel={t('page.manufacturedBadge')}
+      />
+    </>
   );
 }
 
@@ -128,6 +149,16 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
 
   return (
     <div className="section-shell py-12">
+      <JsonLd
+        data={productSchema({
+          name: offer.name,
+          description: detailDescription,
+          slug: offer.slug,
+          image: publicOfferReferenceImage,
+          category: section?.label,
+          manufactured: offer.sectionKind !== 'commercialized',
+        })}
+      />
       <nav className="text-[var(--type-small)] text-[var(--color-text-tertiary)]">
         <Link href="/catalogue" className="text-[var(--color-text-secondary)] hover:text-prodet-blue">
           Catalogue

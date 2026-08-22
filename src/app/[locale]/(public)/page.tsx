@@ -6,6 +6,8 @@ import { localizeSectors } from '@/data/i18n/content';
 import { familles } from '@/data/familles';
 import { sectorPageCards } from '@/components/secteurs/sector-page-data';
 import { getFeaturedCatalogue, getFamilleCounts } from '@/features/catalogue/queries';
+import { JsonLd } from '@/components/seo/json-ld';
+import { siteGraph } from '@/lib/seo/structured-data';
 
 // Static + ISR: served from cache, regenerated in the background. Catalogue
 // edits in the admin revalidate the 'catalogue' tag, so updates are instant.
@@ -29,5 +31,10 @@ export default async function HomeRoute({ params }: { params: Promise<{ locale: 
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .map((f) => ({ id: f.id, image: f.packshot, count: familleCounts[f.id] }));
 
-  return <HomePage showcase={showcase} sectors={sectors} familles={familleCards} />;
+  return (
+    <>
+      <JsonLd data={siteGraph()} />
+      <HomePage showcase={showcase} sectors={sectors} familles={familleCards} />
+    </>
+  );
 }

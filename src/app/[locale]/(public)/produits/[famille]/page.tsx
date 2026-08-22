@@ -12,6 +12,8 @@ import {
 } from '@/data/familles';
 import { getSousCategorieCounts } from '@/features/catalogue/queries';
 import { CategorySidebar } from '@/components/catalogue/category-sidebar';
+import { JsonLd } from '@/components/seo/json-ld';
+import { breadcrumbSchema } from '@/lib/seo/structured-data';
 
 // All five familles are known at build time — prerender them (ISR via the
 // catalogue cache tag keeps counts fresh after admin edits).
@@ -54,6 +56,13 @@ export default async function FamillePage({
 
   return (
     <div className="famille-page">
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: locale === 'ar' ? 'الرئيسية' : locale === 'en' ? 'Home' : 'Accueil', path: `/${locale}` },
+          { name: tf('page.viewAll'), path: `/${locale}/catalogue` },
+          { name: tf(`items.${fam.id}.label`), path: `/${locale}/produits/${fam.id}` },
+        ])}
+      />
       <header className="famille-hero">
         <div className="section-wrap famille-hero__inner">
           <div className="famille-hero__text">
