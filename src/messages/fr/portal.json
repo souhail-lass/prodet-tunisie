@@ -104,7 +104,7 @@
     "successTitle": "Devis demandé",
     "successTitleOrder": "Commande envoyée",
     "successTitleDevis": "Devis demandé",
-    "successBody": "{count, plural, one {# référence} other {# références}} · {units, plural, one {# unité} other {# unités}}. Notre équipe la prend en charge et revient vers vous rapidement.",
+    "successBody": "Notre équipe la traite et revient vers vous rapidement.",
     "backToDashboard": "Retour au tableau de bord",
     "editRequest": "Modifier la demande",
     "searchSub": "{count} produits disponibles à la commande.",

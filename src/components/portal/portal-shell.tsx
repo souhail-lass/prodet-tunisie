@@ -27,8 +27,8 @@ export type PortalShellAccount = {
 // entry point, so the nav list intentionally omits a duplicate "Commander" row.
 const NAV: { href: string; key: string; icon: LucideIcon; exact?: boolean }[] = [
   { href: '/client', key: 'dashboard', icon: Home, exact: true },
-  { href: '/client/commandes', key: 'orders', icon: PackageCheck },
   { href: '/client/devis', key: 'quotes', icon: FileText },
+  { href: '/client/commandes', key: 'orders', icon: PackageCheck },
   { href: '/client/livraisons', key: 'deliveries', icon: Truck },
   { href: '/client/factures', key: 'invoices', icon: Download },
   { href: '/client/support', key: 'support', icon: LifeBuoy },
@@ -38,8 +38,8 @@ const NAV: { href: string; key: string; icon: LucideIcon; exact?: boolean }[] = 
 const MOBILE_NAV: { href: string; key: string; icon: LucideIcon; exact?: boolean }[] = [
   { href: '/client', key: 'dashboard', icon: Home, exact: true },
   { href: '/client/commander', key: 'reorder', icon: Repeat },
-  { href: '/client/commandes', key: 'orders', icon: PackageCheck },
   { href: '/client/devis', key: 'quotes', icon: FileText },
+  { href: '/client/commandes', key: 'orders', icon: PackageCheck },
   { href: '/client/livraisons', key: 'deliveries', icon: Truck },
   { href: '/client/factures', key: 'invoices', icon: Download },
   { href: '/client/support', key: 'support', icon: LifeBuoy },

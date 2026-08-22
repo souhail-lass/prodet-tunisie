@@ -156,12 +156,12 @@ export function ReorderBuilder({
             {submittedKind === 'devis' ? t('reorder.successTitleDevis') : t('reorder.successTitleOrder')}
           </h2>
           <p className="panel__sub" style={{ marginTop: 6 }}>
-            {t('reorder.successBody', { count: lines.length, units: totalUnits })}
+            {t('reorder.successBody')}
           </p>
           {reference ? (
             <p className="reorder-success__ref">
               {pushed ? <CheckCircle2 size={15} /> : <FileText size={15} />}
-              <span>{pushed ? t('reorder.transmitted', { reference }) : reference}</span>
+              <span>{reference}</span>
             </p>
           ) : null}
           <div
@@ -222,11 +222,11 @@ export function ReorderBuilder({
                 )}
               </span>
               <div className="desk-cart__info">
-                <strong>{product.name}</strong>
+                <strong title={product.name}>{product.name}</strong>
                 <span>{product.sku || product.category || ''}</span>
               </div>
               <QuantityControl
-                className="desk-cart__qty"
+                className="desk-cart__qty pds-qty--compact"
                 value={qty[product.slug] ?? 0}
                 onChange={(n) => setProductQty(product.slug, n)}
               />

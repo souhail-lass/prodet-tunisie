@@ -104,7 +104,7 @@
     "successTitle": "Quote requested",
     "successTitleOrder": "Order sent",
     "successTitleDevis": "Quote requested",
-    "successBody": "{count, plural, one {# reference} other {# references}} · {units, plural, one {# unit} other {# units}}. Our team will process it and get back to you shortly.",
+    "successBody": "Our team is on it and will get back to you shortly.",
     "backToDashboard": "Back to dashboard",
     "editRequest": "Edit the request",
     "searchSub": "{count} products available to order.",

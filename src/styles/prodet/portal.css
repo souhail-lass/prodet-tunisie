@@ -40,6 +40,11 @@
 .portal__nav-item:hover { background: var(--surface-navy-soft); color: #fff; }
 .portal__nav-item.is-active { background: var(--prodet-blue); color: #fff; }
 .portal__nav-item svg { flex-shrink: 0; }
+/* Nav items are <a>; without this the global a / a:hover colour tints them
+   link-blue and hides them on the navy rail. Pin the on-dark colours above it. */
+.portal__rail a.portal__nav-item { color: rgba(255, 255, 255, 0.86); }
+.portal__rail a.portal__nav-item:hover,
+.portal__rail a.portal__nav-item.is-active { color: #fff; }
 
 .portal__rail-help {
   margin-top: auto; display: flex; align-items: center; gap: 11px;
@@ -204,15 +209,16 @@
 .desk-cart__title { display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-base); font-weight: var(--fw-semibold); }
 .desk-cart__title svg { color: var(--prodet-blue); }
 .desk-cart__list { list-style: none; margin: 0; padding: 6px 10px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; }
-.desk-cart__row { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; grid-template-areas: 'thumb info remove' 'qty qty qty'; align-items: center; gap: 6px 10px; padding: 10px 8px; border-bottom: 1px solid var(--border-default); animation: desk-row-in var(--dur-base) var(--ease-out) both; }
+.desk-cart__row { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto auto; grid-template-areas: 'thumb info qty remove'; align-items: center; gap: 8px; padding: 10px 6px; border-bottom: 1px solid var(--border-default); animation: desk-row-in var(--dur-base) var(--ease-out) both; }
 .desk-cart__row:last-child { border-bottom: none; }
-.desk-cart__thumb { grid-area: thumb; width: 40px; height: 40px; border-radius: var(--radius-button); background: var(--surface-sunken); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: var(--text-2xs); font-weight: var(--fw-semibold); color: var(--text-tertiary); }
+.desk-cart__thumb { grid-area: thumb; width: 36px; height: 36px; border-radius: var(--radius-button); background: var(--surface-sunken); display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: var(--text-2xs); font-weight: var(--fw-semibold); color: var(--text-tertiary); }
 .desk-cart__thumb img { width: 100%; height: 100%; object-fit: contain; }
 .desk-cart__info { grid-area: info; min-width: 0; }
-.desk-cart__info strong { display: block; font-size: var(--text-sm); font-weight: var(--fw-semibold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desk-cart__info strong { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: var(--text-sm); font-weight: var(--fw-semibold); line-height: 1.3; overflow-wrap: anywhere; }
 .desk-cart__info span { font-size: var(--text-2xs); color: var(--text-tertiary); }
 .desk-cart__qty { grid-area: qty; }
-.desk-cart__remove { grid-area: remove; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: none; background: none; color: var(--text-tertiary); border-radius: var(--radius-button); cursor: pointer; transition: color var(--dur-base) var(--ease-out), background var(--dur-base) var(--ease-out); }
+.desk-cart__remove-cell { grid-area: remove; }
+.desk-cart__remove { grid-area: remove; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border: none; background: none; color: var(--text-tertiary); border-radius: var(--radius-button); cursor: pointer; transition: color var(--dur-base) var(--ease-out), background var(--dur-base) var(--ease-out); }
 .desk-cart__remove:hover { color: var(--color-danger); background: var(--surface-sunken); }
 .desk-cart__empty { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding: 40px 22px; color: var(--text-tertiary); }
 .desk-cart__empty-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--surface-sunken); display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
@@ -250,6 +256,10 @@
 }
 @media (max-width: 420px) {
   .desk__products { grid-template-columns: 1fr; }
+  /* Below ~420px the thumbnail is the least useful column — drop it so the
+     name + stepper + remove still fit on one line. */
+  .desk-cart__row { grid-template-columns: minmax(0, 1fr) auto auto; grid-template-areas: 'info qty remove'; gap: 8px; }
+  .desk-cart__thumb { display: none; }
   .desk-bar { flex-wrap: wrap; }
   .desk-bar__actions { flex: 1 1 100%; }
   .desk-bar__actions .pds-btn { flex: 1 1 0; }
@@ -293,6 +303,10 @@
 /* topbar avatar shortcut */
 .portal__avatar--topbar { width: 40px; height: 40px; font-size: var(--text-xs); border: 1px solid var(--border-default); transition: box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out); }
 .portal__avatar--topbar:hover { border-color: var(--prodet-blue); box-shadow: var(--shadow-sm); color: #fff; }
+/* The topbar avatar is an <a>; the global a colour makes its initials match the
+   blue background and disappear until hover. Force white above the global rule. */
+.portal__topbar-actions a.portal__avatar--topbar,
+.portal__topbar-actions a.portal__avatar--topbar:hover { color: #fff; }
 
 /* ---------- reorder: search results ---------- */
 .reorder-results { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -329,11 +343,12 @@
   background: var(--prodet-green-tint); color: var(--prodet-green);
 }
 .reorder-success__ref {
-  display: inline-flex; align-items: center; gap: 6px; margin-top: 12px;
-  padding: 6px 12px; border-radius: var(--radius-pill);
-  background: var(--prodet-green-tint); color: var(--prodet-green);
-  font-size: var(--text-sm); font-weight: var(--fw-semibold);
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+  font-size: var(--text-sm); font-weight: var(--fw-medium);
+  color: var(--text-secondary); font-variant-numeric: tabular-nums;
 }
+.reorder-success__ref svg { color: var(--prodet-green); }
+.reorder-success__ref span { letter-spacing: 0.02em; }
 @keyframes reorder-count-pulse {
   0% { transform: scale(1); }
   35% { transform: scale(1.08); }
@@ -424,6 +439,12 @@
 .fin-hero__meta { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
 .fin-hero__count { font-size: var(--text-sm); color: var(--text-on-dark-soft); }
 .fin-hero__link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; font-size: var(--text-sm); font-weight: var(--fw-semibold); color: #fff; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.22); border-radius: var(--radius-button); padding: 8px 14px; transition: background var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); }
+/* Keep it white on the navy hero — the global `a:not(.pds-btn)` rule in
+   tokens.css is more specific than a bare class, so it would tint the label
+   link-blue and make it vanish against the card. */
+a.fin-hero__link,
+a.fin-hero__link:hover,
+a.fin-hero__link:focus-visible { color: #fff; }
 .fin-hero__link:hover { background: rgba(255, 255, 255, 0.22); transform: translateY(-1px); }
 .fin-hero__chart { position: relative; z-index: 1; min-width: 0; }
 

@@ -104,7 +104,7 @@
     "successTitle": "تم طلب عرض السعر",
     "successTitleOrder": "تم إرسال الطلبية",
     "successTitleDevis": "تم طلب عرض السعر",
-    "successBody": "{count, plural, one {مرجع واحد} other {# مراجع}} · {units} وحدة. سيتولى فريقنا معالجته والرد عليكم قريباً.",
+    "successBody": "يتولى فريقنا معالجتها ويعود إليكم قريباً.",
     "backToDashboard": "العودة إلى لوحة القيادة",
     "editRequest": "تعديل الطلب",
     "searchSub": "{count} منتجاً متاحاً للطلب.",
