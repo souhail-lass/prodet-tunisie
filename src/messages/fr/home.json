@@ -1,17 +1,18 @@
 {
   "hero": {
     "eyebrow": "Fabriqué en Tunisie",
-    "title": "L’hygiène professionnelle, livrée à votre établissement.",
+    "title": "Tout ce que votre établissement consomme pour rester propre — chez un seul fournisseur.",
     "subtitle": "Détergents, désinfectants et accessoires pour hôtels, restaurants, sociétés de nettoyage, grossistes et institutions. Livraison Grand Tunis.",
     "primaryCta": "Devis",
     "secondaryCta": "Voir le catalogue",
-    "sub": "Détergents, désinfectants et consommables pour hôtels, restaurants, cafés et collectivités. Un catalogue complet, un devis sous 24 heures.",
+    "sub": "Nous fabriquons nos détergents et désinfectants dans notre usine en Tunisie. Et nous fournissons tout le reste : sacs, serpillères, gants, papier, distributeurs. Un seul bon de commande, une seule livraison, une seule facture.",
     "ctaQuote": "Demander un devis",
     "ctaCatalogue": "Voir le catalogue",
     "metaReferences": "références",
     "metaServices": "services dédiés",
     "metaExperience": "ans d’expérience",
     "madeBadge": "Fabriqué par Prodet",
+    "suppliedLabel": "Et tout le reste, fourni",
     "packTitle": "SIRAFAN",
     "packSub": "Désinfectant toutes surfaces, sans rinçage · biodégradable > 90%"
   },

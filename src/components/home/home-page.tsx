@@ -23,6 +23,15 @@ const TRUST = [
   { key: 'quote', icon: FileText },
 ] as const;
 
+/** Interim hero "range" — a Prodet formula + real consommables we source.
+ * Says the positioning visually: fabricant + fournisseur. Swap for one shot photo later. */
+const HERO_SUPPLIED = [
+  { src: '/images/products/resell/sac-poubelle-mm-noir.jpg', label: 'Sacs poubelle' },
+  { src: '/images/products/resell/lavette-microfibre.png', label: 'Lavettes microfibre' },
+  { src: '/images/products/resell/gant-latex.jpg', label: 'Gants' },
+  { src: '/images/products/resell/papier-hygienique-lilas-48.jpg', label: 'Papier hygiénique' },
+] as const;
+
 export function HomePage({
   showcase,
   sectors,
@@ -51,7 +60,7 @@ export function HomePage({
               <Button variant="primary" size="xl" onClick={openQuote} iconRight={<ArrowRight size={18} />}>
                 {t('hero.ctaQuote')}
               </Button>
-              <Button variant="dark" size="xl" onClick={() => router.push('/catalogue')}>
+              <Button variant="dark" size="xl" onClick={() => router.push('/produits/produits-nettoyage')}>
                 {t('hero.ctaCatalogue')}
               </Button>
             </div>
@@ -70,24 +79,33 @@ export function HomePage({
             </div>
           </div>
           <div className="hero__visual">
-            <div className="hero__packshot">
-              <span className="hero__made">
-                <Check size={13} /> {t('hero.madeBadge')}
-              </span>
-              {/* LCP element — priority + optimized AVIF/WebP at display size (kit CSS sizes it to 320px). */}
-              <Image
-                src="/images/products/sirafan.png"
-                alt="SIRAFAN"
-                width={340}
-                height={320}
-                priority
-                sizes="340px"
-                style={{ height: '320px', width: 'auto' }}
-              />
-            </div>
-            <div className="hero__visual-card">
-              <strong>{t('hero.packTitle')}</strong>
-              <span>{t('hero.packSub')}</span>
+            <div className="hero__range">
+              <div className="hero__range-made">
+                <span className="hero__made">
+                  <Check size={13} /> {t('hero.madeBadge')}
+                </span>
+                {/* LCP element — the Prodet formula (what we fabricate). */}
+                <Image
+                  src="/images/products/sirafan.png"
+                  alt="Désinfectant fabriqué par Prodet"
+                  width={240}
+                  height={220}
+                  priority
+                  sizes="240px"
+                  style={{ height: '220px', width: 'auto' }}
+                />
+              </div>
+              <div className="hero__range-supplied">
+                <span className="hero__range-label">{t('hero.suppliedLabel')}</span>
+                <div className="hero__range-items">
+                  {HERO_SUPPLIED.map((item) => (
+                    <span className="hero__range-item" key={item.src} title={item.label}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={item.src} alt={item.label} loading="eager" />
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -191,7 +209,7 @@ export function HomePage({
             <span className="eyebrow">{t('featured.eyebrow')}</span>
             <h2 className="section-title">{t('featured.title')}</h2>
           </div>
-          <Button variant="outline" onClick={() => router.push('/catalogue')} iconRight={<ArrowRight size={16} />}>
+          <Button variant="outline" onClick={() => router.push('/produits/produits-nettoyage')} iconRight={<ArrowRight size={16} />}>
             {t('featured.cta')}
           </Button>
         </div>

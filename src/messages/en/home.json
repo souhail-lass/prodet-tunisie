@@ -1,17 +1,18 @@
 {
   "hero": {
     "eyebrow": "Made in Tunisia",
-    "title": "Professional hygiene, delivered to your business.",
+    "title": "Everything your business uses to stay clean — from a single supplier.",
     "subtitle": "Detergents, disinfectants and accessories for hotels, restaurants, cleaning companies, wholesalers and institutions. Greater Tunis delivery.",
     "primaryCta": "Request a quote",
     "secondaryCta": "View catalog",
-    "sub": "Detergents, disinfectants and consumables for hotels, restaurants, cafés and communities. A complete catalogue, a quote within 24 hours.",
+    "sub": "We manufacture our own detergents and disinfectants at our plant in Tunisia. And we supply everything else: bags, mops, gloves, paper, dispensers. One purchase order, one delivery, one invoice.",
     "ctaQuote": "Request a quote",
     "ctaCatalogue": "View the catalogue",
     "metaReferences": "references",
     "metaServices": "dedicated services",
     "metaExperience": "years of experience",
     "madeBadge": "Made by Prodet",
+    "suppliedLabel": "And everything else, supplied",
     "packTitle": "SIRAFAN",
     "packSub": "All-surface disinfectant, no rinsing · biodegradable > 90%"
   },

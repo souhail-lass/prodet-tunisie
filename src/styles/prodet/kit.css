@@ -34,7 +34,7 @@
 .hero { background: var(--surface-navy); color: var(--text-on-dark); position: relative; overflow: hidden; }
 .hero__inner { max-width: var(--container-max); margin: 0 auto; padding: 72px 32px 80px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
 .hero__eyebrow { display: inline-flex; align-items: center; gap: 7px; font-size: var(--text-2xs); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--prodet-sky); background: rgba(65,170,226,0.12); border: 1px solid rgba(65,170,226,0.28); padding: 6px 12px; border-radius: var(--radius-pill); }
-.hero__title { font-size: clamp(2.4rem, 4vw, 3.2rem); font-weight: var(--fw-bold); letter-spacing: var(--tracking-display); line-height: 1.05; color: #fff; margin-top: 22px; max-width: 16ch; }
+.hero__title { font-size: clamp(2.1rem, 3.4vw, 2.9rem); font-weight: var(--fw-bold); letter-spacing: var(--tracking-display); line-height: 1.1; color: #fff; margin-top: 22px; max-width: 22ch; }
 .hero__sub { font-size: var(--text-lg); color: var(--text-on-dark-soft); margin-top: 20px; max-width: 46ch; line-height: var(--leading-relaxed); }
 .hero__cta { display: flex; gap: 12px; margin-top: 32px; }
 .hero__meta { display: flex; align-items: center; gap: 18px; margin-top: 38px; color: var(--text-on-dark-soft); font-size: var(--text-sm); }
@@ -48,6 +48,16 @@
 .hero__visual-card { background: var(--surface-navy-soft); border: 1px solid var(--border-on-dark); border-radius: var(--radius-card); padding: 14px 18px; margin-top: -14px; width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 3px; position: relative; }
 .hero__visual-card strong { color: #fff; font-size: var(--text-base); font-weight: var(--fw-semibold); }
 .hero__visual-card span { color: var(--text-on-dark-soft); font-size: var(--text-xs); }
+
+/* Hero "range" — one Prodet formula (fabricated) + real consommables (supplied). */
+.hero__range { position: relative; width: 100%; max-width: 360px; background: var(--surface-card); border-radius: var(--radius-panel); padding: 22px; box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.55); }
+.hero__range-made { position: relative; display: flex; justify-content: center; padding: 6px 0 18px; }
+.hero__range-made img { height: 220px; width: auto; object-fit: contain; }
+.hero__range-supplied { border-top: 1px solid var(--border-default); padding-top: 16px; }
+.hero__range-label { display: block; text-align: center; font-size: var(--text-2xs); font-weight: var(--fw-semibold); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--text-tertiary); margin-bottom: 12px; }
+.hero__range-items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.hero__range-item { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; padding: 8px; background: var(--surface-sunken); border-radius: var(--radius-button); }
+.hero__range-item img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
 
 /* ---------- TRUST ---------- */
 .trust { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; padding-top: 40px; padding-bottom: 40px; }
