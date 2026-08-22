@@ -6,6 +6,8 @@
  * best) and add an entry below. Each logo is shown in a uniform white chip,
  * grayscale by default, and colours in on hover.
  */
+import Image from 'next/image';
+
 type Client = { name: string; logo?: string };
 
 const CLIENTS: Client[] = [
@@ -31,8 +33,16 @@ export function ClientWall() {
           return (
             <span className="cwall__logo" key={`${c.name}-${i}`} aria-hidden={dupe} title={c.name}>
               {c.logo ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={c.logo} alt={c.name} loading="lazy" />
+                // Chip content box is 128x60 (176x96 minus 24/18px padding).
+                // object-fit:contain comes from .cwall__logo img.
+                <Image
+                  src={c.logo}
+                  alt={c.name}
+                  width={128}
+                  height={60}
+                  sizes="128px"
+                  loading="lazy"
+                />
               ) : (
                 <span className="cwall__wordmark">{c.name}</span>
               )}
