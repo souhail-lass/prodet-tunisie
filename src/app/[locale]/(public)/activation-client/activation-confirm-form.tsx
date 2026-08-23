@@ -1,7 +1,7 @@
 'use client';
 
-import { useActionState } from 'react';
-import { AlertCircle, ArrowRight, CheckCircle2, KeyRound } from 'lucide-react';
+import { useActionState, useEffect, useRef, type ReactNode } from 'react';
+import { AlertCircle, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/routing';
 import {
@@ -13,17 +13,35 @@ const initialState: AcceptInviteResult = {
   ok: false,
 };
 
+/**
+ * Active l'invitation dès l'arrivée sur la page — un seul clic depuis l'email.
+ *
+ * L'activation reste un POST (server action) auto-déclenché au montage, et non
+ * un effet de bord du GET. C'est délibéré : les antivirus et scanners de liens
+ * des messageries suivent les URL des emails, et consommeraient un jeton à
+ * usage unique avant même que le client ne clique. Ils n'exécutent pas de JS,
+ * donc ce déclenchement côté client les laisse de côté.
+ */
 export function ActivationConfirmForm({
   token,
   locale,
+  fallback,
 }: {
   token: string;
   locale: 'fr' | 'en';
+  /** Bloc « recevoir un lien de connexion », rendu si l'activation échoue. */
+  fallback: ReactNode;
 }) {
   const [state, formAction, isPending] = useActionState(acceptPortalInvite, initialState);
+  const formRef = useRef<HTMLFormElement>(null);
+  const startedRef = useRef(false);
 
-  // Compte activé : on remplace tout par la confirmation. Le client n'a plus
-  // rien à faire ici, la seule action utile est d'entrer dans le portail.
+  useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    formRef.current?.requestSubmit();
+  }, []);
+
   if (state.accepted) {
     return (
       <div className="mt-6 rounded-sm border border-border bg-white p-8 text-center">
@@ -52,18 +70,28 @@ export function ActivationConfirmForm({
 
   return (
     <>
-      <form action={formAction} className="mt-6">
+      {/* Soumis automatiquement au montage ; sans JS, le bouton reste utilisable. */}
+      <form ref={formRef} action={formAction} className="mt-6">
         <input type="hidden" name="token" value={token} />
         <input type="hidden" name="locale" value={locale} />
-        <Button type="submit" variant="navy" size="lg" disabled={isPending}>
-          <KeyRound className="h-4 w-4" aria-hidden />
-          {isPending ? 'Activation...' : 'Confirmer l’activation'}
-        </Button>
+
+        {state.formError ? null : (
+          <p className="flex items-center gap-2 text-sm leading-6 text-muted-foreground">
+            <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
+            Activation de votre accès…
+          </p>
+        )}
+
+        <noscript>
+          <Button type="submit" variant="navy" size="lg">
+            Confirmer l’activation
+          </Button>
+        </noscript>
 
         {state.formError ? (
           <p
             role="alert"
-            className="mt-4 flex items-start gap-2 rounded-sm bg-red-50 px-3 py-2 text-sm leading-6 text-destructive"
+            className="flex items-start gap-2 rounded-sm bg-red-50 px-3 py-2 text-sm leading-6 text-destructive"
           >
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
             {state.formError}
@@ -71,6 +99,9 @@ export function ActivationConfirmForm({
         ) : null}
       </form>
 
+      {/* L'activation a échoué (jeton consommé entre le chargement et l'envoi,
+          ou expiré) : on propose la même issue que la page. */}
+      {state.formError && !isPending ? fallback : null}
     </>
   );
 }

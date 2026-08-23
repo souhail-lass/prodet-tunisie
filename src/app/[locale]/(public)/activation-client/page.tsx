@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { AlertCircle, CheckCircle2, KeyRound, ShieldCheck } from 'lucide-react';
+import { AlertCircle, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { isLocale } from '@/i18n/routing';
 import {
   getPortalInviteActivationState,
@@ -87,22 +87,19 @@ export default async function ClientActivationPage({
             />
           ) : null}
 
+          {/* Jeton valide : l'activation se déclenche seule, sans second clic. */}
           {state.status === 'valid' && token ? (
-            <div className="mt-6 rounded-sm border border-border bg-prodet-wash p-4">
-              <div className="flex items-start gap-3">
-                <KeyRound className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden />
-                <div>
-                  <h2 className="font-display text-xl font-bold text-prodet-text">
-                    Confirmer cette invitation
-                  </h2>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    Cette confirmation active l’identité client Prodet liée à cette invitation.
-                    Vous pourrez ensuite demander un lien magique avec le même email.
-                  </p>
-                  <ActivationConfirmForm token={token} locale={locale} />
-                </div>
-              </div>
-            </div>
+            <ActivationConfirmForm
+              token={token}
+              locale={locale}
+              fallback={
+                <MagicLinkFallback
+                  locale={locale}
+                  title="Recevoir un lien de connexion"
+                  body="Ce lien ne peut plus être utilisé. Si votre accès a déjà été ouvert, saisissez votre email professionnel pour recevoir un lien de connexion."
+                />
+              }
+            />
           ) : null}
         </div>
       </section>
