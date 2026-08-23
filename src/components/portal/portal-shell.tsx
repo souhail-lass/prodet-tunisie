@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import {
   Download,
   FileText,
@@ -10,12 +10,14 @@ import {
   Phone,
   Plus,
   Repeat,
-  Search,
+  LogOut,
+  ShoppingCart,
   Truck,
   type LucideIcon,
 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import { Link, usePathname, useRouter } from '@/i18n/routing';
+import { useLocale, useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/routing';
+import { usePortalCartCount } from '@/lib/portal-cart';
 
 export type PortalShellAccount = {
   name: string;
@@ -60,8 +62,8 @@ const TITLES: { match: (p: string) => boolean; key: string }[] = [
 export function PortalShell({ account, children }: { account: PortalShellAccount; children: ReactNode }) {
   const t = useTranslations('portal');
   const pathname = usePathname();
-  const router = useRouter();
-  const [search, setSearch] = useState('');
+  const locale = useLocale();
+  const cartCount = usePortalCartCount();
   const meta = TITLES.find((x) => x.match(pathname));
   const title = meta ? t(`titles.${meta.key}`) : t('nav.tag');
   const subtitle = meta ? t(`titles.${meta.key}Sub`) : undefined;
@@ -69,14 +71,6 @@ export function PortalShell({ account, children }: { account: PortalShellAccount
   function isActive(href: string, exact?: boolean) {
     if (exact) return pathname === href;
     return pathname === href || pathname.startsWith(`${href}/`);
-  }
-
-  function submitSearch(event: React.FormEvent) {
-    event.preventDefault();
-    const q = search.trim();
-    if (!q) return;
-    router.push(`/client/commander?q=${encodeURIComponent(q)}`);
-    setSearch('');
   }
 
   return (
@@ -121,13 +115,13 @@ export function PortalShell({ account, children }: { account: PortalShellAccount
           </div>
         </div>
 
-        <Link href="/client/compte" className="portal__account">
+        {/* Purement informatif : cliquer n'ouvrait qu'une fiche compte vide. */}
+        <div className="portal__account portal__account--static">
           <span className="portal__avatar">{account.initials}</span>
           <span className="portal__account-info">
             <strong>{account.name}</strong>
-            <span>{account.contact}</span>
           </span>
-        </Link>
+        </div>
       </aside>
 
       <div className="portal__main">
@@ -137,18 +131,30 @@ export function PortalShell({ account, children }: { account: PortalShellAccount
             {subtitle ? <p className="portal__subtitle">{subtitle}</p> : null}
           </div>
           <div className="portal__topbar-actions">
-            <form className="portal__search" onSubmit={submitSearch}>
-              <Search size={16} />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t('nav.search')}
-                aria-label={t('nav.search')}
-              />
-            </form>
-            <Link href="/client/compte" className="portal__avatar portal__avatar--topbar" aria-label={t('titles.account')}>
-              {account.initials}
+            {/* Retour à la commande en cours. La corbeille est conservée entre
+                les pages, donc ce bouton ramène exactement où on en était. */}
+            <Link
+              href="/client/commander"
+              className="portal__cart"
+              aria-label={
+                cartCount > 0
+                  ? `Commande en cours — ${cartCount} référence${cartCount > 1 ? 's' : ''}`
+                  : 'Commander'
+              }
+              title="Commande en cours"
+            >
+              <ShoppingCart size={18} aria-hidden />
+              {cartCount > 0 ? <span className="portal__cart-badge">{cartCount}</span> : null}
             </Link>
+            <a
+              href={`/auth/signout?next=/${locale}/connexion-client`}
+              className="portal__signout"
+              aria-label="Se déconnecter"
+              title="Se déconnecter"
+            >
+              <LogOut size={17} aria-hidden />
+              <span>Déconnexion</span>
+            </a>
           </div>
         </header>
         <div className="portal__content" key={pathname}>

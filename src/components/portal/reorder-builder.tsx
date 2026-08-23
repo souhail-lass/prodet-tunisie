@@ -17,6 +17,12 @@ import { useTranslations } from 'next-intl';
 import { Button, Input, ProductTile, QuantityControl } from '@/components/ds';
 import { Link } from '@/i18n/routing';
 import { submitPortalQuoteAction } from '@/features/client-portal/quote-actions';
+import {
+  clearPortalCart,
+  setPortalCart,
+  usePortalCart,
+  type PortalCart,
+} from '@/lib/portal-cart';
 import type { PortalProductRef } from '@/features/client-portal/mock/portal-mock';
 
 /** Cap the grid so a large catalogue never floods the DOM — search narrows it. */
@@ -41,12 +47,21 @@ export function ReorderBuilder({
   initialQuery?: string;
 }) {
   const t = useTranslations('portal');
-  const [qty, setQty] = useState<Record<string, number>>(initialQty);
-  const [extra, setExtra] = useState<PortalProductRef[]>(initialExtra);
-  // Selection order, newest first — drives the basket order.
-  const [picked, setPicked] = useState<string[]>(() =>
-    Object.keys(initialQty).filter((slug) => (initialQty[slug] ?? 0) > 0),
-  );
+
+  // La corbeille survit à la navigation (localStorage) : sortir vers Factures
+  // puis revenir ne doit plus vider la sélection. Les props initiales ne
+  // servent qu'au tout premier passage, panier vide.
+  const storedCart = usePortalCart();
+  const hasStoredCart =
+    storedCart.picked.length > 0 || Object.values(storedCart.qty).some((n) => n > 0);
+  const qty = hasStoredCart ? storedCart.qty : initialQty;
+  const extra = hasStoredCart ? storedCart.extra : initialExtra;
+  const picked = hasStoredCart
+    ? storedCart.picked
+    : Object.keys(initialQty).filter((slug) => (initialQty[slug] ?? 0) > 0);
+
+  const writeCart = (next: Partial<PortalCart>) =>
+    setPortalCart({ qty, extra, picked, ...next });
   const [query, setQuery] = useState(initialQuery ?? '');
   const [filter, setFilter] = useState<string>(frequent.length ? FREQUENT : ALL);
   const [submitted, setSubmitted] = useState(false);
@@ -96,18 +111,17 @@ export function ReorderBuilder({
   const refsCount = lines.length;
   const countKey = `${refsCount}-${totalUnits}`;
 
-  function setProductQty(slug: string, n: number) {
+  function setProductQty(slug: string, n: number, product?: PortalProductRef) {
     const next = Math.max(0, n);
-    setQty((prev) => ({ ...prev, [slug]: next }));
-    setPicked((prev) => {
-      if (next <= 0) return prev.filter((s) => s !== slug);
-      return prev.includes(slug) ? prev : [slug, ...prev];
-    });
+    const nextPicked =
+      next <= 0 ? picked.filter((s) => s !== slug) : picked.includes(slug) ? picked : [slug, ...picked];
+    const nextExtra =
+      product && !extra.some((p) => p.slug === product.slug) ? [...extra, product] : extra;
+    setPortalCart({ qty: { ...qty, [slug]: next }, extra: nextExtra, picked: nextPicked });
   }
 
   function changeQty(product: PortalProductRef, n: number) {
-    setExtra((prev) => (prev.some((p) => p.slug === product.slug) ? prev : [...prev, product]));
-    setProductQty(product.slug, n);
+    setProductQty(product.slug, n, product);
   }
 
   function pickChip(value: string) {
@@ -135,6 +149,9 @@ export function ReorderBuilder({
         setPushed(Boolean(result.swiverPushed));
         setSubmittedKind(kind);
         setSubmitted(true);
+        // La commande est partie : la corbeille ne doit pas réapparaître
+        // au prochain passage sur la page.
+        clearPortalCart();
       } else {
         setSubmitError(true);
       }
@@ -199,10 +216,7 @@ export function ReorderBuilder({
           <button
             type="button"
             className="ghost-link"
-            onClick={() => {
-              setPicked([]);
-              setQty({});
-            }}
+            onClick={() => writeCart({ qty: {}, picked: [] })}
           >
             {t('reorder.clearAll')}
           </button>

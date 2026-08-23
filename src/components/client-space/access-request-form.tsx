@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertCircle, MailCheck, Send } from 'lucide-react';
+import { AlertCircle, Check, MailCheck, Send } from 'lucide-react';
 import type { FormEvent, ReactNode } from 'react';
 import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -114,20 +114,24 @@ export function AccessRequestForm() {
   // à faire, juste attendre le rappel de l'équipe.
   if (status.type === 'saved') {
     return (
-      <div className="rounded-sm border border-border bg-white p-8 text-center shadow-[0_18px_50px_-44px_rgba(8,41,78,0.45)] md:p-10">
-        <h2 className="font-display text-2xl font-bold leading-tight text-prodet-text">
-          Demande envoyée
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">
-          Merci. Notre équipe vérifie vos informations et vous recontacte sous 24&nbsp;heures
-          ouvrées pour ouvrir votre accès client.
-        </p>
-        <p className="mt-6 text-sm text-muted-foreground">
-          Une question d’ici là ?{' '}
-          <a href={companyInfo.emailHref} className="font-semibold text-primary">
+      <div className="rounded-sm border border-border bg-white px-6 py-14 shadow-[0_18px_50px_-44px_rgba(8,41,78,0.45)] md:px-10 md:py-16">
+        <div className="mx-auto flex max-w-sm flex-col items-center text-center">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-support/10 text-support">
+            <Check className="h-6 w-6" aria-hidden strokeWidth={2.5} />
+          </span>
+          <h2 className="mt-6 font-display text-2xl font-bold leading-tight text-prodet-text">
+            Demande envoyée
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+            Notre équipe vérifie vos informations et vous recontacte sous 24&nbsp;heures ouvrées.
+          </p>
+          <a
+            href={companyInfo.emailHref}
+            className="mt-8 border-t border-border pt-6 text-sm font-semibold text-primary"
+          >
             {companyInfo.email}
           </a>
-        </p>
+        </div>
       </div>
     );
   }
