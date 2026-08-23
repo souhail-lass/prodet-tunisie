@@ -131,7 +131,12 @@ export interface SwiverDocumentPort {
   updateDocument(
     swiverId: string,
     input: {
-      contactSwiverId: string | number;
+      /**
+       * Swiver contact to attach. Omit to leave the draft's client empty —
+       * used by the public devis push, where the requester is a prospect with
+       * no Swiver contact yet and an operator creates one by hand.
+       */
+      contactSwiverId?: string | number | null;
       lines: SwiverOrderLineInput[];
       version?: number;
       warehouseId?: number | null;

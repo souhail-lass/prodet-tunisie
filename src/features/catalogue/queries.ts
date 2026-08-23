@@ -252,3 +252,24 @@ export async function getOrderableCatalogue(): Promise<OrderableProduct[]> {
       categoryLabel: r.baseCategory ?? null,
     }));
 }
+
+/**
+ * Map catalogue product ids to their Swiver ids + unit price, for the public
+ * devis push. Products created in the admin (source='local') have no Swiver
+ * id and are simply absent from the map — the caller pushes what it can and
+ * lists the rest in the notification email.
+ */
+export async function getSwiverLinesForProductIds(
+  ids: string[],
+): Promise<Map<string, { swiverId: string; unitPrice: number | null }>> {
+  const wanted = new Set(ids);
+  const out = new Map<string, { swiverId: string; unitPrice: number | null }>();
+  for (const row of await getCachedCatalogueRows()) {
+    if (!row.swiverId || !wanted.has(row.id)) continue;
+    out.set(row.id, {
+      swiverId: row.swiverId,
+      unitPrice: row.unitPrice != null ? Number(row.unitPrice) : null,
+    });
+  }
+  return out;
+}

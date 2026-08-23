@@ -1,10 +1,16 @@
 'use server';
 
+import { after } from 'next/server';
 import { z } from 'zod';
-import { companyInfo } from '@/data/company';
 import { generateReferenceCode } from '@/lib/reference-code';
 import { consumeRateLimit, formatRetryAfterFr } from '@/lib/rate-limit';
+import { publicInboxEmail } from '@/lib/email';
+import { getSwiverAdapter } from '@/integrations/swiver';
+import { getSwiverLinesForProductIds } from '@/features/catalogue/queries';
 import { QuoteRequestSchema, type QuoteRequestInput } from './schema';
+
+/** Swiver numeric document type for a quote. 4 = sale order, 6 = devis. */
+const SWIVER_DEVIS_TYPE = 6;
 
 export interface QuoteSubmitResult {
   ok: boolean;
@@ -144,6 +150,12 @@ export async function submitPublicDevisRequest(
     deliveryStatus: delivery.ok ? 'sent' : delivery.error,
     receivedAt: new Date().toISOString(),
   });
+
+  // Mirror the request into Swiver as a draft devis, client left empty for an
+  // operator to attach. Runs after the response: a slow or down ERP must never
+  // delay (or fail) a visitor's form submit, and the email above already
+  // carries everything needed to key the devis in by hand.
+  after(() => pushPublicDevisToSwiver(referenceCode, parsed.data));
 
   if (!delivery.ok) {
     return {
@@ -287,7 +299,7 @@ async function sendOperatorEmail({
     process.env.QUOTE_EMAIL_FROM?.trim() ||
     process.env.RESEND_FROM_EMAIL?.trim() ||
     'Prodet Website <onboarding@resend.dev>';
-  const to = process.env.QUOTE_NOTIFICATION_EMAIL?.trim() || companyInfo.email;
+  const to = publicInboxEmail();
 
   try {
     const response = await fetch('https://api.resend.com/emails', {
@@ -347,4 +359,88 @@ function escapeHtml(value: string): string {
     .replace(/>/gu, '&gt;')
     .replace(/"/gu, '&quot;')
     .replace(/'/gu, '&#39;');
+}
+
+/**
+ * Create a draft devis in Swiver from a public request.
+ *
+ * The requester is a prospect, not a Swiver contact, so the document's client
+ * is deliberately left empty — Prodet creates the customer by hand and
+ * attaches it. Only lines whose catalogue product carries a `swiver_id` can be
+ * pushed; anything else stays in the notification email only.
+ *
+ * Best-effort throughout: every failure is logged and swallowed. On a partial
+ * failure the empty draft is cancelled so it does not clutter Swiver.
+ */
+async function pushPublicDevisToSwiver(
+  referenceCode: string,
+  input: z.output<typeof PublicDevisRequestSchema>,
+): Promise<void> {
+  try {
+    const swiver = getSwiverAdapter();
+    if (swiver.mode === 'disabled') return;
+
+    const bySwiver = await getSwiverLinesForProductIds(input.lines.map((l) => l.productId));
+    const lines = input.lines.flatMap((line) => {
+      const match = bySwiver.get(line.productId);
+      if (!match) return [];
+      return [
+        {
+          productSwiverId: match.swiverId,
+          quantity: line.quantity,
+          unitPrice: match.unitPrice,
+          label: line.format ? `${line.productName} — ${line.format}` : line.productName,
+        },
+      ];
+    });
+
+    if (lines.length === 0) {
+      console.warn('[public-devis:swiver-skipped]', {
+        referenceCode,
+        reason: 'no-line-has-swiver-id',
+        lineCount: input.lines.length,
+      });
+      return;
+    }
+
+    const created = await swiver.documents.createDraftDocument(SWIVER_DEVIS_TYPE);
+    if (!created) {
+      console.error('[public-devis:swiver-create-failed]', { referenceCode });
+      return;
+    }
+
+    const ok = await swiver.documents.updateDocument(created.swiverId, {
+      // No contact on purpose — operator attaches the client manually.
+      version: created.version,
+      warehouseId: created.warehouseId,
+      type: SWIVER_DEVIS_TYPE,
+      lines,
+    });
+
+    if (!ok) {
+      console.error('[public-devis:swiver-update-failed]', {
+        referenceCode,
+        swiverId: created.swiverId,
+      });
+      try {
+        await swiver.documents.setDocumentState(created.swiverId, 'to_canceled');
+      } catch {
+        // Nothing more to do — the notification email is the fallback.
+      }
+      return;
+    }
+
+    console.info('[public-devis:swiver-pushed]', {
+      referenceCode,
+      swiverId: created.swiverId,
+      pushedLines: lines.length,
+      totalLines: input.lines.length,
+    });
+  } catch (error) {
+    console.error(
+      '[public-devis:swiver-error]',
+      referenceCode,
+      error instanceof Error ? error.message : error,
+    );
+  }
 }

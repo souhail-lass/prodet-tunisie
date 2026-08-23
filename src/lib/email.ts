@@ -10,12 +10,31 @@ function fromAddress(): string {
   );
 }
 
+/**
+ * The Prodet inbox that public-site submissions must always reach.
+ *
+ * contact@prodet.com.tn forwards here via ImprovMX, but this is the address
+ * the team actually reads, so it is the built-in default: a public contact
+ * message or devis is never silently dropped just because an env var is
+ * unset in some environment.
+ */
+export const PRODET_INBOX = 'prodet.tunisie@gmail.com';
+
 /** Internal Prodet inbox for portal notifications (orders, support). */
 export function prodetNotificationEmail(): string | null {
   return (
     process.env.QUOTE_NOTIFICATION_EMAIL?.trim() ||
     process.env.PRODET_NOTIFICATION_EMAIL?.trim() ||
     null
+  );
+}
+
+/** Where public-site form submissions (contact form, public devis) land. */
+export function publicInboxEmail(): string {
+  return (
+    process.env.CONTACT_NOTIFICATION_EMAIL?.trim() ||
+    process.env.QUOTE_NOTIFICATION_EMAIL?.trim() ||
+    PRODET_INBOX
   );
 }
 

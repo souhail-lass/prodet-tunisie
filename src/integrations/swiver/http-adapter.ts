@@ -588,7 +588,7 @@ class HttpDocumentPort implements SwiverDocumentPort {
   async updateDocument(
     swiverId: string,
     input: {
-      contactSwiverId: string | number;
+      contactSwiverId?: string | number | null;
       lines: SwiverOrderLineInput[];
       version?: number;
       warehouseId?: number | null;
@@ -653,7 +653,11 @@ class HttpDocumentPort implements SwiverDocumentPort {
         type: String(input.type ?? 4),
         version,
         warehouse: warehouseId ?? undefined,
-        contact: Number(input.contactSwiverId),
+        // Omitted entirely when absent — the draft keeps the empty client it
+        // was created with, rather than being sent contact: NaN.
+        ...(input.contactSwiverId != null
+          ? { contact: Number(input.contactSwiverId) }
+          : {}),
         document_lines: lines,
       };
 
