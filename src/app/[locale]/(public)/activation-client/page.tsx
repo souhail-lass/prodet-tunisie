@@ -10,6 +10,7 @@ import {
 } from '@/features/client-access/activation-actions';
 import { normalizeInviteToken } from '@/features/client-access/invite-token';
 import { ActivationConfirmForm } from './activation-confirm-form';
+import { MagicLinkFallback } from './magic-link-fallback';
 
 export const dynamic = 'force-dynamic';
 
@@ -67,6 +68,24 @@ export default async function ClientActivationPage({
               </p>
             </div>
           </div>
+
+          {/* Lien mort (expiré, déjà utilisé, invalide) : au lieu d'une impasse,
+              le client redemande lui-même un lien de connexion. */}
+          {state.status !== 'valid' ? (
+            <MagicLinkFallback
+              locale={locale}
+              title={
+                state.status === 'accepted'
+                  ? 'Votre compte est déjà activé'
+                  : 'Recevoir un lien de connexion'
+              }
+              body={
+                state.status === 'accepted'
+                  ? 'Saisissez votre email professionnel pour recevoir un lien de connexion à votre espace client.'
+                  : 'Ce lien ne peut plus être utilisé. Si votre accès a déjà été ouvert, saisissez votre email professionnel pour recevoir un lien de connexion.'
+              }
+            />
+          ) : null}
 
           {state.status === 'valid' && token ? (
             <div className="mt-6 rounded-sm border border-border bg-prodet-wash p-4">

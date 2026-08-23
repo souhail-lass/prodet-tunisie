@@ -93,6 +93,7 @@ export type SwiverCustomerInput = {
   /** Matricule fiscal (champ `registration`). */
   registration?: string | null;
   address?: string | null;
+  postalCode?: string | null;
 };
 
 export interface SwiverCustomerPort {

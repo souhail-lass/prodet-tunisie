@@ -422,14 +422,43 @@ class HttpCustomerPort implements SwiverCustomerPort {
       if (input.email) body.email = input.email;
       if (input.phone) body.phone1 = input.phone;
       if (input.registration) body.registration = input.registration;
+      // `address` est un OBJET imbriqué, pas une chaîne — envoyer une chaîne
+      // fait échouer toute la validation en 400. Vérifié sur le tenant.
       if (input.address) {
-        body.contactAddress = [{ address: input.address, isDefault: true, type: 0 }];
+        body.contactAddress = [
+          {
+            type: 0,
+            isDefault: true,
+            address: { address: input.address, zipCode: input.postalCode ?? null },
+          },
+        ];
       }
 
-      const res = await this.transport.fetchJson<{ id?: number | string; reference?: string }>(
-        '/open_api/customers/new',
-        { method: 'POST', body },
-      );
+      const post = (payload: Record<string, unknown>) =>
+        this.transport.fetchJson<{ id?: number | string; reference?: string }>(
+          '/open_api/customers/new',
+          { method: 'POST', body: payload },
+        );
+
+      let res: { id?: number | string; reference?: string } | null = null;
+      try {
+        res = await post(body);
+      } catch (error) {
+        // L'adresse est un confort, le client est l'essentiel : si Swiver
+        // rejette la charge utile, on retente sans elle plutôt que de laisser
+        // un client validé sans fiche ERP.
+        if (body.contactAddress) {
+          console.warn(
+            '[swiver] createCustomer: retry sans adresse',
+            error instanceof Error ? error.message : error,
+          );
+          const { contactAddress: _dropped, ...withoutAddress } = body;
+          res = await post(withoutAddress);
+        } else {
+          throw error;
+        }
+      }
+
       if (res?.id == null) return null;
       return { swiverId: String(res.id), reference: res.reference ?? null };
     } catch (error) {
