@@ -5,6 +5,7 @@ import {
   SwiverNotConfiguredError,
   type SwiverAdapter,
   type SwiverCustomer,
+  type SwiverCustomerInput,
   type SwiverCustomerPort,
   type SwiverDocumentKind,
   type SwiverDocumentPort,
@@ -405,6 +406,40 @@ const SWIVER_KIND_TO_TYPE: Partial<Record<SwiverDocumentKind, number>> = {
 
 class HttpCustomerPort implements SwiverCustomerPort {
   constructor(private readonly transport: HttpTransport) {}
+
+  // POST /open_api/customers/new — champs en camelCase (voir types.ts).
+  async createCustomer(
+    input: SwiverCustomerInput,
+  ): Promise<{ swiverId: string; reference: string | null } | null> {
+    try {
+      const body: Record<string, unknown> = {
+        name: input.companyName,
+        companyName: input.companyName,
+        // 1 = personne morale, aligné sur les clients existants du tenant.
+        type: 1,
+        enabled: true,
+      };
+      if (input.email) body.email = input.email;
+      if (input.phone) body.phone1 = input.phone;
+      if (input.registration) body.registration = input.registration;
+      if (input.address) {
+        body.contactAddress = [{ address: input.address, isDefault: true, type: 0 }];
+      }
+
+      const res = await this.transport.fetchJson<{ id?: number | string; reference?: string }>(
+        '/open_api/customers/new',
+        { method: 'POST', body },
+      );
+      if (res?.id == null) return null;
+      return { swiverId: String(res.id), reference: res.reference ?? null };
+    } catch (error) {
+      console.error(
+        '[swiver] createCustomer failed',
+        error instanceof Error ? error.message : error,
+      );
+      return null;
+    }
+  }
 
   async listCustomers(params: { updatedSince?: Date }): Promise<SwiverCustomer[]> {
     // Pagination: walk the documented offset/limit loop until rows are

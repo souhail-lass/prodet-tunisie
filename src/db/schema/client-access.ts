@@ -29,6 +29,8 @@ export const clientAccessRequest = pgTable(
       .default(sql`now()`),
     reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
     reviewerNote: text('reviewer_note'),
+    /** Client Swiver créé à l'approbation — rattaché au customer à l'activation. */
+    swiverCustomerId: text('swiver_customer_id'),
   },
   (t) => ({
     statusCreatedIdx: index('client_access_request_status_created_idx').on(

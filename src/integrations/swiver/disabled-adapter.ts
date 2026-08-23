@@ -17,6 +17,10 @@ import {
  * write methods will throw `SwiverNotConfiguredError`.
  */
 class DisabledCustomerPort implements SwiverCustomerPort {
+  async createCustomer(): Promise<null> {
+    return null;
+  }
+
   async listCustomers(): Promise<SwiverCustomer[]> {
     return [];
   }

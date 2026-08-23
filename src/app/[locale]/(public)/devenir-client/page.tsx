@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   MailCheck,
   PhoneCall,
-  ShieldCheck,
 } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, isLocale } from '@/i18n/routing';
@@ -49,10 +48,7 @@ export default async function DevenirClientPage({ params }: { params: Promise<{ 
           {/* LEFT — the procedure. Sticky on desktop so it stays in view while
               the form (right) scrolls. Vertical timeline = the enhanced schema. */}
           <aside className="lg:sticky lg:top-24">
-            <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-prodet-ink text-white">
-              <ShieldCheck className="h-5 w-5" aria-hidden />
-            </span>
-            <p className="eyebrow-label mt-5">{t('controlled.title')}</p>
+            <p className="eyebrow-label">{t('controlled.title')}</p>
             <h1 className="mt-2 font-display text-[28px] font-bold leading-tight text-prodet-text">
               {t('title')}
             </h1>

@@ -84,9 +84,31 @@ export type SwiverDocumentSummary = {
 /**
  * Read-only customer port. Stage 2 candidate.
  */
+/** Champs acceptés par la création client Swiver (POST /open_api/customers/new). */
+export type SwiverCustomerInput = {
+  /** Raison sociale — sert de `name` ET de `companyName` côté Swiver. */
+  companyName: string;
+  email?: string | null;
+  phone?: string | null;
+  /** Matricule fiscal (champ `registration`). */
+  registration?: string | null;
+  address?: string | null;
+};
+
 export interface SwiverCustomerPort {
   listCustomers(params: { updatedSince?: Date }): Promise<SwiverCustomer[]>;
   getCustomer(swiverId: string): Promise<SwiverCustomer | null>;
+  /**
+   * POST /open_api/customers/new — crée un client actif et renvoie son id.
+   *
+   * Attention : le POST attend des champs en **camelCase** (`companyName`,
+   * `contactAddress`), alors que la lecture renvoie du snake_case
+   * (`company_name`, `contact_address`). Vérifié en direct sur le tenant :
+   * `/open_api/customers/` n'accepte que GET, c'est bien `/new` qui crée.
+   * Renvoie null en cas d'échec — la création ne doit jamais bloquer
+   * l'ouverture d'un accès portail.
+   */
+  createCustomer(input: SwiverCustomerInput): Promise<{ swiverId: string; reference: string | null } | null>;
 }
 
 /**

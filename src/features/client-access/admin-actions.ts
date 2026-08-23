@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { resolveAuthOrigin } from '@/lib/site-origin';
+import { getSwiverAdapter } from '@/integrations/swiver';
 import { companyInfo } from '@/data/company';
 import {
   isAdminAuthUnavailableError,
@@ -110,6 +111,34 @@ export async function decideAccessRequest(
   }
 
   // ---------- ACCEPTATION ----------
+  // 1) Créer le client dans Swiver, avec les coordonnées de la demande.
+  //    Best-effort : si Swiver refuse ou est injoignable, on ouvre quand même
+  //    l'accès portail — l'ERP se rattrape à la main, l'inverse bloquerait un
+  //    client validé derrière une panne d'intégration.
+  let swiverCustomerId = request.swiverCustomerId;
+  if (!swiverCustomerId) {
+    const swiver = getSwiverAdapter();
+    if (swiver.mode !== 'disabled') {
+      const created = await swiver.customers.createCustomer({
+        companyName: request.companyName,
+        email: request.email,
+        phone: request.phone,
+        registration: extractRegistration(request.message),
+        address: extractAddress(request.message),
+      });
+      if (created) {
+        swiverCustomerId = created.swiverId;
+        console.info('[access-request:swiver-customer-created]', {
+          requestId: request.id,
+          swiverId: created.swiverId,
+          reference: created.reference,
+        });
+      } else {
+        console.error('[access-request:swiver-customer-failed]', { requestId: request.id });
+      }
+    }
+  }
+
   const rawToken = generateInviteToken();
   const tokenHash = hashInviteToken(rawToken);
   const expiresAt = getInviteExpiresAt(now);
@@ -118,7 +147,7 @@ export async function decideAccessRequest(
   const invite = await db.transaction(async (tx) => {
     await tx
       .update(schema.clientAccessRequest)
-      .set({ status: 'approved', reviewedAt: now, updatedAt: now })
+      .set({ status: 'approved', reviewedAt: now, updatedAt: now, swiverCustomerId })
       .where(eq(schema.clientAccessRequest.id, request.id));
 
     const [row] = await tx
@@ -151,7 +180,7 @@ export async function decideAccessRequest(
       entityType: 'client_access_request',
       entityId: request.id,
       diff: { before: { status: request.status }, after: { status: 'approved' } },
-      metadata: { inviteId: row?.id ?? null, locale: parsed.data.locale },
+      metadata: { inviteId: row?.id ?? null, locale: parsed.data.locale, swiverCustomerId },
     });
 
     return row ?? null;
@@ -182,7 +211,9 @@ export async function decideAccessRequest(
     emailDelivery,
     message:
       emailDelivery === 'sent'
-        ? `Accès accordé — invitation envoyée à ${invite.email}.`
+        ? `Accès accordé — invitation envoyée à ${invite.email}.${
+            swiverCustomerId ? ' Client créé dans Swiver.' : ' Client Swiver NON créé — à créer à la main.'
+          }`
         : `Accès accordé, mais l'email n'est pas parti. Transmettez le lien ci-dessous.`,
     // Le lien n'est révélé que si l'email a échoué : sinon il n'a rien à faire
     // dans une réponse HTTP, c'est un secret à usage unique.
@@ -286,4 +317,24 @@ function escapeHtml(value: string): string {
     .replace(/>/gu, '&gt;')
     .replace(/"/gu, '&quot;')
     .replace(/'/gu, '&#39;');
+}
+
+/**
+ * Le formulaire public range le matricule fiscal et l'adresse dans un bloc
+ * structuré au début de `message` (voir client-access/actions.ts) faute de
+ * colonnes dédiées. On les ré-extrait ici pour alimenter Swiver.
+ */
+function extractRegistration(message: string | null): string | null {
+  return matchLine(message, /Matricule fiscal\s*:\s*(.+)/i);
+}
+
+function extractAddress(message: string | null): string | null {
+  return matchLine(message, /Adresse\s*:\s*(.+)/i);
+}
+
+function matchLine(message: string | null, pattern: RegExp): string | null {
+  if (!message) return null;
+  const found = message.match(pattern);
+  const value = found?.[1]?.trim();
+  return value ? value : null;
 }

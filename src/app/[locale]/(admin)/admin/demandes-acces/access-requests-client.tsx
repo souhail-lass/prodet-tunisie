@@ -224,7 +224,7 @@ function RequestCard({
         message={
           confirming === 'reject'
             ? `La demande de ${r.company} sera refusée. Aucun accès ne sera créé.`
-            : `${r.company} recevra immédiatement un email d’activation à ${r.email}. Pensez à créer le client dans Swiver — l’API ne permet pas de le faire automatiquement.`
+            : `${r.company} sera créé comme client dans Swiver, puis recevra un email d’activation à ${r.email} (lien valable 7 jours).`
         }
         confirmLabel={confirming === 'reject' ? 'Refuser' : 'Accepter'}
         cancelLabel="Retour"

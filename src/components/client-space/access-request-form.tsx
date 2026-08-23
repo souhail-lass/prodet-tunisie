@@ -18,6 +18,7 @@ import { sectors } from '@/data/sectors';
 import { submitClientAccessRequest } from '@/features/client-access/actions';
 import { cn } from '@/lib/utils';
 import { HoneypotField } from '@/components/site/honeypot-field';
+import { companyInfo } from '@/data/company';
 
 type AccessRequestFormState = {
   fullName: string;
@@ -27,10 +28,6 @@ type AccessRequestFormState = {
   phone: string;
   email: string;
   address: string;
-  city: string;
-  postalCode: string;
-  clientReference: string;
-  needType: string;
   message: string;
   /** Spam honeypot — stays empty for real users. */
   website: string;
@@ -49,21 +46,10 @@ const initialFormState: AccessRequestFormState = {
   phone: '',
   email: '',
   address: '',
-  city: '',
-  postalCode: '',
-  clientReference: '',
   website: '',
-  needType: '',
   message: '',
 };
 
-const needTypes = [
-  'Réapprovisionnement régulier',
-  'Produits pour un établissement',
-  'Approvisionnement multi-sites',
-  'Devenir revendeur / grossiste',
-  'Autre besoin professionnel',
-] as const;
 
 export function AccessRequestForm() {
   const [formState, setFormState] = useState<AccessRequestFormState>(initialFormState);
@@ -97,10 +83,11 @@ export function AccessRequestForm() {
       phone: formState.phone,
       email: formState.email,
       addressLine: formState.address,
-      cityOrZone: formState.city,
-      postalCode: formState.postalCode,
-      needType: formState.needType,
-      prodetReferenceOptional: formState.clientReference,
+      // Champs retirés du formulaire mais toujours exigés par le schéma :
+      // on envoie une valeur neutre plutôt que d'imposer la saisie au client.
+      cityOrZone: '—',
+      postalCode: '—',
+      needType: '—',
       message: formState.message,
       website: formState.website,
     });
@@ -122,24 +109,42 @@ export function AccessRequestForm() {
     });
   }
 
+  // Demande envoyée : on remplace entièrement le formulaire. Laisser les champs
+  // remplis sous un bandeau vert invite à re-soumettre — ici il n'y a plus rien
+  // à faire, juste attendre le rappel de l'équipe.
+  if (status.type === 'saved') {
+    return (
+      <div className="rounded-sm border border-border bg-white p-8 text-center shadow-[0_18px_50px_-44px_rgba(8,41,78,0.45)] md:p-10">
+        <h2 className="font-display text-2xl font-bold leading-tight text-prodet-text">
+          Demande envoyée
+        </h2>
+        <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">
+          Merci. Notre équipe vérifie vos informations et vous recontacte sous 24&nbsp;heures
+          ouvrées pour ouvrir votre accès client.
+        </p>
+        <p className="mt-6 text-sm text-muted-foreground">
+          Une question d’ici là ?{' '}
+          <a href={companyInfo.emailHref} className="font-semibold text-primary">
+            {companyInfo.email}
+          </a>
+        </p>
+      </div>
+    );
+  }
+
   return (
     <form
       onSubmit={submitAccessRequest}
       className="rounded-sm border border-border bg-white p-5 shadow-[0_18px_50px_-44px_rgba(8,41,78,0.45)] md:p-6"
     >
-      <div className="flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:items-start md:justify-between">
-        <div>
-          <p className="eyebrow-label">Demande d&apos;accès</p>
-          <h2 className="mt-2 font-display text-2xl font-bold leading-tight text-prodet-text">
-            Informations professionnelles
-          </h2>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            Prodet vérifie la demande avant ouverture.
-          </p>
-        </div>
-        <div className="w-fit rounded-sm border border-primary/15 bg-prodet-mist px-3 py-2 text-xs font-semibold uppercase text-primary">
-          Enregistrement sécurisé
-        </div>
+      <div className="border-b border-border pb-4">
+        <p className="eyebrow-label">Demande d&apos;accès</p>
+        <h2 className="mt-2 font-display text-2xl font-bold leading-tight text-prodet-text">
+          Informations professionnelles
+        </h2>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          Prodet vérifie la demande avant ouverture.
+        </p>
       </div>
 
       <div className="mt-5 grid gap-4 md:grid-cols-2">
@@ -202,45 +207,6 @@ export function AccessRequestForm() {
             placeholder="Rue, numéro, zone industrielle…"
           />
         </FormField>
-        <FormField label="Ville / zone" required>
-          <Input
-            value={formState.city}
-            onChange={(event) => updateField('city', event.target.value)}
-            autoComplete="address-level2"
-          />
-        </FormField>
-        <FormField label="Code postal" required>
-          <Input
-            value={formState.postalCode}
-            onChange={(event) => updateField('postalCode', event.target.value)}
-            autoComplete="postal-code"
-            placeholder="Ex : 2045"
-          />
-        </FormField>
-        <FormField
-          label="Référence client Prodet, facture ou BL — si vous la connaissez"
-          className="md:col-span-2"
-        >
-          <Input
-            value={formState.clientReference}
-            onChange={(event) => updateField('clientReference', event.target.value)}
-            placeholder="Ex: référence client, numéro de facture, BL ou ancienne commande"
-          />
-        </FormField>
-        <FormField label="Type de besoin" required>
-          <Select value={formState.needType} onValueChange={(value) => updateField('needType', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Choisir un besoin" />
-            </SelectTrigger>
-            <SelectContent>
-              {needTypes.map((needType) => (
-                <SelectItem key={needType} value={needType}>
-                  {needType}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </FormField>
         <FormField label="Message" className="md:col-span-2">
           <Textarea
             rows={5}
@@ -282,10 +248,6 @@ export function AccessRequestForm() {
             {status.message}
           </p>
         ) : null}
-
-        <p className="mt-4 text-xs leading-5 text-muted-foreground">
-          Aucun compte n&apos;est créé automatiquement. Aucun prix, stock ou paiement public.
-        </p>
       </div>
     </form>
   );
@@ -322,9 +284,6 @@ function validateForm(formState: AccessRequestFormState): string | null {
     'phone',
     'email',
     'address',
-    'city',
-    'postalCode',
-    'needType',
   ];
 
   const missingField = requiredFields.some((field) => !formState[field].trim());

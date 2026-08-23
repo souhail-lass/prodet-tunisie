@@ -165,6 +165,8 @@ export async function acceptPortalInvite(
             phone: request.phone,
             city: request.cityOrZone,
             sectorKey: request.sector,
+            // Rattache le client Swiver créé à l'approbation, s'il y en a un.
+            swiverId: request.swiverCustomerId,
             status: 'active',
             needsReview: true,
             notesInternal: buildCustomerNotes(request.prodetReferenceOptional),
