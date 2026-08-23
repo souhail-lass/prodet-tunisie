@@ -14,7 +14,14 @@
     "madeBadge": "Made by Prodet",
     "suppliedLabel": "And everything else, supplied",
     "packTitle": "SIRAFAN",
-    "packSub": "All-surface disinfectant, no rinsing · biodegradable > 90%"
+    "packSub": "All-surface disinfectant, no rinsing · biodegradable > 90%",
+    "suppliedAlt": {
+      "bags": "Bin bags",
+      "wipes": "Microfibre cloths",
+      "gloves": "Gloves",
+      "paper": "Toilet paper"
+    },
+    "madeAlt": "Disinfectant made by Prodet"
   },
   "sectors": {
     "title": "Designed for your trade",
@@ -66,6 +73,7 @@
   },
   "clients": {
     "eyebrow": "References",
-    "title": "Trusted by leading businesses"
+    "title": "Trusted by leading businesses",
+    "ariaLabel": "They trust us"
   }
 }

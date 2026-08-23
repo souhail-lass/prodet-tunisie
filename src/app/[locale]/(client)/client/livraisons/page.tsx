@@ -8,10 +8,14 @@ export const dynamic = 'force-dynamic';
 
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeZone: 'Africa/Tunis' });
 
-function deliveryBadge(status: SwiverDocumentStatus) {
-  if (status === 'cancelled') return <Badge tone="neutral" dot>Annulée</Badge>;
-  if (status === 'draft') return <Badge tone="blue" dot>En préparation</Badge>;
-  return <Badge tone="green" dot>Livrée</Badge>;
+type DeliveryLabel = (key: string) => string;
+
+function deliveryBadge(status: SwiverDocumentStatus, t: DeliveryLabel) {
+  if (status === 'cancelled')
+    return <Badge tone="neutral" dot>{t('deliveries.status.cancelled')}</Badge>;
+  if (status === 'draft')
+    return <Badge tone="blue" dot>{t('deliveries.status.preparing')}</Badge>;
+  return <Badge tone="green" dot>{t('deliveries.status.delivered')}</Badge>;
 }
 
 export default async function ClientDeliveriesPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -36,8 +40,8 @@ export default async function ClientDeliveriesPage({ params }: { params: Promise
       <div className="portal-list">
         <div className="panel portal-empty">
           <span className="portal-empty__icon"><Truck size={22} /></span>
-          <h2 className="panel__title">Aucune livraison pour le moment</h2>
-          <p className="panel__sub">Vos bons de livraison apparaîtront ici dès l’expédition de vos commandes.</p>
+          <h2 className="panel__title">{t('deliveries.emptyTitle')}</h2>
+          <p className="panel__sub">{t('deliveries.emptyBody')}</p>
         </div>
       </div>
     );
@@ -57,14 +61,14 @@ export default async function ClientDeliveriesPage({ params }: { params: Promise
         <div className="stat-card">
           <span className="stat-card__icon stat-card__icon--blue"><Truck size={20} /></span>
           <div className="stat-card__value">{documents.length}</div>
-          <div className="stat-card__label">Bons de livraison</div>
+          <div className="stat-card__label">{t('deliveries.title')}</div>
         </div>
         <div className="stat-card">
           <span className="stat-card__icon stat-card__icon--blue"><CalendarClock size={20} /></span>
           <div className="stat-card__value" style={{ fontSize: 'var(--text-base)' }}>
             {dateFmt.format(lastDelivery.issueDate)}
           </div>
-          <div className="stat-card__label">Dernière livraison</div>
+          <div className="stat-card__label">{t('deliveries.last')}</div>
         </div>
       </div>
 
@@ -79,7 +83,7 @@ export default async function ClientDeliveriesPage({ params }: { params: Promise
               </div>
             </div>
             <div className="portal-list-row__actions">
-              {deliveryBadge(doc.status)}
+              {deliveryBadge(doc.status, t)}
               <a
                 className="pds-btn pds-btn--ghost pds-btn--sm"
                 href={`/api/client/factures/${doc.swiverId}/pdf`}

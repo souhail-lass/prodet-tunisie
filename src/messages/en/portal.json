@@ -87,7 +87,30 @@
     "reorderList": "Reorder this list",
     "detailTitle": "Order details",
     "madeBy": "Made by Prodet",
-    "transmitted": "Sent to Prodet"
+    "transmitted": "Sent to Prodet",
+    "status": {
+      "confirmed": "Confirmed",
+      "closed": "Closed",
+      "cancelled": "Cancelled",
+      "parsing": "Draft",
+      "review": "Pending"
+    },
+    "tabs": {
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "sent": "Sent to Prodet",
+      "all": "All",
+      "review": "Pending"
+    },
+    "searchPlaceholder": "Reference…",
+    "searchLabel": "Search an order",
+    "savedShort": "Recorded at Prodet",
+    "savedLong": "Order recorded by Prodet",
+    "emptyAll": "No orders yet. Click “New order”.",
+    "emptyCategory": "No orders in this category.",
+    "cancelConfirm": "Cancel this order?",
+    "cancel": "Cancel the order",
+    "reference": "Reference"
   },
   "reorder": {
     "notice": "List pre-filled from {order}. Adjust the quantities, then place your order.",
@@ -198,5 +221,117 @@
     "yearTotal": "{year} invoiced total",
     "outstanding": "Outstanding balance",
     "invoices": "Invoices issued"
+  },
+  "access": {
+    "notActivatedTitle": "Client access not activated",
+    "notActivatedBody": "Your session exists, but no approved Prodet customer is linked to this account."
+  },
+  "deliveries": {
+    "title": "Delivery notes",
+    "last": "Last delivery",
+    "emptyTitle": "No deliveries yet",
+    "emptyBody": "Your delivery notes will appear here once your orders ship.",
+    "status": {
+      "preparing": "In preparation",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    }
+  },
+  "usual": {
+    "eyebrow": "Restocking",
+    "lead": "References saved for your company, aligned with the Prodet catalogue.",
+    "toConfigure": "To be set up",
+    "toConfigureBody": "Contact Prodet to link recurring references, or browse the catalogue.",
+    "openCatalogue": "Open the catalogue",
+    "qty": "Qty",
+    "pageTitle": "Usual products",
+    "emptyTitle": "No usual products",
+    "count": "{n, plural, one {# product} other {# products}}"
+  },
+  "history": {
+    "title": "Request history",
+    "lead": "Every request sent to Prodet from your client area.",
+    "all": "All requests",
+    "emptyTitle": "Your history is empty",
+    "emptyBody": "Requests sent from your client area will appear here.",
+    "prepare": "Prepare a request",
+    "noProduct": "No product",
+    "reference": "Reference",
+    "viewDetail": "View detail"
+  },
+  "historyDetail": {
+    "products": "Requested products",
+    "leadTime": "Lead time",
+    "stepsNote": "Steps known to your client area.",
+    "attachments": "Attachments",
+    "noAttachments": "No documents attached yet.",
+    "attachmentsUnavailable": "Attachments unavailable",
+    "storageOff": "Document storage is not enabled on the Prodet side yet.",
+    "backToHistory": "Back to history",
+    "attachmentsNote": "You'll be able to attach documents (POs, invoices, ERP exports) once the module is enabled.",
+    "uploadHint": "Upload a purchase order, an ERP export or any document useful for processing.",
+    "portalNote": "Portal data only. Official confirmations are still handled internally by Prodet.",
+    "attachedCount": "{n, plural, one {# file linked} other {# files linked}} to this request.",
+    "tracking": "Tracking"
+  },
+  "documents": {
+    "eyebrow": "Shared documents",
+    "lead": "Purchase orders, invoices, ERP exports. Shared read-only with Prodet.",
+    "disabledTitle": "Documents module not enabled yet",
+    "disabledBody": "Supabase storage is not provisioned on the Prodet side yet. The module will be enabled shortly.",
+    "emptyList": "No shared documents yet.",
+    "emptyTitle": "No documents yet",
+    "emptyBody": "Upload a first document to share it with Prodet.",
+    "deleted": "Document deleted.",
+    "actionFailed": "Action failed. Please try again.",
+    "privacyNote": "Documents are stored privately. Only you and Prodet can access them, through a temporary signed link generated per download.",
+    "count": "{n, plural, one {# document available} other {# documents available}}.",
+    "notFound": "Document not found."
+  },
+  "upload": {
+    "title": "Upload a document",
+    "submit": "Upload",
+    "type": "Document type",
+    "label": "Label (optional)",
+    "chooseFile": "Choose a file",
+    "noFile": "No file selected",
+    "note": "Note for Prodet (optional)",
+    "notePlaceholder": "Details about this document",
+    "errors": {
+      "generic": "Upload failed. Try again or contact Prodet.",
+      "incomplete": "Incomplete form or unreadable file.",
+      "badFormat": "File format not allowed.",
+      "rateLimited": "Too many recent uploads. Try again in a few minutes.",
+      "storage": "Document storage unavailable. Contact Prodet.",
+      "noFile": "Select a file to upload.",
+      "tooLarge": "File too large. Maximum {max}."
+    },
+    "successAttached": "Document uploaded and attached to the request.",
+    "success": "Document uploaded.",
+    "sending": "Sending…"
+  },
+  "detach": {
+    "action": "Detach this document",
+    "confirmTitle": "Detach this document?",
+    "confirmBody": "The document stays in your documents, but will no longer be linked to this request.",
+    "confirm": "Detach"
+  },
+  "support": {
+    "subjectPlaceholder": "Subject (e.g. Problem with my order ORD-…)",
+    "bodyPlaceholder": "Describe your request…",
+    "attach": "Attach a photo or file",
+    "closed": "Closed",
+    "prodetReply": "Prodet reply",
+    "lead": "A question or an issue with an order? Write to us, we reply here.",
+    "uploadFailed": "Failed — check the size (25 MB max) and try again.",
+    "empty": "No tickets. Click “New ticket” to write to us.",
+    "pending": "Pending"
+  },
+  "ticket": {
+    "attachFile": "Attach a file",
+    "attachTitle": "Attach a photo or file",
+    "messagePlaceholder": "Write your message…",
+    "closedNote": "This ticket is closed. Reply to reopen it.",
+    "sendFailed": "Sending failed (or the file is too large, 25 MB max). Please try again."
   }
 }

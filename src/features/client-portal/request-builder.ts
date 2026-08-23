@@ -24,7 +24,6 @@ export async function listPortalProductOptions(locale: Locale): Promise<PortalPr
       translatedName: schema.productTranslation.name,
       nameCanonical: schema.product.nameCanonical,
       categoryNameFr: schema.category.nameFr,
-      categoryNameAr: schema.category.nameAr,
       categoryNameEn: schema.category.nameEn,
       conditionnement: schema.product.conditionnement,
       unitOfSale: schema.product.unitOfSale,
@@ -87,7 +86,6 @@ export async function getPortalRequestPrefill({
       translatedName: schema.productTranslation.name,
       nameCanonical: schema.product.nameCanonical,
       categoryNameFr: schema.category.nameFr,
-      categoryNameAr: schema.category.nameAr,
       categoryNameEn: schema.category.nameEn,
       conditionnement: schema.product.conditionnement,
       unitOfSale: schema.product.unitOfSale,
@@ -208,7 +206,6 @@ export async function submitPortalRequest(
       unitOfSale: schema.product.unitOfSale,
       conditionnement: schema.product.conditionnement,
       categoryNameFr: schema.category.nameFr,
-      categoryNameAr: schema.category.nameAr,
       categoryNameEn: schema.category.nameEn,
     })
     .from(schema.product)
@@ -377,12 +374,10 @@ export async function submitPortalRequest(
 function getCategoryName(
   row: {
     categoryNameFr: string | null;
-    categoryNameAr: string | null;
     categoryNameEn: string | null;
   },
   locale: Locale,
 ): string | null {
-  if (locale === 'ar') return row.categoryNameAr || row.categoryNameFr;
   if (locale === 'en') return row.categoryNameEn || row.categoryNameFr;
   return row.categoryNameFr;
 }

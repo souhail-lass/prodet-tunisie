@@ -85,7 +85,7 @@ export default async function ProductDetailPage({
 
   const publicOffer = getPublicOfferBySlug(slug);
   if (publicOffer) {
-    return <PublicOfferDetailPage offer={publicOffer} />;
+    return <PublicOfferDetailPage offer={publicOffer} locale={locale} />;
   }
 
   const product = await getCatalogueProductBySlug(slug);
@@ -134,7 +134,8 @@ export default async function ProductDetailPage({
   );
 }
 
-function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
+async function PublicOfferDetailPage({ offer, locale }: { offer: PublicOffer; locale: Locale }) {
+  const t = await getTranslations({ locale, namespace: 'catalogue' });
   const section = getPublicOfferSectionById(offer.sectionId);
   const legacyProduct = getLegacyProductForPublicOffer(offer);
   const relatedOffers = getRelatedPublicOffers(offer, 4);
@@ -266,14 +267,14 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <Button asChild className="h-12 text-sm font-semibold">
-              <Link href="/devis">Demander un devis</Link>
+              <Link href="/devis">{t('detail.requestQuote')}</Link>
             </Button>
 
             {legacyProduct?.technicalSheetUrl ? (
               <Button asChild variant="outline" className="h-12 text-sm font-semibold">
                 <a href={legacyProduct.technicalSheetUrl} download>
                   <FileDown className="h-4 w-4" aria-hidden />
-                  Télécharger la fiche technique
+                  {t('detail.downloadSheet')}
                 </a>
               </Button>
             ) : (
@@ -299,7 +300,7 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
           </ul>
         </InfoCard>
 
-        <InfoCard icon={<MapPinned className="h-5 w-5" aria-hidden />} title="Ou l utiliser">
+        <InfoCard icon={<MapPinned className="h-5 w-5" aria-hidden />} title={t('detail.whereToUse')}>
           <ul className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
             {whereToUse.map((item) => (
               <li key={item} className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
@@ -338,10 +339,10 @@ function PublicOfferDetailPage({ offer }: { offer: PublicOffer }) {
               <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
                 Meme service
               </p>
-              <h2 className="mt-3 text-2xl font-bold text-[var(--color-text-primary)]">Autres références proches</h2>
+              <h2 className="mt-3 text-2xl font-bold text-[var(--color-text-primary)]">{t('detail.related')}</h2>
             </div>
             <Button asChild variant="outline" className="rounded-full px-5">
-              <Link href={`/catalogue?section=${offer.sectionId}`}>Voir la section</Link>
+              <Link href={`/catalogue?section=${offer.sectionId}`}>{t('detail.viewSection')}</Link>
             </Button>
           </div>
 

@@ -30,5 +30,70 @@
     "successTitle": "Request sent.",
     "successBody": "We will reply within one business day with a quote. A copy has been sent to your email.",
     "successReference": "Reference: {ref}"
+  },
+  "drawer": {
+    "eyebrow": "Quote request",
+    "selectionTitle": "Your selection",
+    "contactTitle": "Your details",
+    "sentTitle": "Request sent",
+    "close": "Close",
+    "empty": "Your quote list is empty.",
+    "browseCatalogue": "Browse the catalogue",
+    "clearList": "Clear the list",
+    "manufactured": "Made by Prodet",
+    "successBody": "Thank you. Your request {ref} has been sent. Our team will get back to you within 24 working hours with pricing, dosage and delivery terms.",
+    "reassure": "Reply within 24h with pricing, dosage and delivery terms.",
+    "formError": "Please check the quote details.",
+    "noProducts": "No products",
+    "summary": "{refs, plural, one {# reference} other {# references}} · {units, plural, one {# unit} other {# units}}",
+    "continue": "Continue",
+    "back": "Back",
+    "submit": "Send the request",
+    "submitting": "Sending…",
+    "fields": {
+      "company": "Business name",
+      "email": "Email",
+      "phone": "Phone",
+      "sector": "Sector"
+    },
+    "placeholders": {
+      "company": "Carthage Hotel",
+      "email": "you@business.tn",
+      "sector": "Choose your sector"
+    }
+  },
+  "quote": {
+    "eyebrow": "Quote request",
+    "title": "Pick your products, send your request.",
+    "lead": "Add quantities and your contact details. Prodet replies to you directly.",
+    "sendError": "Unable to send the request right now.",
+    "fields": {
+      "name": "First & last name",
+      "company": "Company / business",
+      "sector": "Business sector",
+      "sectorPlaceholder": "Choose a sector",
+      "phone": "Phone",
+      "city": "City / delivery area",
+      "message": "Additional message",
+      "messageHelp": "Add usage, formats or volumes if needed."
+    },
+    "search": {
+      "placeholder": "Search for a product to add…",
+      "label": "Search for a product to add",
+      "clear": "Clear the search"
+    },
+    "badges": {
+      "manufactured": "Made by Prodet",
+      "resold": "Resold"
+    },
+    "selection": {
+      "title": "Selection",
+      "hint": "Add from the search or the catalogue.",
+      "clear": "Clear the list",
+      "emptyTitle": "No product selected.",
+      "emptyHint": "Search for a product above."
+    },
+    "contactTitle": "Contact details",
+    "contactNote": "Phone or email required. Pricing is confirmed directly by Prodet."
   }
 }

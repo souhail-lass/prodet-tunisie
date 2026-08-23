@@ -9,7 +9,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 const ClientLoginSchema = z.object({
   email: z.string().trim().email(),
-  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+  locale: z.enum(['fr', 'en']).default('fr'),
   next: z.string().trim().optional(),
 });
 
@@ -105,7 +105,7 @@ async function hasActivatedClientAccess(email: string): Promise<boolean> {
   return Boolean(membership);
 }
 
-function sanitizeClientNext(locale: 'fr' | 'ar' | 'en', value?: string): string {
+function sanitizeClientNext(locale: 'fr' | 'en', value?: string): string {
   if (!value) return `/${locale}/client`;
 
   try {

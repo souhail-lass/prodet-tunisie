@@ -42,7 +42,7 @@ const STATUS_TONE: Record<string, { bg: string; fg: string; label: string }> = {
 };
 
 function heroDateFmt(locale: string): Intl.DateTimeFormat {
-  const tag = locale === 'ar' ? 'ar-TN' : locale === 'en' ? 'en' : 'fr-FR';
+  const tag = locale === 'en' ? 'en' : 'fr-FR';
   return new Intl.DateTimeFormat(tag, {
     weekday: 'long',
     day: 'numeric',

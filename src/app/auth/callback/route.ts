@@ -57,7 +57,7 @@ function isClientPath(value: string): boolean {
   return /^\/(fr|ar|en)\/client(?:\/|$)/u.test(value) && !value.startsWith('//');
 }
 
-function getLocaleFromNext(value: string): 'fr' | 'ar' | 'en' {
+function getLocaleFromNext(value: string): 'fr' | 'en' {
   const locale = value.split('/')[1];
-  return locale === 'ar' || locale === 'en' ? locale : 'fr';
+  return locale === 'en' ? locale : 'fr';
 }

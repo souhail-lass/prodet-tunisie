@@ -30,5 +30,70 @@
     "successTitle": "Demande envoyée.",
     "successBody": "Nous revenons vers vous sous 24h ouvrées avec un devis. Une copie a été envoyée à votre adresse e-mail.",
     "successReference": "Référence : {ref}"
+  },
+  "drawer": {
+    "eyebrow": "Demande de devis",
+    "selectionTitle": "Votre sélection",
+    "contactTitle": "Vos coordonnées",
+    "sentTitle": "Demande envoyée",
+    "close": "Fermer",
+    "empty": "Votre liste de devis est vide.",
+    "browseCatalogue": "Parcourir le catalogue",
+    "clearList": "Vider la liste",
+    "manufactured": "Fabriqué par Prodet",
+    "successBody": "Merci. Votre demande {ref} a bien été transmise. Notre équipe revient vers vous sous 24 heures ouvrées avec prix, dosage et conditions de livraison.",
+    "reassure": "Réponse sous 24h avec prix, dosage et conditions de livraison.",
+    "formError": "Vérifiez les informations du devis.",
+    "noProducts": "Aucun produit",
+    "summary": "{refs, plural, one {# référence} other {# références}} · {units, plural, one {# unité} other {# unités}}",
+    "continue": "Continuer",
+    "back": "Retour",
+    "submit": "Envoyer la demande",
+    "submitting": "Envoi…",
+    "fields": {
+      "company": "Nom de l'établissement",
+      "email": "Email",
+      "phone": "Téléphone",
+      "sector": "Secteur"
+    },
+    "placeholders": {
+      "company": "Hôtel Carthage",
+      "email": "vous@etablissement.tn",
+      "sector": "Choisir votre secteur"
+    }
+  },
+  "quote": {
+    "eyebrow": "Demande de devis",
+    "title": "Sélectionnez vos produits, envoyez votre demande.",
+    "lead": "Ajoutez les quantités et vos coordonnées. Prodet vous répond directement.",
+    "sendError": "Impossible d'envoyer la demande maintenant.",
+    "fields": {
+      "name": "Nom / Prénom",
+      "company": "Société / Établissement",
+      "sector": "Secteur d'activité",
+      "sectorPlaceholder": "Choisir un secteur",
+      "phone": "Téléphone",
+      "city": "Ville / zone de livraison",
+      "message": "Message complémentaire",
+      "messageHelp": "Précisez les usages, les formats ou les volumes si nécessaire."
+    },
+    "search": {
+      "placeholder": "Rechercher un produit à ajouter…",
+      "label": "Rechercher un produit à ajouter",
+      "clear": "Effacer la recherche"
+    },
+    "badges": {
+      "manufactured": "Fabriqué Prodet",
+      "resold": "Commercialisé"
+    },
+    "selection": {
+      "title": "Sélection",
+      "hint": "Ajoutez depuis la recherche ou le catalogue.",
+      "clear": "Vider la liste",
+      "emptyTitle": "Aucun produit sélectionné.",
+      "emptyHint": "Recherchez un produit ci-dessus."
+    },
+    "contactTitle": "Coordonnées",
+    "contactNote": "Téléphone ou email requis. Prix confirmés directement par Prodet."
   }
 }

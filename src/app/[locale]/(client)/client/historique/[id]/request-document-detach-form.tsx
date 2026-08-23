@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useRef, useState, useTransition } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,6 +18,7 @@ export function RequestDocumentDetachForm({
   orderDraftId: string;
   locale: Locale;
 }) {
+  const t = useTranslations('portal.detach');
   const [isPending, startTransition] = useTransition();
   const [confirming, setConfirming] = useState(false);
   const confirmedRef = useRef(false);
@@ -52,17 +55,17 @@ export function RequestDocumentDetachForm({
         size="xs"
         disabled={isPending}
         className="text-muted-foreground hover:bg-prodet-wash hover:text-destructive"
-        aria-label="Détacher ce document"
+        aria-label={t('action')}
       >
         <X className="h-3.5 w-3.5" aria-hidden />
-        Détacher
+        {t('confirm')}
       </Button>
 
       <ConfirmDialog
         open={confirming}
-        title="Détacher ce document ?"
+        title={t('confirmTitle')}
         message="Le document restera disponible dans vos documents, mais ne sera plus lié à cette demande."
-        confirmLabel="Détacher"
+        confirmLabel={t('confirm')}
         cancelLabel="Garder"
         pending={isPending}
         onConfirm={proceed}

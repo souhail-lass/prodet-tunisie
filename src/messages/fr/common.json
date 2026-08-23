@@ -61,5 +61,91 @@
       "atLeastOneItem": "Ajoutez au moins une ligne au devis.",
       "submitFailed": "Impossible d'envoyer le formulaire pour le moment. Réessayez ou écrivez-nous directement."
     }
+  },
+  "quantity": {
+    "decrease": "Diminuer la quantité",
+    "increase": "Augmenter la quantité"
+  },
+  "clientAccess": {
+    "title": "Accédez à votre espace Prodet",
+    "titleLogin": "Connexion à votre espace",
+    "lead": "Connexion sans mot de passe, réservée aux comptes professionnels validés.",
+    "submit": "Recevoir le lien de connexion",
+    "sentEspace": "Si cet email dispose d'un accès activé, un lien de connexion arrive sous peu (pensez aux indésirables).",
+    "sentLogin": "Lien envoyé. Vérifiez votre boîte mail (pensez aux courriers indésirables).",
+    "or": "ou",
+    "requestAccess": "Demander un accès",
+    "reassure": "Accès validé par Prodet · Aucun mot de passe à mémoriser",
+    "errors": {
+      "rateLimited": "Trop de tentatives. Réessayez dans quelques minutes.",
+      "unavailable": "Impossible d'envoyer le lien pour le moment.",
+      "signInFailed": "Connexion impossible pour le moment.",
+      "invalidEmail": "L'adresse email n'est pas valide.",
+      "notActivated": "Cet email n'a pas encore d'accès client activé par Prodet.",
+      "notConfigured": "La connexion client n'est pas configurée côté serveur.",
+      "sendFailed": "Impossible d'envoyer le lien de connexion pour le moment.",
+      "badLink": "Le lien magique n'a pas pu être validé. Demandez un nouveau lien."
+    },
+    "continueToLogin": "Continuer vers la connexion client",
+    "eyebrow": "Espace client",
+    "notYetClient": "Pas encore client ?",
+    "emailLabel": "E-mail professionnel",
+    "emailPlaceholder": "nom@societe.tn"
+  },
+  "becomeClient": {
+    "title": "Demander un accès client Prodet",
+    "steps": {
+      "request": {
+        "title": "Votre demande",
+        "body": "Vos informations société et professionnelles."
+      },
+      "check": {
+        "title": "Vérification & appel",
+        "body": "Notre équipe vérifie le dossier et vous appelle."
+      },
+      "approve": {
+        "title": "Validation",
+        "body": "Prodet valide votre compte client."
+      },
+      "activate": {
+        "title": "Activation",
+        "body": "Vous recevez un lien pour activer votre accès."
+      },
+      "portal": {
+        "title": "Accès au portail",
+        "body": "Commandes, devis, factures et livraisons."
+      }
+    },
+    "controlled": {
+      "title": "Accès contrôlé",
+      "body": "Réservé aux professionnels. Prodet vérifie chaque demande avant d'ouvrir l'accès."
+    },
+    "step": "Étape {n}"
+  },
+  "accessForm": {
+    "needs": {
+      "recurring": "Réapprovisionnement régulier",
+      "singleSite": "Produits pour un établissement",
+      "unspecified": "Non précisé"
+    },
+    "saved": "Demande enregistrée. Prodet vérifiera vos informations avant l'ouverture de l'accès.",
+    "fields": {
+      "name": "Nom / Prénom",
+      "company": "Société / Établissement",
+      "sectorPlaceholder": "Choisir un secteur",
+      "phone": "Téléphone",
+      "addressPlaceholder": "Rue, numéro, zone industrielle…",
+      "refHelp": "Référence client Prodet, facture ou BL — si vous la connaissez",
+      "refPlaceholder": "Ex: référence client, numéro de facture, BL ou ancienne commande",
+      "needType": "Type de besoin",
+      "needPlaceholder": "Choisir un besoin",
+      "detailsPlaceholder": "Décrivez les produits recherchés, les formats, les volumes ou le nombre de sites à approvisionner."
+    },
+    "submit": "Envoyer la demande",
+    "incomplete": "Complétez les champs obligatoires avant de préparer la demande.",
+    "title": "Demande d'accès",
+    "reviewNote": "Prodet vérifie la demande avant ouverture.",
+    "secureTitle": "Enregistrement sécurisé",
+    "secureBody": "Aucun compte n'est créé automatiquement. Aucun prix, stock ou paiement public."
   }
 }

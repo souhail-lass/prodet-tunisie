@@ -58,7 +58,7 @@ export default async function FamillePage({
     <div className="famille-page">
       <JsonLd
         data={breadcrumbSchema([
-          { name: locale === 'ar' ? 'الرئيسية' : locale === 'en' ? 'Home' : 'Accueil', path: `/${locale}` },
+          { name: locale === 'en' ? 'Home' : 'Accueil', path: `/${locale}` },
           { name: tf('page.viewAll'), path: `/${locale}/catalogue` },
           { name: tf(`items.${fam.id}.label`), path: `/${locale}/produits/${fam.id}` },
         ])}
@@ -67,7 +67,7 @@ export default async function FamillePage({
         <div className="section-wrap famille-hero__inner">
           <div className="famille-hero__text">
             <nav className="famille-breadcrumb">
-              <Link href="/">{locale === 'ar' ? 'الرئيسية' : locale === 'en' ? 'Home' : 'Accueil'}</Link>
+              <Link href="/">{locale === 'en' ? 'Home' : 'Accueil'}</Link>
               <span className="famille-breadcrumb__sep">/</span>
               <Link href="/catalogue">{tf('page.viewAll')}</Link>
               <span className="famille-breadcrumb__sep">/</span>

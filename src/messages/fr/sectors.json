@@ -7,8 +7,16 @@
   "detail": {
     "recommendedTitle": "Sélection recommandée",
     "recommendedSubtitle": "Une base de départ adaptée à votre activité. Ajustons ensemble selon vos volumes et contraintes.",
-    "ctaTitle": "Vous voulez un devis personnalisé ?",
-    "ctaSubtitle": "Décrivez-nous votre activité et vos volumes, nous revenons vers vous sous 24h ouvrées."
+    "ctaTitle": "Construisons votre gamme.",
+    "ctaSubtitle": "Décrivez-nous votre activité et vos volumes, nous revenons vers vous sous 24h ouvrées.",
+    "requestQuote": "Demander un devis",
+    "viewCatalogue": "Voir le catalogue",
+    "viewAllCatalogue": "Voir tout le catalogue",
+    "metaLine": "solutions Prodet · réponse sous 24h ouvrées",
+    "needsEyebrow": "Vos besoins · nos solutions",
+    "needsTitle": "Zone par zone, la solution Prodet.",
+    "needsLead": "Nos produits fabriqués localement, organisés selon le terrain de votre activité. Tout se commande en un seul devis.",
+    "ctaLead": "Donnez-nous vos zones et vos volumes — nous revenons vers vous sous 24h ouvrées."
   },
   "hero": {
     "eyebrow": "Secteurs",

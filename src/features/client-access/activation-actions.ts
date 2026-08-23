@@ -8,7 +8,7 @@ import { hashInviteToken, normalizeInviteToken } from './invite-token';
 
 const AcceptInviteSchema = z.object({
   token: z.string().trim().min(32, 'invalidToken').max(256, 'invalidToken'),
-  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+  locale: z.enum(['fr', 'en']).default('fr'),
 });
 
 export type ActivationState =

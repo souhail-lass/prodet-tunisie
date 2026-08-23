@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useActionState } from 'react';
 import { AlertCircle, CheckCircle2, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,8 +20,9 @@ export function ActivationConfirmForm({
   locale,
 }: {
   token: string;
-  locale: 'fr' | 'ar' | 'en';
+  locale: 'fr' | 'en';
 }) {
+  const tc = useTranslations('common.clientAccess');
   const [state, formAction, isPending] = useActionState(acceptPortalInvite, initialState);
 
   return (
@@ -48,7 +51,7 @@ export function ActivationConfirmForm({
             {state.message}
           </p>
           <Button asChild variant="neutral" size="sm" className="mt-3">
-            <Link href="/connexion-client">Continuer vers la connexion client</Link>
+            <Link href="/connexion-client">{tc('continueToLogin')}</Link>
           </Button>
         </div>
       ) : null}

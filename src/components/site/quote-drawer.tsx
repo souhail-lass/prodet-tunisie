@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import Image from 'next/image';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ArrowRight, Check, ChevronLeft, FileText, Shield, Trash2, X } from 'lucide-react';
 import { Button, Input, QuantityControl, Select } from '@/components/ds';
 import { listSectors } from '@/data/queries';
@@ -60,6 +60,7 @@ export function useQuoteDrawer() {
 
 function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { items, setProductQuantity, clearSelection } = useQuoteSelection();
+  const t = useTranslations('devis.drawer');
   const locale = useLocale() as Locale;
   const [step, setStep] = useState<'list' | 'form'>('list');
   const [form, setForm] = useState<FormState>(INITIAL_FORM);
@@ -125,7 +126,7 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
       if (result.ok) {
         setReference(result.referenceCode ?? null);
       } else {
-        setFormError(result.formError ?? 'Vérifiez les informations du devis.');
+        setFormError(result.formError ?? t('formError'));
       }
     });
   }
@@ -135,12 +136,12 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
       <div className="qm__panel" onClick={(event) => event.stopPropagation()}>
         <header className="qm__head">
           <div>
-            <span className="eyebrow">Demande de devis</span>
+            <span className="eyebrow">{t('eyebrow')}</span>
             <h2 className="qm__title">
-              {reference ? 'Demande envoyée' : step === 'list' ? 'Votre sélection' : 'Vos coordonnées'}
+              {reference ? t('sentTitle') : step === 'list' ? t('selectionTitle') : t('contactTitle')}
             </h2>
           </div>
-          <button className="qm__close" onClick={onClose} aria-label="Fermer">
+          <button className="qm__close" onClick={onClose} aria-label={t('close')}>
             <X size={20} />
           </button>
         </header>
@@ -151,12 +152,9 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
               <span className="qm__empty-icon" style={{ background: 'var(--prodet-green-tint)', color: 'var(--prodet-green)' }}>
                 <Check size={26} />
               </span>
-              <p>
-                Merci. Votre demande <strong>{reference}</strong> a bien été transmise. Notre équipe revient
-                vers vous sous 24&nbsp;heures ouvrées avec prix, dosage et conditions de livraison.
-              </p>
+              <p>{t('successBody', { ref: reference ?? '' })}</p>
               <Button variant="outline" onClick={onClose}>
-                Fermer
+                {t('close')}
               </Button>
             </div>
           </div>
@@ -167,16 +165,16 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                 <span className="qm__empty-icon">
                   <FileText size={26} />
                 </span>
-                <p>Votre liste de devis est vide.</p>
+                <p>{t('empty')}</p>
                 <Button variant="outline" onClick={onClose}>
-                  <Link href="/produits/produits-nettoyage">Parcourir le catalogue</Link>
+                  <Link href="/produits/produits-nettoyage">{t('browseCatalogue')}</Link>
                 </Button>
               </div>
             ) : (
               <>
                 <div className="qm__actions-top">
                   <button type="button" className="qm__clear" onClick={clearSelection}>
-                    <Trash2 size={14} /> Vider la liste
+                    <Trash2 size={14} /> {t('clearList')}
                   </button>
                 </div>
                 <div className="qm__lines">
@@ -205,7 +203,7 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                       <strong>{line.productName}</strong>
                       <span>
                         {line.format ?? '—'}
-                        {line.category === 'manufactured' ? ' · Fabriqué par Prodet' : ''}
+                        {line.category === 'manufactured' ? ` · ${t('manufactured')}` : ''}
                       </span>
                     </div>
                     <div className="qm__line-qty">
@@ -227,29 +225,29 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
           <div className="qm__body">
             <div className="qm__form">
               <Input
-                label="Nom de l'établissement"
-                placeholder="Hôtel Carthage"
+                label={t('fields.company')}
+                placeholder={t('placeholders.company')}
                 required
                 value={form.company}
                 onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
               />
               <Input
-                label="Email"
+                label={t('fields.email')}
                 type="email"
-                placeholder="vous@etablissement.tn"
+                placeholder={t('placeholders.email')}
                 required
                 value={form.email}
                 onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
               />
               <Input
-                label="Téléphone"
+                label={t('fields.phone')}
                 placeholder="71 000 000"
                 value={form.phone}
                 onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
               />
               <Select
-                label="Secteur"
-                placeholder="Choisir votre secteur"
+                label={t('fields.sector')}
+                placeholder={t('placeholders.sector')}
                 options={sectorOptions}
                 value={form.sectorId}
                 onChange={(e) => setForm((f) => ({ ...f, sectorId: e.target.value }))}
@@ -261,7 +259,7 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
               </p>
             ) : (
               <p className="qm__reassure">
-                <Shield size={15} /> Réponse sous 24h avec prix, dosage et conditions de livraison.
+                <Shield size={15} /> {t('reassure')}
               </p>
             )}
           </div>
@@ -270,9 +268,7 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
         {!reference ? (
           <footer className="qm__foot">
             <span className="qm__total">
-              {total > 0
-                ? `${lines.length} référence${lines.length > 1 ? 's' : ''} · ${total} unité${total > 1 ? 's' : ''}`
-                : 'Aucun produit'}
+              {total > 0 ? t('summary', { refs: lines.length, units: total }) : t('noProducts')}
             </span>
             {step === 'list' ? (
               <Button
@@ -282,12 +278,12 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                 onClick={() => setStep('form')}
                 iconRight={<ArrowRight size={18} />}
               >
-                Continuer
+                {t('continue')}
               </Button>
             ) : (
               <div className="qm__foot-actions">
                 <Button variant="ghost" onClick={() => setStep('list')} iconLeft={<ChevronLeft size={16} />}>
-                  Retour
+                  {t('back')}
                 </Button>
                 <Button
                   variant="primary"
@@ -296,7 +292,7 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                   onClick={submit}
                   iconRight={<Check size={18} />}
                 >
-                  {isPending ? 'Envoi…' : 'Envoyer la demande'}
+                  {isPending ? t('submitting') : t('submit')}
                 </Button>
               </div>
             )}

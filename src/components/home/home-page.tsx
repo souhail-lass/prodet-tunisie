@@ -26,10 +26,10 @@ const TRUST = [
 /** Interim hero "range" — a Prodet formula + real consommables we source.
  * Says the positioning visually: fabricant + fournisseur. Swap for one shot photo later. */
 const HERO_SUPPLIED = [
-  { src: '/images/products/resell/sac-poubelle-mm-noir.jpg', label: 'Sacs poubelle' },
-  { src: '/images/products/resell/lavette-microfibre.png', label: 'Lavettes microfibre' },
-  { src: '/images/products/resell/gant-latex.jpg', label: 'Gants' },
-  { src: '/images/products/resell/papier-hygienique-lilas-48.jpg', label: 'Papier hygiénique' },
+  { src: '/images/products/resell/sac-poubelle-mm-noir.jpg', key: 'bags' },
+  { src: '/images/products/resell/lavette-microfibre.png', key: 'wipes' },
+  { src: '/images/products/resell/gant-latex.jpg', key: 'gloves' },
+  { src: '/images/products/resell/papier-hygienique-lilas-48.jpg', key: 'paper' },
 ] as const;
 
 export function HomePage({
@@ -87,7 +87,7 @@ export function HomePage({
                 {/* LCP element — the Prodet formula (what we fabricate). */}
                 <Image
                   src="/images/products/sirafan.png"
-                  alt="Désinfectant fabriqué par Prodet"
+                  alt={t('hero.madeAlt')}
                   width={240}
                   height={220}
                   priority
@@ -99,9 +99,9 @@ export function HomePage({
                 <span className="hero__range-label">{t('hero.suppliedLabel')}</span>
                 <div className="hero__range-items">
                   {HERO_SUPPLIED.map((item) => (
-                    <span className="hero__range-item" key={item.src} title={item.label}>
+                    <span className="hero__range-item" key={item.src} title={t(`hero.suppliedAlt.${item.key}`)}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={item.src} alt={item.label} loading="eager" />
+                      <img src={item.src} alt={t(`hero.suppliedAlt.${item.key}`)} loading="eager" />
                     </span>
                   ))}
                 </div>

@@ -7,8 +7,16 @@
   "detail": {
     "recommendedTitle": "Recommended selection",
     "recommendedSubtitle": "A starting point shaped for your operation. We tailor it to your volumes and constraints.",
-    "ctaTitle": "Want a tailored quote?",
-    "ctaSubtitle": "Tell us about your activity and volumes — we reply within one business day."
+    "ctaTitle": "Let's build your range.",
+    "ctaSubtitle": "Tell us about your activity and volumes — we reply within one business day.",
+    "requestQuote": "Request a quote",
+    "viewCatalogue": "View the catalogue",
+    "viewAllCatalogue": "View the full catalogue",
+    "metaLine": "Prodet solutions · reply within 24 working hours",
+    "needsEyebrow": "Your needs · our solutions",
+    "needsTitle": "Zone by zone, the Prodet solution.",
+    "needsLead": "Our locally manufactured products, organised around the realities of your operation. Everything ordered in a single quote.",
+    "ctaLead": "Tell us your zones and volumes — we'll get back to you within 24 working hours."
   },
   "hero": {
     "eyebrow": "Sectors",

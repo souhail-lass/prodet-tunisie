@@ -61,5 +61,91 @@
       "atLeastOneItem": "Add at least one line to the quote.",
       "submitFailed": "Could not submit the form right now. Try again or write to us directly."
     }
+  },
+  "quantity": {
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity"
+  },
+  "clientAccess": {
+    "title": "Access your Prodet account",
+    "titleLogin": "Sign in to your account",
+    "lead": "Passwordless sign-in, reserved for approved business accounts.",
+    "submit": "Send me the sign-in link",
+    "sentEspace": "If this email has an active account, a sign-in link is on its way (check your spam folder).",
+    "sentLogin": "Link sent. Check your inbox (and your spam folder).",
+    "or": "or",
+    "requestAccess": "Request access",
+    "reassure": "Access approved by Prodet · No password to remember",
+    "errors": {
+      "rateLimited": "Too many attempts. Try again in a few minutes.",
+      "unavailable": "Unable to send the link right now.",
+      "signInFailed": "Sign-in is unavailable right now.",
+      "invalidEmail": "That email address is not valid.",
+      "notActivated": "This email does not have a Prodet client account activated yet.",
+      "notConfigured": "Client sign-in is not configured on the server.",
+      "sendFailed": "Unable to send the sign-in link right now.",
+      "badLink": "That sign-in link could not be verified. Request a new one."
+    },
+    "continueToLogin": "Continue to client sign-in",
+    "eyebrow": "Client area",
+    "notYetClient": "Not a client yet?",
+    "emailLabel": "Work email",
+    "emailPlaceholder": "name@company.tn"
+  },
+  "becomeClient": {
+    "title": "Request a Prodet client account",
+    "steps": {
+      "request": {
+        "title": "Your request",
+        "body": "Your company and professional details."
+      },
+      "check": {
+        "title": "Verification & call",
+        "body": "Our team reviews the file and calls you."
+      },
+      "approve": {
+        "title": "Approval",
+        "body": "Prodet approves your client account."
+      },
+      "activate": {
+        "title": "Activation",
+        "body": "You receive a link to activate your access."
+      },
+      "portal": {
+        "title": "Portal access",
+        "body": "Orders, quotes, invoices and deliveries."
+      }
+    },
+    "controlled": {
+      "title": "Controlled access",
+      "body": "For businesses only. Prodet reviews every request before opening access."
+    },
+    "step": "Step {n}"
+  },
+  "accessForm": {
+    "needs": {
+      "recurring": "Regular restocking",
+      "singleSite": "Products for one business",
+      "unspecified": "Not specified"
+    },
+    "saved": "Request saved. Prodet will verify your details before opening access.",
+    "fields": {
+      "name": "First & last name",
+      "company": "Company / business",
+      "sectorPlaceholder": "Choose a sector",
+      "phone": "Phone",
+      "addressPlaceholder": "Street, number, industrial zone…",
+      "refHelp": "Prodet customer reference, invoice or delivery note — if you know it",
+      "refPlaceholder": "E.g. customer reference, invoice number, delivery note or past order",
+      "needType": "Type of need",
+      "needPlaceholder": "Choose a need",
+      "detailsPlaceholder": "Describe the products you need, formats, volumes or the number of sites to supply."
+    },
+    "submit": "Send the request",
+    "incomplete": "Complete the required fields before preparing the request.",
+    "title": "Access request",
+    "reviewNote": "Prodet reviews the request before opening access.",
+    "secureTitle": "Secure submission",
+    "secureBody": "No account is created automatically. No public pricing, stock or payment."
   }
 }

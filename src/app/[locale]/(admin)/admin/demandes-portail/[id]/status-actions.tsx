@@ -27,7 +27,7 @@ export function PortalRequestStatusActions({
   requestId,
   status,
 }: {
-  locale: 'fr' | 'ar' | 'en';
+  locale: 'fr' | 'en';
   requestId: string;
   status: AdminPortalRequestStatus;
 }) {

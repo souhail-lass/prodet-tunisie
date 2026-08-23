@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { connection } from 'next/server';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ArrowRight, ClipboardList, Plus } from 'lucide-react';
 import { EmptyState } from '@/components/portal/empty-state';
 import { PageHeader } from '@/components/portal/page-header';
@@ -34,6 +34,7 @@ export default async function ClientHistoryPage({
   const { locale: localeParam } = await params;
   const locale: Locale = isLocale(localeParam) ? localeParam : 'fr';
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'portal' });
   await connection();
 
   const access = await requireClientPortalAccess();
@@ -43,8 +44,8 @@ export default async function ClientHistoryPage({
     <div className="flex flex-col gap-6 lg:gap-8">
       <PageHeader
         eyebrow="Suivi"
-        title="Historique des demandes"
-        description="Toutes les demandes envoyées à Prodet depuis votre espace client."
+        title={t('history.title')}
+        description={t('history.lead')}
         meta={
           <StatusPill
             tone={requests.length > 0 ? 'info' : 'neutral'}
@@ -65,13 +66,13 @@ export default async function ClientHistoryPage({
       {requests.length > 0 ? (
         <Panel
           padding="flush"
-          title="Toutes les demandes"
+          title={t('history.all')}
           description={`${requests.length} envoyée${requests.length > 1 ? 's' : ''}, plus récente en haut.`}
         >
           {/* Sticky column headers (desktop only). On mobile the row layout
            *  stacks so headers would only add noise. */}
           <div className="hidden grid-cols-[160px_140px_1fr_120px_100px] items-center gap-4 border-b border-border bg-prodet-wash/60 px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground lg:grid">
-            <span>Référence</span>
+            <span>{t('history.reference')}</span>
             <span>Statut</span>
             <span>Produits</span>
             <span className="text-right">Lignes</span>
@@ -89,16 +90,17 @@ export default async function ClientHistoryPage({
       ) : (
         <EmptyState
           icon={<ClipboardList className="h-4 w-4" aria-hidden />}
-          title="Votre historique est vide"
-          description="Les demandes envoyées depuis votre espace client apparaîtront ici."
-          action={{ label: 'Préparer une demande', href: '/client/nouvelle-demande' }}
+          title={t('history.emptyTitle')}
+          description={t('history.emptyBody')}
+          action={{ label: t('history.prepare'), href: '/client/nouvelle-demande' }}
         />
       )}
     </div>
   );
 }
 
-function HistoryRow({ request }: { request: PortalRequestSummary }) {
+async function HistoryRow({ request }: { request: PortalRequestSummary }) {
+  const t = await getTranslations('portal');
   const tone = portalStatusTones[request.status];
   const meta = [
     request.metadata.recurrenceSummary,
@@ -129,7 +131,7 @@ function HistoryRow({ request }: { request: PortalRequestSummary }) {
         </div>
 
         <div className="min-w-0 text-[13px] leading-5 text-muted-foreground">
-          <p className="line-clamp-1 text-prodet-text">{request.productSummary || 'Sans produit'}</p>
+          <p className="line-clamp-1 text-prodet-text">{request.productSummary || t('history.noProduct')}</p>
           {meta ? <p className="line-clamp-1 text-muted-foreground">{meta}</p> : null}
         </div>
 
@@ -154,7 +156,7 @@ function HistoryRow({ request }: { request: PortalRequestSummary }) {
 
       {/* Mobile-only "Voir détail" affordance — the whole row is the link. */}
       <div className="mt-2 inline-flex items-center gap-1 text-[12px] font-medium text-prodet-blue lg:hidden">
-        Voir détail
+        {t('history.viewDetail')}
         <ArrowRight className="h-3.5 w-3.5" aria-hidden />
       </div>
     </Link>

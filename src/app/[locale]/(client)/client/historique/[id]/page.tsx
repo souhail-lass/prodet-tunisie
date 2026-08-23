@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ArrowLeft, FolderArchive, Paperclip, RotateCcw } from 'lucide-react';
 import { PageHeader } from '@/components/portal/page-header';
 import { Panel } from '@/components/portal/panel';
@@ -44,6 +44,7 @@ export default async function ClientHistoryDetailPage({
   const { locale: localeParam, id } = await params;
   const locale: Locale = isLocale(localeParam) ? localeParam : 'fr';
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'portal' });
   await connection();
 
   if (!isUuid(id)) notFound();
@@ -81,7 +82,7 @@ export default async function ClientHistoryDetailPage({
         className="inline-flex w-fit items-center gap-1.5 text-[12px] font-medium text-muted-foreground transition-colors hover:text-prodet-blue"
       >
         <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
-        Retour à l&apos;historique
+        {t('historyDetail.backToHistory')}
       </Link>
 
       <PageHeader
@@ -106,7 +107,7 @@ export default async function ClientHistoryDetailPage({
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <Panel
-          title="Produits demandés"
+          title={t('historyDetail.products')}
           description={`${request.lineCount} ligne${request.lineCount > 1 ? 's' : ''} · ${totalUnits} unité${totalUnits > 1 ? 's' : ''} au total`}
           padding="flush"
         >
@@ -145,12 +146,12 @@ export default async function ClientHistoryDetailPage({
             <dl className="divide-y divide-border text-[13px]">
               <MetaRow label="Cadence" value={request.metadata.recurrenceSummary} />
               <MetaRow label="Lieu / livraison" value={request.metadata.deliveryText} />
-              <MetaRow label="Délai" value={request.metadata.preferredTiming} />
+              <MetaRow label={t('historyDetail.leadTime')} value={request.metadata.preferredTiming} />
               <MetaRow label="Message" value={request.metadata.message} multiline />
             </dl>
           </Panel>
 
-          <Panel title="Suivi" description="Étapes connues par votre espace client.">
+          <Panel title={t('historyDetail.tracking')} description={t('historyDetail.stepsNote')}>
             <ol className="space-y-3">
               {request.timeline.map((event, index) => (
                 <TimelineEntry
@@ -166,11 +167,11 @@ export default async function ClientHistoryDetailPage({
 
       <section className="grid gap-5 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <Panel
-          title="Pièces jointes"
+          title={t('historyDetail.attachments')}
           description={
             attachedDocuments.length > 0
-              ? `${attachedDocuments.length} fichier${attachedDocuments.length > 1 ? 's' : ''} lié${attachedDocuments.length > 1 ? 's' : ''} à cette demande.`
-              : 'Aucun document attaché pour le moment.'
+              ? t('historyDetail.attachedCount', { n: attachedDocuments.length })
+              : t('historyDetail.noAttachments')
           }
           padding="flush"
         >
@@ -209,8 +210,7 @@ export default async function ClientHistoryDetailPage({
             <div className="px-5 py-6 md:px-6">
               <p className="flex items-center gap-2 text-[12px] text-muted-foreground">
                 <FolderArchive className="h-3.5 w-3.5" aria-hidden />
-                Téléversez un bon de commande, un export ERP ou tout document utile
-                au traitement.
+                {t('historyDetail.uploadHint')}
               </p>
             </div>
           )}
@@ -224,20 +224,18 @@ export default async function ClientHistoryDetailPage({
           />
         ) : (
           <Panel
-            title="Pièces jointes indisponibles"
-            description="Le stockage des documents n’est pas encore activé côté Prodet."
+            title={t('historyDetail.attachmentsUnavailable')}
+            description={t('historyDetail.storageOff')}
           >
             <p className="text-[12px] leading-5 text-muted-foreground">
-              Vous pourrez attacher des documents (BC, factures, exports ERP) dès activation
-              du module.
+              {t('historyDetail.attachmentsNote')}
             </p>
           </Panel>
         )}
       </section>
 
       <p className="text-[12px] leading-5 text-muted-foreground">
-        Données liées uniquement au portail. Les confirmations officielles restent traitées par
-        Prodet en interne.
+        {t('historyDetail.portalNote')}
       </p>
     </div>
   );

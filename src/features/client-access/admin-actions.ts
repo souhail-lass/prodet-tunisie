@@ -27,7 +27,7 @@ const ReviewIntentSchema = z.enum([
 
 const ReviewClientAccessRequestSchema = z.object({
   requestId: z.string().uuid('invalidRequest'),
-  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+  locale: z.enum(['fr', 'en']).default('fr'),
   intent: ReviewIntentSchema,
   reviewerNote: z.string().trim().max(2000, 'tooLong').optional(),
 });
@@ -49,7 +49,7 @@ export interface ClientAccessReviewResult {
 const PortalInviteActionSchema = z.object({
   inviteId: z.string().uuid('invalidInvite'),
   requestId: z.string().uuid('invalidRequest'),
-  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+  locale: z.enum(['fr', 'en']).default('fr'),
 });
 
 export interface PortalInviteActionResult {
@@ -530,7 +530,7 @@ async function requirePortalInviteAdmin(): Promise<
   }
 }
 
-async function buildActivationLink(locale: 'fr' | 'ar' | 'en', rawToken: string): Promise<string> {
+async function buildActivationLink(locale: 'fr' | 'en', rawToken: string): Promise<string> {
   const origin = await resolveAuthOrigin();
   return `${origin}/${locale}/activation-client?token=${encodeURIComponent(rawToken)}`;
 }
@@ -540,7 +540,7 @@ async function sendPortalInviteEmail(input: {
   companyName: string;
   activationLink: string;
   expiresAt: Date;
-  locale: 'fr' | 'ar' | 'en';
+  locale: 'fr' | 'en';
 }): Promise<'sent' | 'skipped' | 'failed'> {
   const apiKey = process.env.RESEND_API_KEY?.trim();
   if (!apiKey) {
@@ -557,7 +557,7 @@ async function sendPortalInviteEmail(input: {
     'Prodet Website <onboarding@resend.dev>';
   const subject = 'Activation de votre accès client Prodet';
   const expiry = new Intl.DateTimeFormat(
-    input.locale === 'ar' ? 'ar-TN' : input.locale === 'en' ? 'en-GB' : 'fr-TN',
+    input.locale === 'en' ? 'en-GB' : 'fr-TN',
     { dateStyle: 'medium', timeStyle: 'short' },
   ).format(input.expiresAt);
   const text = [

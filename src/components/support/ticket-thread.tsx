@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { FileText, ImageIcon, Loader2, Paperclip, Send, X } from 'lucide-react';
 import { useRouter } from '@/i18n/routing';
@@ -60,6 +62,7 @@ export function TicketThread({
   onUpload: (formData: FormData) => Promise<UploadResult>;
   poll?: boolean;
 }) {
+  const t = useTranslations('portal.ticket');
   const router = useRouter();
   const [body, setBody] = useState('');
   const [pending, setPending] = useState<Pending[]>([]);
@@ -235,11 +238,11 @@ export function TicketThread({
 
       {closed ? (
         <p className="panel__sub" style={{ marginTop: 14, textAlign: 'center' }}>
-          Ce ticket est clôturé. Répondez pour le rouvrir.
+          {t('closedNote')}
         </p>
       ) : null}
       {failed ? (
-        <p className="ticket-error">L’envoi a échoué (ou fichier trop volumineux, max 25 Mo). Réessayez.</p>
+        <p className="ticket-error">{t('sendFailed')}</p>
       ) : null}
 
       {pending.length > 0 ? (
@@ -270,8 +273,8 @@ export function TicketThread({
           type="button"
           className="ticket-composer__attach"
           onClick={() => fileRef.current?.click()}
-          aria-label="Joindre un fichier"
-          title="Joindre une photo ou un fichier"
+          aria-label={t('attachFile')}
+          title={t('attachTitle')}
         >
           <Paperclip size={18} />
         </button>
@@ -282,7 +285,7 @@ export function TicketThread({
             if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') send();
           }}
           rows={1}
-          placeholder="Écrivez votre message…"
+          placeholder={t('messagePlaceholder')}
           className="ticket-composer__input"
         />
         <button type="button" className="ticket-composer__send" onClick={send} disabled={!canSend} aria-label="Envoyer">

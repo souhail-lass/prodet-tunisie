@@ -158,7 +158,6 @@ export async function getClientDashboardData({
           translatedName: schema.productTranslation.name,
           nameCanonical: schema.product.nameCanonical,
           categoryNameFr: schema.category.nameFr,
-          categoryNameAr: schema.category.nameAr,
           categoryNameEn: schema.category.nameEn,
           conditionnement: schema.product.conditionnement,
           unitOfSale: schema.product.unitOfSale,
@@ -233,7 +232,6 @@ export async function getClientDashboardData({
           productNameCanonical: schema.product.nameCanonical,
           translatedName: schema.productTranslation.name,
           categoryNameFr: schema.category.nameFr,
-          categoryNameAr: schema.category.nameAr,
           categoryNameEn: schema.category.nameEn,
           totalQuantity: sum(schema.orderLine.quantity).as('total_quantity'),
           requestCount: sql<number>`count(distinct ${schema.orderLine.orderDraftId})`.as(
@@ -266,7 +264,6 @@ export async function getClientDashboardData({
           schema.product.nameCanonical,
           schema.productTranslation.name,
           schema.category.nameFr,
-          schema.category.nameAr,
           schema.category.nameEn,
         )
         .orderBy(sql`total_quantity desc`)
@@ -431,12 +428,10 @@ async function hydrateRecentRequests({
 function getCategoryName(
   row: {
     categoryNameFr: string | null;
-    categoryNameAr: string | null;
     categoryNameEn: string | null;
   },
   locale: Locale,
 ): string | null {
-  if (locale === 'ar') return row.categoryNameAr || row.categoryNameFr;
   if (locale === 'en') return row.categoryNameEn || row.categoryNameFr;
   return row.categoryNameFr;
 }

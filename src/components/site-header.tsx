@@ -9,7 +9,7 @@ import { Button } from '@/components/ds';
 import { useQuoteSelection } from '@/lib/quote-cart-context';
 import { useQuoteDrawer } from '@/components/site/quote-drawer';
 
-const LANG_LABEL: Record<Locale, string> = { fr: 'FR', ar: 'AR', en: 'EN' };
+const LANG_LABEL: Record<Locale, string> = { fr: 'FR', en: 'EN' };
 
 export function SiteHeader() {
   const t = useTranslations('common');

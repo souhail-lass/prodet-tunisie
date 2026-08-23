@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 import { ArrowRight, MailCheck, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { Link, isLocale } from '@/i18n/routing';
@@ -36,6 +37,7 @@ export default async function ClientLoginPage({
   const error = firstParam(rawSearchParams.error);
   const sent = firstParam(rawSearchParams.sent);
   const next = sanitizeNext(locale, firstParam(rawSearchParams.next));
+  const t = await getTranslations({ locale, namespace: 'common.clientAccess' });
 
   // Returning client with a still-valid session: skip the form entirely and
   // go straight to the portal. The magic link is only for the FIRST login on
@@ -55,13 +57,13 @@ export default async function ClientLoginPage({
         {/* Heading — mirrors /espace-client for a consistent entry point. */}
         <header className="mb-8 text-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-prodet-blue">
-            Espace client
+            {t('eyebrow')}
           </p>
           <h1 className="mt-2.5 text-[28px] font-semibold leading-[1.15] text-prodet-text">
-            Connexion à votre espace
+            {t('titleLogin')}
           </h1>
           <p className="mx-auto mt-3 max-w-[320px] text-[14px] leading-6 text-muted-foreground">
-            Connexion sans mot de passe, réservée aux comptes professionnels validés.
+            {t('lead')}
           </p>
         </header>
 
@@ -78,11 +80,11 @@ export default async function ClientLoginPage({
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="nom@societe.tn"
+                placeholder={t('emailPlaceholder')}
               />
             </label>
             <Button type="submit" size="lg" className="w-full">
-              Recevoir le lien de connexion
+              {t('submit')}
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Button>
           </form>
@@ -93,7 +95,7 @@ export default async function ClientLoginPage({
               className="mt-4 flex items-start gap-2 rounded-md border border-prodet-green/20 bg-prodet-green/10 px-3 py-2.5 text-[12px] leading-5 text-prodet-green"
             >
               <MailCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-              <span>Lien envoyé. Vérifiez votre boîte mail (pensez aux courriers indésirables).</span>
+              <span>{t('sentLogin')}</span>
             </p>
           ) : null}
 
@@ -103,7 +105,7 @@ export default async function ClientLoginPage({
               className="mt-4 flex items-start gap-2 rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-[12px] leading-5 text-destructive"
             >
               <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-              <span>{clientLoginErrorMessage(error)}</span>
+              <span>{t(clientLoginErrorKey(error))}</span>
             </p>
           ) : null}
 
@@ -111,44 +113,53 @@ export default async function ClientLoginPage({
           <div className="my-6 flex items-center gap-3" aria-hidden>
             <span className="h-px flex-1 bg-border" />
             <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-              ou
+              {t('or')}
             </span>
             <span className="h-px flex-1 bg-border" />
           </div>
 
           {/* Secondary path — request access */}
           <div className="text-center">
-            <p className="text-[13px] text-muted-foreground">Pas encore client&nbsp;?</p>
+            <p className="text-[13px] text-muted-foreground">{t('notYetClient')}</p>
             <Button asChild variant="neutral" size="lg" className="mt-2.5 w-full">
-              <Link href="/devenir-client">Demander un accès</Link>
+              <Link href="/devenir-client">{t('requestAccess')}</Link>
             </Button>
           </div>
         </div>
 
         <p className="mt-5 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
           <ShieldCheck className="h-3.5 w-3.5 text-prodet-blue" aria-hidden />
-          Accès validé par Prodet · Aucun mot de passe à mémoriser
+          {t('reassure')}
         </p>
       </div>
     </main>
   );
 }
 
-function clientLoginErrorMessage(error: string): string {
+type ClientLoginErrorKey =
+  | 'errors.invalidEmail'
+  | 'errors.notActivated'
+  | 'errors.notConfigured'
+  | 'errors.sendFailed'
+  | 'errors.badLink'
+  | 'errors.signInFailed';
+
+/** Map the ?error= code to a translation key under common.clientAccess. */
+function clientLoginErrorKey(error: string): ClientLoginErrorKey {
   switch (error) {
     case 'invalid':
-      return "L'adresse email n'est pas valide.";
+      return 'errors.invalidEmail';
     case 'not-activated':
-      return "Cet email n'a pas encore d'accès client activé par Prodet.";
+      return 'errors.notActivated';
     case 'config':
-      return "La connexion client n'est pas configurée côté serveur.";
+      return 'errors.notConfigured';
     case 'failed':
-      return "Impossible d'envoyer le lien de connexion pour le moment.";
+      return 'errors.sendFailed';
     case 'missing-code':
     case 'callback':
-      return "Le lien magique n'a pas pu être validé. Demandez un nouveau lien.";
+      return 'errors.badLink';
     default:
-      return 'Connexion impossible pour le moment.';
+      return 'errors.signInFailed';
   }
 }
 
@@ -156,7 +167,7 @@ function firstParam(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
-function sanitizeNext(locale: 'fr' | 'ar' | 'en', value?: string): string {
+function sanitizeNext(locale: 'fr' | 'en', value?: string): string {
   if (!value) return `/${locale}/client`;
 
   try {

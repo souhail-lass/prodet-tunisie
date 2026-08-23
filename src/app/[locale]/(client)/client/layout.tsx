@@ -10,7 +10,7 @@ import {
   UnauthenticatedClientError,
   requireClientPortalAccess,
 } from '@/features/client-portal/auth';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { account as mockAccount } from '@/features/client-portal/mock/portal-mock';
 import { resolveCurrentPortalSwiverIdentity } from '@/features/client-portal/swiver-identity';
 import { isLocale } from '@/i18n/routing';
@@ -45,6 +45,7 @@ export default async function ClientLayout({
   const { locale } = await params;
   const safeLocale = isLocale(locale) ? locale : 'fr';
   setRequestLocale(safeLocale);
+  const t = await getTranslations({ locale: safeLocale, namespace: 'portal' });
   await cookies();
 
   // Dev preview: without a real Supabase session, render the portal with demo
@@ -89,9 +90,9 @@ export default async function ClientLayout({
             <p className="eyebrow" style={{ marginTop: 16 }}>
               Espace client
             </p>
-            <h1 className="mt-1 text-[20px] font-semibold text-[var(--text-primary)]">Accès client non activé</h1>
+            <h1 className="mt-1 text-[20px] font-semibold text-[var(--text-primary)]">{t('access.notActivatedTitle')}</h1>
             <p className="mt-2 text-[13px] leading-6 text-[var(--text-secondary)]">
-              Votre session existe, mais aucun client validé Prodet n&rsquo;est lié à ce compte.
+              {t('access.notActivatedBody')}
             </p>
           </div>
         </main>

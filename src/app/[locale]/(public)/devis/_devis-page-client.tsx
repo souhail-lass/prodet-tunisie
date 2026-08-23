@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, useTransition, type ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 import { Link, type Locale } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -73,6 +74,7 @@ const fallbackEmail = 'contact@prodet.com.tn';
 const quoteSearchProducts = products.filter((product) => product.category === 'manufactured');
 
 export function DevisPageClient({ locale }: { locale: Locale }) {
+  const t = useTranslations('devis.quote');
   const {
     items,
     addProduct,
@@ -118,12 +120,12 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
 
         setSubmissionState({
           status: 'error',
-          message: result.formError ?? 'Impossible d’envoyer la demande maintenant.',
+          message: result.formError ?? t('sendError'),
         });
       } catch {
         setSubmissionState({
           status: 'error',
-          message: 'Impossible d’envoyer la demande maintenant.',
+          message: t('sendError'),
         });
       }
     });
@@ -138,14 +140,14 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
               Accueil
             </Link>
             <span className="mx-2">/</span>
-            <span>Demande de devis</span>
+            <span>{t('eyebrow')}</span>
           </nav>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-end">
             <SectionHeader
-              eyebrow="Demande de devis"
-              title="Sélectionnez vos produits, envoyez votre demande."
-              description="Ajoutez les quantités et vos coordonnées. Prodet vous répond directement."
+              eyebrow={t('eyebrow')}
+              title={t('title')}
+              description={t('lead')}
               tone="inverse"
               spacing="none"
               level={1}
@@ -179,10 +181,10 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
               <div>
                 <p className="text-xs font-semibold uppercase text-primary">Produits</p>
                 <h2 className="mt-1 text-xl font-semibold text-prodet-text">
-                  Sélection
+                  {t('selection.title')}
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Ajoutez depuis la recherche ou le catalogue.
+                  {t('selection.hint')}
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -192,7 +194,7 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
                     onClick={clearSelection}
                     className="inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-700"
                   >
-                    <Trash2 className="h-3.5 w-3.5" aria-hidden /> Vider la liste
+                    <Trash2 className="h-3.5 w-3.5" aria-hidden /> {t('selection.clear')}
                   </button>
                 ) : null}
                 <Button asChild variant="neutral" size="sm">
@@ -211,10 +213,10 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
                   <PackageSearch className="h-7 w-7" aria-hidden />
                 </div>
                 <h3 className="mt-5 text-lg font-semibold text-prodet-text">
-                  Aucun produit sélectionné.
+                  {t('selection.emptyTitle')}
                 </h3>
                 <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
-                  Recherchez un produit ci-dessus.
+                  {t('selection.emptyHint')}
                 </p>
               </div>
             ) : (
@@ -236,30 +238,30 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
           <aside className="space-y-5 lg:sticky lg:top-[118px] lg:self-start">
             <section className="rounded-lg border border-border bg-white p-5 md:p-6">
               <div>
-                <p className="text-xs font-semibold uppercase text-primary">Coordonnées</p>
+                <p className="text-xs font-semibold uppercase text-primary">{t('contactTitle')}</p>
                 <h2 className="mt-2 text-2xl font-semibold text-prodet-text">Contact</h2>
               </div>
 
               <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                <FormField label="Nom / Prénom">
+                <FormField label={t('fields.name')}>
                   <Input
                     value={formState.fullName}
                     onChange={(event) => updateField('fullName', event.target.value)}
                   />
                 </FormField>
-                <FormField label="Société / Établissement">
+                <FormField label={t('fields.company')}>
                   <Input
                     value={formState.company}
                     onChange={(event) => updateField('company', event.target.value)}
                   />
                 </FormField>
-                <FormField label="Secteur d’activité">
+                <FormField label={t('fields.sector')}>
                   <Select
                     value={formState.sectorId}
                     onValueChange={(value) => updateField('sectorId', value)}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choisir un secteur" />
+                      <SelectValue placeholder={t('fields.sectorPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent>
                       {sectors.map((sector) => (
@@ -270,7 +272,7 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
                     </SelectContent>
                   </Select>
                 </FormField>
-                <FormField label="Téléphone">
+                <FormField label={t('fields.phone')}>
                   <Input
                     type="tel"
                     value={formState.phone}
@@ -284,18 +286,18 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
                     onChange={(event) => updateField('email', event.target.value)}
                   />
                 </FormField>
-                <FormField label="Ville / zone de livraison">
+                <FormField label={t('fields.city')}>
                   <Input
                     value={formState.city}
                     onChange={(event) => updateField('city', event.target.value)}
                   />
                 </FormField>
-                <FormField label="Message complémentaire" className="sm:col-span-2 lg:col-span-1 xl:col-span-2">
+                <FormField label={t('fields.message')} className="sm:col-span-2 lg:col-span-1 xl:col-span-2">
                   <Textarea
                     rows={5}
                     value={formState.message}
                     onChange={(event) => updateField('message', event.target.value)}
-                    placeholder="Précisez les usages, les formats ou les volumes si nécessaire."
+                    placeholder={t('fields.messageHelp')}
                   />
                 </FormField>
               </div>
@@ -330,7 +332,7 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
                   </p>
                 ) : null}
                 <p className="mt-3 text-xs leading-5 text-muted-foreground">
-                  Téléphone ou email requis. Prix confirmés directement par Prodet.
+                  {t('contactNote')}
                 </p>
               </div>
             </section>
@@ -346,6 +348,8 @@ function FastProductAdd({
 }: {
   onAdd: (product: Product, quantity: number) => void;
 }) {
+  const t = useTranslations('devis.quote');
+  const tq = useTranslations('common.quantity');
   const [query, setQuery] = useState('');
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
@@ -387,7 +391,7 @@ function FastProductAdd({
   return (
     <div ref={containerRef} className="mt-4">
       <label htmlFor="devis-product-search" className="sr-only">
-        Rechercher un produit à ajouter
+        {t('search.label')}
       </label>
       <div className="relative">
         <Search
@@ -409,7 +413,7 @@ function FastProductAdd({
               event.currentTarget.blur();
             }
           }}
-          placeholder="Rechercher un produit à ajouter…"
+          placeholder={t('search.placeholder')}
           className="h-11 w-full rounded-sm border border-border bg-white pl-9 pr-10 text-sm text-prodet-text outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10"
         />
         {query ? (
@@ -419,7 +423,7 @@ function FastProductAdd({
               setQuery('');
               setSuggestionsOpen(false);
             }}
-            aria-label="Effacer la recherche"
+            aria-label={t('search.clear')}
             className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground hover:bg-prodet-wash hover:text-primary"
           >
             <X className="h-4 w-4" aria-hidden />
@@ -452,7 +456,7 @@ function FastProductAdd({
                         {product.name}
                       </p>
                       <p className="mt-1 truncate text-xs text-muted-foreground">
-                        {[product.formats[0]?.label, formatCategory(product.category)]
+                        {[product.formats[0]?.label, t(product.category === 'manufactured' ? 'badges.manufactured' : 'badges.resold')]
                           .filter(Boolean)
                           .join(' · ')}
                       </p>
@@ -462,7 +466,7 @@ function FastProductAdd({
                       <div className="inline-flex h-8 overflow-hidden rounded-sm border border-border bg-white">
                         <button
                           type="button"
-                          aria-label="Diminuer la quantité"
+                          aria-label={tq('decrease')}
                           disabled={quantity <= 1}
                           onClick={() => setQuickQuantity(product.id, quantity - 1)}
                           className="inline-flex h-8 w-8 items-center justify-center text-primary transition-colors hover:bg-prodet-mist disabled:cursor-not-allowed disabled:text-border"
@@ -474,7 +478,7 @@ function FastProductAdd({
                         </span>
                         <button
                           type="button"
-                          aria-label="Augmenter la quantité"
+                          aria-label={tq('increase')}
                           onClick={() => setQuickQuantity(product.id, quantity + 1)}
                           className="inline-flex h-8 w-8 items-center justify-center text-primary transition-colors hover:bg-prodet-mist"
                         >
@@ -520,6 +524,8 @@ function SelectionRow({
   onDecrement: () => void;
   onRemove: () => void;
 }) {
+  const t = useTranslations('devis.quote');
+  const tq = useTranslations('common.quantity');
   return (
     <article className="grid gap-3 rounded-lg border border-border bg-white p-3 sm:grid-cols-[84px_minmax(0,1fr)_auto] sm:items-center">
       <Link
@@ -558,7 +564,7 @@ function SelectionRow({
                   : 'bg-support/8 text-support',
               )}
             >
-              {formatCategory(item.category)}
+              {t(item.category === 'manufactured' ? 'badges.manufactured' : 'badges.resold')}
             </span>
           ) : null}
         </div>
@@ -568,7 +574,7 @@ function SelectionRow({
         <div className="inline-flex h-9 overflow-hidden rounded-sm border border-border bg-white">
           <button
             type="button"
-            aria-label="Diminuer la quantité"
+            aria-label={tq('decrease')}
             disabled={item.quantity <= 1}
             onClick={onDecrement}
             className="inline-flex h-9 w-9 items-center justify-center text-primary transition-colors hover:bg-prodet-mist disabled:cursor-not-allowed disabled:text-border"
@@ -580,7 +586,7 @@ function SelectionRow({
           </span>
           <button
             type="button"
-            aria-label="Augmenter la quantité"
+            aria-label={tq('increase')}
             onClick={onIncrement}
             className="inline-flex h-9 w-9 items-center justify-center text-primary transition-colors hover:bg-prodet-mist"
           >

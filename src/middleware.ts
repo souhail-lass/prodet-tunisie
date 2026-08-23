@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import { defaultLocale, locales } from '@/i18n/routing';
+import { defaultLocale, locales, LOCALE_HEADER } from '@/i18n/routing';
 
 function getLocaleFromPathname(pathname: string): string | null {
   const segments = pathname.split('/');
@@ -70,8 +70,21 @@ function hasFreshSession(request: NextRequest): boolean {
   }
 }
 
+/**
+ * Forward the locale we parsed from the pathname to the server render.
+ *
+ * next-intl's `requestLocale` is undefined on the dynamic render path, so
+ * without this header every runtime render falls back to the default locale
+ * and /en serves French. See src/i18n/request.ts.
+ */
+function withLocaleHeader(request: NextRequest, locale: string) {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(LOCALE_HEADER, locale);
+  return NextResponse.next({ request: { headers: requestHeaders } });
+}
+
 function passThroughWithLocale(request: NextRequest, locale: string) {
-  const response = NextResponse.next({ request });
+  const response = withLocaleHeader(request, locale);
   response.cookies.set('NEXT_LOCALE', locale, {
     maxAge: 60 * 60 * 24 * 365,
     path: '/',
@@ -94,6 +107,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Arabic was retired as a site locale. Send any surviving /ar link (bookmarks,
+  // indexed URLs) to the same page in the default locale instead of 404ing.
+  if (pathname === '/ar' || pathname.startsWith('/ar/')) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${defaultLocale}${pathname.slice('/ar'.length)}`;
+    url.search = search;
+    return NextResponse.redirect(url);
+  }
+
   if (pathnameLocale) {
     if (isLocalizedAdminPath(pathname)) {
       return protectAdminPath(request, pathnameLocale);
@@ -103,13 +125,7 @@ export async function middleware(request: NextRequest) {
       return protectClientPath(request, pathnameLocale);
     }
 
-    const response = NextResponse.next();
-    response.cookies.set('NEXT_LOCALE', pathnameLocale, {
-      maxAge: 60 * 60 * 24 * 365,
-      path: '/',
-      sameSite: 'lax',
-    });
-    return response;
+    return passThroughWithLocale(request, pathnameLocale);
   }
 
   const url = request.nextUrl.clone();
@@ -135,7 +151,7 @@ async function protectClientPath(request: NextRequest, locale: string) {
     return passThroughWithLocale(request, locale);
   }
 
-  let response = NextResponse.next();
+  let response = withLocaleHeader(request, locale);
 
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
@@ -146,7 +162,7 @@ async function protectClientPath(request: NextRequest, locale: string) {
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
-        response = NextResponse.next({ request });
+        response = withLocaleHeader(request, locale);
         cookiesToSet.forEach(({ name, value, options }) => {
           response.cookies.set(name, value, options);
         });
@@ -206,7 +222,7 @@ async function protectAdminPath(request: NextRequest, locale: string) {
     return passThroughWithLocale(request, locale);
   }
 
-  let response = NextResponse.next();
+  let response = withLocaleHeader(request, locale);
 
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
@@ -217,7 +233,7 @@ async function protectAdminPath(request: NextRequest, locale: string) {
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
-        response = NextResponse.next({ request });
+        response = withLocaleHeader(request, locale);
         cookiesToSet.forEach(({ name, value, options }) => {
           response.cookies.set(name, value, options);
         });

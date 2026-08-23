@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * "Ils nous font confiance" — trusted-clients logo wall.
  *
@@ -7,6 +9,7 @@
  * grayscale by default, and colours in on hover.
  */
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 type Client = { name: string; logo?: string };
 
@@ -23,10 +26,11 @@ const CLIENTS: Client[] = [
 ];
 
 export function ClientWall() {
+  const t = useTranslations('home');
   if (CLIENTS.length === 0) return null;
   const loop = [...CLIENTS, ...CLIENTS];
   return (
-    <div className="cwall" role="region" aria-label="Ils nous font confiance">
+    <div className="cwall" role="region" aria-label={t('clients.ariaLabel')}>
       <div className="cwall__track">
         {loop.map((c, i) => {
           const dupe = i >= CLIENTS.length;

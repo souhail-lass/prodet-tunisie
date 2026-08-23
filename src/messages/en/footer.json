@@ -9,5 +9,13 @@
     "privacy": "Privacy policy",
     "cookies": "Cookies"
   },
-  "rights": "© {year} Prodet Tunisie. All rights reserved."
+  "rights": "© {year} Prodet Tunisie. All rights reserved.",
+  "madeInTunisia": "Made in Tunisia",
+  "requestQuote": "Request a quote",
+  "catalogLinks": {
+    "food": "Food service & kitchen",
+    "laundry": "Laundry",
+    "housekeeping": "Housekeeping",
+    "household": "Household items"
+  }
 }

@@ -8,7 +8,7 @@ import {
   PhoneCall,
   ShieldCheck,
 } from 'lucide-react';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, isLocale } from '@/i18n/routing';
 import { AccessRequestForm } from '@/components/client-space/access-request-form';
 
@@ -21,17 +21,18 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const STEPS = [
-  { icon: FileText, title: 'Votre demande', body: 'Vos informations société et professionnelles.' },
-  { icon: PhoneCall, title: 'Vérification & appel', body: 'Notre équipe vérifie le dossier et vous appelle.' },
-  { icon: BadgeCheck, title: 'Approbation', body: 'Prodet valide votre compte client.' },
-  { icon: MailCheck, title: "Email d'activation", body: 'Vous recevez un lien pour activer votre accès.' },
-  { icon: LayoutDashboard, title: 'Accès au portail', body: 'Commandes, devis, factures et livraisons.' },
+  { icon: FileText, key: 'request' },
+  { icon: PhoneCall, key: 'check' },
+  { icon: BadgeCheck, key: 'approve' },
+  { icon: MailCheck, key: 'activate' },
+  { icon: LayoutDashboard, key: 'portal' },
 ] as const;
 
 export default async function DevenirClientPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) return null;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'common.becomeClient' });
 
   return (
     <div className="bg-prodet-wash">
@@ -51,12 +52,12 @@ export default async function DevenirClientPage({ params }: { params: Promise<{ 
             <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-prodet-ink text-white">
               <ShieldCheck className="h-5 w-5" aria-hidden />
             </span>
-            <p className="eyebrow-label mt-5">Accès contrôlé</p>
+            <p className="eyebrow-label mt-5">{t('controlled.title')}</p>
             <h1 className="mt-2 font-display text-[28px] font-bold leading-tight text-prodet-text">
-              Demander un accès client Prodet
+              {t('title')}
             </h1>
             <p className="mt-2.5 text-sm leading-6 text-muted-foreground">
-              Réservé aux professionnels. Prodet vérifie chaque demande avant d&apos;ouvrir l&apos;accès.
+              {t('controlled.body')}
             </p>
 
             <ol className="relative mt-8 space-y-6">
@@ -64,7 +65,7 @@ export default async function DevenirClientPage({ params }: { params: Promise<{ 
                 const Icon = step.icon;
                 const isLast = index === STEPS.length - 1;
                 return (
-                  <li key={step.title} className="relative flex gap-4">
+                  <li key={step.key} className="relative flex gap-4">
                     {/* Connector rail between nodes */}
                     {!isLast ? (
                       <span
@@ -77,10 +78,10 @@ export default async function DevenirClientPage({ params }: { params: Promise<{ 
                     </span>
                     <div className="pt-1">
                       <span className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-prodet-blue">
-                        Étape {index + 1}
+                        {t('step', { n: index + 1 })}
                       </span>
-                      <h3 className="mt-0.5 text-sm font-semibold text-prodet-text">{step.title}</h3>
-                      <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{step.body}</p>
+                      <h3 className="mt-0.5 text-sm font-semibold text-prodet-text">{t(`steps.${step.key}.title`)}</h3>
+                      <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{t(`steps.${step.key}.body`)}</p>
                     </div>
                   </li>
                 );

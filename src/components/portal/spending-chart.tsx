@@ -24,11 +24,11 @@ export function SpendingChart({
   const [active, setActive] = useState<number | null>(null);
 
   const months = useMemo(() => {
-    const monthFmt = new Intl.DateTimeFormat(locale === 'ar' ? 'ar-TN' : locale === 'en' ? 'en' : 'fr', {
+    const monthFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'fr', {
       month: 'short',
       timeZone: 'UTC',
     });
-    const longFmt = new Intl.DateTimeFormat(locale === 'ar' ? 'ar-TN' : locale === 'en' ? 'en' : 'fr', {
+    const longFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'fr', {
       month: 'long',
       year: 'numeric',
       timeZone: 'UTC',

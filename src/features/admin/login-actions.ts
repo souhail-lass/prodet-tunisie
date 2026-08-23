@@ -8,7 +8,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 
 const AdminLoginSchema = z.object({
   email: z.string().trim().email(),
-  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+  locale: z.enum(['fr', 'en']).default('fr'),
   next: z.string().trim().optional(),
 });
 
@@ -75,7 +75,7 @@ export async function requestAdminMagicLink(formData: FormData): Promise<never> 
   redirect(`/${locale}/connexion-admin?sent=1`);
 }
 
-function sanitizeAdminNext(locale: 'fr' | 'ar' | 'en', value?: string): string {
+function sanitizeAdminNext(locale: 'fr' | 'en', value?: string): string {
   if (!value) return `/${locale}/admin/overview`;
 
   try {

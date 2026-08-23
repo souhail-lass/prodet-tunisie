@@ -27,14 +27,10 @@ export async function generateMetadata({
   const isFrench = locale === 'fr';
   const defaultTitle = isFrench
     ? "Prodet Tunisie — Produits d'entretien professionnels fabriqués en Tunisie"
-    : locale === 'ar'
-      ? 'بروديت تونس'
-      : 'Prodet Tunisie';
+    : 'Prodet Tunisie';
   const description = isFrench
     ? "Prodet fabrique et distribue des produits d'entretien et d'hygiène pour hôtels, restaurants, entreprises et institutions en Tunisie. Devis sur demande."
-    : locale === 'ar'
-      ? 'مُصنِّع تونسي لمنتجات النظافة والصيانة المهنية.'
-      : 'Tunisian manufacturer of professional cleaning and hygiene products.';
+    : 'Tunisian manufacturer of professional cleaning and hygiene products.';
   const ogTitle = isFrench
     ? "Prodet Tunisie — Fournisseur B2B de produits d'entretien"
     : defaultTitle;
@@ -54,7 +50,6 @@ export async function generateMetadata({
       canonical: `/${locale}`,
       languages: {
         'fr-TN': '/fr',
-        'ar-TN': '/ar',
         en: '/en',
         'x-default': '/fr',
       },

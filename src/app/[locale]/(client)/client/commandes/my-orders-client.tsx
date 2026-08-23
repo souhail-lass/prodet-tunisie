@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { CheckCircle2, Plus, Repeat, Search, X } from 'lucide-react';
 import { ConfirmDialog } from '@/components/ds';
 import { Link, useRouter } from '@/i18n/routing';
@@ -20,22 +21,23 @@ export type MyOrderRow = {
   origin: 'portal' | 'swiver';
 };
 
-const STATUS: Record<string, { label: string; tone: string }> = {
-  parsing: { label: 'Brouillon', tone: 'neutral' },
-  review: { label: 'En attente', tone: 'blue' },
-  approved: { label: 'Confirmée', tone: 'green' },
-  exported: { label: 'Clôturée', tone: 'green' },
-  rejected: { label: 'Annulée', tone: 'neutral' },
+const STATUS: Record<string, { key: string; tone: string }> = {
+  parsing: { key: 'parsing', tone: 'neutral' },
+  review: { key: 'review', tone: 'blue' },
+  approved: { key: 'confirmed', tone: 'green' },
+  exported: { key: 'closed', tone: 'green' },
+  rejected: { key: 'cancelled', tone: 'neutral' },
 };
 
 const TABS = [
-  { id: 'all', label: 'Toutes' },
-  { id: 'review', label: 'En attente' },
-  { id: 'approved', label: 'Confirmées' },
-  { id: 'rejected', label: 'Annulées' },
+  { id: 'all', key: 'all' },
+  { id: 'review', key: 'review' },
+  { id: 'approved', key: 'confirmed' },
+  { id: 'rejected', key: 'cancelled' },
 ];
 
 export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
+  const tr = useTranslations('portal.orders');
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [canceled, setCanceled] = useState<Set<string>>(new Set());
@@ -76,7 +78,7 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
         </div>
         <div className="stat-card">
           <div className="stat-card__value" style={{ color: 'var(--prodet-green)' }}>{pushed}</div>
-          <div className="stat-card__label">Transmises à Prodet</div>
+          <div className="stat-card__label">{tr('tabs.sent')}</div>
         </div>
       </div>
 
@@ -88,7 +90,7 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
               className={`otable-tab${tab === t.id ? ' is-active' : ''}`}
               onClick={() => setTab(t.id)}
             >
-              {t.label}
+              {tr(`tabs.${t.key}`)}
             </button>
           ))}
         </div>
@@ -98,8 +100,8 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Référence…"
-              aria-label="Rechercher une commande"
+              placeholder={tr('searchPlaceholder')}
+              aria-label={tr('searchLabel')}
             />
           </div>
           <Link href="/client/commander" className="pds-btn pds-btn--primary pds-btn--sm">
@@ -111,7 +113,7 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
       {filtered.length > 0 ? (
         <div className="otable">
           <div className="otable__head">
-            <span>Référence</span>
+            <span>{tr('reference')}</span>
             <span className="otable-hide-sm">Date</span>
             <span className="otable-hide-sm">Articles</span>
             <span style={{ textAlign: 'right' }}>Montant</span>
@@ -120,14 +122,14 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
           </div>
           {filtered.map((o) => {
             const status = effectiveStatus(o);
-            const s = STATUS[status] ?? { label: status, tone: 'neutral' };
+            const s = STATUS[status];
             const isCanceled = status === 'rejected';
             const transmitted = o.swiverPushed && !isCanceled;
             const fromSwiver = o.origin === 'swiver';
             const refInner = (
               <>
                 {transmitted ? (
-                  <CheckCircle2 size={14} className="otable__ref-check" aria-label="Enregistrée chez Prodet" />
+                  <CheckCircle2 size={14} className="otable__ref-check" aria-label={tr('savedShort')} />
                 ) : null}
                 <span>{o.reference}</span>
               </>
@@ -154,11 +156,11 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
                 </span>
                 <span className="otable__amount">{o.totalLabel ?? '—'}</span>
                 <span>
-                  <span className={`otable-pill otable-pill--${s.tone}`}>{s.label}</span>
+                  <span className={`otable-pill otable-pill--${s?.tone ?? 'neutral'}`}>{s ? tr(`status.${s.key}`) : status}</span>
                 </span>
                 <span className="otable__actions">
                   {fromSwiver ? (
-                    <span className="otable__origin" title="Commande enregistrée par Prodet">Prodet</span>
+                    <span className="otable__origin" title={tr('savedLong')}>Prodet</span>
                   ) : (
                     <>
                       <Link
@@ -190,20 +192,20 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
       ) : (
         <div className="otable-empty">
           {tab === 'all' && !query
-            ? 'Aucune commande pour le moment. Cliquez sur « Nouvelle commande ».'
-            : 'Aucune commande dans cette catégorie.'}
+            ? tr('emptyAll')
+            : tr('emptyCategory')}
         </div>
       )}
 
       <ConfirmDialog
         open={confirming != null}
-        title="Annuler cette commande ?"
+        title={tr('cancelConfirm')}
         message={
           confirming
             ? `La commande ${confirming.reference} sera également annulée chez Prodet.`
             : ''
         }
-        confirmLabel="Annuler la commande"
+        confirmLabel={tr('cancel')}
         cancelLabel="Garder"
         danger
         pending={pending}

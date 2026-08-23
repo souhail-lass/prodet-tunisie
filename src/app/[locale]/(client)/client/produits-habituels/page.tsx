@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { connection } from 'next/server';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ArrowRight, Layers3, PackageCheck, Plus } from 'lucide-react';
 import { EmptyState } from '@/components/portal/empty-state';
 import { PageHeader } from '@/components/portal/page-header';
@@ -31,6 +31,7 @@ export default async function ClientUsualProductsPage({
   const { locale: localeParam } = await params;
   const locale: Locale = isLocale(localeParam) ? localeParam : 'fr';
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'portal' });
   await connection();
 
   const access = await requireClientPortalAccess();
@@ -42,16 +43,16 @@ export default async function ClientUsualProductsPage({
   return (
     <div className="flex flex-col gap-6 lg:gap-8">
       <PageHeader
-        eyebrow="Réapprovisionnement"
-        title="Produits habituels"
-        description="Références enregistrées pour votre société, alignées avec le catalogue Prodet."
+        eyebrow={t('usual.eyebrow')}
+        title={t('usual.pageTitle')}
+        description={t('usual.lead')}
         meta={
           <StatusPill
             tone={usualProducts.length > 0 ? 'success' : 'neutral'}
             label={
               usualProducts.length > 0
-                ? `${usualProducts.length} produit${usualProducts.length > 1 ? 's' : ''}`
-                : 'À configurer'
+                ? t('usual.count', { n: usualProducts.length })
+                : t('usual.toConfigure')
             }
             size="md"
           />
@@ -75,16 +76,17 @@ export default async function ClientUsualProductsPage({
       ) : (
         <EmptyState
           icon={<Layers3 className="h-4 w-4" aria-hidden />}
-          title="Aucun produit habituel"
-          description="Contactez Prodet pour lier des références récurrentes, ou parcourez le catalogue."
-          action={{ label: 'Ouvrir le catalogue', href: '/catalogue' }}
+          title={t('usual.emptyTitle')}
+          description={t('usual.toConfigureBody')}
+          action={{ label: t('usual.openCatalogue'), href: '/catalogue' }}
         />
       )}
     </div>
   );
 }
 
-function UsualProductCard({ item }: { item: CustomerUsualProductItem }) {
+async function UsualProductCard({ item }: { item: CustomerUsualProductItem }) {
+  const t = await getTranslations('portal');
   const format = [item.conditionnement, item.unitOfSale].filter(Boolean).join(' · ');
 
   return (
@@ -94,7 +96,7 @@ function UsualProductCard({ item }: { item: CustomerUsualProductItem }) {
           <PackageCheck className="h-4 w-4" aria-hidden />
         </span>
         <span className="inline-flex items-baseline gap-1 rounded-sm border border-border bg-card px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
-          <span className="text-[10px] uppercase tracking-[0.06em]">Qté</span>
+          <span className="text-[10px] uppercase tracking-[0.06em]">{t('usual.qty')}</span>
           <span className="text-[13px] font-semibold tabular-nums text-prodet-text">
             {item.defaultQuantity}
           </span>

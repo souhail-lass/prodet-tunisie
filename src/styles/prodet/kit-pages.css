@@ -22,6 +22,10 @@
 @media (max-width: 700px) {
   .catalogue__browse { gap: 32px; padding-top: 24px; }
   .cat-famille__head { flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 14px; }
+  /* Phones skip the univers picker: an extra full-screen tap target before any
+     product is worse on a small screen than simply scrolling the famille
+     sections. Desktop keeps the picker. */
+  .cat-univers { display: none; }
 }
 /* Keep the catalogue sous-cat tiles 2-up on phones (more specific than the
    global ≤520 `.souscat-grid { 1fr }` so they don't blow up to one column). */

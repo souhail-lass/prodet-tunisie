@@ -41,7 +41,7 @@ const UploadFormSchema = z.object({
     .max(800)
     .optional()
     .transform((value) => (value ? value : undefined)),
-  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+  locale: z.enum(['fr', 'en']).default('fr'),
   /** Optional: attach immediately to an existing request after upload. */
   attachToOrderDraftId: z
     .string()
@@ -53,14 +53,14 @@ const UploadFormSchema = z.object({
 const AttachSchema = z.object({
   documentId: z.string().uuid(),
   orderDraftId: z.string().uuid(),
-  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+  locale: z.enum(['fr', 'en']).default('fr'),
 });
 
 const DetachSchema = AttachSchema;
 
 const DeleteSchema = z.object({
   documentId: z.string().uuid(),
-  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+  locale: z.enum(['fr', 'en']).default('fr'),
 });
 
 const DownloadSchema = z.object({

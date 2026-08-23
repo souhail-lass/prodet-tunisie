@@ -72,7 +72,7 @@ export default async function SousCategoriePage({
         <div className="section-wrap famille-hero__inner">
           <div className="famille-hero__text">
             <nav className="famille-breadcrumb">
-              <Link href="/">{locale === 'ar' ? 'الرئيسية' : locale === 'en' ? 'Home' : 'Accueil'}</Link>
+              <Link href="/">{locale === 'en' ? 'Home' : 'Accueil'}</Link>
               <span className="famille-breadcrumb__sep">/</span>
               <Link href={`/produits/${fam.id}`}>{tf(`items.${fam.id}.label`)}</Link>
               <span className="famille-breadcrumb__sep">/</span>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { FileUp, Loader2, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,20 +26,22 @@ interface DocumentUploadFormProps {
 
 const accept = ALLOWED_DOCUMENT_MIME_TYPES.join(',');
 
-const FALLBACK_ERROR = 'Upload impossible. Réessayez ou contactez Prodet.';
-
-const errorMessages: Record<string, string> = {
-  invalid: 'Formulaire incomplet ou fichier non lisible.',
-  'too-large': `Fichier trop volumineux. Maximum ${formatBytes(MAX_DOCUMENT_BYTES)}.`,
-  'mime-not-allowed': 'Format de fichier non autorisé.',
-  'rate-limited': 'Trop d’uploads récents. Réessayez dans quelques minutes.',
-  unavailable: 'Stockage des documents indisponible. Contactez Prodet.',
-  failed: FALLBACK_ERROR,
-};
-
-function errorMessageFor(code: string | undefined): string {
-  if (!code) return FALLBACK_ERROR;
-  return errorMessages[code] ?? FALLBACK_ERROR;
+/** Map a server error code to a translation key under portal.upload.errors. */
+function errorKeyFor(code: string | undefined): string {
+  switch (code) {
+    case 'invalid':
+      return 'errors.incomplete';
+    case 'too-large':
+      return 'errors.tooLarge';
+    case 'mime-not-allowed':
+      return 'errors.badFormat';
+    case 'rate-limited':
+      return 'errors.rateLimited';
+    case 'unavailable':
+      return 'errors.storage';
+    default:
+      return 'errors.generic';
+  }
 }
 
 export function DocumentUploadForm({
@@ -46,6 +49,7 @@ export function DocumentUploadForm({
   attachToOrderDraftId,
   variant = 'page',
 }: DocumentUploadFormProps) {
+  const t = useTranslations('portal.upload');
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -66,7 +70,7 @@ export function DocumentUploadForm({
       return;
     }
     if (file.size > MAX_DOCUMENT_BYTES) {
-      setError(errorMessageFor('too-large'));
+      setError(t('errors.tooLarge', { max: formatBytes(MAX_DOCUMENT_BYTES) }));
       return;
     }
 
@@ -79,13 +83,13 @@ export function DocumentUploadForm({
     startTransition(async () => {
       const result = await uploadCustomerDocumentAction(formData);
       if (!result.ok) {
-        setError(errorMessageFor(result.error));
+        setError(t(errorKeyFor(result.error), { max: formatBytes(MAX_DOCUMENT_BYTES) }));
         return;
       }
       setSuccess(
         attachToOrderDraftId
-          ? 'Document téléversé et attaché à la demande.'
-          : 'Document téléversé.',
+          ? t('successAttached')
+          : t('success'),
       );
       setFileName(null);
       formRef.current?.reset();
@@ -102,7 +106,7 @@ export function DocumentUploadForm({
     <section aria-labelledby="upload-document-title" className={sectionClass}>
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="upload-document-title" className="text-[15px] font-semibold text-prodet-text">
-          Téléverser un document
+          {t('title')}
         </h2>
         <p className="text-[12px] text-muted-foreground">
           Max {formatBytes(MAX_DOCUMENT_BYTES)} · PDF, Excel, Word, CSV, images
@@ -123,7 +127,7 @@ export function DocumentUploadForm({
         <div className="grid gap-3 md:grid-cols-2">
           <label className="block">
             <span className="block text-[12px] font-medium text-prodet-text">
-              Type de document
+              {t('type')}
             </span>
             <select
               name="kind"
@@ -141,7 +145,7 @@ export function DocumentUploadForm({
 
           <label className="block">
             <span className="block text-[12px] font-medium text-prodet-text">
-              Libellé (optionnel)
+              {t('label')}
             </span>
             <Input
               type="text"
@@ -163,10 +167,10 @@ export function DocumentUploadForm({
               onClick={() => fileInputRef.current?.click()}
             >
               <FileUp className="h-4 w-4" aria-hidden />
-              Choisir un fichier
+              {t('chooseFile')}
             </Button>
             <span className="text-[12px] text-muted-foreground">
-              {fileName ? fileName : 'Aucun fichier sélectionné'}
+              {fileName ? fileName : t('noFile')}
             </span>
           </div>
           <input
@@ -185,14 +189,14 @@ export function DocumentUploadForm({
 
         <label className="block">
           <span className="block text-[12px] font-medium text-prodet-text">
-            Note pour Prodet (optionnel)
+            {t('note')}
           </span>
           <textarea
             name="notes"
             maxLength={800}
             rows={2}
             className="mt-1.5 w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-[13px] text-prodet-text focus:border-prodet-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            placeholder="Précisions sur ce document"
+            placeholder={t('notePlaceholder')}
           />
         </label>
 
@@ -217,7 +221,7 @@ export function DocumentUploadForm({
             ) : (
               <FileUp className="h-4 w-4" aria-hidden />
             )}
-            {isPending ? 'Envoi…' : 'Téléverser'}
+            {isPending ? t('sending') : t('submit')}
           </Button>
         </div>
       </form>

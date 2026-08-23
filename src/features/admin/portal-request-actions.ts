@@ -17,7 +17,7 @@ import {
 
 const UpdatePortalRequestStatusSchema = z.object({
   requestId: z.string().uuid('invalidRequest'),
-  locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+  locale: z.enum(['fr', 'en']).default('fr'),
   nextStatus: z.enum(adminPortalRequestActionStatuses),
 });
 

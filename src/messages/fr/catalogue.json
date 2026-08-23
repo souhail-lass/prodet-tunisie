@@ -20,7 +20,12 @@
     "useTitle": "Conseils d'utilisation",
     "addToQuoteTitle": "Besoin de ce produit ?",
     "addToQuoteBody": "Ajoutez-le à votre devis ou contactez-nous par WhatsApp pour échanger sur vos quantités.",
-    "alsoInTitle": "Aussi recommandé pour"
+    "alsoInTitle": "Aussi recommandé pour",
+    "requestQuote": "Demander un devis",
+    "downloadSheet": "Télécharger la fiche technique",
+    "whereToUse": "Où l'utiliser",
+    "related": "Autres références proches",
+    "viewSection": "Voir la section"
   },
   "masthead": {
     "eyebrow": "Catalogue",

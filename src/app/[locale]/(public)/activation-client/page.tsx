@@ -133,7 +133,7 @@ function firstParam(value: string | string[] | undefined): string | undefined {
 }
 
 function formatDateTime(value: Date, locale: string): string {
-  const formatterLocale = locale === 'ar' ? 'ar-TN' : locale === 'en' ? 'en-GB' : 'fr-TN';
+  const formatterLocale = locale === 'en' ? 'en-GB' : 'fr-TN';
   return new Intl.DateTimeFormat(formatterLocale, {
     dateStyle: 'medium',
     timeStyle: 'short',

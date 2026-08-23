@@ -11,7 +11,7 @@ const PortalRequestLineSchema = z.object({
 
 export const SubmitPortalRequestSchema = z
   .object({
-    locale: z.enum(['fr', 'ar', 'en']).default('fr'),
+    locale: z.enum(['fr', 'en']).default('fr'),
     deliveryText: z.string().trim().max(700, 'tooLong').optional(),
     preferredTiming: z.string().trim().max(160, 'tooLong').optional(),
     message: z.string().trim().max(2000, 'tooLong').optional(),

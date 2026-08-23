@@ -9,5 +9,13 @@
     "privacy": "Politique de confidentialité",
     "cookies": "Cookies"
   },
-  "rights": "© {year} Prodet Tunisie. Tous droits réservés."
+  "rights": "© {year} Prodet Tunisie. Tous droits réservés.",
+  "madeInTunisia": "Fabriqué en Tunisie",
+  "requestQuote": "Demander un devis",
+  "catalogLinks": {
+    "food": "Restauration & cuisine",
+    "laundry": "Buanderie",
+    "housekeeping": "Étage / housekeeping",
+    "household": "Articles ménagers"
+  }
 }

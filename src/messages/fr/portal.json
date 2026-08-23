@@ -87,7 +87,30 @@
     "reorderList": "Recommander cette liste",
     "detailTitle": "Détail de la commande",
     "madeBy": "Fabriqué par Prodet",
-    "transmitted": "Transmise à Prodet"
+    "transmitted": "Transmise à Prodet",
+    "status": {
+      "confirmed": "Confirmée",
+      "closed": "Clôturée",
+      "cancelled": "Annulée",
+      "parsing": "Brouillon",
+      "review": "En attente"
+    },
+    "tabs": {
+      "confirmed": "Confirmées",
+      "cancelled": "Annulées",
+      "sent": "Transmises à Prodet",
+      "all": "Toutes",
+      "review": "En attente"
+    },
+    "searchPlaceholder": "Référence…",
+    "searchLabel": "Rechercher une commande",
+    "savedShort": "Enregistrée chez Prodet",
+    "savedLong": "Commande enregistrée par Prodet",
+    "emptyAll": "Aucune commande pour le moment. Cliquez sur « Nouvelle commande ».",
+    "emptyCategory": "Aucune commande dans cette catégorie.",
+    "cancelConfirm": "Annuler cette commande ?",
+    "cancel": "Annuler la commande",
+    "reference": "Référence"
   },
   "reorder": {
     "notice": "Liste pré-remplie à partir de {order}. Ajustez les quantités puis validez votre commande.",
@@ -198,5 +221,117 @@
     "yearTotal": "Total facturé {year}",
     "outstanding": "Encours à régler",
     "invoices": "Factures émises"
+  },
+  "access": {
+    "notActivatedTitle": "Accès client non activé",
+    "notActivatedBody": "Votre session existe, mais aucun client validé Prodet n'est lié à ce compte."
+  },
+  "deliveries": {
+    "title": "Bons de livraison",
+    "last": "Dernière livraison",
+    "emptyTitle": "Aucune livraison pour le moment",
+    "emptyBody": "Vos bons de livraison apparaîtront ici dès l'expédition de vos commandes.",
+    "status": {
+      "preparing": "En préparation",
+      "delivered": "Livrée",
+      "cancelled": "Annulée"
+    }
+  },
+  "usual": {
+    "eyebrow": "Réapprovisionnement",
+    "lead": "Références enregistrées pour votre société, alignées avec le catalogue Prodet.",
+    "toConfigure": "À configurer",
+    "toConfigureBody": "Contactez Prodet pour lier des références récurrentes, ou parcourez le catalogue.",
+    "openCatalogue": "Ouvrir le catalogue",
+    "qty": "Qté",
+    "pageTitle": "Produits habituels",
+    "emptyTitle": "Aucun produit habituel",
+    "count": "{n, plural, one {# produit} other {# produits}}"
+  },
+  "history": {
+    "title": "Historique des demandes",
+    "lead": "Toutes les demandes envoyées à Prodet depuis votre espace client.",
+    "all": "Toutes les demandes",
+    "emptyTitle": "Votre historique est vide",
+    "emptyBody": "Les demandes envoyées depuis votre espace client apparaîtront ici.",
+    "prepare": "Préparer une demande",
+    "noProduct": "Sans produit",
+    "reference": "Référence",
+    "viewDetail": "Voir détail"
+  },
+  "historyDetail": {
+    "products": "Produits demandés",
+    "leadTime": "Délai",
+    "stepsNote": "Étapes connues par votre espace client.",
+    "attachments": "Pièces jointes",
+    "noAttachments": "Aucun document attaché pour le moment.",
+    "attachmentsUnavailable": "Pièces jointes indisponibles",
+    "storageOff": "Le stockage des documents n'est pas encore activé côté Prodet.",
+    "backToHistory": "Retour à l'historique",
+    "attachmentsNote": "Vous pourrez attacher des documents (BC, factures, exports ERP) dès activation du module.",
+    "uploadHint": "Téléversez un bon de commande, un export ERP ou tout document utile au traitement.",
+    "portalNote": "Données liées uniquement au portail. Les confirmations officielles restent traitées par Prodet en interne.",
+    "attachedCount": "{n, plural, one {# fichier lié} other {# fichiers liés}} à cette demande.",
+    "tracking": "Suivi"
+  },
+  "documents": {
+    "eyebrow": "Documents partagés",
+    "lead": "Bons de commande, factures, exports ERP. Partagés en lecture seule avec Prodet.",
+    "disabledTitle": "Module documents non encore activé",
+    "disabledBody": "Le stockage Supabase n'est pas encore provisionné côté Prodet. Le module sera activé sous peu.",
+    "emptyList": "Aucun document partagé pour le moment.",
+    "emptyTitle": "Aucun document pour le moment",
+    "emptyBody": "Téléversez un premier document pour le partager avec Prodet.",
+    "deleted": "Document supprimé.",
+    "actionFailed": "Action impossible. Réessayez.",
+    "privacyNote": "Les documents sont stockés de façon privée. Seuls Prodet et vous y avez accès, via un lien temporaire signé à chaque téléchargement.",
+    "count": "{n, plural, one {# document disponible} other {# documents disponibles}}.",
+    "notFound": "Document introuvable."
+  },
+  "upload": {
+    "title": "Téléverser un document",
+    "submit": "Téléverser",
+    "type": "Type de document",
+    "label": "Libellé (optionnel)",
+    "chooseFile": "Choisir un fichier",
+    "noFile": "Aucun fichier sélectionné",
+    "note": "Note pour Prodet (optionnel)",
+    "notePlaceholder": "Précisions sur ce document",
+    "errors": {
+      "generic": "Upload impossible. Réessayez ou contactez Prodet.",
+      "incomplete": "Formulaire incomplet ou fichier non lisible.",
+      "badFormat": "Format de fichier non autorisé.",
+      "rateLimited": "Trop d'uploads récents. Réessayez dans quelques minutes.",
+      "storage": "Stockage des documents indisponible. Contactez Prodet.",
+      "noFile": "Sélectionnez un fichier à téléverser.",
+      "tooLarge": "Fichier trop volumineux. Maximum {max}."
+    },
+    "successAttached": "Document téléversé et attaché à la demande.",
+    "success": "Document téléversé.",
+    "sending": "Envoi…"
+  },
+  "detach": {
+    "action": "Détacher ce document",
+    "confirmTitle": "Détacher ce document ?",
+    "confirmBody": "Le document restera disponible dans vos documents, mais ne sera plus lié à cette demande.",
+    "confirm": "Détacher"
+  },
+  "support": {
+    "subjectPlaceholder": "Sujet (ex. Problème sur ma commande ORD-…)",
+    "bodyPlaceholder": "Décrivez votre demande…",
+    "attach": "Joindre une photo ou un fichier",
+    "closed": "Clôturé",
+    "prodetReply": "Réponse Prodet",
+    "lead": "Une question, un souci sur une commande ? Écrivez-nous, nous répondons ici.",
+    "uploadFailed": "Échec — vérifiez la taille (max 25 Mo) et réessayez.",
+    "empty": "Aucun ticket. Cliquez sur « Nouveau ticket » pour nous écrire.",
+    "pending": "En attente"
+  },
+  "ticket": {
+    "attachFile": "Joindre un fichier",
+    "attachTitle": "Joindre une photo ou un fichier",
+    "messagePlaceholder": "Écrivez votre message…",
+    "closedNote": "Ce ticket est clôturé. Répondez pour le rouvrir.",
+    "sendFailed": "L'envoi a échoué (ou fichier trop volumineux, max 25 Mo). Réessayez."
   }
 }

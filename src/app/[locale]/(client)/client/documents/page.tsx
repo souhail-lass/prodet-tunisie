@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { connection } from 'next/server';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { FolderArchive, ShieldAlert } from 'lucide-react';
 import { EmptyState } from '@/components/portal/empty-state';
 import { PageHeader } from '@/components/portal/page-header';
@@ -39,6 +39,7 @@ export default async function ClientDocumentsPage({
   const { locale: localeParam } = await params;
   const locale: Locale = isLocale(localeParam) ? localeParam : 'fr';
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'portal' });
   await connection();
 
   const access = await requireClientPortalAccess();
@@ -63,7 +64,7 @@ export default async function ClientDocumentsPage({
       <PageHeader
         eyebrow="Documents"
         title="Mes documents"
-        description="Bons de commande, factures, exports ERP. Partagés en lecture seule avec Prodet."
+        description={t('documents.lead')}
       />
 
       {statusHint ? <StatusBanner hint={statusHint} /> : null}
@@ -73,8 +74,8 @@ export default async function ClientDocumentsPage({
           <EmptyState
             inline
             icon={<ShieldAlert className="h-4 w-4" aria-hidden />}
-            title="Module documents non encore activé"
-            description="Le stockage Supabase n’est pas encore provisionné côté Prodet. Le module sera activé sous peu."
+            title={t('documents.disabledTitle')}
+            description={t('documents.disabledBody')}
           />
         </Panel>
       ) : (
@@ -82,13 +83,11 @@ export default async function ClientDocumentsPage({
           <DocumentUploadForm locale={locale} variant="page" />
 
           <Panel
-            title="Documents partagés"
+            title={t('documents.eyebrow')}
             description={
               documents.length > 0
-                ? `${documents.length} document${documents.length > 1 ? 's' : ''} disponible${
-                    documents.length > 1 ? 's' : ''
-                  }.`
-                : 'Aucun document partagé pour le moment.'
+                ? t('documents.count', { n: documents.length })
+                : t('documents.emptyList')
             }
             padding="flush"
           >
@@ -131,8 +130,8 @@ export default async function ClientDocumentsPage({
               <EmptyState
                 inline
                 icon={<FolderArchive className="h-4 w-4" aria-hidden />}
-                title="Aucun document pour le moment"
-                description="Téléversez un premier document pour le partager avec Prodet."
+                title={t('documents.emptyTitle')}
+                description={t('documents.emptyBody')}
               />
             )}
           </Panel>
@@ -140,18 +139,18 @@ export default async function ClientDocumentsPage({
       )}
 
       <p className="text-[12px] leading-5 text-muted-foreground">
-        Les documents sont stockés de façon privée. Seuls Prodet et vous y avez accès, via un
-        lien temporaire signé à chaque téléchargement.
+        {t('documents.privacyNote')}
       </p>
     </div>
   );
 }
 
-function StatusBanner({ hint }: { hint: string }) {
+async function StatusBanner({ hint }: { hint: string }) {
+  const t = await getTranslations('portal');
   const messages: Record<string, { tone: 'success' | 'error'; text: string }> = {
-    deleted: { tone: 'success', text: 'Document supprimé.' },
-    'not-found': { tone: 'error', text: 'Document introuvable.' },
-    error: { tone: 'error', text: 'Action impossible. Réessayez.' },
+    deleted: { tone: 'success', text: t('documents.deleted') },
+    'not-found': { tone: 'error', text: t('documents.notFound') },
+    error: { tone: 'error', text: t('documents.actionFailed') },
   };
   const message = messages[hint];
   if (!message) return null;

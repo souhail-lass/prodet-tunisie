@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ArrowRight, MailCheck, ShieldAlert, ShieldCheck } from 'lucide-react';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, isLocale } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,6 +26,7 @@ export default async function EspaceClientPage({
   const { locale } = await params;
   if (!isLocale(locale)) return null;
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'common.clientAccess' });
 
   const search = searchParams ? await searchParams : {};
   const error = firstParam(search.error);
@@ -38,13 +39,13 @@ export default async function EspaceClientPage({
           {/* Heading — one eyebrow, one line, one sub. No marketing wall. */}
           <header className="mb-8 text-center">
             <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-prodet-blue">
-              Espace client
+              {t('eyebrow')}
             </p>
             <h1 className="mt-2.5 text-[28px] font-semibold leading-[1.15] text-prodet-text">
-              Accédez à votre espace Prodet
+              {t('title')}
             </h1>
             <p className="mx-auto mt-3 max-w-[320px] text-[14px] leading-6 text-muted-foreground">
-              Connexion sans mot de passe, réservée aux comptes professionnels validés.
+              {t('lead')}
             </p>
           </header>
 
@@ -63,11 +64,11 @@ export default async function EspaceClientPage({
                   type="email"
                   required
                   autoComplete="email"
-                  placeholder="nom@societe.tn"
+                  placeholder={t('emailPlaceholder')}
                 />
               </label>
               <Button type="submit" size="lg" className="w-full">
-                Recevoir le lien de connexion
+                {t('submit')}
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </Button>
             </form>
@@ -79,8 +80,7 @@ export default async function EspaceClientPage({
               >
                 <MailCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
                 <span>
-                  Si cet email dispose d&apos;un accès activé, un lien de connexion arrive sous peu
-                  (pensez aux indésirables).
+                  {t('sentEspace')}
                 </span>
               </p>
             ) : null}
@@ -91,7 +91,7 @@ export default async function EspaceClientPage({
                 className="mt-4 flex items-start gap-2 rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-[12px] leading-5 text-destructive"
               >
                 <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-                <span>{loginErrorMessage(error)}</span>
+                <span>{t(loginErrorKey(error))}</span>
               </p>
             ) : null}
 
@@ -99,16 +99,16 @@ export default async function EspaceClientPage({
             <div className="my-6 flex items-center gap-3" aria-hidden>
               <span className="h-px flex-1 bg-border" />
               <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                ou
+                {t('or')}
               </span>
               <span className="h-px flex-1 bg-border" />
             </div>
 
             {/* Secondary path — request access */}
             <div className="text-center">
-              <p className="text-[13px] text-muted-foreground">Pas encore client&nbsp;?</p>
+              <p className="text-[13px] text-muted-foreground">{t('notYetClient')}</p>
               <Button asChild variant="neutral" size="lg" className="mt-2.5 w-full">
-                <Link href="/devenir-client">Demander un accès</Link>
+                <Link href="/devenir-client">{t('requestAccess')}</Link>
               </Button>
             </div>
           </div>
@@ -116,7 +116,7 @@ export default async function EspaceClientPage({
           {/* Trust line */}
           <p className="mt-5 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
             <ShieldCheck className="h-3.5 w-3.5 text-prodet-blue" aria-hidden />
-            Accès validé par Prodet · Aucun mot de passe à mémoriser
+            {t('reassure')}
           </p>
         </div>
       </section>
@@ -124,18 +124,17 @@ export default async function EspaceClientPage({
   );
 }
 
-function loginErrorMessage(error: string): string {
+type LoginErrorKey = 'errors.rateLimited' | 'errors.unavailable' | 'errors.signInFailed';
+
+/** Map the ?error= code to a translation key under common.clientAccess. */
+function loginErrorKey(error: string): LoginErrorKey {
   switch (error) {
-    case 'invalid':
-      return "L'adresse email n'est pas valide.";
-    case 'not-activated':
-      return "Cet email n'a pas d'accès client activé.";
-    case 'rate-limited':
-      return 'Trop de tentatives. Réessayez dans quelques minutes.';
+    case 'rate_limited':
+      return 'errors.rateLimited';
     case 'config':
-      return "La connexion client n'est pas configurée côté serveur.";
+      return 'errors.signInFailed';
     default:
-      return 'Impossible d’envoyer le lien pour le moment.';
+      return 'errors.unavailable';
   }
 }
 

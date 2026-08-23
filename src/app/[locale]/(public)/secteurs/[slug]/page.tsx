@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { setRequestLocale } from 'next-intl/server';
 import { ArrowRight, FileText } from 'lucide-react';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getSectorBySlug, listProducts, listSectors } from '@/data/queries';
 import { localizeProducts, localizeSector } from '@/data/i18n/content';
 import { isLocale, Link } from '@/i18n/routing';
@@ -22,6 +22,7 @@ export default async function SectorPage({
   const { locale, slug } = await params;
   if (!isLocale(locale)) return notFound();
   setRequestLocale(locale);
+  const t = await getTranslations({ locale, namespace: 'sectors.detail' });
 
   const sectorBase = getSectorBySlug(slug);
   if (!sectorBase) return notFound();
@@ -58,9 +59,9 @@ export default async function SectorPage({
         <span className="sector-hero__scrim" aria-hidden />
         <div className="section-wrap sector-hero__inner">
           <nav className="sector-hero__crumb">
-            <Link href="/">{locale === 'ar' ? 'الرئيسية' : locale === 'en' ? 'Home' : 'Accueil'}</Link>
+            <Link href="/">{locale === 'en' ? 'Home' : 'Accueil'}</Link>
             <span>/</span>
-            <Link href="/secteurs">{locale === 'ar' ? 'القطاعات' : locale === 'en' ? 'Sectors' : 'Secteurs'}</Link>
+            <Link href="/secteurs">{locale === 'en' ? 'Sectors' : 'Secteurs'}</Link>
             <span>/</span>
             <span aria-current="page">{sector.label}</span>
           </nav>
@@ -72,14 +73,14 @@ export default async function SectorPage({
               <p className="sector-hero__lead">{sector.shortDescription}</p>
               <div className="sector-hero__cta">
                 <Link href="/devis" className="pds-btn pds-btn--primary pds-btn--lg">
-                  <FileText size={17} /> Demander un devis
+                  <FileText size={17} /> {t('requestQuote')}
                 </Link>
                 <Link href="/produits/produits-nettoyage" className="sector-hero__link">
-                  Voir le catalogue <ArrowRight size={15} />
+                  {t('viewCatalogue')} <ArrowRight size={15} />
                 </Link>
               </div>
               <p className="sector-hero__meta">
-                <b>{solutionCount}</b> solutions Prodet · réponse sous 24h ouvrées
+                <b>{solutionCount}</b> {t('metaLine')}
               </p>
             </div>
           </div>
@@ -88,11 +89,10 @@ export default async function SectorPage({
 
       <section className="section-wrap sector-zones">
         <div className="section-head">
-          <span className="eyebrow">Vos besoins · nos solutions</span>
-          <h2 className="section-title">Zone par zone, la solution Prodet.</h2>
+          <span className="eyebrow">{t('needsEyebrow')}</span>
+          <h2 className="section-title">{t('needsTitle')}</h2>
           <p className="section-lead">
-            Nos produits fabriqués localement, organisés selon le terrain de votre activité.
-            Tout se commande en un seul devis.
+            {t('needsLead')}
           </p>
         </div>
 
@@ -119,18 +119,18 @@ export default async function SectorPage({
       <section className="cta-band">
         <div className="cta-band__inner">
           <div>
-            <h2>Construisons votre gamme.</h2>
-            <p>Donnez-nous vos zones et vos volumes — nous revenons vers vous sous 24h ouvrées.</p>
+            <h2>{t('ctaTitle')}</h2>
+            <p>{t('ctaLead')}</p>
           </div>
           <div className="cta-band__actions">
             <Link href="/devis" className="pds-btn pds-btn--primary pds-btn--lg">
-              Demander un devis
+              {t('requestQuote')}
             </Link>
             <Link
               href="/produits/produits-nettoyage"
               className="pds-btn pds-btn--ghost pds-btn--lg cta-band__ghost"
             >
-              Voir tout le catalogue <ArrowRight size={16} />
+              {t('viewAllCatalogue')} <ArrowRight size={16} />
             </Link>
           </div>
         </div>

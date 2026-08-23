@@ -27,7 +27,7 @@ export default async function AdminLoginPage({
 }) {
   const { locale } = await params;
   const { sent, error, next } = await searchParams;
-  const safeLocale = locale === 'ar' || locale === 'en' ? locale : 'fr';
+  const safeLocale = locale === 'en' ? locale : 'fr';
 
   // Admin with a still-valid session: skip the form and go straight to the
   // console instead of asking for a new magic link on every visit.

@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 import { useRef, useState, useTransition } from 'react';
 import { FileText, Loader2, LifeBuoy, MessageSquarePlus, Paperclip, Plus, Send, X } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
@@ -25,6 +27,7 @@ export type SupportRow = {
 };
 
 export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
+  const tr = useTranslations('portal.support');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [subject, setSubject] = useState('');
@@ -89,7 +92,7 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
           <h2 className="panel__title" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <LifeBuoy size={18} /> Support
           </h2>
-          <p className="panel__sub">Une question, un souci sur une commande ? Écrivez-nous, nous répondons ici.</p>
+          <p className="panel__sub">{tr('lead')}</p>
         </div>
         <button className="pds-btn pds-btn--primary pds-btn--sm" onClick={() => setOpen((o) => !o)}>
           <Plus size={15} /> <span>Nouveau ticket</span>
@@ -106,14 +109,14 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
           <input
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
-            placeholder="Sujet (ex. Problème sur ma commande ORD-…)"
+            placeholder={tr('subjectPlaceholder')}
             style={inputStyle}
           />
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
             rows={4}
-            placeholder="Décrivez votre demande…"
+            placeholder={tr('bodyPlaceholder')}
             style={{ ...inputStyle, marginTop: 10, resize: 'vertical' }}
           />
           {files.length > 0 ? (
@@ -146,14 +149,14 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
               type="button"
               className="pds-btn pds-btn--ghost pds-btn--md"
               onClick={() => fileRef.current?.click()}
-              title="Joindre une photo ou un fichier"
+              title={tr('attach')}
             >
               <Paperclip size={16} /> <span>Joindre</span>
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               {createError ? (
                 <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-danger)', fontWeight: 'var(--fw-medium)' }}>
-                  Échec — vérifiez la taille (max 25 Mo) et réessayez.
+                  {tr('uploadFailed')}
                 </span>
               ) : null}
               <button className="pds-btn pds-btn--primary pds-btn--md" onClick={create} disabled={pending || uploading}>
@@ -182,7 +185,7 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
                       : { background: 'var(--prodet-blue-tint)', color: 'var(--prodet-blue)' }
                 }
               >
-                {t.status === 'closed' ? 'Clôturé' : t.lastAuthorRole === 'admin' ? 'Réponse Prodet' : 'En attente'}
+                {t.status === 'closed' ? tr('closed') : t.lastAuthorRole === 'admin' ? tr('prodetReply') : tr('pending')}
               </span>
             </div>
           </Link>
@@ -190,7 +193,7 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
         {tickets.length === 0 && !open ? (
           <div className="admin-empty">
             <LifeBuoy size={26} style={{ marginBottom: 8, opacity: 0.5 }} />
-            <div>Aucun ticket. Cliquez sur « Nouveau ticket » pour nous écrire.</div>
+            <div>{tr('empty')}</div>
           </div>
         ) : null}
       </div>

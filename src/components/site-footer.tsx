@@ -17,16 +17,16 @@ export async function SiteFooter() {
           </div>
           <p className="site-footer__tag">{companyInfo.footerTagline}</p>
           <span className="site-footer__made">
-            <Factory size={15} /> Fabriqué en Tunisie
+            <Factory size={15} /> {t('madeInTunisia')}
           </span>
         </div>
 
         <div className="site-footer__col">
           <h4>{t('catalog')}</h4>
-          <Link href="/catalogue">Restauration &amp; cuisine</Link>
-          <Link href="/catalogue">Buanderie</Link>
-          <Link href="/catalogue">Étage / housekeeping</Link>
-          <Link href="/catalogue">Articles ménagers</Link>
+          <Link href="/catalogue">{t('catalogLinks.food')}</Link>
+          <Link href="/catalogue">{t('catalogLinks.laundry')}</Link>
+          <Link href="/catalogue">{t('catalogLinks.housekeeping')}</Link>
+          <Link href="/catalogue">{t('catalogLinks.household')}</Link>
         </div>
 
         <div className="site-footer__col">
@@ -34,7 +34,7 @@ export async function SiteFooter() {
           <Link href="/a-propos">{tc('navigation.about')}</Link>
           <Link href="/secteurs">{tc('navigation.sectors')}</Link>
           <Link href="/contact">{tc('navigation.contact')}</Link>
-          <Link href="/catalogue">Demander un devis</Link>
+          <Link href="/catalogue">{t('requestQuote')}</Link>
         </div>
 
         <div className="site-footer__col">

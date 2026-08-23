@@ -20,7 +20,12 @@
     "useTitle": "How to use",
     "addToQuoteTitle": "Need this product?",
     "addToQuoteBody": "Add it to your quote or chat with us on WhatsApp about quantities.",
-    "alsoInTitle": "Also recommended for"
+    "alsoInTitle": "Also recommended for",
+    "requestQuote": "Request a quote",
+    "downloadSheet": "Download the technical sheet",
+    "whereToUse": "Where to use it",
+    "related": "Other related references",
+    "viewSection": "View the section"
   },
   "masthead": {
     "eyebrow": "Catalogue",
