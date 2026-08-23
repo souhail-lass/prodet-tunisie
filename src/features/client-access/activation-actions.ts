@@ -1,6 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { getServerEnv } from '@/lib/env';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { consumeRateLimit, formatRetryAfterFr } from '@/lib/rate-limit';
@@ -341,12 +344,20 @@ export async function acceptPortalInvite(
       },
     });
 
-    return { status: 'accepted_now' as const };
+    return { status: 'accepted_now' as const, email };
   });
 
   revalidatePath(`/${parsed.data.locale}/activation-client`);
 
   if (result.status === 'accepted_now') {
+    // Connecter directement : le client vient de prouver qu'il possède cette
+    // adresse en ouvrant le lien reçu dessus. Lui redemander un lien magique
+    // pour la même adresse n'ajoute aucune sécurité, seulement une étape.
+    const signedIn = await startPortalSession(result.email);
+    if (signedIn) {
+      // Hors du try : redirect() lève NEXT_REDIRECT et ne doit pas être avalé.
+      redirect(`/${parsed.data.locale}/client`);
+    }
     return {
       ok: true,
       accepted: true,
@@ -379,11 +390,69 @@ function buildCustomerNotes(reference: string | null): string {
   if (reference) {
     lines.push(`Référence fournie: ${reference}`);
   }
-  lines.push('Lien Swiver non créé automatiquement.');
   return lines.join('\n');
 }
 
 function readFormString(formData: FormData, key: string): string | undefined {
   const value = formData.get(key);
   return typeof value === 'string' ? value : undefined;
+}
+
+/**
+ * Ouvre une session portail pour `email`, sans envoyer d'email.
+ *
+ * `generateLink` renvoie le jeton directement (aucun mail parti, et la limite
+ * d'envoi de liens magiques n'est pas consommée) ; `verifyOtp` sur un client
+ * SSR écrit les cookies d'auth dans le format exact que lisent le middleware
+ * et les gardes serveur.
+ *
+ * Renvoie false — sans jamais lever — si Supabase n'est pas configuré ou
+ * refuse : l'accès vient d'être activé en base, et il vaut mieux retomber sur
+ * l'écran de succès que faire échouer une activation réussie.
+ */
+async function startPortalSession(email: string): Promise<boolean> {
+  try {
+    const env = getServerEnv();
+    if (!env.SUPABASE_URL || !env.SUPABASE_ANON_KEY || !env.SUPABASE_SERVICE_ROLE_KEY) {
+      return false;
+    }
+
+    const { createClient } = await import('@supabase/supabase-js');
+    const admin = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+
+    // Le compte auth peut ne pas exister encore : on le crée déjà confirmé.
+    const { error: createError } = await admin.auth.admin.createUser({
+      email,
+      email_confirm: true,
+    });
+    if (createError && !/already|registered|exists/i.test(createError.message)) {
+      console.error('[activation:auth-user]', createError.message);
+    }
+
+    const { data: link, error: linkError } = await admin.auth.admin.generateLink({
+      type: 'magiclink',
+      email,
+    });
+    const tokenHash = link?.properties?.hashed_token;
+    if (linkError || !tokenHash) {
+      console.error('[activation:generate-link]', linkError?.message ?? 'no token');
+      return false;
+    }
+
+    const supabase = await createSupabaseServerClient();
+    const { error: otpError } = await supabase.auth.verifyOtp({
+      type: 'magiclink',
+      token_hash: tokenHash,
+    });
+    if (otpError) {
+      console.error('[activation:verify-otp]', otpError.message);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('[activation:session]', error instanceof Error ? error.message : error);
+    return false;
+  }
 }

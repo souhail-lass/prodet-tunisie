@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { AlertCircle, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { isLocale } from '@/i18n/routing';
+import { AlertCircle, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Link, isLocale } from '@/i18n/routing';
 import {
   getPortalInviteActivationState,
   type ActivationState,
@@ -11,6 +11,7 @@ import {
 import { normalizeInviteToken } from '@/features/client-access/invite-token';
 import { ActivationConfirmForm } from './activation-confirm-form';
 import { MagicLinkFallback } from './magic-link-fallback';
+import { Button } from '@/components/ui/button';
 
 export const dynamic = 'force-dynamic';
 
@@ -69,19 +70,33 @@ export default async function ClientActivationPage({
             </div>
           </div>
 
-          {/* Lien mort (expiré, déjà utilisé, invalide) : au lieu d'une impasse,
-              le client redemande lui-même un lien de connexion. */}
+          {/* Déjà activé (le lien est à usage unique, donc c'est le cas normal
+              d'une réouverture) : on propose d'abord d'entrer, pas de ressaisir
+              un email. Si la session a expiré, le middleware renverra vers la
+              connexion — et le bloc ci-dessous reste disponible. */}
+          {state.status === 'accepted' ? (
+            <div className="mt-6">
+              <Button asChild variant="navy" size="lg">
+                <Link href="/client">
+                  Accéder à mon espace client
+                  <ArrowRight className="h-4 w-4" aria-hidden />
+                </Link>
+              </Button>
+            </div>
+          ) : null}
+
+          {/* Lien mort : au lieu d'une impasse, le client redemande un lien. */}
           {state.status !== 'valid' ? (
             <MagicLinkFallback
               locale={locale}
               title={
                 state.status === 'accepted'
-                  ? 'Votre compte est déjà activé'
+                  ? 'Plus connecté sur cet appareil ?'
                   : 'Recevoir un lien de connexion'
               }
               body={
                 state.status === 'accepted'
-                  ? 'Saisissez votre email professionnel pour recevoir un lien de connexion à votre espace client.'
+                  ? 'Saisissez votre email professionnel pour recevoir un lien de connexion.'
                   : 'Ce lien ne peut plus être utilisé. Si votre accès a déjà été ouvert, saisissez votre email professionnel pour recevoir un lien de connexion.'
               }
             />
