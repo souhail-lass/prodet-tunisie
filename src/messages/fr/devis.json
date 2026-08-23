@@ -41,8 +41,8 @@
     "browseCatalogue": "Parcourir le catalogue",
     "clearList": "Vider la liste",
     "manufactured": "Fabriqué par Prodet",
-    "successBody": "Merci. Votre demande {ref} a bien été transmise. Notre équipe revient vers vous sous 24 heures ouvrées avec prix, dosage et conditions de livraison.",
-    "reassure": "Réponse sous 24h avec prix, dosage et conditions de livraison.",
+    "successBody": "Merci. Votre demande {ref} a bien été transmise. Notre équipe revient vers vous sous 24 heures ouvrées avec prix.",
+    "reassure": "Réponse sous 24h avec prix.",
     "formError": "Vérifiez les informations du devis.",
     "noProducts": "Aucun produit",
     "summary": "{refs, plural, one {# référence} other {# références}} · {units, plural, one {# unité} other {# unités}}",
@@ -60,7 +60,8 @@
       "company": "Hôtel Carthage",
       "email": "vous@etablissement.tn",
       "sector": "Choisir votre secteur"
-    }
+    },
+    "removeLine": "Retirer {product} du devis"
   },
   "quote": {
     "eyebrow": "Demande de devis",

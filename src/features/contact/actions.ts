@@ -74,7 +74,10 @@ export async function submitContactMessage(
     `Téléphone : ${message.phone?.trim() || 'Non précisé'}`,
     '',
     'Message :',
-    message.message,
+    // Split on newlines: the form prefixes the message with "Secteur: X\n\n",
+    // and brandedHtml renders one <p> per entry — passing the whole blob as a
+    // single entry collapsed the sector onto the same line as the message.
+    ...message.message.split('\n'),
   ];
 
   const delivery = await sendEmail({

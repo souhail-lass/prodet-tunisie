@@ -59,7 +59,7 @@ export function useQuoteDrawer() {
 }
 
 function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { items, setProductQuantity, clearSelection } = useQuoteSelection();
+  const { items, setProductQuantity, clearSelection, removeProduct } = useQuoteSelection();
   const t = useTranslations('devis.drawer');
   const locale = useLocale() as Locale;
   const [step, setStep] = useState<'list' | 'form'>('list');
@@ -215,6 +215,20 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                         }
                       />
                     </div>
+                    {/* Always rendered, not only above qty 1: the stepper's
+                        trash only appears at qty 1, so removing a line with a
+                        large quantity otherwise meant clicking − that many
+                        times. Keeping it permanent also stops the row from
+                        reflowing while the quantity is being stepped down. */}
+                    <button
+                      type="button"
+                      className="qm__line-remove"
+                      onClick={() => removeProduct(line.productId)}
+                      aria-label={t('removeLine', { product: line.productName })}
+                      title={t('removeLine', { product: line.productName })}
+                    >
+                      <X size={16} aria-hidden />
+                    </button>
                   </div>
                   ))}
                 </div>
