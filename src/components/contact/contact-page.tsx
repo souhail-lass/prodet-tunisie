@@ -10,10 +10,11 @@ import { listSectors } from '@/data/queries';
 import { localizeSectors } from '@/data/i18n/content';
 import type { Locale } from '@/i18n/routing';
 import { submitContactMessage } from '@/features/contact/actions';
+import { HoneypotField } from '@/components/site/honeypot-field';
 
-type FormState = { company: string; name: string; email: string; phone: string; sectorId: string; message: string };
+type FormState = { company: string; name: string; email: string; phone: string; sectorId: string; message: string; website: string };
 
-const INITIAL: FormState = { company: '', name: '', email: '', phone: '', sectorId: '', message: '' };
+const INITIAL: FormState = { company: '', name: '', email: '', phone: '', sectorId: '', message: '', website: '' };
 
 const WHATSAPP_HREF = `https://wa.me/${companyInfo.phoneHref.replace(/[^0-9]/g, '')}`;
 
@@ -45,6 +46,7 @@ export function ContactPage() {
         phone: form.phone || undefined,
         subject: 'quote',
         message,
+        website: form.website,
       });
       if (result.ok) setSent(true);
       else setError(t('error'));
@@ -138,6 +140,11 @@ export function ContactPage() {
                   {error}
                 </p>
               ) : null}
+              <HoneypotField
+                id="contact-website"
+                value={form.website}
+                onChange={(v) => update('website', v)}
+              />
               <div className="contact__actions">
                 <Button type="submit" variant="primary" size="lg" disabled={isPending} iconRight={<ArrowRight size={18} />}>
                   {isPending ? t('submitting') : t('submit')}

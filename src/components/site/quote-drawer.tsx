@@ -18,6 +18,7 @@ import { localizeSectors } from '@/data/i18n/content';
 import { submitPublicDevisRequest } from '@/features/quote/actions';
 import { useQuoteSelection } from '@/lib/quote-cart-context';
 import { Link, type Locale } from '@/i18n/routing';
+import { HoneypotField } from '@/components/site/honeypot-field';
 
 type QuoteDrawerContextValue = {
   open: () => void;
@@ -32,9 +33,11 @@ type FormState = {
   email: string;
   phone: string;
   sectorId: string;
+  /** Spam honeypot — stays empty for real users. */
+  website: string;
 };
 
-const INITIAL_FORM: FormState = { company: '', email: '', phone: '', sectorId: '' };
+const INITIAL_FORM: FormState = { company: '', email: '', phone: '', sectorId: '', website: '' };
 
 export function QuoteDrawerProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -113,6 +116,7 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
         email: form.email,
         phone: form.phone,
         sectorId: form.sectorId,
+        website: form.website,
         lines: lines.map((line) => ({
           productId: line.productId,
           productName: line.productName,
@@ -276,6 +280,11 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                 <Shield size={15} /> {t('reassure')}
               </p>
             )}
+            <HoneypotField
+              id="devis-website"
+              value={form.website}
+              onChange={(v) => setForm((f) => ({ ...f, website: v }))}
+            />
           </div>
         )}
 

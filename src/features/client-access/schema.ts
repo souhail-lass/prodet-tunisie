@@ -14,6 +14,8 @@ export const ClientAccessRequestSchema = z.object({
   needType: z.string().trim().min(1, 'required').max(120, 'tooLong'),
   prodetReferenceOptional: z.string().trim().max(180, 'tooLong').optional(),
   message: z.string().trim().max(2000, 'tooLong').optional(),
+  /** Spam honeypot — must stay empty; see components/site/honeypot-field.tsx. */
+  website: z.string().trim().max(200, 'tooLong').optional(),
 });
 
 export type ClientAccessRequestInput = z.input<typeof ClientAccessRequestSchema>;

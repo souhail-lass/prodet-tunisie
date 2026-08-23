@@ -474,3 +474,16 @@
   .section-title { font-size: var(--text-h3); }
   .pdp__name, .contact__title, .sectors-page__title, .about__title, .catalogue__title { font-size: var(--text-h2); }
 }
+
+/* Spam honeypot (see components/site/honeypot-field.tsx). Off-screen rather
+   than display:none — bots skip explicitly hidden fields, and those are the
+   ones we want to catch. Never focusable, never announced. */
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  pointer-events: none;
+}

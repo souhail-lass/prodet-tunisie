@@ -18,6 +18,12 @@ export interface ClientAccessSubmitResult {
 export async function submitClientAccessRequest(
   input: ClientAccessRequestInput,
 ): Promise<ClientAccessSubmitResult> {
+  // Honeypot filled → a bot. Report success without storing or notifying, so
+  // the bot cannot tell it was rejected.
+  if (input.website?.trim()) {
+    return { ok: true, requestId: 'ignored' };
+  }
+
   const limit = await consumeRateLimit({
     scope: 'client-access',
     limit: 5,

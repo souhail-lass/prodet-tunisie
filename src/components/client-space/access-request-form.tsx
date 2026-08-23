@@ -17,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { sectors } from '@/data/sectors';
 import { submitClientAccessRequest } from '@/features/client-access/actions';
 import { cn } from '@/lib/utils';
+import { HoneypotField } from '@/components/site/honeypot-field';
 
 type AccessRequestFormState = {
   fullName: string;
@@ -31,6 +32,8 @@ type AccessRequestFormState = {
   clientReference: string;
   needType: string;
   message: string;
+  /** Spam honeypot — stays empty for real users. */
+  website: string;
 };
 
 type FormStatus =
@@ -49,6 +52,7 @@ const initialFormState: AccessRequestFormState = {
   city: '',
   postalCode: '',
   clientReference: '',
+  website: '',
   needType: '',
   message: '',
 };
@@ -98,6 +102,7 @@ export function AccessRequestForm() {
       needType: formState.needType,
       prodetReferenceOptional: formState.clientReference,
       message: formState.message,
+      website: formState.website,
     });
     setIsSubmitting(false);
 
@@ -245,6 +250,8 @@ export function AccessRequestForm() {
           />
         </FormField>
       </div>
+
+      <HoneypotField value={formState.website} onChange={(v) => updateField('website', v)} />
 
       <div className="mt-6">
         <Button

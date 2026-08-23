@@ -12,6 +12,13 @@ import { QuoteRequestSchema, type QuoteRequestInput } from './schema';
 /** Swiver numeric document type for a quote. 4 = sale order, 6 = devis. */
 const SWIVER_DEVIS_TYPE = 6;
 
+/**
+ * Maximum draft devis the public form may create in Swiver per rolling 24h,
+ * across all visitors. Sized well above real demand — it is a blast-radius
+ * limit on ERP pollution, not a business throttle.
+ */
+const SWIVER_DAILY_DRAFT_CAP = 40;
+
 export interface QuoteSubmitResult {
   ok: boolean;
   referenceCode?: string;
@@ -156,6 +163,7 @@ export async function submitPublicDevisRequest(
   // delay (or fail) a visitor's form submit, and the email above already
   // carries everything needed to key the devis in by hand.
   after(() => pushPublicDevisToSwiver(referenceCode, parsed.data));
+
 
   if (!delivery.ok) {
     return {
@@ -379,6 +387,25 @@ async function pushPublicDevisToSwiver(
   try {
     const swiver = getSwiverAdapter();
     if (swiver.mode === 'disabled') return;
+
+    // Global ceiling on ERP writes, independent of the per-IP form limit.
+    // Even a distributed flood that slips the request limiter cannot bury the
+    // real Swiver document list under junk drafts: past the cap we stop
+    // pushing and the operator still gets every request by email.
+    const erpBudget = await consumeRateLimit({
+      scope: 'swiver-public-devis',
+      identifier: 'global',
+      limit: SWIVER_DAILY_DRAFT_CAP,
+      windowMs: 24 * 60 * 60_000,
+    });
+    if (!erpBudget.ok) {
+      console.warn('[public-devis:swiver-capped]', {
+        referenceCode,
+        cap: SWIVER_DAILY_DRAFT_CAP,
+        reason: 'daily-erp-write-budget-exhausted',
+      });
+      return;
+    }
 
     const bySwiver = await getSwiverLinesForProductIds(input.lines.map((l) => l.productId));
     const lines = input.lines.flatMap((line) => {
