@@ -17,293 +17,114 @@ import {
   hashInviteToken,
 } from './invite-token';
 
-const ReviewIntentSchema = z.enum([
-  'save_note',
-  'reviewing',
-  'approved',
-  'rejected',
-  'needs_info',
-]);
-
-const ReviewClientAccessRequestSchema = z.object({
+/** Une seule décision admin : accepter (= accès envoyé) ou refuser. */
+const DecisionSchema = z.object({
   requestId: z.string().uuid('invalidRequest'),
   locale: z.enum(['fr', 'en']).default('fr'),
-  intent: ReviewIntentSchema,
-  reviewerNote: z.string().trim().max(2000, 'tooLong').optional(),
+  intent: z.enum(['accept', 'reject']),
 });
 
-export type ClientAccessReviewStatus = Exclude<
-  z.infer<typeof ReviewIntentSchema>,
-  'save_note'
->;
-
-export interface ClientAccessReviewResult {
-  ok: boolean;
-  authRequired?: boolean;
-  forbidden?: boolean;
-  fieldErrors?: Record<string, string[]>;
-  formError?: string;
-  message?: string;
-}
-
-const PortalInviteActionSchema = z.object({
-  inviteId: z.string().uuid('invalidInvite'),
-  requestId: z.string().uuid('invalidRequest'),
-  locale: z.enum(['fr', 'en']).default('fr'),
-});
-
-export interface PortalInviteActionResult {
+export interface AccessDecisionResult {
   ok: boolean;
   authRequired?: boolean;
   forbidden?: boolean;
   formError?: string;
   message?: string;
+  /** Surfaced only when the invitation email could not be delivered. */
   activationLink?: string;
   emailDelivery?: 'sent' | 'skipped' | 'failed';
 }
 
-export async function reviewClientAccessRequest(
-  _previousState: ClientAccessReviewResult,
+/**
+ * Accepter ou refuser une demande d'accès, en une seule action.
+ *
+ * « Accepter » fait tout d'un coup : la demande passe en `approved`, une
+ * invitation est créée (ou re-créée), un jeton à usage unique est généré et
+ * l'email d'activation part. Accepter une demande déjà acceptée renvoie une
+ * nouvelle invitation — c'est le mécanisme de renvoi, sans bouton séparé.
+ *
+ * Le client Swiver n'est PAS créé : l'API Swiver est en lecture seule sur les
+ * clients (`/open_api/customers/` → Allow: GET). Il reste à créer à la main.
+ */
+export async function decideAccessRequest(
+  _previousState: AccessDecisionResult,
   formData: FormData,
-): Promise<ClientAccessReviewResult> {
-  const parsed = ReviewClientAccessRequestSchema.safeParse({
+): Promise<AccessDecisionResult> {
+  const parsed = DecisionSchema.safeParse({
     requestId: readFormString(formData, 'requestId'),
     locale: readFormString(formData, 'locale') || 'fr',
     intent: readFormString(formData, 'intent'),
-    reviewerNote: readFormString(formData, 'reviewerNote') || undefined,
   });
+  if (!parsed.success) return { ok: false, formError: 'Demande invalide.' };
 
-  if (!parsed.success) {
-    const flat = parsed.error.flatten((issue) => issue.message);
-    const fieldErrors: Record<string, string[]> = {};
-    for (const [key, value] of Object.entries(flat.fieldErrors)) {
-      if (value && value.length > 0) fieldErrors[key] = value;
-    }
-    if (flat.formErrors.length > 0) fieldErrors._root = flat.formErrors;
-    return { ok: false, fieldErrors, formError: 'Vérifiez les informations de revue.' };
-  }
-
-  let currentUser;
+  let admin;
   try {
-    currentUser = await requireAdmin();
+    admin = await requireAdmin();
   } catch (error) {
     if (isAdminAuthUnavailableError(error)) {
-      return {
-        ok: false,
-        authRequired: true,
-        formError:
-          "La revue admin exige une authentification serveur qui n'est pas encore configurée.",
-      };
+      return { ok: false, authRequired: true, formError: "L'authentification admin n'est pas configurée." };
     }
     if (isUnauthenticatedAdminError(error)) {
-      return {
-        ok: false,
-        authRequired: true,
-        formError: 'Connectez-vous avec un compte admin Prodet.',
-      };
+      return { ok: false, authRequired: true, formError: 'Connectez-vous avec un compte admin Prodet.' };
     }
     if (isForbiddenAdminError(error)) {
-      return {
-        ok: false,
-        forbidden: true,
-        formError: "Votre compte n'a pas le rôle requis pour cette action.",
-      };
+      return { ok: false, forbidden: true, formError: "Votre compte n'a pas le rôle requis." };
     }
     throw error;
   }
 
   const { db, schema } = await import('@/db/client');
   const now = new Date();
-  const reviewerNote = parsed.data.reviewerNote || null;
-  const nextStatus =
-    parsed.data.intent === 'save_note' ? null : parsed.data.intent;
+  const actor = { actorUserId: admin.appUser?.id ?? null, actorRole: admin.appUser?.role ?? null };
 
-  const result = await db.transaction(async (tx) => {
-    const [existing] = await tx
-      .select()
-      .from(schema.clientAccessRequest)
-      .where(eq(schema.clientAccessRequest.id, parsed.data.requestId))
-      .limit(1);
+  const [request] = await db
+    .select()
+    .from(schema.clientAccessRequest)
+    .where(eq(schema.clientAccessRequest.id, parsed.data.requestId))
+    .limit(1);
+  if (!request) return { ok: false, formError: "Cette demande n'existe plus." };
 
-    if (!existing) return { found: false as const };
-
-    const updateValues: {
-      status?: ClientAccessReviewStatus;
-      reviewerNote: string | null;
-      reviewedAt?: Date | null;
-      updatedAt: Date;
-    } = {
-      reviewerNote,
-      updatedAt: now,
-    };
-
-    if (nextStatus) {
-      updateValues.status = nextStatus;
-      updateValues.reviewedAt = isReviewedStatus(nextStatus) ? now : null;
-    }
-
-    const [updated] = await tx
-      .update(schema.clientAccessRequest)
-      .set(updateValues)
-      .where(eq(schema.clientAccessRequest.id, parsed.data.requestId))
-      .returning();
-
-    let preparedInvite:
-      | typeof schema.portalInvite.$inferSelect
-      | null = null;
-
-    if (nextStatus === 'approved') {
-      const [invite] = await tx
-        .insert(schema.portalInvite)
-        .values({
-          accessRequestId: existing.id,
-          email: existing.email.toLowerCase(),
-          companyName: existing.companyName,
-          status: 'prepared',
-          tokenHash: null,
-          expiresAt: null,
-          updatedAt: now,
-        })
-        .onConflictDoUpdate({
-          target: schema.portalInvite.accessRequestId,
-          set: {
-            email: existing.email.toLowerCase(),
-            companyName: existing.companyName,
-            updatedAt: now,
-          },
-        })
-        .returning();
-
-      preparedInvite = invite ?? null;
-    }
-
-    await tx.insert(schema.auditLog).values({
-      actorUserId: currentUser.appUser?.id ?? null,
-      actorRole: currentUser.appUser?.role ?? null,
-      action:
-        parsed.data.intent === 'save_note'
-          ? 'client_access_request.note_updated'
-          : 'client_access_request.status_updated',
-      entityType: 'client_access_request',
-      entityId: parsed.data.requestId,
-      diff: {
-        before: {
-          status: existing.status,
-          reviewerNote: existing.reviewerNote,
-          reviewedAt: existing.reviewedAt?.toISOString() ?? null,
-        },
-        after: {
-          status: updated?.status ?? existing.status,
-          reviewerNote: updated?.reviewerNote ?? null,
-          reviewedAt: updated?.reviewedAt?.toISOString() ?? null,
-        },
-      },
-      metadata: {
-        intent: parsed.data.intent,
-        locale: parsed.data.locale,
-      },
-    });
-
-    if (preparedInvite) {
+  // ---------- REFUS ----------
+  if (parsed.data.intent === 'reject') {
+    await db.transaction(async (tx) => {
+      await tx
+        .update(schema.clientAccessRequest)
+        .set({ status: 'rejected', reviewedAt: now, updatedAt: now })
+        .where(eq(schema.clientAccessRequest.id, request.id));
+      // Neutralise toute invitation encore active.
+      await tx
+        .update(schema.portalInvite)
+        .set({ status: 'revoked', tokenHash: null, expiresAt: null, updatedAt: now })
+        .where(eq(schema.portalInvite.accessRequestId, request.id));
       await tx.insert(schema.auditLog).values({
-        actorUserId: currentUser.appUser?.id ?? null,
-        actorRole: currentUser.appUser?.role ?? null,
-        action: 'portal_invite.prepared',
-        entityType: 'portal_invite',
-        entityId: preparedInvite.id,
-        diff: {
-          status: preparedInvite.status,
-          email: preparedInvite.email,
-          companyName: preparedInvite.companyName,
-          accessRequestId: preparedInvite.accessRequestId,
-        },
-        metadata: {
-          sourceAction: 'client_access_request.approved',
-          locale: parsed.data.locale,
-        },
+        ...actor,
+        action: 'client_access_request.rejected',
+        entityType: 'client_access_request',
+        entityId: request.id,
+        diff: { before: { status: request.status }, after: { status: 'rejected' } },
+        metadata: {},
       });
-    }
-
-    return { found: true as const };
-  });
-
-  if (!result.found) {
-    return { ok: false, formError: "Cette demande d'accès n'existe plus." };
+    });
+    revalidatePath(`/${parsed.data.locale}/admin/demandes-acces`);
+    return { ok: true, message: 'Demande refusée.' };
   }
 
-  revalidatePath(`/${parsed.data.locale}/admin/demandes-acces`);
-  revalidatePath(`/${parsed.data.locale}/admin/demandes-acces/${parsed.data.requestId}`);
-
-  return {
-    ok: true,
-    message:
-      parsed.data.intent === 'save_note'
-        ? 'Note enregistrée.'
-        : parsed.data.intent === 'approved'
-          ? 'Demande approuvée. Invitation portail préparée.'
-        : 'Statut de la demande mis à jour.',
-  };
-}
-
-function readFormString(formData: FormData, key: string): string | undefined {
-  const value = formData.get(key);
-  return typeof value === 'string' ? value : undefined;
-}
-
-function isReviewedStatus(status: ClientAccessReviewStatus): boolean {
-  return status === 'approved' || status === 'rejected' || status === 'needs_info';
-}
-
-export async function sendPortalInvite(
-  _previousState: PortalInviteActionResult,
-  formData: FormData,
-): Promise<PortalInviteActionResult> {
-  const parsed = PortalInviteActionSchema.safeParse({
-    inviteId: readFormString(formData, 'inviteId'),
-    requestId: readFormString(formData, 'requestId'),
-    locale: readFormString(formData, 'locale') || 'fr',
-  });
-
-  if (!parsed.success) {
-    return { ok: false, formError: "L'invitation n'est pas valide." };
-  }
-
-  const currentUser = await requirePortalInviteAdmin();
-  if (!('currentUser' in currentUser)) return currentUser;
-
-  const { db, schema } = await import('@/db/client');
-  const now = new Date();
+  // ---------- ACCEPTATION ----------
   const rawToken = generateInviteToken();
   const tokenHash = hashInviteToken(rawToken);
   const expiresAt = getInviteExpiresAt(now);
   const activationLink = await buildActivationLink(parsed.data.locale, rawToken);
 
-  const result = await db.transaction(async (tx) => {
-    const [request] = await tx
-      .select()
-      .from(schema.clientAccessRequest)
-      .where(eq(schema.clientAccessRequest.id, parsed.data.requestId))
-      .limit(1);
+  const invite = await db.transaction(async (tx) => {
+    await tx
+      .update(schema.clientAccessRequest)
+      .set({ status: 'approved', reviewedAt: now, updatedAt: now })
+      .where(eq(schema.clientAccessRequest.id, request.id));
 
-    if (!request) return { status: 'missing_request' as const };
-    if (request.status !== 'approved') return { status: 'not_approved' as const };
-
-    const [invite] = await tx
-      .select()
-      .from(schema.portalInvite)
-      .where(eq(schema.portalInvite.id, parsed.data.inviteId))
-      .limit(1);
-
-    if (!invite || invite.accessRequestId !== request.id) {
-      return { status: 'missing_invite' as const };
-    }
-    if (invite.status !== 'prepared') {
-      return { status: 'not_prepared' as const, inviteStatus: invite.status };
-    }
-
-    const [updatedInvite] = await tx
-      .update(schema.portalInvite)
-      .set({
+    const [row] = await tx
+      .insert(schema.portalInvite)
+      .values({
+        accessRequestId: request.id,
         email: request.email.toLowerCase(),
         companyName: request.companyName,
         status: 'sent',
@@ -311,223 +132,67 @@ export async function sendPortalInvite(
         expiresAt,
         updatedAt: now,
       })
-      .where(eq(schema.portalInvite.id, invite.id))
+      .onConflictDoUpdate({
+        target: schema.portalInvite.accessRequestId,
+        set: {
+          email: request.email.toLowerCase(),
+          companyName: request.companyName,
+          status: 'sent',
+          tokenHash,
+          expiresAt,
+          updatedAt: now,
+        },
+      })
       .returning();
 
-    if (!updatedInvite) return { status: 'missing_invite' as const };
-
     await tx.insert(schema.auditLog).values({
-      actorUserId: currentUser.currentUser.appUser?.id ?? null,
-      actorRole: currentUser.currentUser.appUser?.role ?? null,
-      action: 'portal_invite.activation_token_prepared',
-      entityType: 'portal_invite',
-      entityId: updatedInvite.id,
-      diff: {
-        before: {
-          status: invite.status,
-          expiresAt: invite.expiresAt?.toISOString() ?? null,
-          tokenHashPresent: Boolean(invite.tokenHash),
-        },
-        after: {
-          status: updatedInvite.status,
-          expiresAt: updatedInvite.expiresAt?.toISOString() ?? null,
-          tokenHashPresent: Boolean(updatedInvite.tokenHash),
-        },
-      },
-      metadata: {
-        accessRequestId: request.id,
-        locale: parsed.data.locale,
-      },
+      ...actor,
+      action: 'client_access_request.accepted_and_invited',
+      entityType: 'client_access_request',
+      entityId: request.id,
+      diff: { before: { status: request.status }, after: { status: 'approved' } },
+      metadata: { inviteId: row?.id ?? null, locale: parsed.data.locale },
     });
 
-    return {
-      status: 'updated' as const,
-      invite: updatedInvite,
-      request,
-    };
+    return row ?? null;
   });
 
-  if (result.status === 'missing_request') {
-    return { ok: false, formError: "La demande d'accès n'existe plus." };
-  }
-  if (result.status === 'not_approved') {
-    return {
-      ok: false,
-      formError: "La demande doit être approuvée avant d'envoyer une invitation.",
-    };
-  }
-  if (result.status === 'missing_invite') {
-    return { ok: false, formError: "L'invitation préparée n'existe plus." };
-  }
-  if (result.status === 'not_prepared') {
-    return {
-      ok: false,
-      formError: "Cette invitation n'est plus en statut préparé.",
-    };
-  }
+  if (!invite) return { ok: false, formError: "L'invitation n'a pas pu être créée." };
 
   const emailDelivery = await sendPortalInviteEmail({
-    to: result.invite.email,
-    companyName: result.invite.companyName,
+    to: invite.email,
+    companyName: invite.companyName,
     activationLink,
     expiresAt,
     locale: parsed.data.locale,
   });
 
   await db.insert(schema.auditLog).values({
-    actorUserId: currentUser.currentUser.appUser?.id ?? null,
-    actorRole: currentUser.currentUser.appUser?.role ?? null,
-    action:
-      emailDelivery === 'sent'
-        ? 'portal_invite.email_sent'
-        : 'portal_invite.manual_delivery_prepared',
+    ...actor,
+    action: emailDelivery === 'sent' ? 'portal_invite.email_sent' : 'portal_invite.manual_delivery_prepared',
     entityType: 'portal_invite',
-    entityId: result.invite.id,
-    metadata: {
-      accessRequestId: result.request.id,
-      emailDelivery,
-      locale: parsed.data.locale,
-    },
+    entityId: invite.id,
+    metadata: { accessRequestId: request.id, emailDelivery },
   });
 
-  revalidatePath(`/${parsed.data.locale}/admin/demandes-acces/${parsed.data.requestId}`);
+  revalidatePath(`/${parsed.data.locale}/admin/demandes-acces`);
 
   return {
     ok: true,
     emailDelivery,
-    activationLink:
-      emailDelivery === 'skipped' && process.env.NODE_ENV !== 'production'
-        ? activationLink
-        : undefined,
     message:
       emailDelivery === 'sent'
-        ? 'Invitation envoyée par email.'
-        : emailDelivery === 'skipped'
-          ? 'Invitation générée. Email non configuré, lien disponible en développement.'
-          : "Invitation générée, mais l'envoi email a échoué.",
+        ? `Accès accordé — invitation envoyée à ${invite.email}.`
+        : `Accès accordé, mais l'email n'est pas parti. Transmettez le lien ci-dessous.`,
+    // Le lien n'est révélé que si l'email a échoué : sinon il n'a rien à faire
+    // dans une réponse HTTP, c'est un secret à usage unique.
+    activationLink: emailDelivery === 'sent' ? undefined : activationLink,
   };
 }
 
-export async function revokePortalInvite(
-  _previousState: PortalInviteActionResult,
-  formData: FormData,
-): Promise<PortalInviteActionResult> {
-  const parsed = PortalInviteActionSchema.safeParse({
-    inviteId: readFormString(formData, 'inviteId'),
-    requestId: readFormString(formData, 'requestId'),
-    locale: readFormString(formData, 'locale') || 'fr',
-  });
-
-  if (!parsed.success) {
-    return { ok: false, formError: "L'invitation n'est pas valide." };
-  }
-
-  const currentUser = await requirePortalInviteAdmin();
-  if (!('currentUser' in currentUser)) return currentUser;
-
-  const { db, schema } = await import('@/db/client');
-  const now = new Date();
-
-  const result = await db.transaction(async (tx) => {
-    const [invite] = await tx
-      .select()
-      .from(schema.portalInvite)
-      .where(eq(schema.portalInvite.id, parsed.data.inviteId))
-      .limit(1);
-
-    if (!invite || invite.accessRequestId !== parsed.data.requestId) {
-      return { status: 'missing_invite' as const };
-    }
-    if (invite.status === 'accepted') return { status: 'accepted' as const };
-    if (invite.status === 'revoked') return { status: 'already_revoked' as const };
-
-    const [updatedInvite] = await tx
-      .update(schema.portalInvite)
-      .set({
-        status: 'revoked',
-        tokenHash: null,
-        expiresAt: null,
-        updatedAt: now,
-      })
-      .where(eq(schema.portalInvite.id, invite.id))
-      .returning();
-
-    if (!updatedInvite) return { status: 'missing_invite' as const };
-
-    await tx.insert(schema.auditLog).values({
-      actorUserId: currentUser.currentUser.appUser?.id ?? null,
-      actorRole: currentUser.currentUser.appUser?.role ?? null,
-      action: 'portal_invite.revoked',
-      entityType: 'portal_invite',
-      entityId: updatedInvite.id,
-      diff: {
-        before: {
-          status: invite.status,
-          expiresAt: invite.expiresAt?.toISOString() ?? null,
-          tokenHashPresent: Boolean(invite.tokenHash),
-        },
-        after: {
-          status: updatedInvite.status,
-          expiresAt: updatedInvite.expiresAt?.toISOString() ?? null,
-          tokenHashPresent: Boolean(updatedInvite.tokenHash),
-        },
-      },
-      metadata: {
-        accessRequestId: parsed.data.requestId,
-        locale: parsed.data.locale,
-      },
-    });
-
-    return { status: 'revoked' as const };
-  });
-
-  if (result.status === 'missing_invite') {
-    return { ok: false, formError: "L'invitation n'existe plus." };
-  }
-  if (result.status === 'accepted') {
-    return { ok: false, formError: 'Une invitation acceptée ne peut pas être révoquée ici.' };
-  }
-  if (result.status === 'already_revoked') {
-    return { ok: true, message: 'Invitation déjà révoquée.' };
-  }
-
-  revalidatePath(`/${parsed.data.locale}/admin/demandes-acces/${parsed.data.requestId}`);
-
-  return { ok: true, message: 'Invitation révoquée.' };
-}
-
-async function requirePortalInviteAdmin(): Promise<
-  | { currentUser: Awaited<ReturnType<typeof requireAdmin>> }
-  | PortalInviteActionResult
-> {
-  try {
-    const currentUser = await requireAdmin();
-    return { currentUser };
-  } catch (error) {
-    if (isAdminAuthUnavailableError(error)) {
-      return {
-        ok: false,
-        authRequired: true,
-        formError:
-          "L'envoi d'invitation exige une authentification serveur configurée.",
-      };
-    }
-    if (isUnauthenticatedAdminError(error)) {
-      return {
-        ok: false,
-        authRequired: true,
-        formError: 'Connectez-vous avec un compte admin Prodet.',
-      };
-    }
-    if (isForbiddenAdminError(error)) {
-      return {
-        ok: false,
-        forbidden: true,
-        formError: "Votre compte n'a pas le rôle requis pour cette action.",
-      };
-    }
-    throw error;
-  }
+function readFormString(formData: FormData, key: string): string | undefined {
+  const value = formData.get(key);
+  return typeof value === 'string' ? value : undefined;
 }
 
 async function buildActivationLink(locale: 'fr' | 'en', rawToken: string): Promise<string> {

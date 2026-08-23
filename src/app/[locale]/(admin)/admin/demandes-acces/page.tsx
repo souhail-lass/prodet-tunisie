@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 import { CloudOff } from 'lucide-react';
-import {
-  accessRequestStatusLabels,
-  inviteStatusLabels,
-  listAdminAccessRequests,
-} from '@/features/client-access/admin-queries';
+import { notFound } from 'next/navigation';
+import { listAdminAccessRequests } from '@/features/client-access/admin-queries';
+import { isLocale } from '@/i18n/routing';
 import { AccessRequestsClient, type AccessRequestRow } from './access-requests-client';
 
 export const dynamic = 'force-dynamic';
@@ -20,7 +18,14 @@ const dateFmt = new Intl.DateTimeFormat('fr-FR', {
   timeZone: 'Africa/Tunis',
 });
 
-export default async function AdminAccessRequestsPage() {
+export default async function AdminAccessRequestsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+
   let rows: AccessRequestRow[] = [];
   let error: string | null = null;
 
@@ -35,10 +40,11 @@ export default async function AdminAccessRequestsPage() {
       sector: r.sector,
       city: r.cityOrZone,
       needType: r.needType,
+      reference: r.prodetReferenceOptional,
+      message: r.message,
       status: r.status,
-      statusLabel: accessRequestStatusLabels[r.status] ?? r.status,
-      inviteStatus: r.inviteStatus,
-      inviteLabel: r.inviteStatus ? inviteStatusLabels[r.inviteStatus] ?? r.inviteStatus : null,
+      activated: r.inviteStatus === 'accepted',
+      invited: r.inviteStatus === 'sent' || r.inviteStatus === 'accepted',
       dateLabel: dateFmt.format(r.createdAt),
     }));
   } catch (e) {
@@ -56,19 +62,13 @@ export default async function AdminAccessRequestsPage() {
             <CloudOff size={18} /> Données indisponibles
           </h2>
         </div>
-        <p className="panel__sub">Impossible de charger les demandes d’accès (base de données).</p>
-        <p
-          style={{
-            marginTop: 10,
-            fontSize: 'var(--text-xs)',
-            color: 'var(--text-tertiary)',
-          }}
-        >
+        <p className="panel__sub">Impossible de charger les demandes d’accès.</p>
+        <p style={{ marginTop: 10, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
           {error}
         </p>
       </section>
     );
   }
 
-  return <AccessRequestsClient requests={rows} />;
+  return <AccessRequestsClient requests={rows} locale={locale} />;
 }

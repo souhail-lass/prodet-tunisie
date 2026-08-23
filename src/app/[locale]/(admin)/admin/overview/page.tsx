@@ -1,4 +1,4 @@
-import { ArrowRight, Boxes, CheckCircle2, GraduationCap, Inbox, LifeBuoy, Users } from 'lucide-react';
+import { ArrowRight, Boxes, CheckCircle2, GraduationCap, LifeBuoy, UserPlus, Users } from 'lucide-react';
 import { getAdminOverview } from '@/features/admin/overview';
 import { Link } from '@/i18n/routing';
 
@@ -6,13 +6,13 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminOverviewPage() {
   const o = await getAdminOverview();
-  const toAction = o.openTickets + o.pendingOrders;
+  const toAction = o.openTickets + o.pendingAccessRequests;
 
   return (
     <div className="dash">
       <div className="dash__stats">
         <Stat icon={<Users size={20} />} tone="blue" value={o.activeClients} label="Clients actifs" />
-        <Stat icon={<Inbox size={20} />} tone={o.pendingOrders > 0 ? 'amber' : 'blue'} value={o.pendingOrders} label="Commandes à traiter" href="/admin/demandes-portail" />
+        <Stat icon={<UserPlus size={20} />} tone={o.pendingAccessRequests > 0 ? 'amber' : 'blue'} value={o.pendingAccessRequests} label="Demandes d’accès" href="/admin/demandes-acces" />
         <Stat icon={<LifeBuoy size={20} />} tone={o.openTickets > 0 ? 'amber' : 'blue'} value={o.openTickets} label="Tickets ouverts" href="/admin/support" />
         <Stat icon={<Boxes size={20} />} tone="green" value={o.visibleProducts} label="Produits en ligne" href="/admin/produits" />
       </div>
@@ -41,18 +41,18 @@ export default async function AdminOverviewPage() {
             </span>
           </div>
 
-          {o.orders.length === 0 && o.tickets.length === 0 ? (
+          {o.accessRequests.length === 0 && o.tickets.length === 0 ? (
             <div className="dash-empty" style={{ padding: '28px 16px' }}>
               <CheckCircle2 size={22} /> <p>Rien en attente. Tout est à jour.</p>
             </div>
           ) : (
             <div className="otable">
-              {o.orders.map((r) => (
-                <Link href={`/admin/demandes-portail/${r.id}`} key={r.id} className="ov-row">
-                  <span className="ov-row__tag ov-row__tag--order">Commande</span>
+              {o.accessRequests.map((r) => (
+                <Link href="/admin/demandes-acces" key={r.id} className="ov-row">
+                  <span className="ov-row__tag ov-row__tag--order">Accès</span>
                   <span className="ov-row__main">
-                    <strong>{r.reference}</strong>
-                    <span>{r.customerName ?? 'Client'} · {r.dateLabel}</span>
+                    <strong>{r.company}</strong>
+                    <span>{r.name} · {r.dateLabel}</span>
                   </span>
                   <ArrowRight size={16} className="ov-row__arrow" />
                 </Link>

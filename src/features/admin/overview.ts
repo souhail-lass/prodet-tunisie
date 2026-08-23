@@ -1,15 +1,15 @@
 import 'server-only';
-import { and, desc, eq, isNull, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 
 export type AdminOverview = {
   activeClients: number;
   openTickets: number;
-  pendingOrders: number;
+  pendingAccessRequests: number;
   visibleProducts: number;
   /** Open support tickets to action, newest first. */
   tickets: { id: string; subject: string; customerName: string | null; dateLabel: string; awaitingProdet: boolean }[];
-  /** Portal orders awaiting review. */
-  orders: { id: string; reference: string; customerName: string | null; dateLabel: string }[];
+  /** Portal access requests awaiting a decision. */
+  accessRequests: { id: string; company: string; name: string; dateLabel: string }[];
   /** Recently active (logged-in) clients. */
   activeNow: { name: string; email: string | null; lastSeenLabel: string }[];
 };
@@ -24,7 +24,7 @@ export async function getAdminOverview(): Promise<AdminOverview> {
     .select({
       activeClients: sql<number>`(select count(*) from app_user where role = 'customer_user' and is_active)`,
       openTickets: sql<number>`(select count(*) from support_ticket where status = 'open')`,
-      pendingOrders: sql<number>`(select count(*) from order_draft where source = 'portal' and status = 'review' and deleted_at is null)`,
+      pendingAccessRequests: sql<number>`(select count(*) from client_access_request where status in ('new','reviewing'))`,
       visibleProducts: sql<number>`(select count(*) from catalogue_product where not hidden)`,
     })
     .from(sql`(select 1) as _`);
@@ -43,17 +43,16 @@ export async function getAdminOverview(): Promise<AdminOverview> {
     .orderBy(desc(schema.supportTicket.lastMessageAt))
     .limit(6);
 
-  const orders = await db
+  const accessRequests = await db
     .select({
-      id: schema.orderDraft.id,
-      reference: schema.orderDraft.referenceCode,
-      customerName: schema.customer.name,
-      createdAt: schema.orderDraft.createdAt,
+      id: schema.clientAccessRequest.id,
+      company: schema.clientAccessRequest.companyName,
+      name: schema.clientAccessRequest.name,
+      createdAt: schema.clientAccessRequest.createdAt,
     })
-    .from(schema.orderDraft)
-    .leftJoin(schema.customer, eq(schema.customer.id, schema.orderDraft.customerId))
-    .where(and(eq(schema.orderDraft.source, 'portal'), eq(schema.orderDraft.status, 'review'), isNull(schema.orderDraft.deletedAt)))
-    .orderBy(desc(schema.orderDraft.createdAt))
+    .from(schema.clientAccessRequest)
+    .where(inArray(schema.clientAccessRequest.status, ['new', 'reviewing']))
+    .orderBy(desc(schema.clientAccessRequest.createdAt))
     .limit(6);
 
   const activeNow = await db
@@ -72,7 +71,7 @@ export async function getAdminOverview(): Promise<AdminOverview> {
   return {
     activeClients: Number(counts?.activeClients ?? 0),
     openTickets: Number(counts?.openTickets ?? 0),
-    pendingOrders: Number(counts?.pendingOrders ?? 0),
+    pendingAccessRequests: Number(counts?.pendingAccessRequests ?? 0),
     visibleProducts: Number(counts?.visibleProducts ?? 0),
     tickets: tickets.map((t) => ({
       id: t.id,
@@ -81,11 +80,11 @@ export async function getAdminOverview(): Promise<AdminOverview> {
       dateLabel: dt.format(t.lastMessageAt),
       awaitingProdet: t.lastAuthorRole === 'client',
     })),
-    orders: orders.map((o) => ({
-      id: o.id,
-      reference: o.reference,
-      customerName: o.customerName,
-      dateLabel: dt.format(o.createdAt),
+    accessRequests: accessRequests.map((r) => ({
+      id: r.id,
+      company: r.company,
+      name: r.name,
+      dateLabel: dt.format(r.createdAt),
     })),
     activeNow: activeNow.map((a) => ({
       name: a.name,

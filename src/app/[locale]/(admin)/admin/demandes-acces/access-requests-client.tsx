@@ -1,12 +1,22 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { Building2, Calendar, Inbox, Mail, MapPin, Search, Send } from 'lucide-react';
-import { Link, useRouter } from '@/i18n/routing';
-import type {
-  AccessRequestStatus,
-  PortalInviteStatus,
-} from '@/features/client-access/admin-queries';
+import { useActionState, useMemo, useState } from 'react';
+import {
+  AlertCircle,
+  Check,
+  CheckCircle2,
+  Inbox,
+  Mail,
+  MapPin,
+  Phone,
+  X,
+} from 'lucide-react';
+import { ConfirmDialog } from '@/components/ds';
+import {
+  decideAccessRequest,
+  type AccessDecisionResult,
+} from '@/features/client-access/admin-actions';
+import type { AccessRequestStatus } from '@/features/client-access/admin-queries';
 
 export type AccessRequestRow = {
   id: string;
@@ -17,207 +27,212 @@ export type AccessRequestRow = {
   sector: string;
   city: string;
   needType: string;
+  reference: string | null;
+  message: string | null;
   status: AccessRequestStatus;
-  statusLabel: string;
-  inviteStatus: PortalInviteStatus | null;
-  inviteLabel: string | null;
+  activated: boolean;
+  invited: boolean;
   dateLabel: string;
 };
 
-const TABS: { id: string; label: string }[] = [
-  { id: 'all', label: 'Toutes' },
-  { id: 'new', label: 'Nouvelles' },
-  { id: 'reviewing', label: 'En revue' },
-  { id: 'approved', label: 'Approuvées' },
-  { id: 'needs_info', label: 'Infos manquantes' },
-  { id: 'rejected', label: 'Refusées' },
-];
+const initialState: AccessDecisionResult = { ok: false };
 
-const TONE: Record<string, { bg: string; fg: string }> = {
-  new: { bg: 'var(--prodet-blue-tint)', fg: 'var(--prodet-blue)' },
-  reviewing: { bg: 'var(--surface-sunken)', fg: 'var(--text-secondary)' },
-  approved: { bg: 'var(--prodet-green-tint)', fg: 'var(--prodet-green)' },
-  needs_info: { bg: 'var(--surface-sunken)', fg: 'var(--text-secondary)' },
-  rejected: { bg: 'var(--color-danger-bg)', fg: 'var(--color-danger)' },
-};
+export function AccessRequestsClient({
+  requests,
+  locale,
+}: {
+  requests: AccessRequestRow[];
+  locale: 'fr' | 'en';
+}) {
+  const [state, formAction, isPending] = useActionState(decideAccessRequest, initialState);
+  const [showHandled, setShowHandled] = useState(false);
 
-const INVITE_TONE: Record<string, { bg: string; fg: string }> = {
-  prepared: { bg: 'var(--surface-sunken)', fg: 'var(--text-secondary)' },
-  sent: { bg: 'var(--prodet-blue-tint)', fg: 'var(--prodet-blue)' },
-  accepted: { bg: 'var(--prodet-green-tint)', fg: 'var(--prodet-green)' },
-  expired: { bg: 'var(--surface-sunken)', fg: 'var(--text-tertiary)' },
-  revoked: { bg: 'var(--color-danger-bg)', fg: 'var(--color-danger)' },
-};
+  const pending = useMemo(
+    () => requests.filter((r) => r.status === 'new' || r.status === 'reviewing'),
+    [requests],
+  );
+  const handled = useMemo(
+    () => requests.filter((r) => r.status !== 'new' && r.status !== 'reviewing'),
+    [requests],
+  );
 
-export function AccessRequestsClient({ requests }: { requests: AccessRequestRow[] }) {
-  const router = useRouter();
-  const [query, setQuery] = useState('');
-  const [status, setStatus] = useState('all');
-
-  // Near-real-time, matching the portal-requests queue.
-  useEffect(() => {
-    const id = setInterval(() => router.refresh(), 10_000);
-    return () => clearInterval(id);
-  }, [router]);
-
-  const counts = useMemo(() => {
-    const map: Record<string, number> = { all: requests.length };
-    for (const r of requests) map[r.status] = (map[r.status] ?? 0) + 1;
-    return map;
-  }, [requests]);
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return requests.filter((r) => {
-      if (status !== 'all' && r.status !== status) return false;
-      if (!q) return true;
-      return (
-        r.name.toLowerCase().includes(q) ||
-        r.company.toLowerCase().includes(q) ||
-        r.email.toLowerCase().includes(q) ||
-        r.phone.toLowerCase().includes(q) ||
-        r.city.toLowerCase().includes(q)
-      );
-    });
-  }, [requests, query, status]);
-
-  const pending = (counts.new ?? 0) + (counts.reviewing ?? 0);
-  const toSend = requests.filter((r) => r.inviteStatus === 'prepared').length;
-  const active = requests.filter((r) => r.inviteStatus === 'accepted').length;
+  const visible = showHandled ? handled : pending;
 
   return (
     <div className="dash">
-      <div className="dash__stats dash__stats--3">
-        <div className="stat-card">
-          <div className="stat-card__value" style={{ color: 'var(--prodet-blue)' }}>
-            {pending}
-          </div>
-          <div className="stat-card__label">À traiter</div>
+      {state.formError ? (
+        <p role="alert" className="admin-alert admin-alert--danger">
+          <AlertCircle size={15} />
+          {state.formError}
+        </p>
+      ) : null}
+      {state.ok && state.message ? (
+        <p role="status" className="admin-alert admin-alert--success">
+          <CheckCircle2 size={15} />
+          {state.message}
+        </p>
+      ) : null}
+      {state.activationLink ? (
+        <div className="admin-note">
+          <span className="admin-fact__label">Lien d’activation à transmettre</span>
+          <p style={{ fontSize: 'var(--text-xs)', wordBreak: 'break-all' }}>
+            {state.activationLink}
+          </p>
         </div>
-        <div className="stat-card">
-          <div className="stat-card__value">{toSend}</div>
-          <div className="stat-card__label">Invitations à envoyer</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-card__value" style={{ color: 'var(--prodet-green)' }}>
-            {active}
-          </div>
-          <div className="stat-card__label">Accès activés</div>
-        </div>
-      </div>
+      ) : null}
 
-      <div className="orders__tabs">
-        {TABS.map((tab) => (
-          <button
-            key={tab.id}
-            className={`orders__tab${status === tab.id ? ' is-active' : ''}`}
-            onClick={() => setStatus(tab.id)}
-          >
-            {tab.label}
-            {counts[tab.id] ? ` (${counts[tab.id]})` : ''}
-          </button>
-        ))}
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            marginLeft: 'auto',
-            fontSize: 'var(--text-xs)',
-            color: 'var(--text-tertiary)',
-          }}
+      <div className="acc-switch">
+        <button
+          type="button"
+          className={`orders__tab${!showHandled ? ' is-active' : ''}`}
+          onClick={() => setShowHandled(false)}
         >
-          <span
-            style={{
-              width: 7,
-              height: 7,
-              borderRadius: '50%',
-              background: 'var(--prodet-green)',
-            }}
-          />
-          Synchronisé en direct
-        </div>
+          En attente{pending.length ? ` (${pending.length})` : ''}
+        </button>
+        <button
+          type="button"
+          className={`orders__tab${showHandled ? ' is-active' : ''}`}
+          onClick={() => setShowHandled(true)}
+        >
+          Traitées{handled.length ? ` (${handled.length})` : ''}
+        </button>
       </div>
 
-      <div className="admin-toolbar" style={{ marginBottom: 0 }}>
-        <div className="admin-search">
-          <Search size={16} />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Rechercher une société, un nom, un email, une ville…"
+      <div className="acc-list">
+        {visible.map((r) => (
+          <RequestCard
+            key={r.id}
+            request={r}
+            locale={locale}
+            formAction={formAction}
+            isPending={isPending}
           />
-        </div>
-      </div>
+        ))}
 
-      <div className="orders__list">
-        {filtered.map((r) => {
-          const tone = TONE[r.status] ?? {
-            bg: 'var(--surface-sunken)',
-            fg: 'var(--text-secondary)',
-          };
-          const inviteTone = r.inviteStatus ? INVITE_TONE[r.inviteStatus] : null;
-          return (
-            <Link
-              key={r.id}
-              href={`/admin/demandes-acces/${r.id}`}
-              className="order-row order-row--link"
-            >
-              <div className="order-row__main">
-                <div className="order-row__id-block">
-                  <span className="order-row__id">{r.company}</span>
-                  <span className="order-row__date">
-                    {r.name} · {r.email}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    display: 'inline-flex',
-                    gap: 8,
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  {inviteTone && r.inviteLabel ? (
-                    <span
-                      className="pds-badge pds-badge--sm"
-                      style={{ background: inviteTone.bg, color: inviteTone.fg }}
-                    >
-                      <Send size={13} /> {r.inviteLabel}
-                    </span>
-                  ) : null}
-                  <span
-                    className="pds-badge pds-badge--sm"
-                    style={{ background: tone.bg, color: tone.fg }}
-                  >
-                    {r.statusLabel}
-                  </span>
-                </div>
-              </div>
-              <div className="order-row__meta">
-                <span>
-                  <Building2 size={15} /> {r.sector}
-                </span>
-                <span>
-                  <MapPin size={15} /> {r.city}
-                </span>
-                <span style={{ color: 'var(--text-tertiary)' }}>
-                  <Mail size={15} /> {r.phone}
-                </span>
-                <span className="order-row__eta">
-                  <Calendar size={15} /> {r.dateLabel}
-                </span>
-              </div>
-            </Link>
-          );
-        })}
-        {filtered.length === 0 ? (
+        {visible.length === 0 ? (
           <div className="admin-empty">
             <Inbox size={26} style={{ marginBottom: 8, opacity: 0.5 }} />
-            <div>Aucune demande d’accès pour le moment.</div>
+            <div>
+              {showHandled ? 'Aucune demande traitée.' : 'Aucune demande en attente.'}
+            </div>
           </div>
         ) : null}
       </div>
     </div>
+  );
+}
+
+function RequestCard({
+  request: r,
+  locale,
+  formAction,
+  isPending,
+}: {
+  request: AccessRequestRow;
+  locale: 'fr' | 'en';
+  formAction: (payload: FormData) => void;
+  isPending: boolean;
+}) {
+  const [confirming, setConfirming] = useState<'accept' | 'reject' | null>(null);
+
+  function submit(intent: 'accept' | 'reject') {
+    const data = new FormData();
+    data.set('requestId', r.id);
+    data.set('locale', locale);
+    data.set('intent', intent);
+    formAction(data);
+    setConfirming(null);
+  }
+
+  return (
+    <article className="acc-card">
+      <header className="acc-card__head">
+        <div style={{ minWidth: 0 }}>
+          <h2 className="acc-card__title">{r.company}</h2>
+          <p className="acc-card__sub">
+            {r.name} · {r.dateLabel}
+          </p>
+        </div>
+        {r.status === 'approved' ? (
+          <span
+            className="pds-badge pds-badge--sm"
+            style={{ background: 'var(--prodet-green-tint)', color: 'var(--prodet-green)' }}
+          >
+            {r.activated ? 'Accès actif' : 'Invitation envoyée'}
+          </span>
+        ) : null}
+        {r.status === 'rejected' ? (
+          <span
+            className="pds-badge pds-badge--sm"
+            style={{ background: 'var(--color-danger-bg)', color: 'var(--color-danger)' }}
+          >
+            Refusée
+          </span>
+        ) : null}
+      </header>
+
+      <div className="acc-card__facts">
+        <span>
+          <Mail size={14} /> {r.email}
+        </span>
+        <span>
+          <Phone size={14} /> {r.phone}
+        </span>
+        <span>
+          <MapPin size={14} /> {r.city}
+        </span>
+        <span className="acc-card__muted">{r.sector}</span>
+        <span className="acc-card__muted">{r.needType}</span>
+        {r.reference ? <span className="acc-card__muted">Réf. {r.reference}</span> : null}
+      </div>
+
+      {r.message ? <pre className="acc-card__message">{r.message}</pre> : null}
+
+      <footer className="acc-card__actions">
+        {/* Une fois le client activé, renvoyer une invitation n'a plus de sens :
+            il a déjà son accès, et un nouveau jeton ne ferait qu'embrouiller. */}
+        {r.activated ? (
+          <span className="acc-card__done">
+            <CheckCircle2 size={15} /> Compte activé par le client
+          </span>
+        ) : (
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => setConfirming('accept')}
+            className="pds-btn pds-btn--success pds-btn--md"
+          >
+            <Check size={16} />
+            <span>{r.status === 'approved' ? 'Renvoyer l’invitation' : 'Accepter'}</span>
+          </button>
+        )}
+        <button
+          type="button"
+          disabled={isPending || r.status === 'rejected' || r.activated}
+          onClick={() => setConfirming('reject')}
+          className="pds-btn pds-btn--ghost pds-btn--md"
+          style={{ color: 'var(--color-danger)' }}
+        >
+          <X size={16} />
+          <span>Refuser</span>
+        </button>
+      </footer>
+
+      <ConfirmDialog
+        open={confirming != null}
+        title={confirming === 'reject' ? 'Refuser la demande ?' : 'Accorder l’accès ?'}
+        message={
+          confirming === 'reject'
+            ? `La demande de ${r.company} sera refusée. Aucun accès ne sera créé.`
+            : `${r.company} recevra immédiatement un email d’activation à ${r.email}. Pensez à créer le client dans Swiver — l’API ne permet pas de le faire automatiquement.`
+        }
+        confirmLabel={confirming === 'reject' ? 'Refuser' : 'Accepter'}
+        cancelLabel="Retour"
+        danger={confirming === 'reject'}
+        pending={isPending}
+        onConfirm={() => submit(confirming ?? 'accept')}
+        onClose={() => setConfirming(null)}
+      />
+    </article>
   );
 }

@@ -3,42 +3,10 @@ import { desc, eq } from 'drizzle-orm';
 import { requireAdmin } from '@/features/admin/auth';
 
 export type AccessRequestStatus = 'new' | 'reviewing' | 'approved' | 'rejected' | 'needs_info';
-export type PortalInviteStatus = 'prepared' | 'sent' | 'accepted' | 'expired' | 'revoked';
-export type AdminTone = 'neutral' | 'info' | 'success' | 'danger' | 'warn';
 
-export const accessRequestStatusLabels: Record<AccessRequestStatus, string> = {
-  new: 'Nouvelle',
-  reviewing: 'En cours de revue',
-  approved: 'Approuvée',
-  rejected: 'Refusée',
-  needs_info: 'Infos manquantes',
-};
-
-export const accessRequestStatusTones: Record<AccessRequestStatus, AdminTone> = {
-  new: 'info',
-  reviewing: 'warn',
-  approved: 'success',
-  rejected: 'danger',
-  needs_info: 'warn',
-};
-
-export const inviteStatusLabels: Record<PortalInviteStatus, string> = {
-  prepared: 'À envoyer',
-  sent: 'Envoyée',
-  accepted: 'Activée',
-  expired: 'Expirée',
-  revoked: 'Révoquée',
-};
-
-export const inviteStatusTones: Record<PortalInviteStatus, AdminTone> = {
-  prepared: 'warn',
-  sent: 'info',
-  accepted: 'success',
-  expired: 'neutral',
-  revoked: 'danger',
-};
-
-export type AdminAccessRequestRow = {
+/** Une demande d'accès telle qu'affichée dans l'admin, avec tout le contexte
+ *  nécessaire pour décider sans changer de page. */
+export type AdminAccessRequest = {
   id: string;
   name: string;
   companyName: string;
@@ -47,34 +15,20 @@ export type AdminAccessRequestRow = {
   sector: string;
   cityOrZone: string;
   needType: string;
+  prodetReferenceOptional: string | null;
+  message: string | null;
   status: AccessRequestStatus;
   createdAt: Date;
   reviewedAt: Date | null;
-  inviteStatus: PortalInviteStatus | null;
-};
-
-export type AdminAccessRequestDetail = AdminAccessRequestRow & {
-  prodetReferenceOptional: string | null;
-  message: string | null;
-  reviewerNote: string | null;
-  source: string;
-  updatedAt: Date;
-  invite: {
-    id: string;
-    status: PortalInviteStatus;
-    email: string;
-    expiresAt: Date | null;
-    createdAt: Date;
-    updatedAt: Date;
-  } | null;
+  /** 'sent' une fois l'invitation partie, 'accepted' quand le client a activé. */
+  inviteStatus: string | null;
 };
 
 /**
- * Every "devenir client" request, newest first, with the state of its portal
- * invite (if the request was approved). Admin-gated at the data boundary
- * rather than relying only on the route layout.
+ * Toutes les demandes d'accès, plus récentes d'abord. Gardée derrière
+ * requireAdmin() au niveau de la donnée, pas seulement du layout.
  */
-export async function listAdminAccessRequests(): Promise<AdminAccessRequestRow[]> {
+export async function listAdminAccessRequests(): Promise<AdminAccessRequest[]> {
   await requireAdmin();
   const { db, schema } = await import('@/db/client');
 
@@ -88,6 +42,8 @@ export async function listAdminAccessRequests(): Promise<AdminAccessRequestRow[]
       sector: schema.clientAccessRequest.sector,
       cityOrZone: schema.clientAccessRequest.cityOrZone,
       needType: schema.clientAccessRequest.needType,
+      prodetReferenceOptional: schema.clientAccessRequest.prodetReferenceOptional,
+      message: schema.clientAccessRequest.message,
       status: schema.clientAccessRequest.status,
       createdAt: schema.clientAccessRequest.createdAt,
       reviewedAt: schema.clientAccessRequest.reviewedAt,
@@ -100,61 +56,5 @@ export async function listAdminAccessRequests(): Promise<AdminAccessRequestRow[]
     )
     .orderBy(desc(schema.clientAccessRequest.createdAt));
 
-  return rows as AdminAccessRequestRow[];
-}
-
-export async function getAdminAccessRequestDetail(
-  id: string,
-): Promise<AdminAccessRequestDetail | null> {
-  await requireAdmin();
-  const { db, schema } = await import('@/db/client');
-
-  const [row] = await db
-    .select()
-    .from(schema.clientAccessRequest)
-    .where(eq(schema.clientAccessRequest.id, id))
-    .limit(1);
-  if (!row) return null;
-
-  const [invite] = await db
-    .select()
-    .from(schema.portalInvite)
-    .where(eq(schema.portalInvite.accessRequestId, id))
-    .limit(1);
-
-  return {
-    id: row.id,
-    name: row.name,
-    companyName: row.companyName,
-    email: row.email,
-    phone: row.phone,
-    sector: row.sector,
-    cityOrZone: row.cityOrZone,
-    needType: row.needType,
-    status: row.status as AccessRequestStatus,
-    createdAt: row.createdAt,
-    updatedAt: row.updatedAt,
-    reviewedAt: row.reviewedAt,
-    reviewerNote: row.reviewerNote,
-    prodetReferenceOptional: row.prodetReferenceOptional,
-    message: row.message,
-    source: row.source,
-    inviteStatus: (invite?.status as PortalInviteStatus | undefined) ?? null,
-    invite: invite
-      ? {
-          id: invite.id,
-          status: invite.status as PortalInviteStatus,
-          email: invite.email,
-          expiresAt: invite.expiresAt,
-          createdAt: invite.createdAt,
-          updatedAt: invite.updatedAt,
-        }
-      : null,
-  };
-}
-
-/** Count of requests still awaiting a decision — drives the nav badge. */
-export async function countPendingAccessRequests(): Promise<number> {
-  const rows = await listAdminAccessRequests();
-  return rows.filter((r) => r.status === 'new' || r.status === 'reviewing').length;
+  return rows as AdminAccessRequest[];
 }
