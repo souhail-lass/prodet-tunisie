@@ -1,7 +1,7 @@
 import 'server-only';
 import { eq, type SQL } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
-import type { Product, ProductCategory, ProductSpec } from '@/types/product';
+import type { CatalogueCardProduct, Product, ProductCategory, ProductSpec } from '@/types/product';
 import {
   classifyFamille,
   classifySousCategorie,
@@ -136,6 +136,25 @@ export async function getCatalogueCount(): Promise<number> {
 export async function getVisibleCatalogue(): Promise<Product[]> {
   const rows = await getCachedCatalogueRows();
   return rows.filter((r) => !r.hidden).map(mapRowToProduct);
+}
+
+/**
+ * Slim product cards shipped to the browser so any catalogue page can run the
+ * shared client-side search (see `@/lib/product-search`). Kept to the card
+ * fields only — descriptions and specs stay on the server.
+ */
+export async function getCatalogueSearchCards(): Promise<CatalogueCardProduct[]> {
+  const products = await getVisibleCatalogue();
+  return products.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    tagline: p.tagline,
+    category: p.category,
+    categoryLabel: p.categoryLabel,
+    image: p.image,
+    formats: p.formats,
+  }));
 }
 
 export async function getCatalogueCategories(): Promise<string[]> {

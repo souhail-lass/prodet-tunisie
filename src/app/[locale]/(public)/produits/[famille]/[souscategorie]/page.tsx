@@ -10,8 +10,9 @@ import {
   getSousCategorie,
   sousCatLabelKey,
 } from '@/data/familles';
-import { getCatalogueBySousCategorie } from '@/features/catalogue/queries';
+import { getCatalogueBySousCategorie, getCatalogueSearchCards } from '@/features/catalogue/queries';
 import { CategorySidebar } from '@/components/catalogue/category-sidebar';
+import { ProductQuickSearch } from '@/components/catalogue/product-quick-search';
 import { ProductGrid } from '@/components/catalogue/product-grid';
 import type { CatalogueCardProduct } from '@/types/product';
 
@@ -54,6 +55,8 @@ export default async function SousCategoriePage({
   const tc = await getTranslations({ locale, namespace: 'catalogue' });
   const sub = getSousCategorie(fam.id, souscategorie);
   const label = tf(`souscats.${sousCatLabelKey(souscategorie)}`);
+  // Search spans the whole catalogue, not just this sous-catégorie.
+  const searchCards = await getCatalogueSearchCards();
 
   const cards: CatalogueCardProduct[] = products.map((p) => ({
     id: p.id,
@@ -81,6 +84,12 @@ export default async function SousCategoriePage({
             <span className="eyebrow">{tf('page.subEyebrow')}</span>
             <h1 className="famille-hero__title">{label}</h1>
             <span className="famille-hero__count">{tf('page.productsCount', { count: cards.length })}</span>
+            <div className="famille-hero__search">
+              <ProductQuickSearch
+                products={searchCards}
+                madeLabel={tc('page.manufacturedBadge')}
+              />
+            </div>
           </div>
           {sub ? (
             <div className="famille-hero__media">

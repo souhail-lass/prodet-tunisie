@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { Clock, Factory, FileText, Info, ShieldCheck, SlidersHorizontal, Truck } from 'lucide-react';
+import { Clock, Factory, FileText, Info, PackageCheck, ShieldCheck, SlidersHorizontal, Truck } from 'lucide-react';
 import type { Locale } from '@/i18n/routing';
 import type { Product } from '@/data/types';
 import { cn } from '@/lib/utils';
@@ -27,6 +27,8 @@ export function ProductHeroV2({
   const primaryImage = galleryImages[0];
   const [activeImage, setActiveImage] = useState<ProductGalleryImage | undefined>(primaryImage);
   const isEnglish = locale === 'en';
+  const hasDilution = Boolean(product.dilutionRates?.length || product.dosage);
+  const isManufactured = product.category === 'manufactured';
   const technicalSheetLabel = product.technicalSheetUrl
     ? isEnglish
       ? 'Available'
@@ -153,35 +155,42 @@ export function ProductHeroV2({
           </div>
         ) : null}
 
+        {/* Only surface a panel we can actually fill. A dilution rate on a bin
+            bag — or an empty "information à compléter" — reads as neglect, so
+            consumables and equipment simply show fewer panels. */}
         <div className="mt-7 overflow-hidden rounded-[6px]">
-          <ProductAccordion
-            title={isEnglish ? 'How To Use' : 'Mode d’utilisation'}
-            icon={Info}
-            defaultOpen={false}
-          >
-            <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
-              {product.howToUse ?? (isEnglish ? 'Information to be completed.' : 'Information à compléter.')}
-            </p>
-          </ProductAccordion>
-          <ProductAccordion
-            title={isEnglish ? 'Dilution Rates' : 'Taux de dilution'}
-            icon={SlidersHorizontal}
-            defaultOpen={false}
-          >
-            {product.dilutionRates?.length ? (
-              <ul className="list-disc space-y-1 pl-5 text-[13px] leading-6 text-[var(--color-text-primary)]">
-                {product.dilutionRates.map((rate) => (
-                  <li key={rate.label}>
-                    <strong>{rate.label}:</strong> {rate.rate}
-                  </li>
-                ))}
-              </ul>
-            ) : (
+          {product.howToUse ? (
+            <ProductAccordion
+              title={isEnglish ? 'How To Use' : 'Mode d’utilisation'}
+              icon={Info}
+              defaultOpen={false}
+            >
               <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
-                {product.dosage ?? (isEnglish ? 'Information to be completed.' : 'Information à compléter.')}
+                {product.howToUse}
               </p>
-            )}
-          </ProductAccordion>
+            </ProductAccordion>
+          ) : null}
+          {hasDilution ? (
+            <ProductAccordion
+              title={isEnglish ? 'Dilution Rates' : 'Taux de dilution'}
+              icon={SlidersHorizontal}
+              defaultOpen={false}
+            >
+              {product.dilutionRates?.length ? (
+                <ul className="list-disc space-y-1 pl-5 text-[13px] leading-6 text-[var(--color-text-primary)]">
+                  {product.dilutionRates.map((rate) => (
+                    <li key={rate.label}>
+                      <strong>{rate.label}:</strong> {rate.rate}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
+                  {product.dosage}
+                </p>
+              )}
+            </ProductAccordion>
+          ) : null}
           <ProductAccordion
             title={isEnglish ? 'Technical Sheet' : 'Fiche technique'}
             icon={FileText}
@@ -211,9 +220,15 @@ export function ProductHeroV2({
 
         <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border border-[var(--color-border)] bg-white p-4">
           {[
-            { icon: Factory, title: isEnglish ? 'Made in Tunisia' : 'Fabriqué en Tunisie', accent: true },
+            // "Fabriqué en Tunisie" is a claim about the product, not the
+            // supplier: a resold DETTOL or VILEDA glove must not carry it.
+            isManufactured
+              ? { icon: Factory, title: isEnglish ? 'Made in Tunisia' : 'Fabriqué en Tunisie', accent: true }
+              : { icon: PackageCheck, title: isEnglish ? 'Selected range' : 'Gamme sélectionnée', accent: true },
             { icon: Truck, title: isEnglish ? 'Regular delivery' : 'Livraison régulière' },
-            { icon: ShieldCheck, title: isEnglish ? 'Dosage advice' : 'Conseil sur le dosage' },
+            hasDilution
+              ? { icon: ShieldCheck, title: isEnglish ? 'Dosage advice' : 'Conseil sur le dosage' }
+              : { icon: ShieldCheck, title: isEnglish ? 'Product advice' : 'Conseil produit' },
             { icon: Clock, title: isEnglish ? 'Reply within 24h' : 'Réponse sous 24h ouvrées' },
           ].map(({ icon: TrustIcon, title, accent }) => (
             <div key={title} className="flex items-center gap-2.5">

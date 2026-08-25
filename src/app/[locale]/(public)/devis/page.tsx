@@ -1,7 +1,12 @@
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { isLocale, type Locale } from '@/i18n/routing';
+import { getCatalogueSearchCards } from '@/features/catalogue/queries';
 import { DevisPageClient } from './_devis-page-client';
+
+// The quick-add search reads the live catalogue, so keep this page on the same
+// ISR window as the rest of the public catalogue.
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -19,5 +24,14 @@ export default async function DevisPage({
   if (!isLocale(locale)) return null;
   setRequestLocale(locale);
 
-  return <DevisPageClient locale={locale as Locale} />;
+  const searchCards = await getCatalogueSearchCards();
+  const tc = await getTranslations({ locale, namespace: 'catalogue' });
+
+  return (
+    <DevisPageClient
+      locale={locale as Locale}
+      searchCards={searchCards}
+      madeLabel={tc('page.manufacturedBadge')}
+    />
+  );
 }

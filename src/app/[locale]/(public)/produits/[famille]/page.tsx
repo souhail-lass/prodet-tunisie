@@ -10,8 +10,9 @@ import {
   getSousCategorie,
   sousCatLabelKey,
 } from '@/data/familles';
-import { getSousCategorieCounts } from '@/features/catalogue/queries';
+import { getCatalogueSearchCards, getSousCategorieCounts } from '@/features/catalogue/queries';
 import { CategorySidebar } from '@/components/catalogue/category-sidebar';
+import { ProductQuickSearch } from '@/components/catalogue/product-quick-search';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbSchema } from '@/lib/seo/structured-data';
 
@@ -51,8 +52,12 @@ export default async function FamillePage({
   if (!fam) return notFound();
 
   const tf = await getTranslations({ locale, namespace: 'familles' });
+  const tc = await getTranslations({ locale, namespace: 'catalogue' });
   const sousCats = await getSousCategorieCounts(fam.id);
   const total = sousCats.reduce((sum, s) => sum + s.count, 0);
+  // Search spans the whole catalogue, not just this famille — someone landing
+  // here from Google shouldn't have to walk back up to /catalogue to look.
+  const searchCards = await getCatalogueSearchCards();
 
   return (
     <div className="famille-page">
@@ -79,6 +84,12 @@ export default async function FamillePage({
             {total > 0 ? (
               <span className="famille-hero__count">{tf('page.productsCount', { count: total })}</span>
             ) : null}
+            <div className="famille-hero__search">
+              <ProductQuickSearch
+                products={searchCards}
+                madeLabel={tc('page.manufacturedBadge')}
+              />
+            </div>
           </div>
           <div className="famille-hero__media">
             <Image src={fam.image} alt="" fill sizes="(max-width: 860px) 100vw, 240px" style={{ objectFit: 'cover' }} />

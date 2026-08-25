@@ -10,11 +10,9 @@ import {
   PackageSearch,
   Phone,
   Plus,
-  Search,
   Trash2,
-  X,
 } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState, useTransition, type ReactNode } from 'react';
+import { useMemo, useState, useTransition, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, type Locale } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
@@ -29,17 +27,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { ProductQuickSearch } from '@/components/catalogue/product-quick-search';
 import { companyInfo } from '@/data/company';
 import { products } from '@/data/products';
 import { sectors } from '@/data/sectors';
 import { submitPublicDevisRequest } from '@/features/quote/actions';
-import {
-  toQuoteSelectionProduct,
-  useQuoteSelection,
-  type QuoteSelectionItem,
-} from '@/lib/quote-cart-context';
+import { useQuoteSelection, type QuoteSelectionItem } from '@/lib/quote-cart-context';
 import { cn } from '@/lib/utils';
-import type { Product, ProductCategory } from '@/types/product';
+import type { CatalogueCardProduct, ProductCategory } from '@/types/product';
 
 type DevisFormState = {
   fullName: string;
@@ -71,13 +66,20 @@ const INITIAL_FORM_STATE: DevisFormState = {
 };
 
 const fallbackEmail = 'contact@prodet.com.tn';
-const quoteSearchProducts = products.filter((product) => product.category === 'manufactured');
 
-export function DevisPageClient({ locale }: { locale: Locale }) {
+export function DevisPageClient({
+  locale,
+  searchCards,
+  madeLabel,
+}: {
+  locale: Locale;
+  /** Live catalogue, for the quick-add search in the selection header. */
+  searchCards: CatalogueCardProduct[];
+  madeLabel?: string;
+}) {
   const t = useTranslations('devis.quote');
   const {
     items,
-    addProduct,
     setProductQuantity,
     removeProduct,
     clearSelection,
@@ -177,7 +179,7 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
       <div className="section-shell py-6 lg:py-8">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(380px,0.82fr)]">
           <section className="rounded-lg border border-border bg-white p-4 md:p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
+            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4">
               <div>
                 <p className="text-xs font-semibold uppercase text-primary">Produits</p>
                 <h2 className="mt-1 text-xl font-semibold text-prodet-text">
@@ -187,25 +189,30 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
                   {t('selection.hint')}
                 </p>
               </div>
-              <div className="flex items-center gap-2">
-                {!isEmpty ? (
-                  <button
-                    type="button"
-                    onClick={clearSelection}
-                    className="inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-700"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" aria-hidden /> {t('selection.clear')}
-                  </button>
-                ) : null}
-                <Button asChild variant="neutral" size="sm">
-                  <Link href="/produits/produits-nettoyage">Retour catalogue</Link>
-                </Button>
+              {/* Quick-add sits top-right: search the live catalogue and add a
+                  product to the selection without leaving the devis page. */}
+              <div className="flex w-full flex-col gap-2 sm:w-auto sm:min-w-[320px] sm:items-end">
+                <ProductQuickSearch
+                  products={searchCards}
+                  madeLabel={madeLabel}
+                  align="end"
+                />
+                <div className="flex items-center gap-2">
+                  {!isEmpty ? (
+                    <button
+                      type="button"
+                      onClick={clearSelection}
+                      className="inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-red-50 hover:text-red-700"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" aria-hidden /> {t('selection.clear')}
+                    </button>
+                  ) : null}
+                  <Button asChild variant="neutral" size="sm">
+                    <Link href="/catalogue">Retour catalogue</Link>
+                  </Button>
+                </div>
               </div>
             </div>
-
-            <FastProductAdd
-              onAdd={(product, quantity) => addProduct(toQuoteSelectionProduct(product), quantity)}
-            />
 
             {isEmpty ? (
               <div className="mt-4 flex min-h-[240px] flex-col items-center justify-center rounded-lg border border-dashed border-border bg-white px-6 py-10 text-center">
@@ -339,176 +346,6 @@ export function DevisPageClient({ locale }: { locale: Locale }) {
           </aside>
         </div>
       </div>
-    </div>
-  );
-}
-
-function FastProductAdd({
-  onAdd,
-}: {
-  onAdd: (product: Product, quantity: number) => void;
-}) {
-  const t = useTranslations('devis.quote');
-  const tq = useTranslations('common.quantity');
-  const [query, setQuery] = useState('');
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const normalizedQuery = normalizeSearchText(query);
-
-  const matchingProducts = useMemo(() => {
-    if (!normalizedQuery) return [];
-
-    return quoteSearchProducts
-      .filter((product) => productMatchesQuickSearch(product, normalizedQuery))
-      .slice(0, 6);
-  }, [normalizedQuery]);
-
-  function getQuantity(productId: string): number {
-    return quantities[productId] ?? 1;
-  }
-
-  function setQuickQuantity(productId: string, quantity: number) {
-    setQuantities((current) => ({
-      ...current,
-      [productId]: Math.max(1, Math.min(9999, Math.trunc(quantity))),
-    }));
-  }
-
-  useEffect(() => {
-    if (!suggestionsOpen) return;
-
-    function handlePointerDown(event: PointerEvent) {
-      if (!containerRef.current?.contains(event.target as Node)) {
-        setSuggestionsOpen(false);
-      }
-    }
-
-    document.addEventListener('pointerdown', handlePointerDown);
-    return () => document.removeEventListener('pointerdown', handlePointerDown);
-  }, [suggestionsOpen]);
-
-  return (
-    <div ref={containerRef} className="mt-4">
-      <label htmlFor="devis-product-search" className="sr-only">
-        {t('search.label')}
-      </label>
-      <div className="relative">
-        <Search
-          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-          aria-hidden
-        />
-        <input
-          id="devis-product-search"
-          type="search"
-          value={query}
-          onChange={(event) => {
-            setQuery(event.target.value);
-            setSuggestionsOpen(Boolean(event.target.value.trim()));
-          }}
-          onFocus={() => setSuggestionsOpen(Boolean(query.trim()))}
-          onKeyDown={(event) => {
-            if (event.key === 'Escape') {
-              setSuggestionsOpen(false);
-              event.currentTarget.blur();
-            }
-          }}
-          placeholder={t('search.placeholder')}
-          className="h-11 w-full rounded-sm border border-border bg-white pl-9 pr-10 text-sm text-prodet-text outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/10"
-        />
-        {query ? (
-          <button
-            type="button"
-            onClick={() => {
-              setQuery('');
-              setSuggestionsOpen(false);
-            }}
-            aria-label={t('search.clear')}
-            className="absolute right-2 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground hover:bg-prodet-wash hover:text-primary"
-          >
-            <X className="h-4 w-4" aria-hidden />
-          </button>
-        ) : null}
-      </div>
-
-      {normalizedQuery && suggestionsOpen ? (
-        <div className="mt-3 overflow-hidden rounded-lg border border-border bg-white">
-          {matchingProducts.length > 0 ? (
-            <ul className="divide-y divide-border">
-              {matchingProducts.map((product) => {
-                const quantity = getQuantity(product.id);
-
-                return (
-                  <li
-                    key={product.id}
-                    className="grid gap-3 p-3 sm:grid-cols-[52px_minmax(0,1fr)_auto] sm:items-center"
-                  >
-                    <PlainProductThumb
-                      src={product.image}
-                      alt={product.name}
-                      name={product.name}
-                      className="h-[52px] w-[52px]"
-                      imageClassName="p-1.5"
-                    />
-
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-prodet-text">
-                        {product.name}
-                      </p>
-                      <p className="mt-1 truncate text-xs text-muted-foreground">
-                        {[product.formats[0]?.label, t(product.category === 'manufactured' ? 'badges.manufactured' : 'badges.resold')]
-                          .filter(Boolean)
-                          .join(' · ')}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center justify-between gap-2 sm:justify-end">
-                      <div className="inline-flex h-8 overflow-hidden rounded-sm border border-border bg-white">
-                        <button
-                          type="button"
-                          aria-label={tq('decrease')}
-                          disabled={quantity <= 1}
-                          onClick={() => setQuickQuantity(product.id, quantity - 1)}
-                          className="inline-flex h-8 w-8 items-center justify-center text-primary transition-colors hover:bg-prodet-mist disabled:cursor-not-allowed disabled:text-border"
-                        >
-                          <Minus className="h-3 w-3" aria-hidden />
-                        </button>
-                        <span className="flex min-w-9 items-center justify-center border-x border-border px-2 text-xs font-semibold text-prodet-text">
-                          {quantity}
-                        </span>
-                        <button
-                          type="button"
-                          aria-label={tq('increase')}
-                          onClick={() => setQuickQuantity(product.id, quantity + 1)}
-                          className="inline-flex h-8 w-8 items-center justify-center text-primary transition-colors hover:bg-prodet-mist"
-                        >
-                          <Plus className="h-3 w-3" aria-hidden />
-                        </button>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onAdd(product, quantity);
-                          setQuery('');
-                          setSuggestionsOpen(false);
-                        }}
-                        className="inline-flex h-8 items-center justify-center rounded-sm bg-primary px-3 text-xs font-semibold text-white transition-colors hover:bg-primary-strong"
-                      >
-                        Ajouter
-                      </button>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p className="px-3 py-4 text-xs text-muted-foreground">
-              Aucun produit correspondant.
-            </p>
-          )}
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -677,27 +514,6 @@ function hydrateSelectionItems(items: QuoteSelectionItem[]): HydratedSelectionIt
       href: item.slug || product?.slug ? `/catalogue/${item.slug ?? product?.slug}` : undefined,
     };
   });
-}
-
-function productMatchesQuickSearch(product: Product, normalizedQuery: string): boolean {
-  const searchableValue = [
-    product.id,
-    product.slug,
-    product.name,
-    product.tagline,
-    formatCategory(product.category),
-    ...product.formats.map((format) => format.label),
-  ].join(' ');
-
-  return normalizeSearchText(searchableValue).includes(normalizedQuery);
-}
-
-function normalizeSearchText(value: string): string {
-  return value
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/gu, '')
-    .toLowerCase()
-    .trim();
 }
 
 function formatCategory(category: ProductCategory): string {
