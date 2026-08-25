@@ -121,14 +121,16 @@ export default async function FamillePage({
                       href={`/produits/${fam.id}/${slug}`}
                       className="souscat-card souscat-card--product"
                     >
-                      <span className="souscat-card__media">
+                      <span
+                        className={`souscat-card__media${sub?.tileFit === 'cover' ? ' souscat-card__media--photo' : ''}`}
+                      >
                         {sub?.packshot ? (
                           <Image
                             src={sub.packshot}
                             alt=""
                             fill
                             sizes="(max-width: 860px) 45vw, 240px"
-                            style={{ objectFit: 'contain' }}
+                            style={{ objectFit: sub.tileFit ?? 'contain' }}
                           />
                         ) : (
                           <span className="souscat-card__placeholder" aria-hidden>

@@ -34,8 +34,13 @@ export interface SousCategorie {
   familleId: FamilleId;
   /** Scene/lifestyle photo — used as the cover hero on the sous-catégorie page. */
   image: string;
-  /** Detoured (transparent) packshot — used on the sous-catégorie tiles. '' = branded placeholder. */
+  /** Tile art on the sous-catégorie cards. '' = branded placeholder. */
   packshot: string;
+  /**
+   * How the tile art fills its frame. Detoured packshots sit on the pedestal
+   * ("contain", the default); a scene photo fills it edge to edge ("cover").
+   */
+  tileFit?: 'contain' | 'cover';
   displayOrder: number;
   /** Keywords matched against the normalized product name (non-cleaning familles). */
   keywords: readonly string[];
@@ -46,19 +51,9 @@ export interface SousCategorie {
 const CAT_IMG = (slug: string) => `/images/categories/${slug}.jpg`;
 /** Transparent product packshots for the home tiles (swap freely, keep the name). */
 const FAM_PACK = (file: string) => `/images/familles/${file}`;
-const PROD_IMG = (file: string) => `/images/products/${file}`;
 /** Reused resell photos — stand-in tile art until dedicated packshots exist. */
 const RESELL = (file: string) => `/images/products/resell/${file}`;
 
-/** Transparent packshot used to illustrate each cleaning usage gamme (the 6 sous-cats). */
-const USE_CASE_PACK: Record<UseCaseId, string> = {
-  sols: PROD_IMG('degraissant.svg'),
-  'cuisine-degraissage': PROD_IMG('liquide-vaisselle.svg'),
-  'sanitaires-desinfection': PROD_IMG('eau-de-javel.svg'),
-  'linge-textiles': PROD_IMG('prolax-liquide.svg'),
-  'hygiene-mains': PROD_IMG('savon-liquide.svg'),
-  'surfaces-vitres': PROD_IMG('lave-vitre.svg'),
-};
 
 export const familles: readonly Famille[] = [
   { id: 'produits-nettoyage', slug: 'produits-nettoyage', image: CAT_IMG('produits-nettoyage'), packshot: FAM_PACK('produits-nettoyage.png'), displayOrder: 10 },
@@ -177,11 +172,15 @@ const CLEANING_USE_CASES: { useCaseId: UseCaseId; order: number }[] = [
   { useCaseId: 'surfaces-vitres', order: 60 },
 ];
 
+// Les 6 gammes de nettoyage portent une photo d'ambiance fournie par Prodet :
+// on l'utilise aussi comme visuel de tuile, plus parlant que le flacon
+// generique qui etait le meme dessin decline en six couleurs.
 const cleaningSousCats: SousCategorie[] = CLEANING_USE_CASES.map(({ useCaseId, order }) => ({
   slug: useCaseId,
   familleId: 'produits-nettoyage',
   image: CAT_IMG(useCaseId),
-  packshot: USE_CASE_PACK[useCaseId],
+  packshot: CAT_IMG(useCaseId),
+  tileFit: 'cover',
   displayOrder: order,
   keywords: [],
   useCaseId,

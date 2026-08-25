@@ -45,6 +45,7 @@ export default async function CataloguePage({
         slug,
         count,
         packshot: getSousCategorie(fam.id, slug)?.packshot ?? '',
+        tileFit: getSousCategorie(fam.id, slug)?.tileFit,
       })),
     });
   }

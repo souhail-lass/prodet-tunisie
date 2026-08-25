@@ -17,7 +17,7 @@ export type CatalogueBrowseFamille = {
   id: FamilleId;
   packshot: string;
   total: number;
-  sousCats: { slug: string; count: number; packshot: string }[];
+  sousCats: { slug: string; count: number; packshot: string; tileFit?: 'contain' | 'cover' }[];
 };
 
 /**
@@ -176,14 +176,16 @@ export function CataloguePageClient({
                           href={`/produits/${famille.id}/${sc.slug}`}
                           className="souscat-card souscat-card--product"
                         >
-                          <span className="souscat-card__media">
+                          <span
+                            className={`souscat-card__media${sc.tileFit === 'cover' ? ' souscat-card__media--photo' : ''}`}
+                          >
                             {sc.packshot ? (
                               <Image
                                 src={sc.packshot}
                                 alt=""
                                 fill
                                 sizes="(max-width: 620px) 45vw, (max-width: 1080px) 30vw, 220px"
-                                style={{ objectFit: 'contain' }}
+                                style={{ objectFit: sc.tileFit ?? 'contain' }}
                               />
                             ) : (
                               <span className="souscat-card__placeholder" aria-hidden>

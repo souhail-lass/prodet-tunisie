@@ -357,6 +357,12 @@
 }
 .souscat-card--product .souscat-card__media img { object-fit: contain; mix-blend-mode: multiply; transition: transform var(--dur-slow, 0.5s) var(--ease-out, ease); }
 .souscat-card--product:hover .souscat-card__media { box-shadow: var(--pedestal-ring), var(--pedestal-shadow-hover); transform: translateY(-4px); }
+/* Variante photo : le socle est concu pour un packshot detoure (padding +
+   mix-blend multiply). Une photo d'ambiance remplit le cadre bord a bord et ne
+   doit pas etre fondue dans le fond. */
+.souscat-card--product .souscat-card__media--photo { padding: 0; overflow: hidden; background: var(--surface-muted, #f3f5f8); }
+.souscat-card--product .souscat-card__media--photo img { object-fit: cover; mix-blend-mode: normal; }
+
 .souscat-card--product:hover .souscat-card__media img { transform: scale(1.06); }
 .souscat-card__placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .souscat-card__placeholder img { width: 52%; height: auto; opacity: 0.36; filter: grayscale(1); }
