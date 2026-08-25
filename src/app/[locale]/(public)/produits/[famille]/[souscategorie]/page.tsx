@@ -93,7 +93,7 @@ export default async function SousCategoriePage({
           </div>
           {sub ? (
             <div className="famille-hero__media">
-              <Image src={sub.image} alt="" fill sizes="(max-width: 860px) 100vw, 240px" style={{ objectFit: 'cover' }} />
+              <Image src={sub.image} alt="" fill sizes="(max-width: 860px) 100vw, 360px" style={{ objectFit: 'cover' }} />
             </div>
           ) : null}
         </div>

@@ -304,6 +304,12 @@
 .famille-hero { background: var(--surface-card); border-bottom: 1px solid var(--border-default); padding-top: 28px; }
 .famille-hero__inner { display: grid; grid-template-columns: 1fr 240px; gap: 32px; align-items: center; padding-bottom: 30px; }
 .famille-hero--compact .famille-hero__inner { padding-bottom: 22px; }
+/* La page sous-categorie n'a pas de paragraphe de description : sa colonne
+   texte est courte et laissait un vide au centre du hero. On donne plus de
+   place a la photo d'ambiance, qui se lisait comme une vignette a 240px. */
+@media (min-width: 861px) {
+  .famille-hero--compact .famille-hero__inner { grid-template-columns: 1fr 360px; }
+}
 .famille-breadcrumb { font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .famille-breadcrumb a { color: var(--prodet-blue); font-weight: var(--fw-semibold); }
 .famille-breadcrumb__sep { color: var(--border-strong, #c7ced8); }
