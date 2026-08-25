@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { Clock, Factory, FileText, Info, PackageCheck, ShieldCheck, SlidersHorizontal, Truck } from 'lucide-react';
+import { ClipboardList, FileText, Info, SlidersHorizontal } from 'lucide-react';
 import type { Locale } from '@/i18n/routing';
 import type { Product } from '@/data/types';
 import { cn } from '@/lib/utils';
@@ -14,28 +14,14 @@ interface ProductHeroV2Props {
   product: Product;
   locale: Locale;
   useCaseLabel: string;
-  sectorLabels: readonly string[];
 }
 
-export function ProductHeroV2({
-  product,
-  locale,
-  useCaseLabel,
-  sectorLabels,
-}: ProductHeroV2Props) {
+export function ProductHeroV2({ product, locale, useCaseLabel }: ProductHeroV2Props) {
   const galleryImages = useMemo(() => buildGalleryImages(product), [product]);
   const primaryImage = galleryImages[0];
   const [activeImage, setActiveImage] = useState<ProductGalleryImage | undefined>(primaryImage);
   const isEnglish = locale === 'en';
   const hasDilution = Boolean(product.dilutionRates?.length || product.dosage);
-  const isManufactured = product.category === 'manufactured';
-  const technicalSheetLabel = product.technicalSheetUrl
-    ? isEnglish
-      ? 'Available'
-      : 'Disponible'
-    : isEnglish
-      ? 'Available on request'
-      : 'Disponible sur demande';
 
   useEffect(() => {
     setActiveImage(primaryImage);
@@ -133,32 +119,32 @@ export function ProductHeroV2({
           ))}
         </div>
 
-        {product.specs && product.specs.length > 0 ? (
-          <div className="mt-7">
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--color-text-tertiary)]">
-              {isEnglish ? 'Specifications' : 'Spécifications'}
-            </h2>
-            <dl className="mt-3 overflow-hidden rounded-lg border border-[var(--color-border)]">
-              {product.specs.map((spec, index) => (
-                <div
-                  key={spec.label}
-                  className={cn(
-                    'grid grid-cols-[42%_minmax(0,1fr)] gap-3 px-4 py-2.5 text-[13px]',
-                    index % 2 === 1 ? 'bg-white' : 'bg-[var(--color-surface-sunken)]',
-                  )}
-                >
-                  <dt className="font-medium text-[var(--color-text-secondary)]">{spec.label}</dt>
-                  <dd className="font-semibold text-[var(--color-text-primary)]">{spec.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        ) : null}
-
         {/* Only surface a panel we can actually fill. A dilution rate on a bin
             bag — or an empty "information à compléter" — reads as neglect, so
             consumables and equipment simply show fewer panels. */}
         <div className="mt-7 overflow-hidden rounded-[6px]">
+          {product.specs && product.specs.length > 0 ? (
+            <ProductAccordion
+              title={isEnglish ? 'Specifications' : 'Spécifications'}
+              icon={ClipboardList}
+              defaultOpen={false}
+            >
+              <dl className="overflow-hidden rounded-lg border border-[var(--color-border)]">
+                {product.specs.map((spec, index) => (
+                  <div
+                    key={spec.label}
+                    className={cn(
+                      'grid grid-cols-[42%_minmax(0,1fr)] gap-3 px-4 py-2.5 text-[13px]',
+                      index % 2 === 1 ? 'bg-white' : 'bg-[var(--color-surface-sunken)]',
+                    )}
+                  >
+                    <dt className="font-medium text-[var(--color-text-secondary)]">{spec.label}</dt>
+                    <dd className="font-semibold text-[var(--color-text-primary)]">{spec.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </ProductAccordion>
+          ) : null}
           {product.howToUse ? (
             <ProductAccordion
               title={isEnglish ? 'How To Use' : 'Mode d’utilisation'}
@@ -218,93 +204,8 @@ export function ProductHeroV2({
           <ProductQuoteBox product={product} locale={locale} />
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border border-[var(--color-border)] bg-white p-4">
-          {[
-            // "Fabriqué en Tunisie" is a claim about the product, not the
-            // supplier: a resold DETTOL or VILEDA glove must not carry it.
-            isManufactured
-              ? { icon: Factory, title: isEnglish ? 'Made in Tunisia' : 'Fabriqué en Tunisie', accent: true }
-              : { icon: PackageCheck, title: isEnglish ? 'Selected range' : 'Gamme sélectionnée', accent: true },
-            { icon: Truck, title: isEnglish ? 'Regular delivery' : 'Livraison régulière' },
-            hasDilution
-              ? { icon: ShieldCheck, title: isEnglish ? 'Dosage advice' : 'Conseil sur le dosage' }
-              : { icon: ShieldCheck, title: isEnglish ? 'Product advice' : 'Conseil produit' },
-            { icon: Clock, title: isEnglish ? 'Reply within 24h' : 'Réponse sous 24h ouvrées' },
-          ].map(({ icon: TrustIcon, title, accent }) => (
-            <div key={title} className="flex items-center gap-2.5">
-              <TrustIcon
-                className={cn('h-4 w-4 shrink-0', accent ? 'text-prodet-green' : 'text-prodet-blue')}
-                aria-hidden
-              />
-              <span className="text-[12px] font-medium text-[var(--color-text-primary)]">{title}</span>
-            </div>
-          ))}
-        </div>
-
-        <ProductMetadataTable
-          product={product}
-          isEnglish={isEnglish}
-          useCaseLabel={useCaseLabel}
-          sectorLabels={sectorLabels}
-          technicalSheetLabel={technicalSheetLabel}
-        />
       </div>
     </section>
-  );
-}
-
-function ProductMetadataTable({
-  product,
-  isEnglish,
-  useCaseLabel,
-  sectorLabels,
-  technicalSheetLabel,
-}: {
-  product: Product;
-  isEnglish: boolean;
-  useCaseLabel: string;
-  sectorLabels: readonly string[];
-  technicalSheetLabel: string;
-}) {
-  const rows = [
-    {
-      label: isEnglish ? 'Category' : 'Catégorie',
-      value: useCaseLabel,
-    },
-    {
-      label: isEnglish ? 'Packaging' : 'Conditionnement',
-      value: product.formats.map((format) => format.label).join(', '),
-    },
-    {
-      label: isEnglish ? 'Usage' : 'Usage',
-      value: sectorLabels.length > 0 ? sectorLabels.join(', ') : isEnglish ? 'Professional' : 'Professionnel',
-    },
-    {
-      label: isEnglish ? 'Product type' : 'Type de produit',
-      value:
-        product.category === 'manufactured'
-          ? isEnglish
-            ? 'Manufactured by Prodet'
-            : 'Produit fabriqué par Prodet'
-          : isEnglish
-            ? 'Commercialized article'
-            : 'Article commercialisé',
-    },
-    {
-      label: isEnglish ? 'Technical sheet' : 'Fiche technique',
-      value: technicalSheetLabel,
-    },
-  ].filter((row) => row.value);
-
-  return (
-    <dl className="mt-6 border-t border-[var(--color-border)] text-[var(--type-small)]">
-      {rows.map((row) => (
-        <div key={row.label} className="grid grid-cols-[170px_minmax(0,1fr)] border-b border-[var(--color-border)] py-2">
-          <dt className="font-medium text-[var(--color-text-tertiary)]">{row.label}:</dt>
-          <dd className="text-[var(--color-text-secondary)]">{row.value}</dd>
-        </div>
-      ))}
-    </dl>
   );
 }
 

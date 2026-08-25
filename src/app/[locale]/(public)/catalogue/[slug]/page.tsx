@@ -20,10 +20,10 @@ import {
   type PublicOffer,
   type PublicOfferSectionId,
 } from '@/data/public-offers';
-import { getSectorById, getUseCaseById } from '@/data/queries';
+import { getUseCaseById } from '@/data/queries';
 import { classifyFamille, classifySousCategorie } from '@/data/familles';
 import { getCatalogueProductBySlug, getVisibleCatalogue } from '@/features/catalogue/queries';
-import { localizeSector, localizeUseCase } from '@/data/i18n/content';
+import { localizeUseCase } from '@/data/i18n/content';
 import type { Product } from '@/data/types';
 import type { CatalogueCardProduct } from '@/types/product';
 import { siteContent } from '@/data/site-content';
@@ -384,11 +384,6 @@ function LegacyProductDetailPage({
   const primaryUseCaseId = product.useCases[0];
   const primaryUseCaseBase = primaryUseCaseId ? getUseCaseById(primaryUseCaseId) : undefined;
   const primaryUseCase = primaryUseCaseBase ? localizeUseCase(primaryUseCaseBase, locale) : undefined;
-  const sectorLabels = product.sectors
-    .map((sectorId) => getSectorById(sectorId))
-    .filter((sector): sector is NonNullable<typeof sector> => Boolean(sector))
-    .map((sector) => localizeSector(sector, locale).label);
-
   return (
     <div className="py-6 md:py-8">
       <div className="mx-auto w-full max-w-[1200px] px-6">
@@ -396,7 +391,6 @@ function LegacyProductDetailPage({
           product={product}
           locale={locale}
           useCaseLabel={primaryUseCase?.label ?? 'Catalogue'}
-          sectorLabels={sectorLabels}
         />
 
         {related.length > 0 ? (
