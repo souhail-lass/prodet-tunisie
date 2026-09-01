@@ -16,20 +16,31 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(__dirname, '..', 'public', 'downloads');
 const dry = process.argv.includes('--dry');
 
-/** "Prolax 100" / "PROLAX-100 " -> "prolax100" : robuste aux libellés Swiver. */
-const norm = (s) =>
+/**
+ * Les libellés en base viennent de Swiver et portent le conditionnement :
+ * "ALCOGEL ANTISEPTIQUE 500ML", "PROLAX 100 BIDON 20KG". On compare donc des
+ * SUITES DE MOTS, pas des chaînes : un produit correspond si son nom est un
+ * préfixe de mots du libellé Swiver.
+ *
+ * Comparer les chaînes brutes casserait les frontières de mots — "prolax100"
+ * est un préfixe de "prolax1000". En tokens, ["prolax","100"] ne l'est pas.
+ */
+const tokens = (s) =>
   (s ?? '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .replace(/[^a-z0-9]/g, '');
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
 
-/** slug de fichier -> URL publique, indexé par nom normalisé. */
+const isPrefix = (needle, hay) =>
+  needle.length <= hay.length && needle.every((t, i) => t === hay[i]);
+
+/** slug de fichier -> URL publique. */
 function indexDir(sub) {
   const out = new Map();
   for (const file of readdirSync(join(publicDir, sub))) {
-    const slug = file.replace(/\.[^.]+$/, '');
-    out.set(norm(slug), `/downloads/${sub}/${file}`);
+    out.set(file.replace(/\.[^.]+$/, ''), `/downloads/${sub}/${file}`);
   }
   return out;
 }
@@ -38,7 +49,33 @@ const tech = indexDir('technical-sheets');
 const safety = indexDir('safety-sheets');
 
 // Pronet Plus n'a pas de FDS propre : sa section est dans le fichier Pronet.
-safety.set('pronetplus', safety.get('pronet'));
+safety.set('pronet-plus', safety.get('pronet'));
+
+/**
+ * Candidats triés du plus spécifique au moins spécifique : "PRONET PLUS ..."
+ * doit tomber sur pronet-plus et non sur pronet, et "JAVEL PRODET 30° ..." sur
+ * la fiche 30° et non sur celle à 12°.
+ */
+const candidates = [...new Set([...tech.keys(), ...safety.keys()])]
+  .map((slug) => ({ slug, words: tokens(slug) }))
+  .sort((a, b) => b.words.length - a.words.length);
+
+/**
+ * Produits distincts qui n'ont encore AUCUN document. Sans cette réserve, un
+ * nom plus court les capterait : "DEOFRESH LINGE" tomberait sur la fiche
+ * DEOFRESH, qui est le désodorisant d'ambiance — un autre produit. Mieux vaut
+ * aucune fiche qu'une fiche fausse. À retirer d'ici dès que le document arrive.
+ */
+const RESERVED = ['deofresh linge', 'gresil prodet'].map(tokens);
+
+function matchSlug(name) {
+  const words = tokens(name);
+  const hit = candidates.find((c) => isPrefix(c.words, words));
+  if (!hit) return null;
+  const reserved = RESERVED.find((r) => isPrefix(r, words));
+  if (reserved && reserved.length > hit.words.length) return null;
+  return hit.slug;
+}
 
 if (!process.env.DATABASE_URL) {
   console.error('DATABASE_URL is not set. Run with --env-file=.env.local');
@@ -57,11 +94,12 @@ try {
   const unmatched = [];
 
   for (const row of rows) {
-    const key = norm(row.display_name || row.name);
-    const t = tech.get(key) ?? null;
-    const s = safety.get(key) ?? null;
+    const label = row.display_name || row.name;
+    const slug = matchSlug(label);
+    const t = slug ? (tech.get(slug) ?? null) : null;
+    const s = slug ? (safety.get(slug) ?? null) : null;
     if (!t && !s) {
-      unmatched.push(row.display_name || row.name);
+      unmatched.push(label);
       continue;
     }
     // On ne remplace jamais une URL déjà posée à la main depuis l'admin.
@@ -69,7 +107,7 @@ try {
     const nextS = row.safety_sheet_url ?? s;
     if (nextT === row.technical_sheet_url && nextS === row.safety_sheet_url) continue;
 
-    console.log(`${dry ? '[dry] ' : ''}${row.display_name || row.name}`);
+    console.log(`${dry ? '[dry] ' : ''}${label}  ->  ${slug}`);
     if (nextT !== row.technical_sheet_url) console.log(`   FT  ${nextT}`);
     if (nextS !== row.safety_sheet_url) console.log(`   FDS ${nextS}`);
     updated += 1;
