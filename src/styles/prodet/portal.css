@@ -78,6 +78,11 @@
   background: rgba(247,246,243,0.88); backdrop-filter: saturate(140%) blur(10px);
   border-bottom: 1px solid var(--border-default);
   padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  /* La barre reste pleine largeur (le fond et le filet courent d'un bord à
+     l'autre), mais son contenu s'aligne sur les mêmes gouttières que
+     .portal__content — sinon le titre et la déconnexion partent aux extrémités
+     de l'écran pendant que le contenu est centré. */
+  padding-inline: max(32px, calc((100% - var(--container-wide)) / 2 + 32px));
 }
 .portal__title { font-size: var(--text-h3); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-tight); }
 .portal__subtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 2px; }
@@ -88,7 +93,9 @@
 .portal__icon-btn { position: relative; width: 40px; height: 40px; border-radius: var(--radius-button); border: 1px solid var(--border-default); background: var(--surface-card); color: var(--text-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color var(--dur-base), color var(--dur-base); }
 .portal__icon-btn:hover { border-color: var(--prodet-blue); color: var(--prodet-blue); }
 .portal__badge-dot { position: absolute; top: 9px; right: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--prodet-green); border: 2px solid var(--surface-card); }
-.portal__content { padding: 28px 32px 64px; max-width: var(--container-wide); width: 100%; }
+/* Centré dans l'espace restant à droite du rail : au-delà de --container-wide
+   (ultrawide), la colonne se pose au milieu au lieu de coller au rail. */
+.portal__content { padding: 28px 32px 64px; max-width: var(--container-wide); width: 100%; margin-inline: auto; }
 
 /* ---------- DASHBOARD ---------- */
 .dash { display: flex; flex-direction: column; gap: 24px; }
