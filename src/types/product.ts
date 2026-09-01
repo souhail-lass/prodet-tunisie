@@ -51,6 +51,8 @@ export type Product = {
   biodegradability?: string;
   certifications?: string[];
   technicalSheetUrl?: string;
+  /** Fiche de données de sécurité (FDS) — réglementaire, publiée à côté de la fiche technique. */
+  safetySheetUrl?: string;
   relatedProductIds?: string[];
   featured: boolean;
 };

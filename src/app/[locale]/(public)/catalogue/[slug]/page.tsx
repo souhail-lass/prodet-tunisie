@@ -282,6 +282,15 @@ async function PublicOfferDetailPage({ offer, locale }: { offer: PublicOffer; lo
                 <Link href="/devis">{siteContent.product.technicalSheetFallback}</Link>
               </Button>
             )}
+
+            {legacyProduct?.safetySheetUrl ? (
+              <Button asChild variant="outline" className="h-12 text-sm font-semibold">
+                <a href={legacyProduct.safetySheetUrl} download>
+                  <FileDown className="h-4 w-4" aria-hidden />
+                  {t('detail.downloadSafetySheet')}
+                </a>
+              </Button>
+            ) : null}
           </div>
         </div>
       </section>

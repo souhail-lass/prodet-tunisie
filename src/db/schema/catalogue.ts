@@ -40,6 +40,7 @@ export const catalogueProduct = pgTable(
     dosage: text('dosage'),
     specs: jsonb('specs'),
     technicalSheetUrl: text('technical_sheet_url'),
+    safetySheetUrl: text('safety_sheet_url'),
     imageUrl: text('image_url'),
     // visibility:
     hidden: boolean('hidden').notNull().default(false),

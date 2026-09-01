@@ -37,6 +37,7 @@ export type AdminProductRow = {
   dosage: string | null;
   specs: ProductSpec[] | null;
   technicalSheetUrl: string | null;
+  safetySheetUrl: string | null;
   hidden: boolean;
   featured: boolean;
 };
@@ -81,6 +82,7 @@ function mapRowToProduct(row: AdminProductRow): Product {
     dosage: row.dosage ?? undefined,
     specs: row.specs ?? undefined,
     technicalSheetUrl: row.technicalSheetUrl ?? undefined,
+    safetySheetUrl: row.safetySheetUrl ?? undefined,
     featured: row.featured,
   };
 }
@@ -106,6 +108,7 @@ async function selectRows(where?: SQL): Promise<AdminProductRow[]> {
     dosage: t.dosage,
     specs: t.specs,
     technicalSheetUrl: t.technicalSheetUrl,
+    safetySheetUrl: t.safetySheetUrl,
     hidden: t.hidden,
     featured: t.featured,
   };

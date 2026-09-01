@@ -16,7 +16,7 @@ async function ensureBucket(admin: ReturnType<typeof createSupabaseAdminClient>)
 
 export async function uploadProductAsset(params: {
   productId: string;
-  kind: 'sheet' | 'image';
+  kind: 'sheet' | 'safety' | 'image';
   fileName: string;
   bytes: Uint8Array;
   contentType: string;

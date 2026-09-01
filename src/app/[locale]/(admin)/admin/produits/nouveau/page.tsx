@@ -18,6 +18,7 @@ export default function NewProductPage() {
         dosage: '',
         specs: [],
         technicalSheetUrl: '',
+        safetySheetUrl: '',
         imageUrl: '',
         hidden: false,
         featured: false,

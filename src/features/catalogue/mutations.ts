@@ -10,6 +10,7 @@ export type ProductContent = {
   dosage: string | null;
   specs: ProductSpec[] | null;
   technicalSheetUrl: string | null;
+  safetySheetUrl: string | null;
   imageUrl: string | null;
   hidden: boolean;
   featured: boolean;
@@ -57,6 +58,7 @@ export async function saveProductContent(
       dosage: content.dosage,
       specs: content.specs,
       technicalSheetUrl: content.technicalSheetUrl,
+      safetySheetUrl: content.safetySheetUrl,
       imageUrl: content.imageUrl,
       hidden: content.hidden,
       featured: content.featured,
@@ -91,6 +93,7 @@ export async function createCustomProduct(content: ProductContent, actorUserId?:
       dosage: content.dosage,
       specs: content.specs,
       technicalSheetUrl: content.technicalSheetUrl,
+      safetySheetUrl: content.safetySheetUrl,
       imageUrl: content.imageUrl,
       hidden: content.hidden,
       featured: content.featured,

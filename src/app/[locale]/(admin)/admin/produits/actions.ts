@@ -72,7 +72,9 @@ export async function uploadAssetAction(
   await assertRole(['owner', 'admin', 'operator']);
   const file = formData.get('file');
   const productId = (formData.get('productId') as string) || 'new';
-  const kind = (formData.get('kind') as string) === 'image' ? 'image' : 'sheet';
+  const rawKind = formData.get('kind') as string;
+  const kind: 'sheet' | 'safety' | 'image' =
+    rawKind === 'image' ? 'image' : rawKind === 'safety' ? 'safety' : 'sheet';
   if (!(file instanceof File) || file.size === 0) return { ok: false, error: 'invalid' };
   if (file.size > 10 * 1024 * 1024) return { ok: false, error: 'too-large' };
   try {

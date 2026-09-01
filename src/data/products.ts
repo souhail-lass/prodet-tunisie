@@ -151,6 +151,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Lavage principal du linge professionnel' },
       { label: 'Conditionnement', value: 'Bidon 20 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/prolax-liquide.doc',
     relatedProductIds: ['prolax-100', 'proxy', 'deofresh-linge'],
     featured: true,
   }),
@@ -171,7 +172,8 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: "Hygiène des mains en milieu professionnel" },
       { label: 'Conditionnement', value: 'Bidon 05 KG' },
     ],
-    technicalSheetUrl: '/downloads/technical-sheets/sanihand-off.doc',
+    technicalSheetUrl: '/downloads/technical-sheets/sanihand.doc',
+    safetySheetUrl: '/downloads/safety-sheets/sanihand.doc',
     relatedProductIds: ['manocid', 'alcogel', 'alcohand'],
     featured: true,
   }),
@@ -194,6 +196,7 @@ export const products: readonly Product[] = [
       { label: 'Conditionnements', value: 'Bidon 05 KG · Flacon 500 ML' },
     ],
     technicalSheetUrl: '/downloads/technical-sheets/alcogel.docx',
+    safetySheetUrl: '/downloads/safety-sheets/alcogel.docx',
     relatedProductIds: ['alcohand', 'sanihand', 'manocid'],
     featured: true,
   }),
@@ -217,6 +220,7 @@ export const products: readonly Product[] = [
     ],
     dilutionRates: [{ label: 'Dilution courante', rate: "500 ml par 10 litres d'eau" }],
     technicalSheetUrl: '/downloads/technical-sheets/javel-prodet.doc',
+    safetySheetUrl: '/downloads/safety-sheets/javel-prodet.docx',
     relatedProductIds: ['sirafan-desinfectant', 'progerme', 'prokill'],
     featured: true,
   }),
@@ -243,6 +247,7 @@ export const products: readonly Product[] = [
       { label: 'Hottes', rate: 'Dilution à 50 % selon encrassement' },
     ],
     technicalSheetUrl: '/downloads/technical-sheets/profour.docx',
+    safetySheetUrl: '/downloads/safety-sheets/profour.docx',
     relatedProductIds: ['prokill', 'prolav', 'prolac'],
     featured: true,
   }),
@@ -263,6 +268,8 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Vitres, miroirs et surfaces lisses' },
       { label: 'Conditionnements', value: 'Bidon 05 L · Pulvérisateur 500 ML' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/provitre.doc',
+    safetySheetUrl: '/downloads/safety-sheets/provitre.docx',
     relatedProductIds: ['molkabin', 'progerme', 'deofresh'],
     featured: true,
   }),
@@ -284,6 +291,8 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 20 KG' },
     ],
     dilutionRates: [{ label: 'Dosage machine', rate: "3 ml par litre d'eau (0,2 %)" }],
+    technicalSheetUrl: '/downloads/technical-sheets/prolav.doc',
+    safetySheetUrl: '/downloads/safety-sheets/prolav.docx',
     relatedProductIds: ['prorinse', 'prolac', 'solitaire-vaisselle'],
   }),
   createProduct({
@@ -304,6 +313,8 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 10 KG' },
     ],
     dilutionRates: [{ label: 'Dosage machine', rate: "0,2 à 0,3 ml par litre d'eau" }],
+    technicalSheetUrl: '/downloads/technical-sheets/prorinse.doc',
+    safetySheetUrl: '/downloads/safety-sheets/prorinse.doc',
     relatedProductIds: ['prolav', 'prolac'],
   }),
   createProduct({
@@ -323,6 +334,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Renfort de lavage textile' },
       { label: 'Conditionnement', value: 'Bidon 20 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/prolax-100.doc',
     relatedProductIds: ['prolax-liquide', 'prolax-200', 'proxy'],
   }),
   createProduct({
@@ -342,6 +354,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Renfort dégraissant textile' },
       { label: 'Conditionnement', value: 'Bidon 20 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/prolax-200.doc',
     relatedProductIds: ['prolax-liquide', 'prolax-100', 'progras'],
   }),
   createProduct({
@@ -361,6 +374,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Blanchiment et désinfection textile' },
       { label: 'Conditionnement', value: 'Seau 10 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/prolax-400.doc',
     relatedProductIds: ['clorax-liquide', 'prolax-blanc', 'prolax-liquide'],
   }),
   createProduct({
@@ -380,6 +394,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Assouplissement du linge' },
       { label: 'Conditionnement', value: 'Bidon 20 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/prolax-500.doc',
     relatedProductIds: ['deofresh-linge', 'prolax-liquide'],
   }),
   createProduct({
@@ -399,6 +414,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Lavage principal linge couleur' },
       { label: 'Conditionnement', value: 'Sac 25 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/prolax-couleur.doc',
     relatedProductIds: ['prolax-liquide', 'proxy', 'prolax-delicat'],
   }),
   createProduct({
@@ -418,6 +434,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Lavage principal linge blanc' },
       { label: 'Conditionnement', value: 'Sac 25 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/prolax-blanc.doc',
     relatedProductIds: ['prolax-400', 'clorax-liquide', 'prolax-liquide'],
   }),
   createProduct({
@@ -437,6 +454,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Linge délicat et linge client' },
       { label: 'Conditionnement', value: 'Bidon 20 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/prolax-delicat.doc',
     relatedProductIds: ['prolax-liquide', 'prolax-couleur'],
   }),
   createProduct({
@@ -456,6 +474,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Blanchiment oxygéné textile' },
       { label: 'Conditionnement', value: 'Bidon 20 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/proxy.doc',
     relatedProductIds: ['prolax-liquide', 'prolax-couleur', 'prolax-100'],
   }),
   createProduct({
@@ -475,6 +494,8 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Blanchiment chloré du linge blanc' },
       { label: 'Conditionnement', value: 'Bidon 20 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/clorax-liquide.doc',
+    safetySheetUrl: '/downloads/safety-sheets/clorax-liquide.docx',
     relatedProductIds: ['prolax-400', 'prolax-blanc'],
   }),
   createProduct({
@@ -494,6 +515,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Dégraissage textile renforcé' },
       { label: 'Conditionnement', value: 'Sac 25 KG' },
     ],
+    technicalSheetUrl: '/downloads/technical-sheets/progras.doc',
     relatedProductIds: ['prolax-200', 'prolax-liquide'],
   }),
   createProduct({
@@ -534,7 +556,8 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Lavage bactéricide des mains' },
       { label: 'Conditionnement', value: 'Bidon 05 KG' },
     ],
-    technicalSheetUrl: '/downloads/technical-sheets/manocid-off.doc',
+    technicalSheetUrl: '/downloads/technical-sheets/manocid.doc',
+    safetySheetUrl: '/downloads/safety-sheets/manocid.doc',
     relatedProductIds: ['sanihand', 'alcogel', 'alcohand'],
   }),
   createProduct({
@@ -555,6 +578,7 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 05 KG' },
     ],
     technicalSheetUrl: '/downloads/technical-sheets/alcohand.docx',
+    safetySheetUrl: '/downloads/safety-sheets/alcohand.docx',
     relatedProductIds: ['alcogel', 'sanihand', 'sirafan-desinfectant'],
   }),
   createProduct({
@@ -577,6 +601,7 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 05 L' },
     ],
     technicalSheetUrl: '/downloads/technical-sheets/sirafan-desinfectant.doc',
+    safetySheetUrl: '/downloads/safety-sheets/sirafan-desinfectant.docx',
     relatedProductIds: ['javel-prodet', 'alcohand', 'progerme'],
   }),
   createProduct({
@@ -597,6 +622,8 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 05 KG' },
     ],
     dilutionRates: [{ label: 'Dilution courante', rate: "200 à 300 ml par 10 litres d'eau" }],
+    technicalSheetUrl: '/downloads/technical-sheets/prokill.doc',
+    safetySheetUrl: '/downloads/safety-sheets/prokill.docx',
     relatedProductIds: ['javel-prodet', 'sirafan-desinfectant', 'profour'],
   }),
   createProduct({
@@ -617,7 +644,8 @@ export const products: readonly Product[] = [
       { label: 'Conditionnements', value: 'Bidon 06 KG · Bidon 20 KG' },
     ],
     dilutionRates: [{ label: 'Dilution', rate: "1 à 2 litres par 10 litres d'eau (5 à 10 %)" }],
-    technicalSheetUrl: '/downloads/technical-sheets/prolac-off.doc',
+    technicalSheetUrl: '/downloads/technical-sheets/prolac.doc',
+    safetySheetUrl: '/downloads/safety-sheets/prolac.docx',
     relatedProductIds: ['prolav', 'prorinse', 'profour'],
   }),
   createProduct({
@@ -638,7 +666,8 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 05 L' },
     ],
     dilutionRates: [{ label: 'Dilution', rate: "50 ml par 10 litres d'eau" }],
-    technicalSheetUrl: '/downloads/technical-sheets/solitaire-vaisselle-off.doc',
+    technicalSheetUrl: '/downloads/technical-sheets/solitaire-vaisselle.doc',
+    safetySheetUrl: '/downloads/safety-sheets/solitaire-vaisselle.doc',
     relatedProductIds: ['prolav', 'profour', 'prokill'],
   }),
   createProduct({
@@ -660,6 +689,7 @@ export const products: readonly Product[] = [
     ],
     dilutionRates: [{ label: 'Dilution', rate: "1 à 2 litres par 10 litres d'eau" }],
     technicalSheetUrl: '/downloads/technical-sheets/profon.docx',
+    safetySheetUrl: '/downloads/safety-sheets/profon.doc',
     relatedProductIds: ['pilax', 'prostar', 'progerme'],
   }),
   createProduct({
@@ -679,7 +709,8 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Détartrage ciblé des WC' },
       { label: 'Conditionnement', value: 'Flacon 750 ML' },
     ],
-    technicalSheetUrl: '/downloads/technical-sheets/pilax-off.doc',
+    technicalSheetUrl: '/downloads/technical-sheets/pilax.doc',
+    safetySheetUrl: '/downloads/safety-sheets/pilax.doc',
     relatedProductIds: ['profon', 'prostar'],
   }),
   createProduct({
@@ -720,7 +751,8 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 05 KG' },
     ],
     dilutionRates: [{ label: 'Dilution', rate: "200 ml par 10 litres d'eau" }],
-    technicalSheetUrl: '/downloads/technical-sheets/progerme-off.doc',
+    technicalSheetUrl: '/downloads/technical-sheets/progerme.doc',
+    safetySheetUrl: '/downloads/safety-sheets/progerme.doc',
     relatedProductIds: ['javel-prodet', 'deofresh', 'prostar'],
   }),
   createProduct({
@@ -742,8 +774,36 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: "Désodorisation d'ambiance et de surfaces" },
       { label: 'Conditionnements', value: 'Bidon 05 KG · Flacon 750 ML' },
     ],
-    technicalSheetUrl: '/downloads/technical-sheets/deofresh-off.doc',
+    technicalSheetUrl: '/downloads/technical-sheets/deofresh.doc',
     relatedProductIds: ['progerme', 'gresil-prodet', 'provitre'],
+  }),
+  createProduct({
+    id: 'prosav',
+    slug: 'prosav',
+    name: 'Prosav',
+    tagline: 'Détergent pâte multi-usages pour toutes surfaces',
+    category: 'manufactured',
+    useCases: ['sols'],
+    sectors: surfaceSectors,
+    description:
+      "Détergent en pâte polyvalent pour le nettoyage des sols, murs et surfaces carrelées ou peintes. Sa formule neutre et ses propriétés mouillantes décollent les souillures sans altérer les supports, ce qui en fait un produit unique pour l'entretien courant des structures d'hébergement.",
+    formats: [{ label: 'Seau 05 L' }],
+    howToUse:
+      "Diluer, appliquer la solution sur la surface, laisser agir 5 minutes, brosser si nécessaire puis rincer à l'eau.",
+    dosage: "100 à 200 grammes par 10 litres d'eau.",
+    composition: 'Pâte blanche parfumée, formule neutre.',
+    specs: [
+      { label: 'Usage', value: 'Nettoyage multi-surfaces (sols, murs, carrelages)' },
+      { label: 'Aspect', value: 'Pâte blanche parfumée' },
+      { label: 'pH à 100%', value: '7,5 à 8,5' },
+      { label: 'Conditionnement', value: 'Seau 05 L' },
+    ],
+    dilutionRates: [{ label: 'Dilution courante', rate: "100 à 200 g par 10 litres d'eau" }],
+    biodegradability: 'supérieure à 90 %',
+    certifications: ['Contact alimentaire'],
+    technicalSheetUrl: '/downloads/technical-sheets/prosav.docx',
+    safetySheetUrl: '/downloads/safety-sheets/prosav.doc',
+    relatedProductIds: ['pronet', 'progerme', 'super-clean'],
   }),
   createProduct({
     id: 'gresil-prodet',
@@ -782,7 +842,7 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: 'Débouchage de canalisations' },
       { label: 'Conditionnement', value: 'Seau 05 KG' },
     ],
-    technicalSheetUrl: '/downloads/technical-sheets/vit-net-off.doc',
+    technicalSheetUrl: '/downloads/technical-sheets/vit-net.doc',
     relatedProductIds: ['pilax', 'profon'],
   }),
   createProduct({
@@ -803,6 +863,8 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 06 KG' },
     ],
     dilutionRates: [{ label: 'Dilution', rate: "0,5 à 1 litre par 10 litres d'eau" }],
+    technicalSheetUrl: '/downloads/technical-sheets/pronet.doc',
+    safetySheetUrl: '/downloads/safety-sheets/pronet.docx',
     relatedProductIds: ['pronet-plus', 'progerme'],
   }),
   createProduct({
@@ -823,6 +885,7 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 20 KG' },
     ],
     dilutionRates: [{ label: 'Dilution', rate: "0,5 à 1 litre par 10 litres d'eau" }],
+    safetySheetUrl: '/downloads/safety-sheets/pronet.docx',
     relatedProductIds: ['pronet', 'progerme', 'prokill'],
   }),
   createProduct({
@@ -842,7 +905,8 @@ export const products: readonly Product[] = [
       { label: 'Usage', value: "Brillance et entretien de l'inox" },
       { label: 'Conditionnement', value: 'Pulvérisateur 500 ML' },
     ],
-    technicalSheetUrl: '/downloads/technical-sheets/molkabin-off.doc',
+    technicalSheetUrl: '/downloads/technical-sheets/molkabin.doc',
+    safetySheetUrl: '/downloads/safety-sheets/molkabin.pdf',
     relatedProductIds: ['provitre', 'prokill'],
   }),
   createProduct({
@@ -863,6 +927,7 @@ export const products: readonly Product[] = [
       { label: 'Conditionnement', value: 'Bidon 05 KG' },
     ],
     dilutionRates: [{ label: 'Dilution', rate: "200 ml par 10 litres d'eau" }],
+    technicalSheetUrl: '/downloads/technical-sheets/super-clean.doc',
     relatedProductIds: ['pronet', 'progerme'],
   }),
 ] as const;

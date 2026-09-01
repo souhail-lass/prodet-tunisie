@@ -178,25 +178,44 @@ export function ProductHeroV2({ product, locale, useCaseLabel }: ProductHeroV2Pr
             </ProductAccordion>
           ) : null}
           <ProductAccordion
-            title={isEnglish ? 'Technical Sheet' : 'Fiche technique'}
+            title={isEnglish ? 'Documentation' : 'Documentation'}
             icon={FileText}
             defaultOpen={false}
           >
-            {product.technicalSheetUrl ? (
-              <a
-                href={product.technicalSheetUrl}
-                download
-                className="text-[13px] font-semibold text-prodet-green underline-offset-4 hover:underline"
-              >
-                {isEnglish ? 'Download technical sheet' : 'Télécharger la fiche technique'}
-              </a>
-            ) : (
-              <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
-                {isEnglish
-                  ? 'Technical sheet available on request.'
-                  : 'Fiche technique disponible sur demande.'}
-              </p>
-            )}
+            <div className="flex flex-col gap-2">
+              {product.technicalSheetUrl ? (
+                <a
+                  href={product.technicalSheetUrl}
+                  download
+                  className="text-[13px] font-semibold text-prodet-green underline-offset-4 hover:underline"
+                >
+                  {isEnglish ? 'Download technical sheet' : 'Télécharger la fiche technique'}
+                </a>
+              ) : (
+                <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
+                  {isEnglish
+                    ? 'Technical sheet available on request.'
+                    : 'Fiche technique disponible sur demande.'}
+                </p>
+              )}
+              {product.safetySheetUrl ? (
+                <a
+                  href={product.safetySheetUrl}
+                  download
+                  className="text-[13px] font-semibold text-prodet-green underline-offset-4 hover:underline"
+                >
+                  {isEnglish
+                    ? 'Download safety data sheet (SDS)'
+                    : 'Télécharger la fiche de données de sécurité (FDS)'}
+                </a>
+              ) : (
+                <p className="text-[13px] leading-6 text-[var(--color-text-secondary)]">
+                  {isEnglish
+                    ? 'Safety data sheet available on request.'
+                    : 'Fiche de données de sécurité disponible sur demande.'}
+                </p>
+              )}
+            </div>
           </ProductAccordion>
         </div>
 

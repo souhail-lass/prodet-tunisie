@@ -21,6 +21,7 @@ export type ProductFormInitial = {
   dosage: string;
   specs: ProductSpec[];
   technicalSheetUrl: string;
+  safetySheetUrl: string;
   imageUrl: string;
   hidden: boolean;
   featured: boolean;
@@ -30,15 +31,16 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
   const router = useRouter();
   const [f, setF] = useState<ProductFormInitial>({ ...initial, specs: initial.specs.length ? initial.specs : [] });
   const [pending, startTransition] = useTransition();
-  const [uploading, setUploading] = useState<'sheet' | 'image' | null>(null);
+  const [uploading, setUploading] = useState<'sheet' | 'safety' | 'image' | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const sheetInput = useRef<HTMLInputElement>(null);
+  const safetyInput = useRef<HTMLInputElement>(null);
   const imageInput = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof ProductFormInitial>(k: K, v: ProductFormInitial[K]) => setF((p) => ({ ...p, [k]: v }));
 
-  async function upload(file: File, kind: 'sheet' | 'image') {
+  async function upload(file: File, kind: 'sheet' | 'safety' | 'image') {
     const MAX = 10 * 1024 * 1024;
     setUploadError(null);
     if (file.size > MAX) {
@@ -52,7 +54,11 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
       fd.set('kind', kind);
       fd.set('productId', f.id ?? 'new');
       const r = await uploadAssetAction(fd);
-      if (r.ok) set(kind === 'sheet' ? 'technicalSheetUrl' : 'imageUrl', r.url);
+      if (r.ok)
+        set(
+          kind === 'sheet' ? 'technicalSheetUrl' : kind === 'safety' ? 'safetySheetUrl' : 'imageUrl',
+          r.url,
+        );
       else setUploadError('Échec du téléversement : ' + (r.error === 'too-large' ? 'fichier trop volumineux (max 10 Mo)' : r.error));
     } catch {
       setUploadError('Échec du téléversement. Vérifiez la taille du fichier (max 10 Mo) et réessayez.');
@@ -70,6 +76,7 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
       dosage: f.dosage.trim() || null,
       specs: f.specs.filter((s) => s.label.trim() || s.value.trim()),
       technicalSheetUrl: f.technicalSheetUrl || null,
+      safetySheetUrl: f.safetySheetUrl || null,
       imageUrl: f.imageUrl || null,
       hidden: f.hidden,
       featured: f.featured,
@@ -223,6 +230,27 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
               </Button>
               {f.technicalSheetUrl ? (
                 <button className="ghost-link" onClick={() => set('technicalSheetUrl', '')}>
+                  <Trash2 size={14} />
+                </button>
+              ) : null}
+            </div>
+          </div>
+          <div>
+            <div style={labelStyle}>Fiche de données de sécurité (FDS)</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
+              {f.safetySheetUrl ? (
+                <a href={f.safetySheetUrl} target="_blank" rel="noreferrer" className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <FileText size={15} /> Voir le fichier
+                </a>
+              ) : (
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)' }}>Aucune</span>
+              )}
+              <input ref={safetyInput} type="file" accept=".pdf,.doc,.docx,application/pdf" hidden onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], 'safety')} />
+              <Button variant="outline" size="sm" onClick={() => safetyInput.current?.click()} disabled={uploading === 'safety'}>
+                <Upload size={14} /> {uploading === 'safety' ? 'Envoi…' : 'Téléverser'}
+              </Button>
+              {f.safetySheetUrl ? (
+                <button className="ghost-link" onClick={() => set('safetySheetUrl', '')}>
                   <Trash2 size={14} />
                 </button>
               ) : null}

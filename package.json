@@ -26,6 +26,7 @@
     "db:studio": "drizzle-kit studio",
     "db:check": "drizzle-kit check",
     "db:seed:demo-portal": "node --env-file=.env.local scripts/seed-demo-portal.mjs",
+    "db:backfill:sheets": "node --env-file=.env.local scripts/backfill-product-sheets.mjs",
     "screenshots:portal": "node --env-file=.env.local scripts/screenshot-portal.mjs"
   },
   "dependencies": {

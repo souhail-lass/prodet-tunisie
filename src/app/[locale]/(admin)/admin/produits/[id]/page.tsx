@@ -25,6 +25,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         dosage: row.dosage ?? '',
         specs: row.specs ?? [],
         technicalSheetUrl: row.technicalSheetUrl ?? '',
+        safetySheetUrl: row.safetySheetUrl ?? '',
         imageUrl: row.imageUrl ?? '',
         hidden: row.hidden,
         featured: row.featured,
