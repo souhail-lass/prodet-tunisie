@@ -11,6 +11,7 @@ import {
   type CustomerUsualProductItem,
   listCustomerUsualProducts,
 } from '@/features/client-portal/usual-products';
+import { CATALOGUE_PATH } from '@/data/familles';
 import { Link, isLocale } from '@/i18n/routing';
 import type { Locale } from '@/i18n/routing';
 
@@ -78,7 +79,7 @@ export default async function ClientUsualProductsPage({
           icon={<Layers3 className="h-4 w-4" aria-hidden />}
           title={t('usual.emptyTitle')}
           description={t('usual.toConfigureBody')}
-          action={{ label: t('usual.openCatalogue'), href: '/catalogue' }}
+          action={{ label: t('usual.openCatalogue'), href: CATALOGUE_PATH }}
         />
       )}
     </div>

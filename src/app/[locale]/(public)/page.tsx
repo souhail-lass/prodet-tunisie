@@ -3,7 +3,7 @@ import { isLocale } from '@/i18n/routing';
 import { HomePage } from '@/components/home/home-page';
 import { listSectors } from '@/data/queries';
 import { localizeSectors } from '@/data/i18n/content';
-import { familles } from '@/data/familles';
+import { familles, TOUS_LES_PRODUITS } from '@/data/familles';
 import { sectorPageCards } from '@/components/secteurs/sector-page-data';
 import { getFeaturedCatalogue, getFamilleCounts } from '@/features/catalogue/queries';
 import { JsonLd } from '@/components/seo/json-ld';
@@ -28,6 +28,7 @@ export default async function HomeRoute({ params }: { params: Promise<{ locale: 
     image: sectorPageCards.find((c) => c.id === sector.id)?.image ?? '',
   }));
   const familleCards = [...familles]
+    .filter((f) => f.id !== TOUS_LES_PRODUITS)
     .sort((a, b) => a.displayOrder - b.displayOrder)
     .map((f) => ({ id: f.id, image: f.packshot, count: familleCounts[f.id] }));
 

@@ -3,20 +3,24 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ArrowRight } from 'lucide-react';
-import { Link, isLocale } from '@/i18n/routing';
 import {
+  CATALOGUE_PATH,
   familleIds,
   getFamilleBySlug,
   getSousCategorie,
   sousCatLabelKey,
+  TOUS_LES_PRODUITS,
 } from '@/data/familles';
-import { getCatalogueSearchCards, getSousCategorieCounts } from '@/features/catalogue/queries';
+import { Link, isLocale } from '@/i18n/routing';
+import { getCatalogueByFamille, getCatalogueSearchCards, getSousCategorieCounts } from '@/features/catalogue/queries';
 import { CategorySidebar } from '@/components/catalogue/category-sidebar';
 import { ProductQuickSearch } from '@/components/catalogue/product-quick-search';
+import { ProductGrid } from '@/components/catalogue/product-grid';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbSchema } from '@/lib/seo/structured-data';
+import type { CatalogueCardProduct } from '@/types/product';
 
-// All five familles are known at build time — prerender them (ISR via the
+// Browse familles are known at build time — prerender them (ISR via the
 // catalogue cache tag keeps counts fresh after admin edits).
 export const revalidate = 300;
 
@@ -53,30 +57,61 @@ export default async function FamillePage({
 
   const tf = await getTranslations({ locale, namespace: 'familles' });
   const tc = await getTranslations({ locale, namespace: 'catalogue' });
-  const sousCats = await getSousCategorieCounts(fam.id);
-  const total = sousCats.reduce((sum, s) => sum + s.count, 0);
-  // Search spans the whole catalogue, not just this famille — someone landing
-  // here from Google shouldn't have to walk back up to /catalogue to look.
-  const searchCards = await getCatalogueSearchCards();
+  const isAllProducts = fam.id === TOUS_LES_PRODUITS;
+  const [sousCats, allProducts, searchCards] = await Promise.all([
+    isAllProducts ? Promise.resolve([]) : getSousCategorieCounts(fam.id),
+    isAllProducts ? getCatalogueByFamille(fam.id) : Promise.resolve([]),
+    getCatalogueSearchCards(),
+  ]);
+  const total = isAllProducts
+    ? allProducts.length
+    : sousCats.reduce((sum, s) => sum + s.count, 0);
+  const allProductCards: CatalogueCardProduct[] = allProducts.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    name: p.name,
+    tagline: p.tagline,
+    category: p.category,
+    categoryLabel: p.categoryLabel,
+    image: p.image,
+    formats: p.formats,
+  }));
+
+  const catalogLabel = locale === 'en' ? 'Catalog' : 'Catalogue';
+  const homeLabel = locale === 'en' ? 'Home' : 'Accueil';
+  const isCatalogHome = fam.id === 'produits-nettoyage';
 
   return (
     <div className="famille-page">
       <JsonLd
-        data={breadcrumbSchema([
-          { name: locale === 'en' ? 'Home' : 'Accueil', path: `/${locale}` },
-          { name: tf('page.viewAll'), path: `/${locale}/catalogue` },
-          { name: tf(`items.${fam.id}.label`), path: `/${locale}/produits/${fam.id}` },
-        ])}
+        data={breadcrumbSchema(
+          isCatalogHome
+            ? [
+                { name: homeLabel, path: `/${locale}` },
+                { name: catalogLabel, path: `/${locale}${CATALOGUE_PATH}` },
+              ]
+            : [
+                { name: homeLabel, path: `/${locale}` },
+                { name: catalogLabel, path: `/${locale}${CATALOGUE_PATH}` },
+                { name: tf(`items.${fam.id}.label`), path: `/${locale}/produits/${fam.id}` },
+              ],
+        )}
       />
       <header className="famille-hero">
         <div className="section-wrap famille-hero__inner">
           <div className="famille-hero__text">
             <nav className="famille-breadcrumb">
-              <Link href="/">{locale === 'en' ? 'Home' : 'Accueil'}</Link>
+              <Link href="/">{homeLabel}</Link>
               <span className="famille-breadcrumb__sep">/</span>
-              <Link href="/catalogue">{tf('page.viewAll')}</Link>
-              <span className="famille-breadcrumb__sep">/</span>
-              <span aria-current="page">{tf(`items.${fam.id}.label`)}</span>
+              {isCatalogHome ? (
+                <span aria-current="page">{catalogLabel}</span>
+              ) : (
+                <>
+                  <Link href={CATALOGUE_PATH}>{catalogLabel}</Link>
+                  <span className="famille-breadcrumb__sep">/</span>
+                  <span aria-current="page">{tf(`items.${fam.id}.label`)}</span>
+                </>
+              )}
             </nav>
             <span className="eyebrow">{tf('page.eyebrow')}</span>
             <h1 className="famille-hero__title">{tf(`items.${fam.id}.label`)}</h1>
@@ -101,11 +136,13 @@ export default async function FamillePage({
         <CategorySidebar locale={locale} activeFamille={fam.id} />
 
         <main className="famille-main">
-          {sousCats.length === 0 ? (
+          {isAllProducts ? (
+            <ProductGrid products={allProductCards} madeLabel={tc('page.manufacturedBadge')} />
+          ) : sousCats.length === 0 ? (
             <div className="famille-empty">
               <h2>{tf('page.emptyTitle')}</h2>
               <p>{tf('page.emptyBody')}</p>
-              <Link className="famille-empty__link" href="/catalogue">
+              <Link className="famille-empty__link" href={CATALOGUE_PATH}>
                 {tf('page.viewAll')} <ArrowRight size={16} />
               </Link>
             </div>

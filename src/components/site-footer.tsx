@@ -1,5 +1,6 @@
 import { Factory, Mail, MapPin, Phone } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import { CATALOGUE_PATH } from '@/data/familles';
 import { Link } from '@/i18n/routing';
 import { companyInfo } from '@/data/company';
 
@@ -23,10 +24,10 @@ export async function SiteFooter() {
 
         <div className="site-footer__col">
           <h4>{t('catalog')}</h4>
-          <Link href="/catalogue">{t('catalogLinks.food')}</Link>
-          <Link href="/catalogue">{t('catalogLinks.laundry')}</Link>
-          <Link href="/catalogue">{t('catalogLinks.housekeeping')}</Link>
-          <Link href="/catalogue">{t('catalogLinks.household')}</Link>
+          <Link href={`${CATALOGUE_PATH}/cuisine-degraissage`}>{t('catalogLinks.food')}</Link>
+          <Link href={`${CATALOGUE_PATH}/linge-textiles`}>{t('catalogLinks.laundry')}</Link>
+          <Link href={`${CATALOGUE_PATH}/sanitaires-desinfection`}>{t('catalogLinks.housekeeping')}</Link>
+          <Link href="/produits/materiel-hygiene">{t('catalogLinks.household')}</Link>
         </div>
 
         <div className="site-footer__col">
@@ -34,7 +35,7 @@ export async function SiteFooter() {
           <Link href="/a-propos">{tc('navigation.about')}</Link>
           <Link href="/secteurs">{tc('navigation.sectors')}</Link>
           <Link href="/contact">{tc('navigation.contact')}</Link>
-          <Link href="/catalogue">{t('requestQuote')}</Link>
+          <Link href="/devis">{t('requestQuote')}</Link>
         </div>
 
         <div className="site-footer__col">

@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { companyInfo } from '@/data/company';
 import {
@@ -21,8 +21,8 @@ import {
   type PublicOfferSectionId,
 } from '@/data/public-offers';
 import { getUseCaseById } from '@/data/queries';
-import { classifyFamille, classifySousCategorie } from '@/data/familles';
-import { getCatalogueProductBySlug, getVisibleCatalogue } from '@/features/catalogue/queries';
+import { CATALOGUE_PATH, classifyFamille, classifySousCategorie, produitPath } from '@/data/familles';
+import { getCatalogueProductBySlug, getCatalogueSearchCards, getVisibleCatalogue } from '@/features/catalogue/queries';
 import { localizeUseCase } from '@/data/i18n/content';
 import type { Product } from '@/data/types';
 import type { CatalogueCardProduct } from '@/types/product';
@@ -30,6 +30,7 @@ import { siteContent } from '@/data/site-content';
 import { Link, isLocale, type Locale } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { ProductGrid } from '@/components/catalogue/product-grid';
+import { ProductDetailToolbar } from '@/components/product/ProductDetailToolbar';
 import { ProductHeroV2 } from '@/components/product/ProductHeroV2';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbSchema, productSchema } from '@/lib/seo/structured-data';
@@ -55,7 +56,7 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const publicOffer = getPublicOfferBySlug(slug);
   if (publicOffer) {
     const section = getPublicOfferSectionById(publicOffer.sectionId);
@@ -71,6 +72,9 @@ export async function generateMetadata({
   return {
     title: product.name,
     description: product.tagline || undefined,
+    alternates: {
+      canonical: `/${locale}/catalogue/${product.slug}`,
+    },
   };
 }
 
@@ -85,16 +89,30 @@ export default async function ProductDetailPage({
 
   const publicOffer = getPublicOfferBySlug(slug);
   if (publicOffer) {
-    return <PublicOfferDetailPage offer={publicOffer} locale={locale} />;
+    return (
+      <PublicOfferDetailPage
+        offer={publicOffer}
+        locale={locale}
+        toolbar={await buildProductToolbar(locale, CATALOGUE_PATH)}
+      />
+    );
   }
 
   const product = await getCatalogueProductBySlug(slug);
   if (!product) notFound();
+  // Resolve SKU/id URLs to the name slug before any UI is created, otherwise
+  // Next turns the 308 into a client-side redirect.
+  if (product.slug !== slug) {
+    permanentRedirect(`/${locale}/catalogue/${product.slug}`);
+  }
+
+  const t = await getTranslations({ locale, namespace: 'catalogue' });
 
   // Related = same famille, with same sous-catégorie surfaced first. Live DB
   // products carry no useCases, so the family/gamme is derived from the name.
   const famille = classifyFamille(product.name, product.categoryLabel);
   const sousCat = classifySousCategorie(famille, product.name);
+  const toolbar = await buildProductToolbar(locale, produitPath(famille, sousCat));
   const related = (await getVisibleCatalogue())
     .filter((p) => p.slug !== product.slug && classifyFamille(p.name, p.categoryLabel) === famille)
     .sort(
@@ -103,7 +121,6 @@ export default async function ProductDetailPage({
         Number(classifySousCategorie(famille, a.name) === sousCat),
     )
     .slice(0, 4);
-  const t = await getTranslations({ locale, namespace: 'catalogue' });
 
   return (
     <>
@@ -120,7 +137,7 @@ export default async function ProductDetailPage({
       <JsonLd
         data={breadcrumbSchema([
           { name: 'Accueil', path: `/${locale}` },
-          { name: 'Catalogue', path: `/${locale}/catalogue` },
+          { name: 'Catalogue', path: `/${locale}${CATALOGUE_PATH}` },
           { name: product.name, path: `/${locale}/catalogue/${product.slug}` },
         ])}
       />
@@ -129,12 +146,40 @@ export default async function ProductDetailPage({
         locale={locale}
         related={related}
         madeLabel={t('page.manufacturedBadge')}
+        toolbar={toolbar}
       />
     </>
   );
 }
 
-async function PublicOfferDetailPage({ offer, locale }: { offer: PublicOffer; locale: Locale }) {
+async function buildProductToolbar(locale: Locale, backHref: string) {
+  const t = await getTranslations({ locale, namespace: 'catalogue' });
+  const tCommon = await getTranslations({ locale, namespace: 'common' });
+  let searchCards: CatalogueCardProduct[] = [];
+  try {
+    searchCards = await getCatalogueSearchCards();
+  } catch {
+    // Search is an enhancement on the PDP; a missing DB must not hide the product.
+  }
+  return (
+    <ProductDetailToolbar
+      products={searchCards}
+      madeLabel={t('page.manufacturedBadge')}
+      backLabel={tCommon('actions.back')}
+      backHref={backHref}
+    />
+  );
+}
+
+async function PublicOfferDetailPage({
+  offer,
+  locale,
+  toolbar,
+}: {
+  offer: PublicOffer;
+  locale: Locale;
+  toolbar: ReactNode;
+}) {
   const t = await getTranslations({ locale, namespace: 'catalogue' });
   const section = getPublicOfferSectionById(offer.sectionId);
   const legacyProduct = getLegacyProductForPublicOffer(offer);
@@ -149,7 +194,9 @@ async function PublicOfferDetailPage({ offer, locale }: { offer: PublicOffer; lo
   const usageCalculation = buildOfferUsageCalculation(offer, dosage);
 
   return (
-    <div className="section-shell py-12">
+    <>
+      {toolbar}
+      <div className="section-shell py-12">
       <JsonLd
         data={productSchema({
           name: offer.name,
@@ -161,7 +208,7 @@ async function PublicOfferDetailPage({ offer, locale }: { offer: PublicOffer; lo
         })}
       />
       <nav className="text-[var(--type-small)] text-[var(--color-text-tertiary)]">
-        <Link href="/catalogue" className="text-[var(--color-text-secondary)] hover:text-prodet-blue">
+        <Link href={CATALOGUE_PATH} className="text-[var(--color-text-secondary)] hover:text-prodet-blue">
           Catalogue
         </Link>
         <span className="mx-2">›</span>
@@ -351,7 +398,7 @@ async function PublicOfferDetailPage({ offer, locale }: { offer: PublicOffer; lo
               <h2 className="mt-3 text-2xl font-bold text-[var(--color-text-primary)]">{t('detail.related')}</h2>
             </div>
             <Button asChild variant="outline" className="rounded-full px-5">
-              <Link href={`/catalogue?section=${offer.sectionId}`}>{t('detail.viewSection')}</Link>
+              <Link href={CATALOGUE_PATH}>{t('detail.viewSection')}</Link>
             </Button>
           </div>
 
@@ -376,6 +423,7 @@ async function PublicOfferDetailPage({ offer, locale }: { offer: PublicOffer; lo
         </section>
       ) : null}
     </div>
+    </>
   );
 }
 
@@ -384,17 +432,21 @@ function LegacyProductDetailPage({
   locale,
   related,
   madeLabel,
+  toolbar,
 }: {
   product: Product;
   locale: Locale;
   related: CatalogueCardProduct[];
   madeLabel: string;
+  toolbar: ReactNode;
 }) {
   const primaryUseCaseId = product.useCases[0];
   const primaryUseCaseBase = primaryUseCaseId ? getUseCaseById(primaryUseCaseId) : undefined;
   const primaryUseCase = primaryUseCaseBase ? localizeUseCase(primaryUseCaseBase, locale) : undefined;
   return (
-    <div className="py-6 md:py-8">
+    <>
+      {toolbar}
+      <div className="py-6 md:py-8">
       <div className="mx-auto w-full max-w-[1200px] px-6">
         <ProductHeroV2
           product={product}
@@ -416,7 +468,8 @@ function LegacyProductDetailPage({
           </section>
         ) : null}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
 

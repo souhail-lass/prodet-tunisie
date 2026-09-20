@@ -16,10 +16,11 @@ import { syncSwiverCatalogue } from '@/features/catalogue/sync';
 
 function revalidate() {
   // Purges the tagged catalogue data cache, which also marks every static
-  // page built from it (home, /catalogue, /catalogue/[slug]) for regeneration.
+  // page built from it (home, famille browse, /catalogue/[slug]) for regeneration.
   revalidateTag(CATALOGUE_CACHE_TAG);
   revalidatePath('/[locale]/admin/produits', 'page');
   revalidatePath('/[locale]/catalogue', 'page');
+  revalidatePath('/[locale]/produits/[famille]', 'page');
 }
 
 export async function saveProductAction(id: string, content: ProductContent): Promise<{ ok: boolean }> {

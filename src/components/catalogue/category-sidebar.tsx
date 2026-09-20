@@ -25,6 +25,7 @@ export async function CategorySidebar({
       <nav className="cat-sidebar__nav">
         {ordered.map((famille) => {
           const isActive = famille.id === activeFamille;
+          const subs = getSousCategoriesForFamille(famille.id);
           return (
             <div className="cat-sidebar__group" key={famille.id}>
               <Link
@@ -33,9 +34,9 @@ export async function CategorySidebar({
               >
                 {tf(`items.${famille.id}.label`)}
               </Link>
-              {isActive ? (
+              {isActive && subs.length > 0 ? (
                 <ul className="cat-sidebar__subs">
-                  {getSousCategoriesForFamille(famille.id).map((sub) => (
+                  {subs.map((sub) => (
                     <li key={sub.slug}>
                       <Link
                         href={`/produits/${famille.id}/${sub.slug}`}

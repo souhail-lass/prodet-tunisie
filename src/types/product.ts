@@ -30,6 +30,7 @@ export type CatalogueCardProduct = Pick<
 export type Product = {
   id: string;
   slug: string;
+  sku?: string | null;
   name: string;
   tagline: string;
   category: ProductCategory;

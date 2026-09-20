@@ -7,9 +7,16 @@ import {
   classifySousCategorie,
   familleIds,
   getSousCategoriesForFamille,
+  TOUS_LES_PRODUITS,
   type FamilleId,
 } from '@/data/familles';
+import { sortByPinnedCatalogueSku } from '@/data/catalogue-pin-order';
 import { resolveResellImage } from '@/data/resell-images';
+import {
+  assignUniqueProductSlugs,
+  findRowForProductSlug,
+  legacyProductSlug,
+} from '@/lib/product-slug';
 
 /**
  * Cache tag for everything derived from catalogue_product. Admin mutations
@@ -54,13 +61,7 @@ function mapCategory(label: string | null): ProductCategory {
  */
 const PRODET_PACKSHOT = '/images/products/sirafan.png';
 
-/** Stable, URL-safe slug for a catalogue row (SKU preferred, falls back to id). */
-export function productSlug(row: { sku: string | null; id: string }): string {
-  if (row.sku && /^[a-zA-Z0-9._-]+$/.test(row.sku)) return row.sku;
-  return row.id;
-}
-
-function mapRowToProduct(row: AdminProductRow): Product {
+function mapRowToProduct(row: AdminProductRow, slug: string): Product {
   const category = mapCategory(row.baseCategory);
   const realImage = row.imageUrl || row.baseImageUrl || '';
   // Photo precedence: real Swiver/admin image → committed resell packshot
@@ -68,7 +69,8 @@ function mapRowToProduct(row: AdminProductRow): Product {
   const resellImage = realImage ? '' : resolveResellImage(row.displayName || row.name);
   return {
     id: row.id,
-    slug: productSlug(row),
+    slug,
+    sku: row.sku,
     name: row.displayName || row.name,
     tagline: row.tagline ?? '',
     category,
@@ -135,10 +137,16 @@ export async function getCatalogueCount(): Promise<number> {
   return rows.length;
 }
 
+function mapCatalogueRows(rows: AdminProductRow[]): Product[] {
+  const slugs = assignUniqueProductSlugs(rows);
+  return rows.map((row) => mapRowToProduct(row, slugs.get(row.id) ?? legacyProductSlug(row)));
+}
+
 /** Public catalogue products (visible), mapped to the website Product shape. */
 export async function getVisibleCatalogue(): Promise<Product[]> {
   const rows = await getCachedCatalogueRows();
-  return rows.filter((r) => !r.hidden).map(mapRowToProduct);
+  const hidden = new Set(rows.filter((r) => r.hidden).map((r) => r.id));
+  return mapCatalogueRows(rows).filter((p) => !hidden.has(p.id));
 }
 
 /**
@@ -174,11 +182,15 @@ export async function getFamilleCounts(): Promise<Record<FamilleId, number>> {
   const products = await getVisibleCatalogue();
   const counts = Object.fromEntries(familleIds.map((id) => [id, 0])) as Record<FamilleId, number>;
   for (const p of products) counts[classifyFamille(p.name, p.categoryLabel)] += 1;
+  counts[TOUS_LES_PRODUITS] = products.length;
   return counts;
 }
 
 /** Visible products belonging to a given famille, in catalogue order. */
 export async function getCatalogueByFamille(familleId: FamilleId): Promise<Product[]> {
+  if (familleId === TOUS_LES_PRODUITS) {
+    return sortByPinnedCatalogueSku(await getVisibleCatalogue());
+  }
   const products = await getVisibleCatalogue();
   return products.filter((p) => classifyFamille(p.name, p.categoryLabel) === familleId);
 }
@@ -218,21 +230,23 @@ export async function getCatalogueBySousCategorie(
 
 export async function getCatalogueProductBySlug(slug: string): Promise<Product | null> {
   const rows = await getCachedCatalogueRows();
-  const match = rows.find((r) => r.sku === slug) ?? rows.find((r) => r.id === slug);
-  return match ? mapRowToProduct(match) : null;
+  const match = findRowForProductSlug(rows, slug);
+  if (!match) return null;
+  const slugs = assignUniqueProductSlugs(rows);
+  return mapRowToProduct(match, slugs.get(match.id) ?? legacyProductSlug(match));
 }
 
 export async function getFeaturedCatalogue(limit = 4): Promise<Product[]> {
-  const visibleRows = (await getCachedCatalogueRows()).filter((r) => !r.hidden);
-  const featured = visibleRows.filter((r) => r.featured).map(mapRowToProduct);
+  const rows = await getCachedCatalogueRows();
+  const hidden = new Set(rows.filter((r) => r.hidden).map((r) => r.id));
+  const visible = mapCatalogueRows(rows).filter((p) => !hidden.has(p.id));
+  const featured = visible.filter((p) => p.featured);
   if (featured.length >= limit) return featured.slice(0, limit);
 
   // Fall back: fill with other visible products (those with an image first).
-  const visible = visibleRows
-    .map(mapRowToProduct)
-    .sort((a, b) => (b.image ? 1 : 0) - (a.image ? 1 : 0));
+  const ranked = [...visible].sort((a, b) => (b.image ? 1 : 0) - (a.image ? 1 : 0));
   const seen = new Set(featured.map((p) => p.id));
-  for (const p of visible) {
+  for (const p of ranked) {
     if (featured.length >= limit) break;
     if (!seen.has(p.id)) featured.push(p);
   }

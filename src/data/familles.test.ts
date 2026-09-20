@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { classifyFamille, classifyGamme, familleIds } from './familles';
+import {
+  classifyFamille,
+  classifyGamme,
+  classifySousCategorie,
+  familleIds,
+  getSousCategoriesForFamille,
+  produitPath,
+  TOUS_LES_PRODUITS,
+} from './familles';
 
 describe('classifyFamille', () => {
   it('routes air fresheners to parfums-ambiance', () => {
@@ -57,5 +65,29 @@ describe('classifyGamme', () => {
 
   it('returns null for products with no clear gamme', () => {
     expect(classifyGamme('VINAIGRE MENAGER BIDON 5L')).toBeNull();
+  });
+});
+
+describe('tous-les-produits', () => {
+  it('is the first browse category, not a sous-catégorie', () => {
+    expect(familleIds[0]).toBe(TOUS_LES_PRODUITS);
+    expect(getSousCategoriesForFamille('produits-nettoyage').map((s) => s.slug)).not.toContain(
+      TOUS_LES_PRODUITS,
+    );
+  });
+
+  it('is a listing, not a classified bucket', () => {
+    expect(classifyFamille('SOLITAIRE VAISSELLE CITRON 5L')).not.toBe(TOUS_LES_PRODUITS);
+    expect(classifyFamille('SAC POUBELLE NOIR GM 90*120 35GR 200P')).not.toBe(TOUS_LES_PRODUITS);
+  });
+});
+
+describe('produitPath', () => {
+  it('points Retour at the sous-catégorie the product belongs to', () => {
+    const famille = classifyFamille('PROLAC');
+    const sousCat = classifySousCategorie(famille, 'PROLAC');
+    expect(produitPath(famille, sousCat)).toBe(
+      '/produits/produits-nettoyage/cuisine-degraissage',
+    );
   });
 });
