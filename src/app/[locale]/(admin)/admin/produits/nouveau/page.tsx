@@ -1,10 +1,18 @@
+import { adminCatalogueListPath, parseAdminCatalogueQuery, withAdminCatalogueQuery } from '@/lib/admin-catalogue-query';
 import { ProductForm } from '../product-form';
 
 export const dynamic = 'force-dynamic';
 
-export default function NewProductPage() {
+export default async function NewProductPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const query = parseAdminCatalogueQuery(await searchParams);
   return (
     <ProductForm
+      listHref={adminCatalogueListPath(query)}
+      rangementHref={withAdminCatalogueQuery('/admin/produits/rangement', query)}
       initial={{
         isCustom: true,
         name: '',
@@ -24,6 +32,7 @@ export default function NewProductPage() {
         featured: false,
         familleSlug: '',
         sousCategorieSlug: '',
+        extraPlacements: [],
       }}
     />
   );

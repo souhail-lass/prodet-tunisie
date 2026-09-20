@@ -19,10 +19,14 @@ import {
 import { findCatalogueByBrandKey } from '@/lib/sector-catalogue';
 import {
   compareCatalogueRank,
+  famillesOf,
+  listingsOf,
+  parseExtraPlacements,
   pinnedCatalogueRows,
   resolveRowPlacement,
   rowsInSousCategorie,
   sortCurationRows,
+  type ExtraPlacement,
 } from './placement';
 
 /**
@@ -56,6 +60,7 @@ export type AdminProductRow = {
   sousCategorieSlug: string | null;
   sortOrder: number | null;
   catalogueRank: number | null;
+  extraPlacements: ExtraPlacement[];
   hidden: boolean;
   featured: boolean;
 };
@@ -126,13 +131,17 @@ async function selectRows(where?: SQL): Promise<AdminProductRow[]> {
     sousCategorieSlug: t.sousCategorieSlug,
     sortOrder: t.sortOrder,
     catalogueRank: t.catalogueRank,
+    extraPlacements: t.extraPlacements,
     hidden: t.hidden,
     featured: t.featured,
   };
   const rows = where
     ? await db.select(cols).from(t).where(where).orderBy(t.name)
     : await db.select(cols).from(t).orderBy(t.name);
-  return rows as unknown as AdminProductRow[];
+  return (rows as unknown as AdminProductRow[]).map((row) => ({
+    ...row,
+    extraPlacements: parseExtraPlacements(row.extraPlacements),
+  }));
 }
 
 /**
@@ -211,7 +220,9 @@ async function getVisibleRows(): Promise<AdminProductRow[]> {
 export async function getFamilleCounts(): Promise<Record<FamilleId, number>> {
   const rows = await getVisibleRows();
   const counts = Object.fromEntries(familleIds.map((id) => [id, 0])) as Record<FamilleId, number>;
-  for (const row of rows) counts[resolveRowPlacement(row).familleId] += 1;
+  for (const row of rows) {
+    for (const familleId of famillesOf(row)) counts[familleId] += 1;
+  }
   // "Tous les produits" is a listing of the whole catalogue, not a bucket
   // resolvePlacement can return, so its count is the total.
   counts[TOUS_LES_PRODUITS] = rows.length;
@@ -226,7 +237,7 @@ export async function getCatalogueByFamille(familleId: FamilleId): Promise<Produ
     return mapSelectedRows(allRows, [...rows].sort(compareCatalogueRank));
   }
   const selected = sortCurationRows(
-    rows.filter((row) => resolveRowPlacement(row).familleId === familleId),
+    rows.filter((row) => famillesOf(row).includes(familleId)),
   );
   return mapSelectedRows(allRows, selected);
 }
@@ -241,9 +252,10 @@ export async function getSousCategorieCounts(familleId: FamilleId): Promise<Sous
   const rows = await getVisibleRows();
   const counts = new Map<string, number>();
   for (const row of rows) {
-    const placement = resolveRowPlacement(row);
-    if (placement.familleId !== familleId) continue;
-    counts.set(placement.sousCategorieSlug, (counts.get(placement.sousCategorieSlug) ?? 0) + 1);
+    for (const listing of listingsOf(row)) {
+      if (listing.familleId !== familleId) continue;
+      counts.set(listing.sousCategorieSlug, (counts.get(listing.sousCategorieSlug) ?? 0) + 1);
+    }
   }
   const ordered: SousCategorieCount[] = getSousCategoriesForFamille(familleId)
     .map((s) => ({ slug: s.slug, count: counts.get(s.slug) ?? 0 }))
@@ -347,7 +359,7 @@ export type CurationProduct = {
   hidden: boolean;
   sortOrder: number | null;
   pinned: boolean;
-  origin: 'manual' | 'auto';
+  origin: 'manual' | 'auto' | 'extra';
 };
 
 export type CurationSousCategorie = {
@@ -373,7 +385,7 @@ export type CurationFamille = {
 export async function listCurationGroups(): Promise<CurationFamille[]> {
   const rows = await selectRows();
 
-  const toCurationProduct = (row: AdminProductRow): CurationProduct => ({
+  const toCurationProduct = (row: AdminProductRow, origin: CurationProduct['origin']): CurationProduct => ({
     id: row.id,
     name: row.displayName || row.name,
     sku: row.sku,
@@ -381,7 +393,7 @@ export async function listCurationGroups(): Promise<CurationFamille[]> {
     hidden: row.hidden,
     sortOrder: row.sortOrder,
     pinned: row.catalogueRank != null,
-    origin: resolveRowPlacement(row).sousCategorieOrigin,
+    origin,
   });
 
   const allProducts: CurationFamille = {
@@ -390,14 +402,18 @@ export async function listCurationGroups(): Promise<CurationFamille[]> {
       {
         slug: TOUS_LES_PRODUITS,
         familleId: TOUS_LES_PRODUITS,
-        products: pinnedCatalogueRows(rows).map(toCurationProduct),
+        products: pinnedCatalogueRows(rows).map((row) => toCurationProduct(row, 'manual')),
       },
     ],
   };
 
   const byFamille = curationFamilleIds.map((familleId) => {
-    const inFamille = rows.filter((row) => resolveRowPlacement(row).familleId === familleId);
-    const slugs = new Set(inFamille.map((row) => resolveRowPlacement(row).sousCategorieSlug));
+    const slugs = new Set<string>();
+    for (const row of rows) {
+      for (const listing of listingsOf(row)) {
+        if (listing.familleId === familleId) slugs.add(listing.sousCategorieSlug);
+      }
+    }
     const defined = getSousCategoriesForFamille(familleId)
       .map((s) => s.slug)
       .filter((slug) => slugs.has(slug));
@@ -408,7 +424,14 @@ export async function listCurationGroups(): Promise<CurationFamille[]> {
       sousCategories: [...defined, ...leftovers].map((slug) => ({
         slug,
         familleId,
-        products: rowsInSousCategorie(inFamille, familleId, slug).map(toCurationProduct),
+        products: rowsInSousCategorie(rows, familleId, slug).map((row) => {
+          const listing = listingsOf(row).find(
+            (item) => item.familleId === familleId && item.sousCategorieSlug === slug,
+          );
+          const origin: CurationProduct['origin'] =
+            listing?.origin === 'extra' ? 'extra' : resolveRowPlacement(row).sousCategorieOrigin;
+          return toCurationProduct(row, origin);
+        }),
       })),
     };
   });

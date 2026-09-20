@@ -11,6 +11,12 @@ import {
  * the tests. Kept free of `server-only` and of the DB client on purpose: the
  * placement rules are the part worth testing in isolation.
  */
+export type ExtraPlacement = {
+  familleSlug: FamilleId;
+  sousCategorieSlug: string;
+  sortOrder: number | null;
+};
+
 export type CurationRow = {
   id: string;
   name: string;
@@ -20,6 +26,7 @@ export type CurationRow = {
   sousCategorieSlug: string | null;
   sortOrder: number | null;
   catalogueRank: number | null;
+  extraPlacements: ExtraPlacement[];
 };
 
 /** The name the site shows, which is also the name the classifier reads. */
@@ -34,6 +41,102 @@ export function resolveRowPlacement(row: CurationRow): ResolvedPlacement {
     familleSlug: row.familleSlug,
     sousCategorieSlug: row.sousCategorieSlug,
   });
+}
+
+export function parseExtraPlacements(raw: unknown): ExtraPlacement[] {
+  if (!Array.isArray(raw)) return [];
+  const out: ExtraPlacement[] = [];
+  for (const item of raw) {
+    if (!item || typeof item !== 'object') continue;
+    const rec = item as Record<string, unknown>;
+    const familleSlug = typeof rec.familleSlug === 'string' ? rec.familleSlug : '';
+    const sousCategorieSlug = typeof rec.sousCategorieSlug === 'string' ? rec.sousCategorieSlug : '';
+    if (!isCurationFamilleId(familleSlug) || !isSousCategorieOfFamille(familleSlug, sousCategorieSlug)) continue;
+    const sortOrder = typeof rec.sortOrder === 'number' && Number.isFinite(rec.sortOrder) ? rec.sortOrder : null;
+    out.push({ familleSlug, sousCategorieSlug, sortOrder });
+  }
+  return out;
+}
+
+/**
+ * Drop extras that duplicate the primary home, that point at an unknown
+ * slug, or that collide with each other. Order is stable so a save without
+ * edits does not reshuffle the JSON.
+ */
+export function sanitizeExtraPlacements(
+  extras: readonly ExtraPlacement[] | null | undefined,
+  primary: Pick<ResolvedPlacement, 'familleId' | 'sousCategorieSlug'>,
+): ExtraPlacement[] {
+  const seen = new Set<string>();
+  const out: ExtraPlacement[] = [];
+  for (const extra of extras ?? []) {
+    if (!isCurationFamilleId(extra.familleSlug)) continue;
+    if (!isSousCategorieOfFamille(extra.familleSlug, extra.sousCategorieSlug)) continue;
+    if (extra.familleSlug === primary.familleId && extra.sousCategorieSlug === primary.sousCategorieSlug) {
+      continue;
+    }
+    const key = `${extra.familleSlug}/${extra.sousCategorieSlug}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({
+      familleSlug: extra.familleSlug,
+      sousCategorieSlug: extra.sousCategorieSlug,
+      sortOrder: extra.sortOrder ?? null,
+    });
+  }
+  return out;
+}
+
+export type ListingRef = {
+  familleId: FamilleId;
+  sousCategorieSlug: string;
+  sortOrder: number | null;
+  origin: 'primary' | 'extra';
+};
+
+/** Primary home + extra listings, extras already de-duplicated against home. */
+export function listingsOf(row: CurationRow): ListingRef[] {
+  const primary = resolveRowPlacement(row);
+  const extras = sanitizeExtraPlacements(row.extraPlacements, primary);
+  return [
+    {
+      familleId: primary.familleId,
+      sousCategorieSlug: primary.sousCategorieSlug,
+      sortOrder: row.sortOrder,
+      origin: 'primary',
+    },
+    ...extras.map((extra) => ({
+      familleId: extra.familleSlug,
+      sousCategorieSlug: extra.sousCategorieSlug,
+      sortOrder: extra.sortOrder,
+      origin: 'extra' as const,
+    })),
+  ];
+}
+
+export function famillesOf(row: CurationRow): FamilleId[] {
+  return [...new Set(listingsOf(row).map((listing) => listing.familleId))];
+}
+
+export function listingSortOrder(
+  row: CurationRow,
+  familleId: FamilleId,
+  sousCategorieSlug: string,
+): number | null {
+  const listing = listingsOf(row).find(
+    (item) => item.familleId === familleId && item.sousCategorieSlug === sousCategorieSlug,
+  );
+  return listing?.sortOrder ?? null;
+}
+
+export function rowAppearsIn(
+  row: CurationRow,
+  familleId: FamilleId,
+  sousCategorieSlug: string,
+): boolean {
+  return listingsOf(row).some(
+    (listing) => listing.familleId === familleId && listing.sousCategorieSlug === sousCategorieSlug,
+  );
 }
 
 /**
@@ -71,17 +174,19 @@ export function compareCatalogueRank(a: CurationRow, b: CurationRow): number {
   return displayedName(a).localeCompare(displayedName(b), 'fr');
 }
 
-/** Rows resolving into one sous-catégorie, in curation order. */
+/** Rows resolving into one sous-catégorie (home or extra), in that list's order. */
 export function rowsInSousCategorie<T extends CurationRow>(
   rows: readonly T[],
   familleId: FamilleId,
   sousCategorieSlug: string,
 ): T[] {
   return sortCurationRows(
-    rows.filter((row) => {
-      const placement = resolveRowPlacement(row);
-      return placement.familleId === familleId && placement.sousCategorieSlug === sousCategorieSlug;
-    }),
+    rows
+      .filter((row) => rowAppearsIn(row, familleId, sousCategorieSlug))
+      .map((row) => ({
+        ...row,
+        sortOrder: listingSortOrder(row, familleId, sousCategorieSlug),
+      })),
   );
 }
 
@@ -169,6 +274,7 @@ export type PlacementChangePlan = {
   familleSlug: FamilleId | null;
   sousCategorieSlug: string | null;
   sortOrder: number | null;
+  extraPlacements: ExtraPlacement[];
   from: { familleId: FamilleId; sousCategorieSlug: string };
   to: { familleId: FamilleId; sousCategorieSlug: string };
   moved: boolean;
@@ -181,9 +287,12 @@ export type PlacementChangePlan = {
  * chosen famille is cleared instead of left dangling, so the product falls
  * back to the classifier inside its new famille. A product that changes home
  * loses its position — the number it carried belongs to the sous-catégorie it
- * came from.
+ * came from. Extras that would duplicate the new home are dropped.
  */
-export function planPlacementChange(row: CurationRow, input: PlacementChangeInput): PlacementChangePlan {
+export function planPlacementChange(
+  row: CurationRow,
+  input: PlacementChangeInput & { extraPlacements?: readonly ExtraPlacement[] | null },
+): PlacementChangePlan {
   const from = resolveRowPlacement(row);
   const familleSlug = isCurationFamilleId(input.familleSlug) ? input.familleSlug : null;
   const effectiveFamille = familleSlug ?? resolveRowPlacement({ ...row, familleSlug: null }).familleId;
@@ -193,11 +302,13 @@ export function planPlacementChange(row: CurationRow, input: PlacementChangeInpu
 
   const to = resolveRowPlacement({ ...row, familleSlug, sousCategorieSlug });
   const moved = to.familleId !== from.familleId || to.sousCategorieSlug !== from.sousCategorieSlug;
+  const extraPlacements = sanitizeExtraPlacements(input.extraPlacements ?? row.extraPlacements, to);
 
   return {
     familleSlug,
     sousCategorieSlug,
     sortOrder: moved ? null : row.sortOrder,
+    extraPlacements,
     from: { familleId: from.familleId, sousCategorieSlug: from.sousCategorieSlug },
     to: { familleId: to.familleId, sousCategorieSlug: to.sousCategorieSlug },
     moved,

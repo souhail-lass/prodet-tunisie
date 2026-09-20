@@ -3,12 +3,17 @@ import { eq } from 'drizzle-orm';
 import type { ProductSpec } from '@/types/product';
 import type { FamilleId } from '@/data/familles';
 import {
+  parseExtraPlacements,
   pinnedCatalogueRows,
   planCatalogueRankReorder,
   planPlacementChange,
   planReorder,
+  listingSortOrder,
+  resolveRowPlacement,
   rowsInSousCategorie,
+  sanitizeExtraPlacements,
   type CurationRow,
+  type ExtraPlacement,
   type ReorderError,
 } from './placement';
 
@@ -139,7 +144,7 @@ export async function setCategoryHidden(categoryLabel: string, hidden: boolean, 
 async function selectCurationRows(): Promise<CurationRow[]> {
   const { db, schema } = await import('@/db/client');
   const t = schema.catalogueProduct;
-  return db
+  const rows = await db
     .select({
       id: t.id,
       name: t.name,
@@ -149,8 +154,32 @@ async function selectCurationRows(): Promise<CurationRow[]> {
       sousCategorieSlug: t.sousCategorieSlug,
       sortOrder: t.sortOrder,
       catalogueRank: t.catalogueRank,
+      extraPlacements: t.extraPlacements,
     })
     .from(t);
+  return rows.map((row) => ({
+    ...row,
+    extraPlacements: parseExtraPlacements(row.extraPlacements),
+  }));
+}
+
+function listingSortValues(
+  row: CurationRow,
+  familleId: FamilleId,
+  sousCategorieSlug: string,
+  sortOrder: number,
+): { sortOrder: number } | { extraPlacements: ExtraPlacement[] } {
+  const primary = resolveRowPlacement(row);
+  const isPrimary =
+    primary.familleId === familleId && primary.sousCategorieSlug === sousCategorieSlug;
+  if (isPrimary) return { sortOrder };
+  return {
+    extraPlacements: sanitizeExtraPlacements(row.extraPlacements, primary).map((extra) =>
+      extra.familleSlug === familleId && extra.sousCategorieSlug === sousCategorieSlug
+        ? { ...extra, sortOrder }
+        : extra,
+    ),
+  };
 }
 
 /**
@@ -173,7 +202,7 @@ async function reindexSousCategorie(
         ? Promise.resolve()
         : db
             .update(schema.catalogueProduct)
-            .set({ sortOrder: index })
+            .set(listingSortValues(row, familleId, sousCategorieSlug, index))
             .where(eq(schema.catalogueProduct.id, row.id)),
     ),
   );
@@ -182,11 +211,13 @@ async function reindexSousCategorie(
 export type PlacementInputValues = {
   familleSlug: string | null;
   sousCategorieSlug: string | null;
+  extraPlacements?: ExtraPlacement[];
 };
 
 /**
  * Move a product to another famille / sous-catégorie. `null` on either side
- * hands the product back to the keyword classifier.
+ * hands the product back to the keyword classifier. Extra listings are the
+ * other sous-catégories the product should also appear in.
  */
 export async function setProductPlacement(
   id: string,
@@ -205,6 +236,7 @@ export async function setProductPlacement(
       familleSlug: plan.familleSlug,
       sousCategorieSlug: plan.sousCategorieSlug,
       sortOrder: plan.sortOrder,
+      extraPlacements: plan.extraPlacements,
       updatedByUserId: actorUserId ?? null,
       updatedAt: new Date(),
     })
@@ -223,7 +255,7 @@ export async function setProductPlacement(
     id,
     { from: plan.from, to: plan.to },
     actorUserId,
-    { familleSlug: plan.familleSlug, sousCategorieSlug: plan.sousCategorieSlug },
+    { familleSlug: plan.familleSlug, sousCategorieSlug: plan.sousCategorieSlug, extras: plan.extraPlacements.length },
   );
   return true;
 }
@@ -243,15 +275,22 @@ export async function reorderSousCategorie(
   const { db, schema } = await import('@/db/client');
   const changed = planned.plan.assignments.filter((assignment) => {
     const row = rows.find((r) => r.id === assignment.id);
-    return row?.sortOrder !== assignment.sortOrder;
+    if (!row) return false;
+    return listingSortOrder(row, input.familleId, input.sousCategorieSlug) !== assignment.sortOrder;
   });
 
   if (changed.length > 0) {
     await db.transaction(async (tx) => {
       for (const assignment of changed) {
+        const row = rows.find((r) => r.id === assignment.id);
+        if (!row) continue;
         await tx
           .update(schema.catalogueProduct)
-          .set({ sortOrder: assignment.sortOrder, updatedByUserId: actorUserId ?? null, updatedAt: new Date() })
+          .set({
+            ...listingSortValues(row, input.familleId, input.sousCategorieSlug, assignment.sortOrder),
+            updatedByUserId: actorUserId ?? null,
+            updatedAt: new Date(),
+          })
           .where(eq(schema.catalogueProduct.id, assignment.id));
       }
     });

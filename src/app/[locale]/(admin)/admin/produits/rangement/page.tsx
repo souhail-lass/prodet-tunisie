@@ -1,10 +1,16 @@
 import { CloudOff } from 'lucide-react';
 import { listCurationGroups, type CurationFamille } from '@/features/catalogue/queries';
+import { adminCatalogueListPath, parseAdminCatalogueQuery } from '@/lib/admin-catalogue-query';
 import { RangementClient } from './rangement-client';
 
 export const dynamic = 'force-dynamic';
 
-export default async function RangementPage() {
+export default async function RangementPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const backHref = adminCatalogueListPath(parseAdminCatalogueQuery(await searchParams));
   let groups: CurationFamille[] = [];
   let error: string | null = null;
   try {
@@ -27,5 +33,5 @@ export default async function RangementPage() {
     );
   }
 
-  return <RangementClient groups={groups} />;
+  return <RangementClient groups={groups} backHref={backHref} />;
 }

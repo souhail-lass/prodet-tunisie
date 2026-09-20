@@ -12,6 +12,12 @@ import {
 } from 'drizzle-orm/pg-core';
 import { user } from './users';
 
+export type ExtraPlacement = {
+  familleSlug: string;
+  sousCategorieSlug: string;
+  sortOrder: number | null;
+};
+
 /**
  * The website catalogue. Each row is either mirrored from Swiver
  * (`source = 'swiver'`, keyed by `swiver_id`) or admin-created
@@ -48,6 +54,11 @@ export const catalogueProduct = pgTable(
     familleSlug: text('famille_slug'),
     sousCategorieSlug: text('sous_categorie_slug'),
     sortOrder: integer('sort_order'),
+    /**
+     * Additional browse listings besides the primary placement above.
+     * `[{ familleSlug, sousCategorieSlug, sortOrder }]`. Empty = one home.
+     */
+    extraPlacements: jsonb('extra_placements').$type<ExtraPlacement[]>().notNull().default(sql`'[]'::jsonb`),
     // position in the flat "Tous les produits" listing, which is a different
     // axis from sort_order: that one is a rank inside one sous-catégorie.
     catalogueRank: integer('catalogue_rank'),

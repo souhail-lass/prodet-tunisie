@@ -37,10 +37,17 @@ const sousCategorieSlugSchema = z
   .max(64)
   .regex(/^[a-z0-9-]+$/);
 
+const extraPlacementSchema = z.object({
+  familleSlug: familleIdSchema,
+  sousCategorieSlug: sousCategorieSlugSchema,
+  sortOrder: z.number().int().nullable().optional(),
+});
+
 const placementSchema = z.object({
   id: z.string().uuid(),
   familleSlug: familleIdSchema.nullable(),
   sousCategorieSlug: sousCategorieSlugSchema.nullable(),
+  extraPlacements: z.array(extraPlacementSchema).max(40).optional(),
 });
 
 const reorderSchema = z.object({
@@ -110,12 +117,24 @@ export async function setProductPlacementAction(input: unknown): Promise<Placeme
   const existing = await getAdminProduct(parsed.data.id);
   if (!existing) return { ok: false, error: 'not-found' };
 
+  const extraPlacements =
+    parsed.data.extraPlacements === undefined
+      ? undefined
+      : parsed.data.extraPlacements.map((extra) => ({
+          familleSlug: extra.familleSlug,
+          sousCategorieSlug: extra.sousCategorieSlug,
+          sortOrder: extra.sortOrder ?? null,
+        }));
   const changesFamille = (existing.familleSlug ?? null) !== parsed.data.familleSlug;
   try {
     const session = await assertRole(changesFamille ? ['owner', 'admin'] : ['owner', 'admin', 'operator']);
     await setProductPlacement(
       parsed.data.id,
-      { familleSlug: parsed.data.familleSlug, sousCategorieSlug: parsed.data.sousCategorieSlug },
+      {
+        familleSlug: parsed.data.familleSlug,
+        sousCategorieSlug: parsed.data.sousCategorieSlug,
+        ...(extraPlacements !== undefined ? { extraPlacements } : {}),
+      },
       session.appUser?.id ?? null,
     );
   } catch (error) {

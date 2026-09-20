@@ -1,23 +1,28 @@
-# Module — Curation du catalogue public (phase 1)
+# Module — Curation du catalogue public
 
-> Status: implémenté. Owner: Souhail. Last updated: 2026-09.
+> Status: implémenté (phase 1 + listings extra). Owner: Souhail. Last updated: 2026-09.
 > Décide : quels produits apparaissent dans quelle sous-catégorie, et dans quel ordre, sans déploiement.
 
 ## Ce qui est en place
 
-Quatre colonnes nullables sur `catalogue_product` (migrations `0016_catalogue_curation.sql` et
-`0017_catalogue_rank_seed.sql`) :
+Cinq colonnes de curation sur `catalogue_product` (migrations `0016_catalogue_curation.sql`,
+`0017_catalogue_rank_seed.sql`, `0018_catalogue_extra_placements.sql`) :
 
-| Colonne | Rôle | `NULL` signifie |
+| Colonne | Rôle | `NULL` / `[]` signifie |
 |---|---|---|
 | `famille_slug` | famille imposée par l'admin | le classifieur par mots-clés décide |
 | `sous_categorie_slug` | sous-catégorie imposée par l'admin | le classifieur par mots-clés décide |
-| `sort_order` | position manuelle dans la sous-catégorie | produit non rangé, tri alphabétique |
+| `sort_order` | position manuelle dans l'emplacement principal | produit non rangé, tri alphabétique |
 | `catalogue_rank` | position dans la liste plate « Tous les produits » | produit non mis en avant, tri alphabétique |
+| `extra_placements` | autres listings `[{ familleSlug, sousCategorieSlug, sortOrder }]` | le produit n'apparaît que chez lui |
 
 La nullabilité est structurante : les ~160 produits existants et les nouveautés synchronisées depuis Swiver
 continuent de se placer seuls. La curation reste partielle par construction — on range les vingt produits qui
 comptent et on laisse la traîne tranquille.
+
+Un produit a **un emplacement principal** (colonnes ci-dessus) et peut en plus apparaître dans d'autres
+sous-catégories, y compris d'une autre famille. Chaque listing extra a son propre `sort_order`. Sur une page
+famille et dans « Tous les produits », le produit n'est compté / listé qu'une fois.
 
 ## Résolution
 
@@ -55,12 +60,15 @@ leur propre sous-catégorie avec leur ordre relatif conservé. Le module en dur 
 ## Surfaces admin
 
 - **`/admin/produits/[id]`** — deux sélecteurs « Famille » et « Sous-catégorie », chacun avec une option
-  « Automatique » qui affiche ce que le classifieur choisirait.
+  « Automatique » qui affiche ce que le classifieur choisirait, plus des cases « Aussi visible dans » pour
+  les listings extra. Les filtres du catalogue (`?q=&cat=&v=`) voyagent sur Modifier / Retour / Ranger pour
+  ne pas les perdre.
 - **`/admin/produits/rangement`** — écran d'ordonnancement, une sous-catégorie à la fois. Les lignes se
   glissent (HTML5 `draggable` natif, aucune dépendance ajoutée) et se déplacent aussi aux flèches
-  haut/bas, qui restent le chemin accessible au clavier et sur tactile. Le même écran ordonne la tête de
-  « Tous les produits » (première entrée du sélecteur de famille) ; l'étoile de chaque ligne ajoute ou
-  retire un produit de cette mise en avant.
+  haut/bas, qui restent le chemin accessible au clavier et sur tactile. Un produit présent ici via un listing
+  extra est marqué « Aussi ici » ; son ordre s'écrit dans `extra_placements`, pas dans `sort_order`.
+  Le même écran ordonne la tête de « Tous les produits » (première entrée du sélecteur de famille) ; l'étoile
+  de chaque ligne ajoute ou retire un produit de cette mise en avant.
 
 ## Mutations
 
@@ -75,19 +83,20 @@ Tout passe par une server action validée par Zod, `assertRole(...)` et une lign
 
 Deux garde-fous côté serveur : changer de famille efface une sous-catégorie devenue incohérente (cascade) et
 remet `sort_order` à `NULL` (la position appartenait à la sous-catégorie d'origine, qui est réindexée de
-façon dense dans la foulée) ; un réordonnancement n'est accepté que si la liste soumise est une permutation
-exacte de la sous-catégorie, jamais une liste partielle.
+façon dense dans la foulée) ; un extra qui duplique le nouvel emplacement principal est retiré ; un
+réordonnancement n'est accepté que si la liste soumise est une permutation exacte de la sous-catégorie,
+jamais une liste partielle. Omettre `extraPlacements` dans `setProductPlacement` conserve les listings
+existants (l'écran Ranger ne touche que l'emplacement principal).
 
 La synchronisation Swiver (`syncSwiverCatalogue`) n'écrit qu'une liste explicite de champs de base : la
 curation survit aux re-syncs, comme les champs CMS.
 
-## Ce que la phase 1 ne fait pas
+## Ce que ce module ne fait pas
 
-- Un produit a exactement une place. Le multi-placement est la phase 2 (`catalogue_placement`), à ouvrir
-  quand un produit réel devra vivre dans deux sous-catégories.
 - Créer une sous-catégorie reste un déploiement : la liste vit dans `familles.ts` et ses libellés dans
   `src/messages/{fr,en}/familles.json`. C'est la phase 3 (taxonomie en base).
 - L'ordre des cartes de sous-catégories reste `displayOrder` en code.
 
 Contexte complet et options écartées : document de décision « Curation des sous-catégories du catalogue
-public », hors dépôt.
+public », hors dépôt. Le multi-placement n'utilise pas une table `catalogue_placement` : un JSONB sur la
+ligne produit suffit pour un petit nombre de listings extra, sans jointure.

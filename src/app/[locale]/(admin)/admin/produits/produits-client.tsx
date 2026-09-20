@@ -1,19 +1,32 @@
 'use client';
 
-import { useMemo, useState, useTransition } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { ArrowUpDown, Eye, EyeOff, Pencil, Plus, RefreshCw, Search, Star } from 'lucide-react';
-import { Link, useRouter } from '@/i18n/routing';
 import type { AdminProductRow } from '@/features/catalogue/queries';
+import {
+  adminCatalogueListPath,
+  localePrefixedPath,
+  parseAdminCatalogueQuery,
+  withAdminCatalogueQuery,
+  type AdminCatalogueQuery,
+} from '@/lib/admin-catalogue-query';
 import { setProductHiddenAction, syncCatalogueAction, toggleCategoryAction } from './actions';
 
 export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
+  const locale = useLocale();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const filters = parseAdminCatalogueQuery(searchParams);
   const [override, setOverride] = useState<Record<string, boolean>>({});
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('all');
-  const [visibility, setVisibility] = useState<'all' | 'visible' | 'hidden'>('all');
+  const [query, setQuery] = useState(filters.q);
   const [pending, startTransition] = useTransition();
   const [syncing, setSyncing] = useState(false);
+
+  useEffect(() => {
+    setQuery(filters.q);
+  }, [filters.q]);
 
   const isHidden = (it: AdminProductRow) => override[it.id] ?? it.hidden;
 
@@ -25,16 +38,20 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return items.filter((it) => {
-      if (category !== 'all' && (it.baseCategory ?? '') !== category) return false;
+      if (filters.cat !== 'all' && (it.baseCategory ?? '') !== filters.cat) return false;
       const hidden = override[it.id] ?? it.hidden;
-      if (visibility === 'visible' && hidden) return false;
-      if (visibility === 'hidden' && !hidden) return false;
+      if (filters.v === 'visible' && hidden) return false;
+      if (filters.v === 'hidden' && !hidden) return false;
       if (q) return it.name.toLowerCase().includes(q) || (it.sku ?? '').toLowerCase().includes(q);
       return true;
     });
-  }, [items, query, category, visibility, override]);
+  }, [items, query, filters.cat, filters.v, override]);
 
   const visibleCount = items.filter((it) => !isHidden(it)).length;
+
+  function commit(next: AdminCatalogueQuery) {
+    router.replace(localePrefixedPath(locale, adminCatalogueListPath(next)));
+  }
 
   function toggleProduct(it: AdminProductRow) {
     const next = !isHidden(it);
@@ -46,15 +63,15 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
   }
 
   function toggleCategory(hidden: boolean) {
-    if (category === 'all') return;
-    const ids = items.filter((i) => (i.baseCategory ?? '') === category).map((i) => i.id);
+    if (filters.cat === 'all') return;
+    const ids = items.filter((i) => (i.baseCategory ?? '') === filters.cat).map((i) => i.id);
     setOverride((p) => {
       const n = { ...p };
       for (const id of ids) n[id] = hidden;
       return n;
     });
     startTransition(async () => {
-      await toggleCategoryAction({ categoryLabel: category, hidden });
+      await toggleCategoryAction({ categoryLabel: filters.cat, hidden });
     });
   }
 
@@ -68,6 +85,7 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
   }
 
   const cols = '3fr 1.6fr auto auto';
+  const editQuery = { ...filters, q: query };
 
   return (
     <div className="dash">
@@ -76,31 +94,43 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
           tone="blue"
           value={items.length}
           label="Produits"
-          active={visibility === 'all'}
-          onClick={() => setVisibility('all')}
+          active={filters.v === 'all'}
+          onClick={() => commit({ ...editQuery, v: 'all' })}
         />
         <Stat
           tone="green"
           value={visibleCount}
           label="Visibles"
-          active={visibility === 'visible'}
-          onClick={() => setVisibility((v) => (v === 'visible' ? 'all' : 'visible'))}
+          active={filters.v === 'visible'}
+          onClick={() => commit({ ...editQuery, v: filters.v === 'visible' ? 'all' : 'visible' })}
         />
         <Stat
           tone="amber"
           value={items.length - visibleCount}
           label="Masqués"
-          active={visibility === 'hidden'}
-          onClick={() => setVisibility((v) => (v === 'hidden' ? 'all' : 'hidden'))}
+          active={filters.v === 'hidden'}
+          onClick={() => commit({ ...editQuery, v: filters.v === 'hidden' ? 'all' : 'hidden' })}
         />
       </div>
 
       <div className="admin-toolbar">
         <div className="admin-search">
           <Search size={16} />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Rechercher un produit ou une référence…" />
+          <input
+            value={query}
+            onChange={(e) => {
+              const q = e.target.value;
+              setQuery(q);
+              commit({ ...filters, q });
+            }}
+            placeholder="Rechercher un produit ou une référence…"
+          />
         </div>
-        <select className="admin-select" value={category} onChange={(e) => setCategory(e.target.value)}>
+        <select
+          className="admin-select"
+          value={filters.cat}
+          onChange={(e) => commit({ ...editQuery, cat: e.target.value })}
+        >
           <option value="all">Toutes les catégories ({categories.length})</option>
           {categories.map((c) => (
             <option key={c} value={c}>
@@ -108,20 +138,26 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
             </option>
           ))}
         </select>
-        {category !== 'all' ? (
+        {filters.cat !== 'all' ? (
           <button className="pds-btn pds-btn--outline pds-btn--sm" onClick={() => toggleCategory(true)}>
             <EyeOff size={14} /> <span>Masquer la catégorie</span>
           </button>
         ) : null}
-        <Link href="/admin/produits/rangement" className="pds-btn pds-btn--outline pds-btn--sm">
+        <a
+          href={localePrefixedPath(locale, withAdminCatalogueQuery('/admin/produits/rangement', editQuery))}
+          className="pds-btn pds-btn--outline pds-btn--sm"
+        >
           <ArrowUpDown size={14} /> <span>Ranger</span>
-        </Link>
+        </a>
         <button className="pds-btn pds-btn--ghost pds-btn--sm" onClick={sync} disabled={pending}>
           <RefreshCw size={14} /> <span>{syncing ? 'Synchronisation…' : 'Synchroniser'}</span>
         </button>
-        <Link href="/admin/produits/nouveau" className="pds-btn pds-btn--primary pds-btn--sm">
+        <a
+          href={localePrefixedPath(locale, withAdminCatalogueQuery('/admin/produits/nouveau', editQuery))}
+          className="pds-btn pds-btn--primary pds-btn--sm"
+        >
           <Plus size={15} /> <span>Ajouter</span>
-        </Link>
+        </a>
       </div>
 
       <div className="admin-table">
@@ -163,9 +199,12 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
                 </button>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <Link href={`/admin/produits/${it.id}`} className="pds-btn pds-btn--ghost pds-btn--sm">
+                <a
+                  href={localePrefixedPath(locale, withAdminCatalogueQuery(`/admin/produits/${it.id}`, editQuery))}
+                  className="pds-btn pds-btn--ghost pds-btn--sm"
+                >
                   <Pencil size={14} /> <span>Modifier</span>
-                </Link>
+                </a>
               </div>
             </div>
           );

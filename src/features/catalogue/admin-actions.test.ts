@@ -123,6 +123,27 @@ describe('setProductPlacementAction', () => {
     );
   });
 
+  it('forwards extra listings when the form sends them', async () => {
+    getAdminProduct.mockResolvedValue({ id: ID_A, familleSlug: 'produits-nettoyage' });
+
+    await setProductPlacementAction({
+      id: ID_A,
+      familleSlug: 'produits-nettoyage',
+      sousCategorieSlug: 'sols',
+      extraPlacements: [{ familleSlug: 'collecte-dechets', sousCategorieSlug: 'poubelles', sortOrder: 2 }],
+    });
+
+    expect(setProductPlacement).toHaveBeenCalledWith(
+      ID_A,
+      {
+        familleSlug: 'produits-nettoyage',
+        sousCategorieSlug: 'sols',
+        extraPlacements: [{ familleSlug: 'collecte-dechets', sousCategorieSlug: 'poubelles', sortOrder: 2 }],
+      },
+      'user-1',
+    );
+  });
+
   it('requires owner or admin to change the famille', async () => {
     getAdminProduct.mockResolvedValue({ id: ID_A, familleSlug: null });
 

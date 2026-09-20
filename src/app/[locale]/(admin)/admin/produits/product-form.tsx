@@ -1,9 +1,10 @@
 'use client';
 
 import { useMemo, useRef, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { ArrowLeft, ArrowUpDown, FileText, Plus, Save, Star, Trash2, Upload, X } from 'lucide-react';
 import { Button, ConfirmDialog, Input, Textarea } from '@/components/ds';
-import { Link, useRouter } from '@/i18n/routing';
 import {
   assignableSousCategorieSlugs,
   curationFamilleIds,
@@ -12,6 +13,8 @@ import {
   type FamilleId,
 } from '@/data/familles';
 import { familleLabel, sousCategorieLabel } from '@/data/famille-labels';
+import { sanitizeExtraPlacements, type ExtraPlacement } from '@/features/catalogue/placement';
+import { localePrefixedPath } from '@/lib/admin-catalogue-query';
 import type { ProductSpec } from '@/types/product';
 import {
   createProductAction,
@@ -42,10 +45,20 @@ export type ProductFormInitial = {
   /** '' = automatique (le classifieur décide). */
   familleSlug: string;
   sousCategorieSlug: string;
+  extraPlacements: ExtraPlacement[];
 };
 
-export function ProductForm({ initial }: { initial: ProductFormInitial }) {
+export function ProductForm({
+  initial,
+  listHref = '/admin/produits',
+  rangementHref = '/admin/produits/rangement',
+}: {
+  initial: ProductFormInitial;
+  listHref?: string;
+  rangementHref?: string;
+}) {
   const router = useRouter();
+  const locale = useLocale();
   const [f, setF] = useState<ProductFormInitial>({ ...initial, specs: initial.specs.length ? initial.specs : [] });
   const [pending, startTransition] = useTransition();
   const [uploading, setUploading] = useState<'sheet' | 'safety' | 'image' | null>(null);
@@ -84,16 +97,48 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
         nextFamille != null &&
         p.sousCategorieSlug !== '' &&
         assignableSousCategorieSlugs(nextFamille).includes(p.sousCategorieSlug);
-      return { ...p, familleSlug: value, sousCategorieSlug: stillValid ? p.sousCategorieSlug : '' };
+      const next = { ...p, familleSlug: value, sousCategorieSlug: stillValid ? p.sousCategorieSlug : '' };
+      const home = resolvePlacement({
+        name: next.displayName.trim() || next.name.trim(),
+        baseCategory: next.baseCategory || null,
+        familleSlug: next.familleSlug || null,
+        sousCategorieSlug: next.sousCategorieSlug || null,
+      });
+      return { ...next, extraPlacements: sanitizeExtraPlacements(next.extraPlacements, home) };
     });
   }
 
+  function toggleExtra(familleSlug: FamilleId, sousCategorieSlug: string, checked: boolean) {
+    setF((p) => {
+      const extraPlacements = checked
+        ? [...p.extraPlacements, { familleSlug, sousCategorieSlug, sortOrder: null }]
+        : p.extraPlacements.filter(
+            (extra) => extra.familleSlug !== familleSlug || extra.sousCategorieSlug !== sousCategorieSlug,
+          );
+      return { ...p, extraPlacements: sanitizeExtraPlacements(extraPlacements, placement) };
+    });
+  }
+
+  function extrasChanged() {
+    const a = sanitizeExtraPlacements(f.extraPlacements, placement);
+    const b = sanitizeExtraPlacements(initial.extraPlacements, placement);
+    const key = (extra: ExtraPlacement) => `${extra.familleSlug}/${extra.sousCategorieSlug}:${extra.sortOrder ?? ''}`;
+    return a.map(key).sort().join('|') !== b.map(key).sort().join('|');
+  }
+
   async function savePlacement(productId: string) {
-    if (f.familleSlug === initial.familleSlug && f.sousCategorieSlug === initial.sousCategorieSlug) return true;
+    if (
+      f.familleSlug === initial.familleSlug &&
+      f.sousCategorieSlug === initial.sousCategorieSlug &&
+      !extrasChanged()
+    ) {
+      return true;
+    }
     const r = await setProductPlacementAction({
       id: productId,
       familleSlug: f.familleSlug || null,
       sousCategorieSlug: f.sousCategorieSlug || null,
+      extraPlacements: sanitizeExtraPlacements(f.extraPlacements, placement),
     });
     if (!r.ok) {
       setPlacementError(
@@ -154,7 +199,7 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
       if (productId) await saveProductAction(productId, content);
       else productId = (await createProductAction(content)).id;
       if (productId && !(await savePlacement(productId))) return;
-      router.push('/admin/produits');
+      router.push(localePrefixedPath(locale, listHref));
       router.refresh();
     });
   }
@@ -164,7 +209,7 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
     setConfirmingDelete(false);
     startTransition(async () => {
       await deleteProductAction({ id: f.id! });
-      router.push('/admin/produits');
+      router.push(localePrefixedPath(locale, listHref));
       router.refresh();
     });
   }
@@ -173,9 +218,9 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
 
   return (
     <div className="dash" style={{ maxWidth: 820 }}>
-      <Link href="/admin/produits" className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <a href={localePrefixedPath(locale, listHref)} className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
         <ArrowLeft size={15} /> Retour au catalogue
-      </Link>
+      </a>
 
       {/* Identité */}
       <section className="panel">
@@ -215,9 +260,9 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
       <section className="panel">
         <div className="panel__head">
           <h2 className="panel__title">Classement sur le site</h2>
-          <Link href="/admin/produits/rangement" className="panel__link">
+          <a href={localePrefixedPath(locale, rangementHref)} className="panel__link">
             <ArrowUpDown size={15} /> Ordre des produits
-          </Link>
+          </a>
         </div>
         <p className="panel__sub">
           « Automatique » laisse le nom du produit décider — c’est ce qui place tout seul les nouveautés
@@ -251,7 +296,19 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
               className="admin-select"
               style={{ marginTop: 8, width: '100%' }}
               value={f.sousCategorieSlug}
-              onChange={(e) => set('sousCategorieSlug', e.target.value)}
+              onChange={(e) => {
+                const sousCategorieSlug = e.target.value;
+                setF((p) => {
+                  const next = { ...p, sousCategorieSlug };
+                  const home = resolvePlacement({
+                    name: next.displayName.trim() || next.name.trim(),
+                    baseCategory: next.baseCategory || null,
+                    familleSlug: next.familleSlug || null,
+                    sousCategorieSlug: next.sousCategorieSlug || null,
+                  });
+                  return { ...next, extraPlacements: sanitizeExtraPlacements(next.extraPlacements, home) };
+                });
+              }}
             >
               <option value="">
                 Automatique — {sousCategorieLabel(resolvePlacement({ name: classifiedName, baseCategory: f.baseCategory || null, familleSlug: f.familleSlug || null }).sousCategorieSlug)}
@@ -267,6 +324,73 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
         <p style={{ marginTop: 12, fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
           Sur le site : {familleLabel(placement.familleId)} › {sousCategorieLabel(placement.sousCategorieSlug)}
         </p>
+        <div style={{ marginTop: 18 }}>
+          <div style={labelStyle}>Aussi visible dans</div>
+          <p className="panel__sub" style={{ marginTop: 6 }}>
+            Un produit a un emplacement principal ci-dessus. Cochez d’autres sous-catégories pour qu’il
+            apparaisse aussi là — y compris dans une autre famille.
+          </p>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: 16,
+              marginTop: 12,
+            }}
+          >
+            {curationFamilleIds.map((familleId) => (
+              <fieldset key={familleId} style={{ border: 0, margin: 0, padding: 0, minWidth: 0 }}>
+                <legend
+                  style={{
+                    ...labelStyle,
+                    padding: 0,
+                    marginBottom: 8,
+                    color: 'var(--text-secondary)',
+                    textTransform: 'none',
+                    letterSpacing: 0,
+                  }}
+                >
+                  {familleLabel(familleId)}
+                </legend>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {assignableSousCategorieSlugs(familleId).map((slug) => {
+                    const isHome =
+                      placement.familleId === familleId && placement.sousCategorieSlug === slug;
+                    const checked =
+                      isHome ||
+                      f.extraPlacements.some(
+                        (extra) => extra.familleSlug === familleId && extra.sousCategorieSlug === slug,
+                      );
+                    return (
+                      <label
+                        key={slug}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: 8,
+                          fontSize: 'var(--text-sm)',
+                          color: isHome ? 'var(--text-tertiary)' : 'var(--text-primary)',
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          disabled={isHome}
+                          onChange={(e) => toggleExtra(familleId, slug, e.target.checked)}
+                          style={{ marginTop: 2 }}
+                        />
+                        <span>
+                          {sousCategorieLabel(slug)}
+                          {isHome ? ' — emplacement principal' : ''}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Contenu */}

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { CloudOff } from 'lucide-react';
 import { listAdminProducts } from '@/features/catalogue/queries';
 import { ProduitsClient } from './produits-client';
@@ -27,5 +28,9 @@ export default async function ProduitsPage() {
     );
   }
 
-  return <ProduitsClient items={items} />;
+  return (
+    <Suspense fallback={null}>
+      <ProduitsClient items={items} />
+    </Suspense>
+  );
 }

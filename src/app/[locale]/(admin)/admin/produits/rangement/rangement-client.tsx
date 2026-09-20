@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import { ArrowLeft, ChevronDown, ChevronUp, EyeOff, GripVertical, RotateCcw, Save, Star, StarOff } from 'lucide-react';
-import { Link, useRouter } from '@/i18n/routing';
 import { familleLabel, sousCategorieLabel } from '@/data/famille-labels';
 import { TOUS_LES_PRODUITS, type FamilleId } from '@/data/familles';
 import type { CurationFamille, CurationProduct } from '@/features/catalogue/queries';
+import { localePrefixedPath } from '@/lib/admin-catalogue-query';
 import { reorderCatalogueRankAction, reorderSousCategorieAction, setCataloguePinAction } from '../actions';
 
 function move<T>(list: readonly T[], from: number, to: number): T[] {
@@ -19,8 +21,15 @@ function move<T>(list: readonly T[], from: number, to: number): T[] {
 const sameOrder = (a: readonly CurationProduct[], b: readonly string[]) =>
   a.length === b.length && a.every((item, i) => item.id === b[i]);
 
-export function RangementClient({ groups }: { groups: CurationFamille[] }) {
+export function RangementClient({
+  groups,
+  backHref = '/admin/produits',
+}: {
+  groups: CurationFamille[];
+  backHref?: string;
+}) {
   const router = useRouter();
+  const locale = useLocale();
   const populated = groups.filter((g) => g.sousCategories.length > 0);
   const firstFamille = populated[0];
   const [familleId, setFamilleId] = useState<FamilleId>(firstFamille?.familleId ?? 'produits-nettoyage');
@@ -107,9 +116,9 @@ export function RangementClient({ groups }: { groups: CurationFamille[] }) {
 
   return (
     <div className="dash">
-      <Link href="/admin/produits" className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <a href={localePrefixedPath(locale, backHref)} className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
         <ArrowLeft size={15} /> Retour au catalogue
-      </Link>
+      </a>
 
       <section className="panel">
         <div className="panel__head">
@@ -216,7 +225,13 @@ export function RangementClient({ groups }: { groups: CurationFamille[] }) {
               </div>
             </div>
             <div className="admin-cell-muted admin-hide-sm">
-              {isAllProducts ? 'Mis en avant' : item.origin === 'manual' ? 'Manuel' : 'Automatique'}
+              {isAllProducts
+                ? 'Mis en avant'
+                : item.origin === 'manual'
+                  ? 'Manuel'
+                  : item.origin === 'extra'
+                    ? 'Aussi ici'
+                    : 'Automatique'}
             </div>
             <div className="admin-order-actions">
               <button

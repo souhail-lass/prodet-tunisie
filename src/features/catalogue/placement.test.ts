@@ -20,6 +20,7 @@ function row(partial: Partial<CurationRow> & { id: string; name: string }): Cura
     sousCategorieSlug: null,
     sortOrder: null,
     catalogueRank: null,
+    extraPlacements: [],
     ...partial,
   };
 }
@@ -81,6 +82,31 @@ describe('rowsInSousCategorie', () => {
     expect(
       rowsInSousCategorie(rows, 'produits-nettoyage', 'sanitaires-desinfection').map((r) => r.id),
     ).toEqual([]);
+  });
+
+  it('also lists a product that was added as an extra listing', () => {
+    const extra = row({
+      id: 'guest',
+      name: 'POUBELLE PM',
+      extraPlacements: [{ familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 0 }],
+    });
+    expect(rowsInSousCategorie([...rows, extra], 'produits-nettoyage', 'sols').map((r) => r.id)).toEqual([
+      'guest',
+      'pinned',
+      'moved-in',
+      'auto-2',
+      'auto-1',
+    ]);
+    expect(rowsInSousCategorie([extra], 'collecte-dechets', 'poubelles').map((r) => r.id)).toEqual(['guest']);
+  });
+
+  it('ignores an extra that duplicates the primary home', () => {
+    const dup = row({
+      id: 'dup',
+      name: 'PROFON DECAPANT BID 05KG',
+      extraPlacements: [{ familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 0 }],
+    });
+    expect(rowsInSousCategorie([dup], 'produits-nettoyage', 'sols')).toHaveLength(1);
   });
 });
 
@@ -227,5 +253,32 @@ describe('planPlacementChange', () => {
     expect(plan.to.familleId).toBe('produits-nettoyage');
     expect(plan.moved).toBe(true);
     expect(plan.sortOrder).toBeNull();
+  });
+
+  it('drops extras that would duplicate the new home', () => {
+    const withExtra = row({
+      id: 'p3',
+      name: 'JAVEL PRODET BID 5KG',
+      extraPlacements: [{ familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 1 }],
+    });
+    const plan = planPlacementChange(withExtra, {
+      familleSlug: 'produits-nettoyage',
+      sousCategorieSlug: 'sols',
+      extraPlacements: withExtra.extraPlacements,
+    });
+    expect(plan.extraPlacements).toEqual([]);
+  });
+
+  it('keeps extra listings when the payload omits them (rangement only moves home)', () => {
+    const withExtra = row({
+      id: 'p4',
+      name: 'POUBELLE PM',
+      extraPlacements: [{ familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 3 }],
+    });
+    const plan = planPlacementChange(withExtra, {
+      familleSlug: 'collecte-dechets',
+      sousCategorieSlug: 'poubelles',
+    });
+    expect(plan.extraPlacements).toEqual(withExtra.extraPlacements);
   });
 });
