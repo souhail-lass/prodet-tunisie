@@ -2,14 +2,17 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowRight, FileText } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { getSectorBySlug, listProducts, listSectors } from '@/data/queries';
-import { localizeProducts, localizeSector } from '@/data/i18n/content';
+import { getSectorBySlug, listSectors } from '@/data/queries';
+import { localizeSector } from '@/data/i18n/content';
 import { isLocale, Link } from '@/i18n/routing';
 import { QuoteQuantityControl } from '@/components/catalogue/ProductCard';
 import { sectorZones } from '@/components/secteurs/sector-solutions';
+import { getVisibleCatalogue } from '@/features/catalogue/queries';
+import { resolveZoneProducts } from '@/lib/sector-catalogue';
 import type { Product } from '@/types/product';
 
-// Sector pages are built from static fixture data — prerender them all.
+export const revalidate = 300;
+
 export function generateStaticParams() {
   return listSectors().map((sector) => ({ slug: sector.slug }));
 }
@@ -28,16 +31,19 @@ export default async function SectorPage({
   if (!sectorBase) return notFound();
   const sector = localizeSector(sectorBase, locale);
 
-  // Only Prodet **solutions** (manufactured cleaning products) — no hygiene material.
-  const solutions = localizeProducts(listProducts({ category: 'manufactured' }), locale);
-  const bySlug = new Map(solutions.map((p) => [p.slug, p]));
+  // Zone keys are brand stems (`provitre`, `sanihand`). Resolve them against
+  // the live catalogue so cards use real names, photos, and PDP slugs.
+  let catalogue: Product[] = [];
+  try {
+    catalogue = await getVisibleCatalogue();
+  } catch {
+    catalogue = [];
+  }
 
   const zones = (sectorZones[sector.id] ?? [])
     .map((zone) => ({
       ...zone,
-      products: zone.productSlugs
-        .map((s) => bySlug.get(s))
-        .filter((p): p is Product => Boolean(p)),
+      products: resolveZoneProducts(catalogue, zone.productSlugs),
     }))
     .filter((zone) => zone.products.length > 0);
 
@@ -143,13 +149,18 @@ function SolutionCard({ product }: { product: Product }) {
   return (
     <article className="solution-card">
       <Link href={`/catalogue/${product.slug}`} className="solution-card__media">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(max-width: 700px) 40vw, 180px"
-          style={{ objectFit: 'contain' }}
-        />
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 700px) 40vw, 180px"
+            style={{ objectFit: 'contain' }}
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src="/images/logo/prodet-logo.svg" alt="" />
+        )}
       </Link>
       <Link href={`/catalogue/${product.slug}`} className="solution-card__body">
         <h4 className="solution-card__name">{product.name}</h4>

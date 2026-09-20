@@ -6,9 +6,9 @@ import type { SectorId } from '@/types/sector';
  * to the Prodet **solutions** (manufactured cleaning products only, no hygiene
  * material) that answer it.
  *
- * `productSlugs` reference manufactured products in `src/data/products.ts`;
- * the page resolves them, keeps only those that exist and are manufactured,
- * and silently drops the rest — so editing the catalogue never breaks a page.
+ * `productSlugs` are brand stems (`provitre`, `sanihand`), not live URL slugs.
+ * The sector page resolves them against the Swiver catalogue (see
+ * `src/lib/sector-catalogue.ts`) and drops keys with no live match.
  */
 export type SectorZone = {
   /** Two-digit step number shown in the layout. */
