@@ -235,3 +235,65 @@ export function classifySousCategorie(familleId: FamilleId, name: string): strin
   }
   return `${familleId}-autres`;
 }
+
+// --- Curation overrides (admin) ---
+
+export function isFamilleId(value: string | null | undefined): value is FamilleId {
+  return value != null && familleIds.includes(value as FamilleId);
+}
+
+/** Slug of the leftover bucket a famille falls back to when no rule matches. */
+export function leftoverSousCategorieSlug(familleId: FamilleId): string {
+  return familleId === 'produits-nettoyage' ? AUTRES_NETTOYAGE : `${familleId}-autres`;
+}
+
+/** Slugs an admin may assign inside a famille: its sous-catégories + its leftover bucket. */
+export function assignableSousCategorieSlugs(familleId: FamilleId): string[] {
+  return [...getSousCategoriesForFamille(familleId).map((s) => s.slug), leftoverSousCategorieSlug(familleId)];
+}
+
+export function isSousCategorieOfFamille(familleId: FamilleId, slug: string | null | undefined): boolean {
+  return slug != null && assignableSousCategorieSlugs(familleId).includes(slug);
+}
+
+export type PlacementOrigin = 'manual' | 'auto';
+
+export type PlacementInput = {
+  /** Name the classifier reads — the displayed name (display_name || name). */
+  name: string;
+  baseCategory?: string | null;
+  familleSlug?: string | null;
+  sousCategorieSlug?: string | null;
+};
+
+export type ResolvedPlacement = {
+  familleId: FamilleId;
+  sousCategorieSlug: string;
+  familleOrigin: PlacementOrigin;
+  sousCategorieOrigin: PlacementOrigin;
+};
+
+/**
+ * Where a product sits in the browse taxonomy. The admin override wins; the
+ * keyword classifier is the fallback for everything left uncurated.
+ *
+ * A stored sous-catégorie that does not belong to the resolved famille is
+ * ignored rather than trusted — the famille can be moved (or the taxonomy
+ * edited) after the sous-catégorie was chosen, and a dangling slug would
+ * otherwise create a sous-catégorie page nobody can reach.
+ */
+export function resolvePlacement(input: PlacementInput): ResolvedPlacement {
+  const manualFamille = isFamilleId(input.familleSlug) ? input.familleSlug : null;
+  const familleId = manualFamille ?? classifyFamille(input.name, input.baseCategory);
+
+  const manualSousCat = isSousCategorieOfFamille(familleId, input.sousCategorieSlug)
+    ? (input.sousCategorieSlug as string)
+    : null;
+
+  return {
+    familleId,
+    sousCategorieSlug: manualSousCat ?? classifySousCategorie(familleId, input.name),
+    familleOrigin: manualFamille ? 'manual' : 'auto',
+    sousCategorieOrigin: manualSousCat ? 'manual' : 'auto',
+  };
+}

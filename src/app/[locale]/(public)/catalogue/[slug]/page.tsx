@@ -21,8 +21,11 @@ import {
   type PublicOfferSectionId,
 } from '@/data/public-offers';
 import { getUseCaseById } from '@/data/queries';
-import { classifyFamille, classifySousCategorie } from '@/data/familles';
-import { getCatalogueProductBySlug, getVisibleCatalogue } from '@/features/catalogue/queries';
+import {
+  getCatalogueProductBySlug,
+  getRelatedCatalogue,
+  getVisibleCatalogue,
+} from '@/features/catalogue/queries';
 import { localizeUseCase } from '@/data/i18n/content';
 import type { Product } from '@/data/types';
 import type { CatalogueCardProduct } from '@/types/product';
@@ -91,18 +94,9 @@ export default async function ProductDetailPage({
   const product = await getCatalogueProductBySlug(slug);
   if (!product) notFound();
 
-  // Related = same famille, with same sous-catégorie surfaced first. Live DB
-  // products carry no useCases, so the family/gamme is derived from the name.
-  const famille = classifyFamille(product.name, product.categoryLabel);
-  const sousCat = classifySousCategorie(famille, product.name);
-  const related = (await getVisibleCatalogue())
-    .filter((p) => p.slug !== product.slug && classifyFamille(p.name, p.categoryLabel) === famille)
-    .sort(
-      (a, b) =>
-        Number(classifySousCategorie(famille, b.name) === sousCat) -
-        Number(classifySousCategorie(famille, a.name) === sousCat),
-    )
-    .slice(0, 4);
+  // Related = same famille, with same sous-catégorie surfaced first, following
+  // the admin placement when there is one and the keyword classifier otherwise.
+  const related = await getRelatedCatalogue(slug, 4);
   const t = await getTranslations({ locale, namespace: 'catalogue' });
 
   return (
