@@ -22,6 +22,8 @@ export default function NewProductPage() {
         imageUrl: '',
         hidden: false,
         featured: false,
+        familleSlug: '',
+        sousCategorieSlug: '',
       }}
     />
   );

@@ -17,6 +17,7 @@ const NAV: { href: string; label: string; short: string; icon: LucideIcon }[] = 
 
 const TITLES: { match: (p: string) => boolean; title: string; subtitle: string }[] = [
   { match: (p) => p.startsWith('/admin/overview'), title: 'Vue d’ensemble', subtitle: 'Ce qui demande votre attention aujourd’hui.' },
+  { match: (p) => p.startsWith('/admin/produits/rangement'), title: 'Ordre des produits', subtitle: 'Rangez chaque sous-catégorie dans l’ordre où vos clients doivent la voir.' },
   { match: (p) => p.startsWith('/admin/catalogue-swiver'), title: 'Catalogue produits', subtitle: 'Gérez les produits synchronisés depuis Swiver — masquez ce que vous ne vendez pas.' },
   { match: (p) => p.startsWith('/admin/clients'), title: 'Clients', subtitle: 'Vos clients du portail, leurs connexions et leurs accès.' },
   { match: (p) => p.startsWith('/admin/demandes-acces'), title: 'Demandes d’accès', subtitle: 'Sociétés qui demandent un accès au portail client.' },

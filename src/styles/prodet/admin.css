@@ -46,6 +46,14 @@
 
 .admin-namecell { display: flex; align-items: center; gap: 12px; min-width: 0; }
 
+/* ---------- ordering screen (drag or arrows) ---------- */
+.admin-order-row { cursor: grab; user-select: none; }
+.admin-order-row:active { cursor: grabbing; }
+.admin-order-row.is-dragging { background: var(--prodet-blue-tint); opacity: 0.85; }
+.admin-order-pos { display: inline-flex; align-items: center; gap: 8px; color: var(--text-tertiary); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.admin-order-actions { display: inline-flex; gap: 6px; justify-content: flex-end; }
+.admin-order-actions .admin-toggle { padding: 6px 9px; }
+
 /* ---------- detail layout (demandes portail) ---------- */
 .admin-detail { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
 .admin-detail__main { display: flex; flex-direction: column; gap: 20px; min-width: 0; }

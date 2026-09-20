@@ -1,11 +1,25 @@
 'use client';
 
-import { useRef, useState, useTransition } from 'react';
-import { ArrowLeft, FileText, Plus, Save, Star, Trash2, Upload, X } from 'lucide-react';
+import { useMemo, useRef, useState, useTransition } from 'react';
+import { ArrowLeft, ArrowUpDown, FileText, Plus, Save, Star, Trash2, Upload, X } from 'lucide-react';
 import { Button, ConfirmDialog, Input, Textarea } from '@/components/ds';
 import { Link, useRouter } from '@/i18n/routing';
+import {
+  assignableSousCategorieSlugs,
+  familleIds,
+  isFamilleId,
+  resolvePlacement,
+  type FamilleId,
+} from '@/data/familles';
+import { familleLabel, sousCategorieLabel } from '@/data/famille-labels';
 import type { ProductSpec } from '@/types/product';
-import { createProductAction, deleteProductAction, saveProductAction, uploadAssetAction } from './actions';
+import {
+  createProductAction,
+  deleteProductAction,
+  saveProductAction,
+  setProductPlacementAction,
+  uploadAssetAction,
+} from './actions';
 
 export type ProductFormInitial = {
   id?: string;
@@ -25,6 +39,9 @@ export type ProductFormInitial = {
   imageUrl: string;
   hidden: boolean;
   featured: boolean;
+  /** '' = automatique (le classifieur décide). */
+  familleSlug: string;
+  sousCategorieSlug: string;
 };
 
 export function ProductForm({ initial }: { initial: ProductFormInitial }) {
@@ -33,12 +50,61 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
   const [pending, startTransition] = useTransition();
   const [uploading, setUploading] = useState<'sheet' | 'safety' | 'image' | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [placementError, setPlacementError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const sheetInput = useRef<HTMLInputElement>(null);
   const safetyInput = useRef<HTMLInputElement>(null);
   const imageInput = useRef<HTMLInputElement>(null);
 
   const set = <K extends keyof ProductFormInitial>(k: K, v: ProductFormInitial[K]) => setF((p) => ({ ...p, [k]: v }));
+
+  const classifiedName = f.displayName.trim() || f.name.trim();
+  const auto = useMemo(
+    () => resolvePlacement({ name: classifiedName, baseCategory: f.baseCategory || null }),
+    [classifiedName, f.baseCategory],
+  );
+  const placement = useMemo(
+    () =>
+      resolvePlacement({
+        name: classifiedName,
+        baseCategory: f.baseCategory || null,
+        familleSlug: f.familleSlug || null,
+        sousCategorieSlug: f.sousCategorieSlug || null,
+      }),
+    [classifiedName, f.baseCategory, f.familleSlug, f.sousCategorieSlug],
+  );
+  const sousCategorieOptions = assignableSousCategorieSlugs(placement.familleId);
+
+  // Changing the famille invalidates a sous-catégorie that belongs elsewhere;
+  // the server cascades the same way, this only keeps the form honest.
+  function pickFamille(value: string) {
+    const nextFamille: FamilleId | null = isFamilleId(value) ? value : null;
+    setF((p) => {
+      const stillValid =
+        nextFamille != null &&
+        p.sousCategorieSlug !== '' &&
+        assignableSousCategorieSlugs(nextFamille).includes(p.sousCategorieSlug);
+      return { ...p, familleSlug: value, sousCategorieSlug: stillValid ? p.sousCategorieSlug : '' };
+    });
+  }
+
+  async function savePlacement(productId: string) {
+    if (f.familleSlug === initial.familleSlug && f.sousCategorieSlug === initial.sousCategorieSlug) return true;
+    const r = await setProductPlacementAction({
+      id: productId,
+      familleSlug: f.familleSlug || null,
+      sousCategorieSlug: f.sousCategorieSlug || null,
+    });
+    if (!r.ok) {
+      setPlacementError(
+        r.error === 'forbidden'
+          ? 'Changement de famille refusé : rôle propriétaire ou admin requis.'
+          : 'Le classement n’a pas pu être enregistré.',
+      );
+      return false;
+    }
+    return true;
+  }
 
   async function upload(file: File, kind: 'sheet' | 'safety' | 'image') {
     const MAX = 10 * 1024 * 1024;
@@ -82,9 +148,12 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
       featured: f.featured,
       ...(f.isCustom ? { name: f.name.trim() || 'Produit', sku: f.sku.trim() || null, baseCategory: f.baseCategory.trim() || null } : {}),
     };
+    setPlacementError(null);
     startTransition(async () => {
-      if (f.id) await saveProductAction(f.id, content);
-      else await createProductAction(content);
+      let productId = f.id;
+      if (productId) await saveProductAction(productId, content);
+      else productId = (await createProductAction(content)).id;
+      if (productId && !(await savePlacement(productId))) return;
       router.push('/admin/produits');
       router.refresh();
     });
@@ -140,6 +209,64 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
             <Star size={13} /> {f.featured ? 'En vedette' : 'Mettre en vedette'}
           </button>
         </div>
+      </section>
+
+      {/* Classement */}
+      <section className="panel">
+        <div className="panel__head">
+          <h2 className="panel__title">Classement sur le site</h2>
+          <Link href="/admin/produits/rangement" className="panel__link">
+            <ArrowUpDown size={15} /> Ordre des produits
+          </Link>
+        </div>
+        <p className="panel__sub">
+          « Automatique » laisse le nom du produit décider — c’est ce qui place tout seul les nouveautés
+          synchronisées depuis Swiver. Choisissez une valeur pour figer le classement.
+        </p>
+        {placementError ? (
+          <p style={{ marginTop: 10, fontSize: 'var(--text-sm)', color: 'var(--color-danger)', fontWeight: 'var(--fw-medium)' }}>
+            {placementError}
+          </p>
+        ) : null}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginTop: 14 }}>
+          <div>
+            <div style={labelStyle}>Famille</div>
+            <select
+              className="admin-select"
+              style={{ marginTop: 8, width: '100%' }}
+              value={f.familleSlug}
+              onChange={(e) => pickFamille(e.target.value)}
+            >
+              <option value="">Automatique — {familleLabel(auto.familleId)}</option>
+              {familleIds.map((id) => (
+                <option key={id} value={id}>
+                  {familleLabel(id)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <div style={labelStyle}>Sous-catégorie</div>
+            <select
+              className="admin-select"
+              style={{ marginTop: 8, width: '100%' }}
+              value={f.sousCategorieSlug}
+              onChange={(e) => set('sousCategorieSlug', e.target.value)}
+            >
+              <option value="">
+                Automatique — {sousCategorieLabel(resolvePlacement({ name: classifiedName, baseCategory: f.baseCategory || null, familleSlug: f.familleSlug || null }).sousCategorieSlug)}
+              </option>
+              {sousCategorieOptions.map((slug) => (
+                <option key={slug} value={slug}>
+                  {sousCategorieLabel(slug)}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <p style={{ marginTop: 12, fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
+          Sur le site : {familleLabel(placement.familleId)} › {sousCategorieLabel(placement.sousCategorieSlug)}
+        </p>
       </section>
 
       {/* Contenu */}
