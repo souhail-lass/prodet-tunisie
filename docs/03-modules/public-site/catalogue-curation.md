@@ -5,13 +5,15 @@
 
 ## Ce qui est en place
 
-Trois colonnes nullables sur `catalogue_product` (migration `0016_catalogue_curation.sql`) :
+Quatre colonnes nullables sur `catalogue_product` (migrations `0016_catalogue_curation.sql` et
+`0017_catalogue_rank_seed.sql`) :
 
 | Colonne | Rôle | `NULL` signifie |
 |---|---|---|
 | `famille_slug` | famille imposée par l'admin | le classifieur par mots-clés décide |
 | `sous_categorie_slug` | sous-catégorie imposée par l'admin | le classifieur par mots-clés décide |
 | `sort_order` | position manuelle dans la sous-catégorie | produit non rangé, tri alphabétique |
+| `catalogue_rank` | position dans la liste plate « Tous les produits » | produit non mis en avant, tri alphabétique |
 
 La nullabilité est structurante : les ~160 produits existants et les nouveautés synchronisées depuis Swiver
 continuent de se placer seuls. La curation reste partielle par construction — on range les vingt produits qui
@@ -33,13 +35,32 @@ Les compteurs des cartes famille et sous-catégorie, les pages de browse, la rec
 « à découvrir aussi » de la fiche produit passent tous par la même résolution : une carte n'annonce jamais un
 nombre que sa page ne liste pas.
 
+## Pourquoi deux axes d'ordre
+
+`sort_order` est un rang **dans une sous-catégorie** : ses valeurs se répètent d'une sous-catégorie à
+l'autre, donc elles ne peuvent pas ordonner « Tous les produits », qui est une liste plate de tout le
+catalogue. Partager la même colonne entre les deux couplerait deux surfaces sans rapport : réordonner
+« Nettoyage des sols » remonterait silencieusement ces produits en tête de la liste globale — exactement
+l'objection faite à la réutilisation de `featured` pour le rangement.
+
+`catalogue_rank` est donc l'axe global, et il ne concerne que la **tête** de la liste : les produits mis en
+avant d'abord, dans l'ordre choisi, tout le reste par ordre alphabétique derrière. Un produit synchronisé
+depuis Swiver arrive donc au milieu de l'alphabet, pas à la fin d'une liste figée.
+
+Le classement best-sellers (nombre de commandes distinctes) qui vivait en dur dans
+`src/data/catalogue-pin-order.ts` a été repris par la migration `0017` : le même entier alimente les deux
+colonnes, ce qui place les 15 best-sellers en tête de « Tous les produits » dans l'ordre exact, et en tête de
+leur propre sous-catégorie avec leur ordre relatif conservé. Le module en dur est supprimé.
+
 ## Surfaces admin
 
 - **`/admin/produits/[id]`** — deux sélecteurs « Famille » et « Sous-catégorie », chacun avec une option
   « Automatique » qui affiche ce que le classifieur choisirait.
 - **`/admin/produits/rangement`** — écran d'ordonnancement, une sous-catégorie à la fois. Les lignes se
   glissent (HTML5 `draggable` natif, aucune dépendance ajoutée) et se déplacent aussi aux flèches
-  haut/bas, qui restent le chemin accessible au clavier et sur tactile.
+  haut/bas, qui restent le chemin accessible au clavier et sur tactile. Le même écran ordonne la tête de
+  « Tous les produits » (première entrée du sélecteur de famille) ; l'étoile de chaque ligne ajoute ou
+  retire un produit de cette mise en avant.
 
 ## Mutations
 
@@ -49,6 +70,8 @@ Tout passe par une server action validée par Zod, `assertRole(...)` et une lign
 |---|---|---|
 | `setProductPlacementAction` | `owner`/`admin` si la famille change, sinon + `operator` | `catalogue_product.placement_changed`, `diff = { from, to }` |
 | `reorderSousCategorieAction` | `owner`/`admin`/`operator` | `catalogue_product.reordered`, `entity_id = null`, `diff = { before, after }` |
+| `reorderCatalogueRankAction` | `owner`/`admin`/`operator` | `catalogue_product.rank_reordered`, `entity_id = null`, `diff = { before, after }` |
+| `setCataloguePinAction` | `owner`/`admin`/`operator` | `catalogue_product.pinned` / `.unpinned` |
 
 Deux garde-fous côté serveur : changer de famille efface une sous-catégorie devenue incohérente (cascade) et
 remet `sort_order` à `NULL` (la position appartenait à la sous-catégorie d'origine, qui est réindexée de
