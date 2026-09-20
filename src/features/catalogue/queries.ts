@@ -11,6 +11,7 @@ import {
   type ResolvedPlacement,
 } from '@/data/familles';
 import { resolveResellImage } from '@/data/resell-images';
+import { pickHomepagePopular } from '@/data/homepage-popular';
 import {
   assignUniqueProductSlugs,
   findRowForProductSlug,
@@ -330,19 +331,7 @@ export async function getCatalogueProductBySlug(slug: string): Promise<Product |
 
 export async function getFeaturedCatalogue(limit = 4): Promise<Product[]> {
   const rows = await getCachedCatalogueRows();
-  const hidden = new Set(rows.filter((r) => r.hidden).map((r) => r.id));
-  const visible = mapCatalogueRows(rows).filter((p) => !hidden.has(p.id));
-  const featured = visible.filter((p) => p.featured);
-  if (featured.length >= limit) return featured.slice(0, limit);
-
-  // Fall back: fill with other visible products (those with an image first).
-  const ranked = [...visible].sort((a, b) => (b.image ? 1 : 0) - (a.image ? 1 : 0));
-  const seen = new Set(featured.map((p) => p.id));
-  for (const p of ranked) {
-    if (featured.length >= limit) break;
-    if (!seen.has(p.id)) featured.push(p);
-  }
-  return featured.slice(0, limit);
+  return mapSelectedRows(rows, pickHomepagePopular(rows, limit));
 }
 
 /** All rows for the admin manager (incl. hidden). */
