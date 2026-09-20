@@ -1,13 +1,17 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { assertRole } from '@/features/admin/auth';
+import { z } from 'zod';
+import { ForbiddenAdminError, assertRole } from '@/features/admin/auth';
+import { familleIds, type FamilleId } from '@/data/familles';
 import {
   createCustomProduct,
   deleteCustomProduct,
+  reorderSousCategorie,
   saveProductContent,
   setCategoryHidden,
   setProductHidden,
+  setProductPlacement,
   type ProductContent,
 } from '@/features/catalogue/mutations';
 import { CATALOGUE_CACHE_TAG, getAdminProduct } from '@/features/catalogue/queries';
@@ -19,8 +23,30 @@ function revalidate() {
   // page built from it (home, /catalogue, /catalogue/[slug]) for regeneration.
   revalidateTag(CATALOGUE_CACHE_TAG);
   revalidatePath('/[locale]/admin/produits', 'page');
+  revalidatePath('/[locale]/admin/produits/rangement', 'page');
   revalidatePath('/[locale]/catalogue', 'page');
 }
+
+const familleIdSchema = z.enum(familleIds as unknown as [FamilleId, ...FamilleId[]]);
+const sousCategorieSlugSchema = z
+  .string()
+  .min(1)
+  .max(64)
+  .regex(/^[a-z0-9-]+$/);
+
+const placementSchema = z.object({
+  id: z.string().uuid(),
+  familleSlug: familleIdSchema.nullable(),
+  sousCategorieSlug: sousCategorieSlugSchema.nullable(),
+});
+
+const reorderSchema = z.object({
+  familleSlug: familleIdSchema,
+  sousCategorieSlug: sousCategorieSlugSchema,
+  orderedIds: z.array(z.string().uuid()).min(1).max(1000),
+});
+
+export type PlacementActionResult = { ok: true } | { ok: false; error: string };
 
 export async function saveProductAction(id: string, content: ProductContent): Promise<{ ok: boolean }> {
   const session = await assertRole(['owner', 'admin', 'operator']);
@@ -57,6 +83,54 @@ export async function deleteProductAction(input: { id: string }): Promise<{ ok: 
   const ok = await deleteCustomProduct(input.id, session.appUser?.id ?? null);
   revalidate();
   return { ok };
+}
+
+/**
+ * Move a product in the browse taxonomy. Changing the famille is the wider
+ * blast radius (it empties and fills sous-catégorie cards), so it keeps the
+ * owner/admin bar the other structural actions already use; picking a
+ * sous-catégorie inside the same famille stays open to operators.
+ */
+export async function setProductPlacementAction(input: unknown): Promise<PlacementActionResult> {
+  const parsed = placementSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'invalid' };
+
+  const existing = await getAdminProduct(parsed.data.id);
+  if (!existing) return { ok: false, error: 'not-found' };
+
+  const changesFamille = (existing.familleSlug ?? null) !== parsed.data.familleSlug;
+  try {
+    const session = await assertRole(changesFamille ? ['owner', 'admin'] : ['owner', 'admin', 'operator']);
+    await setProductPlacement(
+      parsed.data.id,
+      { familleSlug: parsed.data.familleSlug, sousCategorieSlug: parsed.data.sousCategorieSlug },
+      session.appUser?.id ?? null,
+    );
+  } catch (error) {
+    if (error instanceof ForbiddenAdminError) return { ok: false, error: 'forbidden' };
+    throw error;
+  }
+  revalidate();
+  return { ok: true };
+}
+
+/** Persist a dragged/reordered sous-catégorie as one dense sequence. */
+export async function reorderSousCategorieAction(input: unknown): Promise<PlacementActionResult> {
+  const parsed = reorderSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'invalid' };
+
+  const session = await assertRole(['owner', 'admin', 'operator']);
+  const result = await reorderSousCategorie(
+    {
+      familleId: parsed.data.familleSlug,
+      sousCategorieSlug: parsed.data.sousCategorieSlug,
+      orderedIds: parsed.data.orderedIds,
+    },
+    session.appUser?.id ?? null,
+  );
+  if (!result.ok) return { ok: false, error: result.error };
+  revalidate();
+  return { ok: true };
 }
 
 export async function syncCatalogueAction(): Promise<{ ok: boolean; synced?: number }> {
