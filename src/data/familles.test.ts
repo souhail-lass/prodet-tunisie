@@ -5,8 +5,12 @@ import {
   classifyGamme,
   classifySousCategorie,
   familleIds,
+  curationFamilleIds,
+  getSousCategoriesForFamille,
   leftoverSousCategorieSlug,
+  produitPath,
   resolvePlacement,
+  TOUS_LES_PRODUITS,
 } from './familles';
 
 describe('classifyFamille', () => {
@@ -126,5 +130,36 @@ describe('resolvePlacement', () => {
     });
     expect(placement.sousCategorieSlug).toBe('papier-epi-autres');
     expect(placement.sousCategorieOrigin).toBe('manual');
+  });
+
+  it('refuses "Tous les produits" as a placement target', () => {
+    expect(curationFamilleIds).not.toContain(TOUS_LES_PRODUITS);
+    const placement = resolvePlacement({ name, familleSlug: TOUS_LES_PRODUITS });
+    expect(placement.familleId).toBe(classifyFamille(name));
+    expect(placement.familleOrigin).toBe('auto');
+  });
+});
+
+describe('tous-les-produits', () => {
+  it('is the first browse category, not a sous-catégorie', () => {
+    expect(familleIds[0]).toBe(TOUS_LES_PRODUITS);
+    expect(getSousCategoriesForFamille('produits-nettoyage').map((s) => s.slug)).not.toContain(
+      TOUS_LES_PRODUITS,
+    );
+  });
+
+  it('is a listing, not a classified bucket', () => {
+    expect(classifyFamille('SOLITAIRE VAISSELLE CITRON 5L')).not.toBe(TOUS_LES_PRODUITS);
+    expect(classifyFamille('SAC POUBELLE NOIR GM 90*120 35GR 200P')).not.toBe(TOUS_LES_PRODUITS);
+  });
+});
+
+describe('produitPath', () => {
+  it('points Retour at the sous-catégorie the product belongs to', () => {
+    const famille = classifyFamille('PROLAC');
+    const sousCat = classifySousCategorie(famille, 'PROLAC');
+    expect(produitPath(famille, sousCat)).toBe(
+      '/produits/produits-nettoyage/cuisine-degraissage',
+    );
   });
 });

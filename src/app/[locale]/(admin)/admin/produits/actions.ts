@@ -3,12 +3,14 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { ForbiddenAdminError, assertRole } from '@/features/admin/auth';
-import { familleIds, type FamilleId } from '@/data/familles';
+import { curationFamilleIds, type FamilleId } from '@/data/familles';
 import {
   createCustomProduct,
   deleteCustomProduct,
+  reorderCatalogueRank,
   reorderSousCategorie,
   saveProductContent,
+  setCataloguePin,
   setCategoryHidden,
   setProductHidden,
   setProductPlacement,
@@ -20,14 +22,15 @@ import { syncSwiverCatalogue } from '@/features/catalogue/sync';
 
 function revalidate() {
   // Purges the tagged catalogue data cache, which also marks every static
-  // page built from it (home, /catalogue, /catalogue/[slug]) for regeneration.
+  // page built from it (home, famille browse, /catalogue/[slug]) for regeneration.
   revalidateTag(CATALOGUE_CACHE_TAG);
   revalidatePath('/[locale]/admin/produits', 'page');
   revalidatePath('/[locale]/admin/produits/rangement', 'page');
   revalidatePath('/[locale]/catalogue', 'page');
+  revalidatePath('/[locale]/produits/[famille]', 'page');
 }
 
-const familleIdSchema = z.enum(familleIds as unknown as [FamilleId, ...FamilleId[]]);
+const familleIdSchema = z.enum(curationFamilleIds as unknown as [FamilleId, ...FamilleId[]]);
 const sousCategorieSlugSchema = z
   .string()
   .min(1)
@@ -44,6 +47,15 @@ const reorderSchema = z.object({
   familleSlug: familleIdSchema,
   sousCategorieSlug: sousCategorieSlugSchema,
   orderedIds: z.array(z.string().uuid()).min(1).max(1000),
+});
+
+const rankReorderSchema = z.object({
+  orderedIds: z.array(z.string().uuid()).min(1).max(1000),
+});
+
+const pinSchema = z.object({
+  id: z.string().uuid(),
+  pinned: z.boolean(),
 });
 
 export type PlacementActionResult = { ok: true } | { ok: false; error: string };
@@ -129,6 +141,34 @@ export async function reorderSousCategorieAction(input: unknown): Promise<Placem
     session.appUser?.id ?? null,
   );
   if (!result.ok) return { ok: false, error: result.error };
+  revalidate();
+  return { ok: true };
+}
+
+/**
+ * Order of the products pinned at the top of "Tous les produits". Distinct
+ * from the sous-catégorie order: that list is the whole catalogue, so it has
+ * its own rank column (see `catalogue_rank`).
+ */
+export async function reorderCatalogueRankAction(input: unknown): Promise<PlacementActionResult> {
+  const parsed = rankReorderSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'invalid' };
+
+  const session = await assertRole(['owner', 'admin', 'operator']);
+  const result = await reorderCatalogueRank(parsed.data.orderedIds, session.appUser?.id ?? null);
+  if (!result.ok) return { ok: false, error: result.error };
+  revalidate();
+  return { ok: true };
+}
+
+/** Pin a product to the head of "Tous les produits", or remove it from it. */
+export async function setCataloguePinAction(input: unknown): Promise<PlacementActionResult> {
+  const parsed = pinSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: 'invalid' };
+
+  const session = await assertRole(['owner', 'admin', 'operator']);
+  const ok = await setCataloguePin(parsed.data.id, parsed.data.pinned, session.appUser?.id ?? null);
+  if (!ok) return { ok: false, error: 'not-found' };
   revalidate();
   return { ok: true };
 }

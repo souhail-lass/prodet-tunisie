@@ -24,6 +24,11 @@
     "ctaQuote": "Request a quote"
   },
   "items": {
+    "tous-les-produits": {
+      "label": "All products",
+      "tagline": "Full catalogue",
+      "description": "Every reference we carry, best-sellers first."
+    },
     "produits-nettoyage": {
       "label": "Cleaning products",
       "tagline": "Detergents & disinfectants",

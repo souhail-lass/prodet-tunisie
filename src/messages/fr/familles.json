@@ -24,6 +24,11 @@
     "ctaQuote": "Demander un devis"
   },
   "items": {
+    "tous-les-produits": {
+      "label": "Tous les produits",
+      "tagline": "Catalogue complet",
+      "description": "Toutes nos références, des plus commandées aux autres gammes."
+    },
     "produits-nettoyage": {
       "label": "Produits de nettoyage",
       "tagline": "Détergents & désinfectants",

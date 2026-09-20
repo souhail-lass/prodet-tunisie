@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
+  compareCatalogueRank,
   compareCurationRows,
+  pinnedCatalogueRows,
+  planCatalogueRankReorder,
   planPlacementChange,
   planReorder,
   resolveRowPlacement,
@@ -16,6 +19,7 @@ function row(partial: Partial<CurationRow> & { id: string; name: string }): Cura
     familleSlug: null,
     sousCategorieSlug: null,
     sortOrder: null,
+    catalogueRank: null,
     ...partial,
   };
 }
@@ -118,6 +122,60 @@ describe('planReorder', () => {
     expect(planReorder(rows, 'collecte-dechets', 'poubelles', ['b', 'a'])).toEqual({
       ok: false,
       error: 'incomplete-order',
+    });
+  });
+});
+
+describe('catalogue rank (the "Tous les produits" axis)', () => {
+  const rows = [
+    row({ id: 'pinned-2', name: 'ZZZ PRODUIT', catalogueRank: 1, sortOrder: 1 }),
+    row({ id: 'loose', name: 'AAA PRODUIT' }),
+    row({ id: 'pinned-1', name: 'MMM PRODUIT', catalogueRank: 0, sortOrder: 0 }),
+  ];
+
+  it('orders pinned products first, then alphabetically (NULLS LAST)', () => {
+    expect([...rows].sort(compareCatalogueRank).map((r) => r.id)).toEqual([
+      'pinned-1',
+      'pinned-2',
+      'loose',
+    ]);
+  });
+
+  it('is independent of the sous-catégorie order', () => {
+    // Same two products, reordered inside their sous-catégorie: the global
+    // list must not move.
+    const reordered = rows.map((r) =>
+      r.id === 'pinned-2' ? { ...r, sortOrder: 0 } : r.id === 'pinned-1' ? { ...r, sortOrder: 1 } : r,
+    );
+    expect([...reordered].sort(compareCatalogueRank).map((r) => r.id)).toEqual([
+      'pinned-1',
+      'pinned-2',
+      'loose',
+    ]);
+  });
+
+  it('only lists pinned rows as reorderable', () => {
+    expect(pinnedCatalogueRows(rows).map((r) => r.id)).toEqual(['pinned-1', 'pinned-2']);
+  });
+
+  it('renumbers the pinned head densely', () => {
+    const result = planCatalogueRankReorder(rows, ['pinned-2', 'pinned-1']);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.plan.assignments).toEqual([
+      { id: 'pinned-2', sortOrder: 0 },
+      { id: 'pinned-1', sortOrder: 1 },
+    ]);
+  });
+
+  it('refuses a list that silently unpins a product', () => {
+    expect(planCatalogueRankReorder(rows, ['pinned-1'])).toEqual({
+      ok: false,
+      error: 'incomplete-order',
+    });
+    expect(planCatalogueRankReorder(rows, ['pinned-1', 'loose'])).toEqual({
+      ok: false,
+      error: 'unknown-product',
     });
   });
 });

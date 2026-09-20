@@ -6,7 +6,7 @@ import { Button, ConfirmDialog, Input, Textarea } from '@/components/ds';
 import { Link, useRouter } from '@/i18n/routing';
 import {
   assignableSousCategorieSlugs,
-  familleIds,
+  curationFamilleIds,
   isFamilleId,
   resolvePlacement,
   type FamilleId,
@@ -238,7 +238,7 @@ export function ProductForm({ initial }: { initial: ProductFormInitial }) {
               onChange={(e) => pickFamille(e.target.value)}
             >
               <option value="">Automatique — {familleLabel(auto.familleId)}</option>
-              {familleIds.map((id) => (
+              {curationFamilleIds.map((id) => (
                 <option key={id} value={id}>
                   {familleLabel(id)}
                 </option>

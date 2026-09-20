@@ -48,6 +48,9 @@ export const catalogueProduct = pgTable(
     familleSlug: text('famille_slug'),
     sousCategorieSlug: text('sous_categorie_slug'),
     sortOrder: integer('sort_order'),
+    // position in the flat "Tous les produits" listing, which is a different
+    // axis from sort_order: that one is a rank inside one sous-catégorie.
+    catalogueRank: integer('catalogue_rank'),
     // visibility:
     hidden: boolean('hidden').notNull().default(false),
     featured: boolean('featured').notNull().default(false),
@@ -72,5 +75,6 @@ export const catalogueProduct = pgTable(
       t.sousCategorieSlug,
       t.sortOrder,
     ),
+    catalogueRankIdx: index('catalogue_product_rank_idx').on(t.catalogueRank),
   }),
 );

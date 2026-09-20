@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useMemo, useState, useTransition, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
+import { CATALOGUE_PATH } from '@/data/familles';
 import { Link, type Locale } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -208,7 +209,7 @@ export function DevisPageClient({
                     </button>
                   ) : null}
                   <Button asChild variant="neutral" size="sm">
-                    <Link href="/catalogue">Retour catalogue</Link>
+                    <Link href={CATALOGUE_PATH}>Retour catalogue</Link>
                   </Button>
                 </div>
               </div>
@@ -366,7 +367,7 @@ function SelectionRow({
   return (
     <article className="grid gap-3 rounded-lg border border-border bg-white p-3 sm:grid-cols-[84px_minmax(0,1fr)_auto] sm:items-center">
       <Link
-        href={item.href ?? '/catalogue'}
+        href={item.href ?? CATALOGUE_PATH}
         className="block"
         aria-label={`Voir ${item.productName}`}
       >
@@ -381,7 +382,7 @@ function SelectionRow({
 
       <div className="min-w-0">
         <Link
-          href={item.href ?? '/catalogue'}
+          href={item.href ?? CATALOGUE_PATH}
           className="line-clamp-2 text-sm font-semibold leading-5 text-prodet-text hover:text-primary"
         >
           {item.productName}

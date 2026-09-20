@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { ArrowLeft, ChevronDown, ChevronUp, EyeOff, GripVertical, RotateCcw, Save } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ChevronUp, EyeOff, GripVertical, RotateCcw, Save, Star, StarOff } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
 import { familleLabel, sousCategorieLabel } from '@/data/famille-labels';
-import type { FamilleId } from '@/data/familles';
+import { TOUS_LES_PRODUITS, type FamilleId } from '@/data/familles';
 import type { CurationFamille, CurationProduct } from '@/features/catalogue/queries';
-import { reorderSousCategorieAction } from '../actions';
+import { reorderCatalogueRankAction, reorderSousCategorieAction, setCataloguePinAction } from '../actions';
 
 function move<T>(list: readonly T[], from: number, to: number): T[] {
   if (from === to || from < 0 || to < 0 || from >= list.length || to >= list.length) return [...list];
@@ -36,6 +36,7 @@ export function RangementClient({ groups }: { groups: CurationFamille[] }) {
   const famille = groups.find((g) => g.familleId === familleId);
   const sousCategories = famille?.sousCategories ?? [];
   const dirty = !sameOrder(items, baseline);
+  const isAllProducts = familleId === TOUS_LES_PRODUITS;
 
   function load(nextFamille: FamilleId, nextSlug: string) {
     const group = groups
@@ -64,14 +65,32 @@ export function RangementClient({ groups }: { groups: CurationFamille[] }) {
     setStatus(null);
   }
 
+  function togglePin(item: CurationProduct) {
+    setStatus(null);
+    startTransition(async () => {
+      const r = await setCataloguePinAction({ id: item.id, pinned: !item.pinned });
+      setStatus(
+        r.ok
+          ? item.pinned
+            ? `${item.name} retiré de « Tous les produits ».`
+            : `${item.name} mis en avant dans « Tous les produits ».`
+          : 'La mise en avant n’a pas pu être enregistrée.',
+      );
+      router.refresh();
+    });
+  }
+
   function save() {
     setStatus(null);
     startTransition(async () => {
-      const r = await reorderSousCategorieAction({
-        familleSlug: familleId,
-        sousCategorieSlug: slug,
-        orderedIds: items.map((p) => p.id),
-      });
+      const orderedIds = items.map((p) => p.id);
+      const r = isAllProducts
+        ? await reorderCatalogueRankAction({ orderedIds })
+        : await reorderSousCategorieAction({
+            familleSlug: familleId,
+            sousCategorieSlug: slug,
+            orderedIds,
+          });
       if (!r.ok) {
         setStatus(
           r.error === 'forbidden'
@@ -97,8 +116,9 @@ export function RangementClient({ groups }: { groups: CurationFamille[] }) {
           <h2 className="panel__title">Ordre des produits</h2>
         </div>
         <p className="panel__sub">
-          Glissez une ligne pour la déplacer, ou utilisez les flèches. Les produits rangés ici passent en tête
-          de la sous-catégorie ; les autres suivent par ordre alphabétique.
+          {isAllProducts
+            ? 'Ces produits sont mis en avant en tête de « Tous les produits ». Le reste du catalogue suit par ordre alphabétique. Cet ordre est global : il ne change pas le classement à l’intérieur des sous-catégories.'
+            : 'Glissez une ligne pour la déplacer, ou utilisez les flèches. Les produits rangés ici passent en tête de la sous-catégorie ; les autres suivent par ordre alphabétique.'}
         </p>
         <div className="admin-toolbar" style={{ marginTop: 14, marginBottom: 0 }}>
           <select className="admin-select" value={familleId} onChange={(e) => pickFamille(e.target.value)} aria-label="Famille">
@@ -108,18 +128,20 @@ export function RangementClient({ groups }: { groups: CurationFamille[] }) {
               </option>
             ))}
           </select>
-          <select
-            className="admin-select"
-            value={slug}
-            onChange={(e) => load(familleId, e.target.value)}
-            aria-label="Sous-catégorie"
-          >
-            {sousCategories.map((s) => (
-              <option key={s.slug} value={s.slug}>
-                {sousCategorieLabel(s.slug)} ({s.products.length})
-              </option>
-            ))}
-          </select>
+          {isAllProducts ? null : (
+            <select
+              className="admin-select"
+              value={slug}
+              onChange={(e) => load(familleId, e.target.value)}
+              aria-label="Sous-catégorie"
+            >
+              {sousCategories.map((s) => (
+                <option key={s.slug} value={s.slug}>
+                  {sousCategorieLabel(s.slug)} ({s.products.length})
+                </option>
+              ))}
+            </select>
+          )}
           <span style={{ flex: 1 }} />
           {dirty ? (
             <button className="pds-btn pds-btn--ghost pds-btn--sm" onClick={() => load(familleId, slug)} disabled={pending}>
@@ -194,9 +216,26 @@ export function RangementClient({ groups }: { groups: CurationFamille[] }) {
               </div>
             </div>
             <div className="admin-cell-muted admin-hide-sm">
-              {item.origin === 'manual' ? 'Manuel' : 'Automatique'}
+              {isAllProducts ? 'Mis en avant' : item.origin === 'manual' ? 'Manuel' : 'Automatique'}
             </div>
             <div className="admin-order-actions">
+              <button
+                className={`admin-toggle ${item.pinned ? 'admin-toggle--on' : 'admin-toggle--off'}`}
+                onClick={() => togglePin(item)}
+                disabled={pending}
+                title={
+                  item.pinned
+                    ? 'Retirer de la tête de « Tous les produits »'
+                    : 'Mettre en avant dans « Tous les produits »'
+                }
+                aria-label={
+                  item.pinned
+                    ? `Retirer ${item.name} de la mise en avant`
+                    : `Mettre ${item.name} en avant`
+                }
+              >
+                {item.pinned ? <Star size={14} /> : <StarOff size={14} />}
+              </button>
               <button
                 className="admin-toggle admin-toggle--off"
                 onClick={() => nudge(index, -1)}
@@ -216,7 +255,13 @@ export function RangementClient({ groups }: { groups: CurationFamille[] }) {
             </div>
           </div>
         ))}
-        {items.length === 0 ? <div className="admin-empty">Aucun produit dans cette sous-catégorie.</div> : null}
+        {items.length === 0 ? (
+          <div className="admin-empty">
+            {isAllProducts
+              ? 'Aucun produit mis en avant. Étoilez un produit depuis une sous-catégorie pour l’ajouter ici.'
+              : 'Aucun produit dans cette sous-catégorie.'}
+          </div>
+        ) : null}
       </div>
     </div>
   );

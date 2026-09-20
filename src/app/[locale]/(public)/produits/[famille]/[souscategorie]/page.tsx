@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, isLocale } from '@/i18n/routing';
 import {
@@ -9,6 +9,7 @@ import {
   getSousCategoriesForFamille,
   getSousCategorie,
   sousCatLabelKey,
+  TOUS_LES_PRODUITS,
 } from '@/data/familles';
 import { getCatalogueBySousCategorie, getCatalogueSearchCards } from '@/features/catalogue/queries';
 import { CategorySidebar } from '@/components/catalogue/category-sidebar';
@@ -44,6 +45,10 @@ export default async function SousCategoriePage({
   const { locale, famille, souscategorie } = await params;
   if (!isLocale(locale)) return notFound();
   setRequestLocale(locale);
+
+  if (souscategorie === TOUS_LES_PRODUITS) {
+    permanentRedirect(`/${locale}/produits/${TOUS_LES_PRODUITS}`);
+  }
 
   const fam = getFamilleBySlug(famille);
   if (!fam) return notFound();

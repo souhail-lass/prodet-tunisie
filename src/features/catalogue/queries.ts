@@ -3,13 +3,22 @@ import { eq, type SQL } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 import type { CatalogueCardProduct, Product, ProductCategory, ProductSpec } from '@/types/product';
 import {
+  curationFamilleIds,
   familleIds,
   getSousCategoriesForFamille,
+  TOUS_LES_PRODUITS,
   type FamilleId,
   type ResolvedPlacement,
 } from '@/data/familles';
 import { resolveResellImage } from '@/data/resell-images';
 import {
+  assignUniqueProductSlugs,
+  findRowForProductSlug,
+  legacyProductSlug,
+} from '@/lib/product-slug';
+import {
+  compareCatalogueRank,
+  pinnedCatalogueRows,
   resolveRowPlacement,
   rowsInSousCategorie,
   sortCurationRows,
@@ -45,6 +54,7 @@ export type AdminProductRow = {
   familleSlug: string | null;
   sousCategorieSlug: string | null;
   sortOrder: number | null;
+  catalogueRank: number | null;
   hidden: boolean;
   featured: boolean;
 };
@@ -61,13 +71,7 @@ function mapCategory(label: string | null): ProductCategory {
  */
 const PRODET_PACKSHOT = '/images/products/sirafan.png';
 
-/** Stable, URL-safe slug for a catalogue row (SKU preferred, falls back to id). */
-export function productSlug(row: { sku: string | null; id: string }): string {
-  if (row.sku && /^[a-zA-Z0-9._-]+$/.test(row.sku)) return row.sku;
-  return row.id;
-}
-
-function mapRowToProduct(row: AdminProductRow): Product {
+function mapRowToProduct(row: AdminProductRow, slug: string): Product {
   const category = mapCategory(row.baseCategory);
   const realImage = row.imageUrl || row.baseImageUrl || '';
   // Photo precedence: real Swiver/admin image → committed resell packshot
@@ -75,7 +79,8 @@ function mapRowToProduct(row: AdminProductRow): Product {
   const resellImage = realImage ? '' : resolveResellImage(row.displayName || row.name);
   return {
     id: row.id,
-    slug: productSlug(row),
+    slug,
+    sku: row.sku,
     name: row.displayName || row.name,
     tagline: row.tagline ?? '',
     category,
@@ -119,6 +124,7 @@ async function selectRows(where?: SQL): Promise<AdminProductRow[]> {
     familleSlug: t.familleSlug,
     sousCategorieSlug: t.sousCategorieSlug,
     sortOrder: t.sortOrder,
+    catalogueRank: t.catalogueRank,
     hidden: t.hidden,
     featured: t.featured,
   };
@@ -145,10 +151,26 @@ export async function getCatalogueCount(): Promise<number> {
   return rows.length;
 }
 
+function mapCatalogueRows(rows: AdminProductRow[]): Product[] {
+  return mapSelectedRows(rows, rows);
+}
+
+/**
+ * Map a curated selection while deriving slugs from the full catalogue.
+ * `assignUniqueProductSlugs` resolves name collisions in list order, so a
+ * subset (or a reordered list) would hand the same product a different URL on
+ * different pages — always pass the complete, name-ordered row set.
+ */
+function mapSelectedRows(allRows: AdminProductRow[], selected: AdminProductRow[]): Product[] {
+  const slugs = assignUniqueProductSlugs(allRows);
+  return selected.map((row) => mapRowToProduct(row, slugs.get(row.id) ?? legacyProductSlug(row)));
+}
+
 /** Public catalogue products (visible), mapped to the website Product shape. */
 export async function getVisibleCatalogue(): Promise<Product[]> {
   const rows = await getCachedCatalogueRows();
-  return rows.filter((r) => !r.hidden).map(mapRowToProduct);
+  const hidden = new Set(rows.filter((r) => r.hidden).map((r) => r.id));
+  return mapCatalogueRows(rows).filter((p) => !hidden.has(p.id));
 }
 
 /**
@@ -189,15 +211,23 @@ export async function getFamilleCounts(): Promise<Record<FamilleId, number>> {
   const rows = await getVisibleRows();
   const counts = Object.fromEntries(familleIds.map((id) => [id, 0])) as Record<FamilleId, number>;
   for (const row of rows) counts[resolveRowPlacement(row).familleId] += 1;
+  // "Tous les produits" is a listing of the whole catalogue, not a bucket
+  // resolvePlacement can return, so its count is the total.
+  counts[TOUS_LES_PRODUITS] = rows.length;
   return counts;
 }
 
 /** Visible products belonging to a given famille, in curation order. */
 export async function getCatalogueByFamille(familleId: FamilleId): Promise<Product[]> {
-  const rows = await getVisibleRows();
-  return sortCurationRows(rows.filter((row) => resolveRowPlacement(row).familleId === familleId)).map(
-    mapRowToProduct,
+  const allRows = await getCachedCatalogueRows();
+  const rows = allRows.filter((r) => !r.hidden);
+  if (familleId === TOUS_LES_PRODUITS) {
+    return mapSelectedRows(allRows, [...rows].sort(compareCatalogueRank));
+  }
+  const selected = sortCurationRows(
+    rows.filter((row) => resolveRowPlacement(row).familleId === familleId),
   );
+  return mapSelectedRows(allRows, selected);
 }
 
 export type SousCategorieCount = { slug: string; count: number };
@@ -230,14 +260,19 @@ export async function getCatalogueBySousCategorie(
   familleId: FamilleId,
   sousCategorieSlug: string,
 ): Promise<Product[]> {
-  const rows = await getVisibleRows();
-  return rowsInSousCategorie(rows, familleId, sousCategorieSlug).map(mapRowToProduct);
+  const allRows = await getCachedCatalogueRows();
+  const selected = rowsInSousCategorie(
+    allRows.filter((r) => !r.hidden),
+    familleId,
+    sousCategorieSlug,
+  );
+  return mapSelectedRows(allRows, selected);
 }
 
 /** Where a product sits in the browse taxonomy, override included. */
 export async function getProductPlacementBySlug(slug: string): Promise<ResolvedPlacement | null> {
   const rows = await getCachedCatalogueRows();
-  const match = rows.find((r) => r.sku === slug) ?? rows.find((r) => r.id === slug);
+  const match = findRowForProductSlug(rows, slug);
   return match ? resolveRowPlacement(match) : null;
 }
 
@@ -246,41 +281,44 @@ export async function getProductPlacementBySlug(slug: string): Promise<ResolvedP
  * same sous-catégorie first, then the famille's curation order.
  */
 export async function getRelatedCatalogue(slug: string, limit = 4): Promise<Product[]> {
-  const rows = await getVisibleRows();
-  const target = rows.find((r) => r.sku === slug) ?? rows.find((r) => r.id === slug);
+  const allRows = await getCachedCatalogueRows();
+  const rows = allRows.filter((r) => !r.hidden);
+  const target = findRowForProductSlug(rows, slug);
   if (!target) return [];
   const placement = resolveRowPlacement(target);
 
   const siblings = sortCurationRows(
     rows.filter((row) => row.id !== target.id && resolveRowPlacement(row).familleId === placement.familleId),
   );
-  return siblings
+  const selected = siblings
     .sort(
       (a, b) =>
         Number(resolveRowPlacement(b).sousCategorieSlug === placement.sousCategorieSlug) -
         Number(resolveRowPlacement(a).sousCategorieSlug === placement.sousCategorieSlug),
     )
-    .slice(0, limit)
-    .map(mapRowToProduct);
+    .slice(0, limit);
+  return mapSelectedRows(allRows, selected);
 }
 
 export async function getCatalogueProductBySlug(slug: string): Promise<Product | null> {
   const rows = await getCachedCatalogueRows();
-  const match = rows.find((r) => r.sku === slug) ?? rows.find((r) => r.id === slug);
-  return match ? mapRowToProduct(match) : null;
+  const match = findRowForProductSlug(rows, slug);
+  if (!match) return null;
+  const slugs = assignUniqueProductSlugs(rows);
+  return mapRowToProduct(match, slugs.get(match.id) ?? legacyProductSlug(match));
 }
 
 export async function getFeaturedCatalogue(limit = 4): Promise<Product[]> {
-  const visibleRows = (await getCachedCatalogueRows()).filter((r) => !r.hidden);
-  const featured = visibleRows.filter((r) => r.featured).map(mapRowToProduct);
+  const rows = await getCachedCatalogueRows();
+  const hidden = new Set(rows.filter((r) => r.hidden).map((r) => r.id));
+  const visible = mapCatalogueRows(rows).filter((p) => !hidden.has(p.id));
+  const featured = visible.filter((p) => p.featured);
   if (featured.length >= limit) return featured.slice(0, limit);
 
   // Fall back: fill with other visible products (those with an image first).
-  const visible = visibleRows
-    .map(mapRowToProduct)
-    .sort((a, b) => (b.image ? 1 : 0) - (a.image ? 1 : 0));
+  const ranked = [...visible].sort((a, b) => (b.image ? 1 : 0) - (a.image ? 1 : 0));
   const seen = new Set(featured.map((p) => p.id));
-  for (const p of visible) {
+  for (const p of ranked) {
     if (featured.length >= limit) break;
     if (!seen.has(p.id)) featured.push(p);
   }
@@ -300,6 +338,7 @@ export type CurationProduct = {
   image: string;
   hidden: boolean;
   sortOrder: number | null;
+  pinned: boolean;
   origin: 'manual' | 'auto';
 };
 
@@ -318,10 +357,37 @@ export type CurationFamille = {
  * The whole catalogue grouped the way it is browsed, for the ordering screen.
  * Hidden products are kept (flagged) so the admin reorders the same list they
  * see in the product manager instead of a silently shorter one.
+ *
+ * "Tous les produits" is a single synthetic group holding only the pinned
+ * head of the flat listing — the rest of that page is alphabetical and has
+ * nothing to drag.
  */
 export async function listCurationGroups(): Promise<CurationFamille[]> {
   const rows = await selectRows();
-  return familleIds.map((familleId) => {
+
+  const toCurationProduct = (row: AdminProductRow): CurationProduct => ({
+    id: row.id,
+    name: row.displayName || row.name,
+    sku: row.sku,
+    image: row.imageUrl || row.baseImageUrl || '',
+    hidden: row.hidden,
+    sortOrder: row.sortOrder,
+    pinned: row.catalogueRank != null,
+    origin: resolveRowPlacement(row).sousCategorieOrigin,
+  });
+
+  const allProducts: CurationFamille = {
+    familleId: TOUS_LES_PRODUITS,
+    sousCategories: [
+      {
+        slug: TOUS_LES_PRODUITS,
+        familleId: TOUS_LES_PRODUITS,
+        products: pinnedCatalogueRows(rows).map(toCurationProduct),
+      },
+    ],
+  };
+
+  const byFamille = curationFamilleIds.map((familleId) => {
     const inFamille = rows.filter((row) => resolveRowPlacement(row).familleId === familleId);
     const slugs = new Set(inFamille.map((row) => resolveRowPlacement(row).sousCategorieSlug));
     const defined = getSousCategoriesForFamille(familleId)
@@ -334,18 +400,12 @@ export async function listCurationGroups(): Promise<CurationFamille[]> {
       sousCategories: [...defined, ...leftovers].map((slug) => ({
         slug,
         familleId,
-        products: rowsInSousCategorie(inFamille, familleId, slug).map((row) => ({
-          id: row.id,
-          name: row.displayName || row.name,
-          sku: row.sku,
-          image: row.imageUrl || row.baseImageUrl || '',
-          hidden: row.hidden,
-          sortOrder: row.sortOrder,
-          origin: resolveRowPlacement(row).sousCategorieOrigin,
-        })),
+        products: rowsInSousCategorie(inFamille, familleId, slug).map(toCurationProduct),
       })),
     };
   });
+
+  return [allProducts, ...byFamille];
 }
 
 export async function getAdminProduct(id: string): Promise<AdminProductRow | null> {

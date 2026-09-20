@@ -1,5 +1,5 @@
 import {
-  isFamilleId,
+  isCurationFamilleId,
   isSousCategorieOfFamille,
   resolvePlacement,
   type FamilleId,
@@ -19,6 +19,7 @@ export type CurationRow = {
   familleSlug: string | null;
   sousCategorieSlug: string | null;
   sortOrder: number | null;
+  catalogueRank: number | null;
 };
 
 /** The name the site shows, which is also the name the classifier reads. */
@@ -52,6 +53,22 @@ export function compareCurationRows(a: CurationRow, b: CurationRow): number {
 
 export function sortCurationRows<T extends CurationRow>(rows: readonly T[]): T[] {
   return [...rows].sort(compareCurationRows);
+}
+
+/**
+ * Order of the flat "Tous les produits" listing: `catalogue_rank NULLS LAST,
+ * name`. A separate axis from `sort_order` on purpose — that one is a rank
+ * inside a single sous-catégorie, so its values repeat across the catalogue
+ * and reordering one sous-catégorie would otherwise silently reshuffle the
+ * global list.
+ */
+export function compareCatalogueRank(a: CurationRow, b: CurationRow): number {
+  const ar = a.catalogueRank;
+  const br = b.catalogueRank;
+  if (ar != null && br != null && ar !== br) return ar - br;
+  if (ar != null && br == null) return -1;
+  if (ar == null && br != null) return 1;
+  return displayedName(a).localeCompare(displayedName(b), 'fr');
 }
 
 /** Rows resolving into one sous-catégorie, in curation order. */
@@ -109,6 +126,40 @@ export function planReorder(
   };
 }
 
+/** Rows pinned to the top of "Tous les produits", in their pinned order. */
+export function pinnedCatalogueRows<T extends CurationRow>(rows: readonly T[]): T[] {
+  return rows.filter((row) => row.catalogueRank != null).sort(compareCatalogueRank);
+}
+
+/**
+ * Dense 0..n-1 sequence for the global pinned list. Same permutation rule as
+ * `planReorder`: the submitted list must be exactly what is pinned today, so a
+ * stale screen cannot unpin a product by omitting it.
+ */
+export function planCatalogueRankReorder(
+  rows: readonly CurationRow[],
+  orderedIds: readonly string[],
+): { ok: true; plan: ReorderPlan } | { ok: false; error: ReorderError } {
+  const before = pinnedCatalogueRows(rows).map((row) => row.id);
+  const known = new Set(before);
+  const seen = new Set<string>();
+
+  for (const id of orderedIds) {
+    if (!known.has(id) || seen.has(id)) return { ok: false, error: 'unknown-product' };
+    seen.add(id);
+  }
+  if (seen.size !== known.size) return { ok: false, error: 'incomplete-order' };
+
+  return {
+    ok: true,
+    plan: {
+      assignments: orderedIds.map((id, index) => ({ id, sortOrder: index })),
+      before,
+      after: [...orderedIds],
+    },
+  };
+}
+
 export type PlacementChangeInput = {
   familleSlug: string | null;
   sousCategorieSlug: string | null;
@@ -134,7 +185,7 @@ export type PlacementChangePlan = {
  */
 export function planPlacementChange(row: CurationRow, input: PlacementChangeInput): PlacementChangePlan {
   const from = resolveRowPlacement(row);
-  const familleSlug = isFamilleId(input.familleSlug) ? input.familleSlug : null;
+  const familleSlug = isCurationFamilleId(input.familleSlug) ? input.familleSlug : null;
   const effectiveFamille = familleSlug ?? resolveRowPlacement({ ...row, familleSlug: null }).familleId;
   const sousCategorieSlug = isSousCategorieOfFamille(effectiveFamille, input.sousCategorieSlug)
     ? input.sousCategorieSlug

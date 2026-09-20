@@ -26,6 +26,7 @@ import { StatusPill } from '@/components/portal/status-pill';
 import { PortalRequestProductThumb } from '@/components/client-portal/portal-request-product-thumb';
 import { Button } from '@/components/ui/button';
 import { getProductBySlug } from '@/data/queries';
+import { CATALOGUE_PATH } from '@/data/familles';
 import {
   recurrenceSelectOptionsFr,
   type PortalRecurrenceMode,
@@ -506,7 +507,7 @@ function PickerPanel({
           </TabButton>
         </div>
         <Button asChild variant="ghost" size="xs">
-          <Link href="/catalogue" className="inline-flex items-center gap-1.5 text-muted-foreground">
+          <Link href={CATALOGUE_PATH} className="inline-flex items-center gap-1.5 text-muted-foreground">
             Catalogue web
             <ExternalLink className="h-3.5 w-3.5" aria-hidden />
           </Link>

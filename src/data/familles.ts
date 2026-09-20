@@ -13,6 +13,7 @@ import type { UseCaseId } from '@/types/use-case';
  * Category images live in /public/images/categories/{slug}.jpg (swap freely).
  */
 export type FamilleId =
+  | 'tous-les-produits'
   | 'produits-nettoyage'
   | 'materiel-hygiene'
   | 'papier-epi'
@@ -56,6 +57,7 @@ const RESELL = (file: string) => `/images/products/resell/${file}`;
 
 
 export const familles: readonly Famille[] = [
+  { id: 'tous-les-produits', slug: 'tous-les-produits', image: CAT_IMG('produits-nettoyage'), packshot: FAM_PACK('produits-nettoyage.png'), displayOrder: 0 },
   { id: 'produits-nettoyage', slug: 'produits-nettoyage', image: CAT_IMG('produits-nettoyage'), packshot: FAM_PACK('produits-nettoyage.png'), displayOrder: 10 },
   { id: 'materiel-hygiene', slug: 'materiel-hygiene', image: CAT_IMG('materiel-hygiene'), packshot: FAM_PACK('materiel-hygiene.png'), displayOrder: 20 },
   { id: 'papier-epi', slug: 'papier-epi', image: CAT_IMG('papier-epi'), packshot: FAM_PACK('papier-epi.png'), displayOrder: 30 },
@@ -64,6 +66,15 @@ export const familles: readonly Famille[] = [
 ] as const;
 
 export const familleIds: readonly FamilleId[] = familles.map((f) => f.id);
+
+/** Public catalogue landing: famille page with sidebar (not the old stacked browse). */
+export const CATALOGUE_PATH = '/produits/produits-nettoyage' as const;
+
+export function produitPath(familleId: FamilleId, sousCategorieSlug?: string): string {
+  return sousCategorieSlug
+    ? `/produits/${familleId}/${sousCategorieSlug}`
+    : `/produits/${familleId}`;
+}
 
 export function getFamilleBySlug(slug: string): Famille | undefined {
   return familles.find((f) => f.slug === slug);
@@ -162,6 +173,9 @@ export function classifyGamme(name: string): UseCaseId | null {
 /** Slug used for cleaning products that match no usage gamme. */
 export const AUTRES_NETTOYAGE = 'autres-nettoyage';
 
+/** Virtual listing of the whole catalogue (not a classified bucket). */
+export const TOUS_LES_PRODUITS = 'tous-les-produits';
+
 // Cleaning sous-cats mirror the six usage gammes (slug === useCaseId).
 const CLEANING_USE_CASES: { useCaseId: UseCaseId; order: number }[] = [
   { useCaseId: 'sols', order: 10 },
@@ -226,6 +240,7 @@ export function sousCatLabelKey(slug: string): string {
  * `${familleId}-autres` (or AUTRES_NETTOYAGE for cleaning) when nothing matches.
  */
 export function classifySousCategorie(familleId: FamilleId, name: string): string {
+  if (familleId === TOUS_LES_PRODUITS) return TOUS_LES_PRODUITS;
   if (familleId === 'produits-nettoyage') {
     return classifyGamme(name) ?? AUTRES_NETTOYAGE;
   }
@@ -240,6 +255,19 @@ export function classifySousCategorie(familleId: FamilleId, name: string): strin
 
 export function isFamilleId(value: string | null | undefined): value is FamilleId {
   return value != null && familleIds.includes(value as FamilleId);
+}
+
+/**
+ * Familles a product can actually be placed in. "Tous les produits" is a flat
+ * listing of the whole catalogue, not a bucket — placing a product *into* it
+ * would take that product out of every real famille page.
+ */
+export const curationFamilleIds: readonly FamilleId[] = familleIds.filter(
+  (id) => id !== TOUS_LES_PRODUITS,
+);
+
+export function isCurationFamilleId(value: string | null | undefined): value is FamilleId {
+  return isFamilleId(value) && value !== TOUS_LES_PRODUITS;
 }
 
 /** Slug of the leftover bucket a famille falls back to when no rule matches. */
@@ -283,7 +311,7 @@ export type ResolvedPlacement = {
  * otherwise create a sous-catégorie page nobody can reach.
  */
 export function resolvePlacement(input: PlacementInput): ResolvedPlacement {
-  const manualFamille = isFamilleId(input.familleSlug) ? input.familleSlug : null;
+  const manualFamille = isCurationFamilleId(input.familleSlug) ? input.familleSlug : null;
   const familleId = manualFamille ?? classifyFamille(input.name, input.baseCategory);
 
   const manualSousCat = isSousCategorieOfFamille(familleId, input.sousCategorieSlug)
