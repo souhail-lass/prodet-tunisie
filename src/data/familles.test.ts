@@ -10,6 +10,7 @@ import {
   leftoverSousCategorieSlug,
   produitPath,
   resolvePlacement,
+  catalogueSearchPath,
   TOUS_LES_PRODUITS,
 } from './familles';
 
@@ -161,5 +162,13 @@ describe('produitPath', () => {
     expect(produitPath(famille, sousCat)).toBe(
       '/produits/produits-nettoyage/cuisine-degraissage',
     );
+  });
+});
+
+describe('catalogueSearchPath', () => {
+  it('puts the typed query on the search page URL', () => {
+    expect(catalogueSearchPath('deofresh')).toBe('/produits/recherche?q=deofresh');
+    expect(catalogueSearchPath('  javel 5  ')).toBe('/produits/recherche?q=javel%205');
+    expect(catalogueSearchPath('   ')).toBe('/produits/recherche');
   });
 });

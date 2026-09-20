@@ -16,16 +16,8 @@ export function normalizeSearchText(value: string): string {
     .trim();
 }
 
-function haystack(product: CatalogueCardProduct): string {
-  return normalizeSearchText(
-    [
-      product.name,
-      product.tagline ?? '',
-      product.slug,
-      product.categoryLabel ?? '',
-      ...product.formats.map((format) => format.label),
-    ].join(' '),
-  );
+function nameHaystack(product: CatalogueCardProduct): string {
+  return normalizeSearchText(`${product.name} ${product.slug}`);
 }
 
 /**
@@ -41,21 +33,20 @@ function termMatches(hay: string, term: string): boolean {
 
 /**
  * Rank: a product whose *name* opens with the query beats one that merely
- * contains it, which beats a match found only in the tagline/SKU/format.
- * Lower is better.
+ * contains it. Lower is better.
  */
 function score(product: CatalogueCardProduct, terms: string[]): number {
   const name = normalizeSearchText(product.name);
   const first = terms[0] ?? '';
   const singular = first.endsWith('s') ? first.slice(0, -1) : first;
-  if (name.startsWith(first) || name.startsWith(singular)) return 0;
-  if (termMatches(name, first)) return 1;
-  return 2;
+  if (name.startsWith(first) || (singular.length > 0 && name.startsWith(singular))) return 0;
+  return 1;
 }
 
 /**
- * Products matching every whitespace-separated term ("javel 5" → both), best
- * matches first. Empty query → no results (callers show their normal browse).
+ * Products whose *name* contains every whitespace-separated term
+ * ("javel 5" → both, "pro" → PROFON, JAVEL PRODET, …), best matches first.
+ * Empty query → no results (callers show their normal browse).
  */
 export function searchCatalogue<T extends CatalogueCardProduct>(
   products: T[],
@@ -66,10 +57,10 @@ export function searchCatalogue<T extends CatalogueCardProduct>(
   if (terms.length === 0) return [];
 
   const matches = products.filter((product) => {
-    const hay = haystack(product);
+    const hay = nameHaystack(product);
     return terms.every((term) => termMatches(hay, term));
   });
 
-  matches.sort((a, b) => score(a, terms) - score(b, terms) || a.name.localeCompare(b.name));
+  matches.sort((a, b) => score(a, terms) - score(b, terms) || a.name.localeCompare(b.name, 'fr'));
   return typeof limit === 'number' ? matches.slice(0, limit) : matches;
 }

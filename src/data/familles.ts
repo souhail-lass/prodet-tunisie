@@ -70,10 +70,18 @@ export const familleIds: readonly FamilleId[] = familles.map((f) => f.id);
 /** Public catalogue landing: famille page with sidebar (not the old stacked browse). */
 export const CATALOGUE_PATH = '/produits/produits-nettoyage' as const;
 
+/** Full-catalogue search results. Query string `q` is the typed term. */
+export const SEARCH_PATH = '/produits/recherche' as const;
+
 export function produitPath(familleId: FamilleId, sousCategorieSlug?: string): string {
   return sousCategorieSlug
     ? `/produits/${familleId}/${sousCategorieSlug}`
     : `/produits/${familleId}`;
+}
+
+export function catalogueSearchPath(query: string): string {
+  const q = query.trim();
+  return q ? `${SEARCH_PATH}?q=${encodeURIComponent(q)}` : SEARCH_PATH;
 }
 
 export function getFamilleBySlug(slug: string): Famille | undefined {

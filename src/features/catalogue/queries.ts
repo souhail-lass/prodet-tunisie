@@ -16,6 +16,7 @@ import {
   findRowForProductSlug,
   legacyProductSlug,
 } from '@/lib/product-slug';
+import { findCatalogueByBrandKey } from '@/lib/sector-catalogue';
 import {
   compareCatalogueRank,
   pinnedCatalogueRows,
@@ -303,9 +304,16 @@ export async function getRelatedCatalogue(slug: string, limit = 4): Promise<Prod
 export async function getCatalogueProductBySlug(slug: string): Promise<Product | null> {
   const rows = await getCachedCatalogueRows();
   const match = findRowForProductSlug(rows, slug);
-  if (!match) return null;
-  const slugs = assignUniqueProductSlugs(rows);
-  return mapRowToProduct(match, slugs.get(match.id) ?? legacyProductSlug(match));
+  if (match) {
+    const slugs = assignUniqueProductSlugs(rows);
+    return mapRowToProduct(match, slugs.get(match.id) ?? legacyProductSlug(match));
+  }
+
+  // Old sector/fixture URLs (`/catalogue/provitre`) still resolve, then the
+  // PDP 308s onto the live name slug.
+  const hidden = new Set(rows.filter((r) => r.hidden).map((r) => r.id));
+  const visible = mapCatalogueRows(rows).filter((p) => !hidden.has(p.id));
+  return findCatalogueByBrandKey(visible, slug) ?? null;
 }
 
 export async function getFeaturedCatalogue(limit = 4): Promise<Product[]> {

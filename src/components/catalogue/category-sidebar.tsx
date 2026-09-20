@@ -13,7 +13,7 @@ export async function CategorySidebar({
   activeSousCat,
 }: {
   locale: Locale;
-  activeFamille: FamilleId;
+  activeFamille?: FamilleId;
   activeSousCat?: string;
 }) {
   const tf = await getTranslations({ locale, namespace: 'familles' });

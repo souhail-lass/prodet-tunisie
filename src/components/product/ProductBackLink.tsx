@@ -1,7 +1,9 @@
 'use client';
 
 import { ArrowLeft } from 'lucide-react';
-import { Link, useRouter } from '@/i18n/routing';
+import { useRouter } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { readLastCatalogueBrowse } from '@/lib/catalogue-browse';
 
 export function ProductBackLink({
@@ -12,6 +14,7 @@ export function ProductBackLink({
   label: string;
 }) {
   const router = useRouter();
+  const locale = useLocale();
 
   return (
     <Link
@@ -22,7 +25,7 @@ export function ProductBackLink({
         const browse = readLastCatalogueBrowse();
         if (!browse || browse === href) return;
         event.preventDefault();
-        router.push(browse);
+        router.push(`/${locale}${browse}`);
       }}
     >
       <ArrowLeft size={16} aria-hidden />
