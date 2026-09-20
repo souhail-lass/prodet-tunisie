@@ -1,11 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
+  assignableSousCategorieSlugs,
   classifyFamille,
   classifyGamme,
   classifySousCategorie,
   familleIds,
+  curationFamilleIds,
   getSousCategoriesForFamille,
+  leftoverSousCategorieSlug,
   produitPath,
+  resolvePlacement,
   catalogueSearchPath,
   TOUS_LES_PRODUITS,
 } from './familles';
@@ -66,6 +70,74 @@ describe('classifyGamme', () => {
 
   it('returns null for products with no clear gamme', () => {
     expect(classifyGamme('VINAIGRE MENAGER BIDON 5L')).toBeNull();
+  });
+});
+
+describe('resolvePlacement', () => {
+  const name = 'JAVEL PRODET BID 5KG';
+
+  it('falls back to the classifier when nothing is curated', () => {
+    expect(resolvePlacement({ name })).toEqual({
+      familleId: classifyFamille(name),
+      sousCategorieSlug: classifySousCategorie('produits-nettoyage', name),
+      familleOrigin: 'auto',
+      sousCategorieOrigin: 'auto',
+    });
+  });
+
+  it('prefers the explicit famille and sous-catégorie over the classifier', () => {
+    const placement = resolvePlacement({
+      name,
+      familleSlug: 'materiel-hygiene',
+      sousCategorieSlug: 'seaux-chariots',
+    });
+    expect(placement.familleId).toBe('materiel-hygiene');
+    expect(placement.sousCategorieSlug).toBe('seaux-chariots');
+    expect(placement.familleOrigin).toBe('manual');
+    expect(placement.sousCategorieOrigin).toBe('manual');
+  });
+
+  it('keeps the sous-catégorie override while the famille stays automatic', () => {
+    const placement = resolvePlacement({ name, sousCategorieSlug: 'sols' });
+    expect(placement.familleId).toBe('produits-nettoyage');
+    expect(placement.familleOrigin).toBe('auto');
+    expect(placement.sousCategorieSlug).toBe('sols');
+    expect(placement.sousCategorieOrigin).toBe('manual');
+  });
+
+  it('ignores a sous-catégorie that does not belong to the resolved famille', () => {
+    const placement = resolvePlacement({
+      name,
+      familleSlug: 'collecte-dechets',
+      sousCategorieSlug: 'sols',
+    });
+    expect(placement.familleId).toBe('collecte-dechets');
+    expect(placement.sousCategorieSlug).toBe(classifySousCategorie('collecte-dechets', name));
+    expect(placement.sousCategorieOrigin).toBe('auto');
+  });
+
+  it('ignores an unknown famille slug', () => {
+    const placement = resolvePlacement({ name, familleSlug: 'famille-inventee' });
+    expect(placement.familleId).toBe(classifyFamille(name));
+    expect(placement.familleOrigin).toBe('auto');
+  });
+
+  it('accepts the leftover bucket of a famille as an explicit target', () => {
+    expect(assignableSousCategorieSlugs('papier-epi')).toContain(leftoverSousCategorieSlug('papier-epi'));
+    const placement = resolvePlacement({
+      name,
+      familleSlug: 'papier-epi',
+      sousCategorieSlug: 'papier-epi-autres',
+    });
+    expect(placement.sousCategorieSlug).toBe('papier-epi-autres');
+    expect(placement.sousCategorieOrigin).toBe('manual');
+  });
+
+  it('refuses "Tous les produits" as a placement target', () => {
+    expect(curationFamilleIds).not.toContain(TOUS_LES_PRODUITS);
+    const placement = resolvePlacement({ name, familleSlug: TOUS_LES_PRODUITS });
+    expect(placement.familleId).toBe(classifyFamille(name));
+    expect(placement.familleOrigin).toBe('auto');
   });
 });
 

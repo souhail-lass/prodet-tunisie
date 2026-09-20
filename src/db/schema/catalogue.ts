@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 import {
   boolean,
   index,
+  integer,
   jsonb,
   numeric,
   pgTable,
@@ -42,6 +43,14 @@ export const catalogueProduct = pgTable(
     technicalSheetUrl: text('technical_sheet_url'),
     safetySheetUrl: text('safety_sheet_url'),
     imageUrl: text('image_url'),
+    // browse curation — null means "let the keyword classifier decide", which
+    // is what keeps freshly synced Swiver products placing themselves:
+    familleSlug: text('famille_slug'),
+    sousCategorieSlug: text('sous_categorie_slug'),
+    sortOrder: integer('sort_order'),
+    // position in the flat "Tous les produits" listing, which is a different
+    // axis from sort_order: that one is a rank inside one sous-catégorie.
+    catalogueRank: integer('catalogue_rank'),
     // visibility:
     hidden: boolean('hidden').notNull().default(false),
     featured: boolean('featured').notNull().default(false),
@@ -61,5 +70,11 @@ export const catalogueProduct = pgTable(
     hiddenIdx: index('catalogue_product_hidden_idx').on(t.hidden),
     categoryIdx: index('catalogue_product_category_idx').on(t.baseCategory),
     skuIdx: index('catalogue_product_sku_idx').on(t.sku),
+    placementIdx: index('catalogue_product_placement_idx').on(
+      t.familleSlug,
+      t.sousCategorieSlug,
+      t.sortOrder,
+    ),
+    catalogueRankIdx: index('catalogue_product_rank_idx').on(t.catalogueRank),
   }),
 );

@@ -1,6 +1,16 @@
 import 'server-only';
 import { eq } from 'drizzle-orm';
 import type { ProductSpec } from '@/types/product';
+import type { FamilleId } from '@/data/familles';
+import {
+  pinnedCatalogueRows,
+  planCatalogueRankReorder,
+  planPlacementChange,
+  planReorder,
+  rowsInSousCategorie,
+  type CurationRow,
+  type ReorderError,
+} from './placement';
 
 export type ProductContent = {
   displayName: string | null;
@@ -124,6 +134,220 @@ export async function setCategoryHidden(categoryLabel: string, hidden: boolean, 
     .set({ hidden, updatedAt: new Date() })
     .where(eq(schema.catalogueProduct.baseCategory, categoryLabel));
   await audit('catalogue_product.category_visibility', null, { hidden }, actorUserId, { categoryLabel });
+}
+
+async function selectCurationRows(): Promise<CurationRow[]> {
+  const { db, schema } = await import('@/db/client');
+  const t = schema.catalogueProduct;
+  return db
+    .select({
+      id: t.id,
+      name: t.name,
+      displayName: t.displayName,
+      baseCategory: t.baseCategory,
+      familleSlug: t.familleSlug,
+      sousCategorieSlug: t.sousCategorieSlug,
+      sortOrder: t.sortOrder,
+      catalogueRank: t.catalogueRank,
+    })
+    .from(t);
+}
+
+/**
+ * Rewrite one sous-catégorie's positions as a dense sequence. Called after a
+ * product leaves, so the sous-catégorie it came from keeps a gapless order
+ * instead of accumulating holes over time.
+ */
+async function reindexSousCategorie(
+  rows: CurationRow[],
+  familleId: FamilleId,
+  sousCategorieSlug: string,
+): Promise<void> {
+  const { db, schema } = await import('@/db/client');
+  const curated = rowsInSousCategorie(rows, familleId, sousCategorieSlug).filter(
+    (row) => row.sortOrder != null,
+  );
+  await Promise.all(
+    curated.map((row, index) =>
+      row.sortOrder === index
+        ? Promise.resolve()
+        : db
+            .update(schema.catalogueProduct)
+            .set({ sortOrder: index })
+            .where(eq(schema.catalogueProduct.id, row.id)),
+    ),
+  );
+}
+
+export type PlacementInputValues = {
+  familleSlug: string | null;
+  sousCategorieSlug: string | null;
+};
+
+/**
+ * Move a product to another famille / sous-catégorie. `null` on either side
+ * hands the product back to the keyword classifier.
+ */
+export async function setProductPlacement(
+  id: string,
+  input: PlacementInputValues,
+  actorUserId?: string | null,
+): Promise<boolean> {
+  const { db, schema } = await import('@/db/client');
+  const rows = await selectCurationRows();
+  const row = rows.find((r) => r.id === id);
+  if (!row) return false;
+
+  const plan = planPlacementChange(row, input);
+  await db
+    .update(schema.catalogueProduct)
+    .set({
+      familleSlug: plan.familleSlug,
+      sousCategorieSlug: plan.sousCategorieSlug,
+      sortOrder: plan.sortOrder,
+      updatedByUserId: actorUserId ?? null,
+      updatedAt: new Date(),
+    })
+    .where(eq(schema.catalogueProduct.id, id));
+
+  if (plan.moved) {
+    await reindexSousCategorie(
+      rows.filter((r) => r.id !== id),
+      plan.from.familleId,
+      plan.from.sousCategorieSlug,
+    );
+  }
+
+  await audit(
+    'catalogue_product.placement_changed',
+    id,
+    { from: plan.from, to: plan.to },
+    actorUserId,
+    { familleSlug: plan.familleSlug, sousCategorieSlug: plan.sousCategorieSlug },
+  );
+  return true;
+}
+
+/**
+ * Persist the manual order of one sous-catégorie. One audit row per save, not
+ * per moved product — a drag session that writes thirty rows is noise.
+ */
+export async function reorderSousCategorie(
+  input: { familleId: FamilleId; sousCategorieSlug: string; orderedIds: string[] },
+  actorUserId?: string | null,
+): Promise<{ ok: true; count: number } | { ok: false; error: ReorderError }> {
+  const rows = await selectCurationRows();
+  const planned = planReorder(rows, input.familleId, input.sousCategorieSlug, input.orderedIds);
+  if (!planned.ok) return planned;
+
+  const { db, schema } = await import('@/db/client');
+  const changed = planned.plan.assignments.filter((assignment) => {
+    const row = rows.find((r) => r.id === assignment.id);
+    return row?.sortOrder !== assignment.sortOrder;
+  });
+
+  if (changed.length > 0) {
+    await db.transaction(async (tx) => {
+      for (const assignment of changed) {
+        await tx
+          .update(schema.catalogueProduct)
+          .set({ sortOrder: assignment.sortOrder, updatedByUserId: actorUserId ?? null, updatedAt: new Date() })
+          .where(eq(schema.catalogueProduct.id, assignment.id));
+      }
+    });
+  }
+
+  await audit(
+    'catalogue_product.reordered',
+    null,
+    { before: planned.plan.before, after: planned.plan.after },
+    actorUserId,
+    { familleSlug: input.familleId, sousCategorieSlug: input.sousCategorieSlug },
+  );
+  return { ok: true, count: changed.length };
+}
+
+/**
+ * Persist the order of the products pinned to the top of "Tous les produits".
+ * Separate axis from `sort_order`, which ranks inside one sous-catégorie.
+ */
+export async function reorderCatalogueRank(
+  orderedIds: string[],
+  actorUserId?: string | null,
+): Promise<{ ok: true; count: number } | { ok: false; error: ReorderError }> {
+  const rows = await selectCurationRows();
+  const planned = planCatalogueRankReorder(rows, orderedIds);
+  if (!planned.ok) return planned;
+
+  const { db, schema } = await import('@/db/client');
+  const changed = planned.plan.assignments.filter((assignment) => {
+    const row = rows.find((r) => r.id === assignment.id);
+    return row?.catalogueRank !== assignment.sortOrder;
+  });
+
+  if (changed.length > 0) {
+    await db.transaction(async (tx) => {
+      for (const assignment of changed) {
+        await tx
+          .update(schema.catalogueProduct)
+          .set({
+            catalogueRank: assignment.sortOrder,
+            updatedByUserId: actorUserId ?? null,
+            updatedAt: new Date(),
+          })
+          .where(eq(schema.catalogueProduct.id, assignment.id));
+      }
+    });
+  }
+
+  await audit(
+    'catalogue_product.rank_reordered',
+    null,
+    { before: planned.plan.before, after: planned.plan.after },
+    actorUserId,
+  );
+  return { ok: true, count: changed.length };
+}
+
+/** Add a product to (or remove it from) the "Tous les produits" pinned head. */
+export async function setCataloguePin(
+  id: string,
+  pinned: boolean,
+  actorUserId?: string | null,
+): Promise<boolean> {
+  const rows = await selectCurationRows();
+  const row = rows.find((r) => r.id === id);
+  if (!row) return false;
+  if (pinned === (row.catalogueRank != null)) return true;
+
+  const { db, schema } = await import('@/db/client');
+  const nextRank = pinned ? pinnedCatalogueRows(rows).length : null;
+  await db
+    .update(schema.catalogueProduct)
+    .set({ catalogueRank: nextRank, updatedByUserId: actorUserId ?? null, updatedAt: new Date() })
+    .where(eq(schema.catalogueProduct.id, id));
+
+  if (!pinned) {
+    const remaining = pinnedCatalogueRows(rows.filter((r) => r.id !== id));
+    await Promise.all(
+      remaining.map((r, index) =>
+        r.catalogueRank === index
+          ? Promise.resolve()
+          : db
+              .update(schema.catalogueProduct)
+              .set({ catalogueRank: index })
+              .where(eq(schema.catalogueProduct.id, r.id)),
+      ),
+    );
+  }
+
+  await audit(
+    pinned ? 'catalogue_product.pinned' : 'catalogue_product.unpinned',
+    id,
+    { catalogueRank: nextRank },
+    actorUserId,
+  );
+  return true;
 }
 
 /** Delete a custom product (Swiver products are hidden, never deleted). */

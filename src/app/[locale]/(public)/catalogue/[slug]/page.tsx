@@ -21,8 +21,14 @@ import {
   type PublicOfferSectionId,
 } from '@/data/public-offers';
 import { getUseCaseById } from '@/data/queries';
-import { CATALOGUE_PATH, classifyFamille, classifySousCategorie, produitPath } from '@/data/familles';
-import { getCatalogueProductBySlug, getCatalogueSearchCards, getVisibleCatalogue } from '@/features/catalogue/queries';
+import { CATALOGUE_PATH, produitPath } from '@/data/familles';
+import {
+  getCatalogueProductBySlug,
+  getCatalogueSearchCards,
+  getProductPlacementBySlug,
+  getRelatedCatalogue,
+  getVisibleCatalogue,
+} from '@/features/catalogue/queries';
 import { localizeUseCase } from '@/data/i18n/content';
 import type { Product } from '@/data/types';
 import type { CatalogueCardProduct } from '@/types/product';
@@ -108,19 +114,15 @@ export default async function ProductDetailPage({
 
   const t = await getTranslations({ locale, namespace: 'catalogue' });
 
-  // Related = same famille, with same sous-catégorie surfaced first. Live DB
-  // products carry no useCases, so the family/gamme is derived from the name.
-  const famille = classifyFamille(product.name, product.categoryLabel);
-  const sousCat = classifySousCategorie(famille, product.name);
-  const toolbar = await buildProductToolbar(locale, produitPath(famille, sousCat));
-  const related = (await getVisibleCatalogue())
-    .filter((p) => p.slug !== product.slug && classifyFamille(p.name, p.categoryLabel) === famille)
-    .sort(
-      (a, b) =>
-        Number(classifySousCategorie(famille, b.name) === sousCat) -
-        Number(classifySousCategorie(famille, a.name) === sousCat),
-    )
-    .slice(0, 4);
+  // Back link and related products both follow the admin placement when there
+  // is one, and the keyword classifier otherwise — a curated product must not
+  // send the visitor back to the sous-catégorie it was moved out of.
+  const placement = await getProductPlacementBySlug(slug);
+  const toolbar = await buildProductToolbar(
+    locale,
+    placement ? produitPath(placement.familleId, placement.sousCategorieSlug) : CATALOGUE_PATH,
+  );
+  const related = await getRelatedCatalogue(slug, 4);
 
   return (
     <>

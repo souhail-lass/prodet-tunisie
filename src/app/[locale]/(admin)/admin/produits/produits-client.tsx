@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
-import { Eye, EyeOff, Pencil, Plus, RefreshCw, Search, Star } from 'lucide-react';
+import { ArrowUpDown, Eye, EyeOff, Pencil, Plus, RefreshCw, Search, Star } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
 import type { AdminProductRow } from '@/features/catalogue/queries';
 import { setProductHiddenAction, syncCatalogueAction, toggleCategoryAction } from './actions';
@@ -113,6 +113,9 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
             <EyeOff size={14} /> <span>Masquer la catégorie</span>
           </button>
         ) : null}
+        <Link href="/admin/produits/rangement" className="pds-btn pds-btn--outline pds-btn--sm">
+          <ArrowUpDown size={14} /> <span>Ranger</span>
+        </Link>
         <button className="pds-btn pds-btn--ghost pds-btn--sm" onClick={sync} disabled={pending}>
           <RefreshCw size={14} /> <span>{syncing ? 'Synchronisation…' : 'Synchroniser'}</span>
         </button>

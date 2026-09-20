@@ -29,6 +29,8 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         imageUrl: row.imageUrl ?? '',
         hidden: row.hidden,
         featured: row.featured,
+        familleSlug: row.familleSlug ?? '',
+        sousCategorieSlug: row.sousCategorieSlug ?? '',
       }}
     />
   );
