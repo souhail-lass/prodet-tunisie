@@ -79,18 +79,18 @@ export async function generateMetadata({
       title: 'Prodet',
       statusBarStyle: 'default',
     },
-    // v=20260921d: monogram P on white disc — readable at Google SERP size.
+    // v=20260921e: full Prodet wordmark in white disc (aspect preserved, no clip).
     icons: {
       icon: [
-        { url: '/favicon.ico?v=20260921d', sizes: '48x48' },
-        { url: '/brand/favicon.svg?v=20260921d', type: 'image/svg+xml' },
-        { url: '/brand/favicon-32.png?v=20260921d', sizes: '32x32', type: 'image/png' },
-        { url: '/brand/favicon-48.png?v=20260921d', sizes: '48x48', type: 'image/png' },
-        { url: '/brand/favicon-96.png?v=20260921d', sizes: '96x96', type: 'image/png' },
-        { url: '/brand/icon-192.png?v=20260921d', sizes: '192x192', type: 'image/png' },
+        { url: '/favicon.ico?v=20260921e', sizes: '48x48' },
+        { url: '/brand/favicon.svg?v=20260921e', type: 'image/svg+xml' },
+        { url: '/brand/favicon-32.png?v=20260921e', sizes: '32x32', type: 'image/png' },
+        { url: '/brand/favicon-48.png?v=20260921e', sizes: '48x48', type: 'image/png' },
+        { url: '/brand/favicon-96.png?v=20260921e', sizes: '96x96', type: 'image/png' },
+        { url: '/brand/icon-192.png?v=20260921e', sizes: '192x192', type: 'image/png' },
       ],
-      apple: [{ url: '/brand/apple-touch-icon.png?v=20260921d', sizes: '180x180' }],
-      shortcut: '/brand/favicon-48.png?v=20260921d',
+      apple: [{ url: '/brand/apple-touch-icon.png?v=20260921e', sizes: '180x180' }],
+      shortcut: '/brand/favicon-48.png?v=20260921e',
     },
   };
 }
