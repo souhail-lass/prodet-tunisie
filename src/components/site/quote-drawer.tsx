@@ -218,7 +218,11 @@ function QuoteDrawer({
                 </span>
                 <p>{t('empty')}</p>
                 {products.length > 0 ? <p className="qm__empty-hint">{t('emptyHint')}</p> : null}
-                <Link href="/produits/produits-nettoyage" className="pds-btn pds-btn--outline" onClick={onClose}>
+                <Link
+                  href="/produits/produits-nettoyage"
+                  className="pds-btn pds-btn--outline pds-btn--md"
+                  onClick={onClose}
+                >
                   {t('browseCatalogue')}
                 </Link>
               </div>
