@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { CATALOGUE_PATH } from '@/data/familles';
 import { Link } from '@/i18n/routing';
 import { companyInfo } from '@/data/company';
+import { OpenQuoteButton } from '@/components/site/open-quote-button';
 
 export async function SiteFooter() {
   const t = await getTranslations('footer');
@@ -35,7 +36,7 @@ export async function SiteFooter() {
           <Link href="/a-propos">{tc('navigation.about')}</Link>
           <Link href="/secteurs">{tc('navigation.sectors')}</Link>
           <Link href="/contact">{tc('navigation.contact')}</Link>
-          <Link href="/devis">{t('requestQuote')}</Link>
+          <OpenQuoteButton className="site-footer__link">{t('requestQuote')}</OpenQuoteButton>
         </div>
 
         <div className="site-footer__col">

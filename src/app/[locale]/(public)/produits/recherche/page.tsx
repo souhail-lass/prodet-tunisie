@@ -7,6 +7,7 @@ import { searchCatalogue } from '@/lib/product-search';
 import { CategorySidebar } from '@/components/catalogue/category-sidebar';
 import { ProductQuickSearch } from '@/components/catalogue/product-quick-search';
 import { ProductGrid } from '@/components/catalogue/product-grid';
+import { OpenQuoteButton } from '@/components/site/open-quote-button';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbSchema } from '@/lib/seo/structured-data';
 
@@ -120,9 +121,9 @@ export default async function CatalogueSearchPage({
             <p>{tf('page.ctaBody')}</p>
           </div>
           <div className="cta-band__actions">
-            <Link className="pds-btn pds-btn--primary pds-btn--lg" href="/devis">
+            <OpenQuoteButton className="pds-btn pds-btn--primary pds-btn--lg">
               {tf('page.ctaQuote')}
-            </Link>
+            </OpenQuoteButton>
           </div>
         </div>
       </section>

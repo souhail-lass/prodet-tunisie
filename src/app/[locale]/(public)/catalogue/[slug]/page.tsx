@@ -38,6 +38,7 @@ import { Button } from '@/components/ui/button';
 import { ProductGrid } from '@/components/catalogue/product-grid';
 import { ProductDetailToolbar } from '@/components/product/ProductDetailToolbar';
 import { ProductHeroV2 } from '@/components/product/ProductHeroV2';
+import { OpenQuoteButton } from '@/components/site/open-quote-button';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbSchema, productSchema } from '@/lib/seo/structured-data';
 
@@ -311,7 +312,7 @@ async function PublicOfferDetailPage({
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <Button asChild className="h-12 text-sm font-semibold">
-              <Link href="/devis">{t('detail.requestQuote')}</Link>
+              <OpenQuoteButton>{t('detail.requestQuote')}</OpenQuoteButton>
             </Button>
 
             {legacyProduct?.technicalSheetUrl ? (
@@ -323,7 +324,7 @@ async function PublicOfferDetailPage({
               </Button>
             ) : (
               <Button asChild variant="outline" className="h-12 text-sm font-semibold">
-                <Link href="/devis">{siteContent.product.technicalSheetFallback}</Link>
+                <OpenQuoteButton>{siteContent.product.technicalSheetFallback}</OpenQuoteButton>
               </Button>
             )}
 

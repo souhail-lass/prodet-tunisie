@@ -38,6 +38,7 @@
     "sentTitle": "Request sent",
     "close": "Close",
     "empty": "Your quote list is empty.",
+    "emptyHint": "Search for a product above to add it.",
     "browseCatalogue": "Browse the catalogue",
     "clearList": "Clear the list",
     "manufactured": "Made by Prodet",

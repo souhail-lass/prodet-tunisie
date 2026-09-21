@@ -6,6 +6,7 @@ import { getSectorBySlug, listSectors } from '@/data/queries';
 import { localizeSector } from '@/data/i18n/content';
 import { isLocale, Link } from '@/i18n/routing';
 import { QuoteQuantityControl } from '@/components/catalogue/ProductCard';
+import { OpenQuoteButton } from '@/components/site/open-quote-button';
 import { sectorZones } from '@/components/secteurs/sector-solutions';
 import { getVisibleCatalogue } from '@/features/catalogue/queries';
 import { resolveZoneProducts } from '@/lib/sector-catalogue';
@@ -78,9 +79,9 @@ export default async function SectorPage({
               <h1 className="sector-hero__title">{sector.label}</h1>
               <p className="sector-hero__lead">{sector.shortDescription}</p>
               <div className="sector-hero__cta">
-                <Link href="/devis" className="pds-btn pds-btn--primary pds-btn--lg">
+                <OpenQuoteButton className="pds-btn pds-btn--primary pds-btn--lg">
                   <FileText size={17} /> {t('requestQuote')}
-                </Link>
+                </OpenQuoteButton>
                 <Link href="/produits/produits-nettoyage" className="sector-hero__link">
                   {t('viewCatalogue')} <ArrowRight size={15} />
                 </Link>
@@ -129,9 +130,9 @@ export default async function SectorPage({
             <p>{t('ctaLead')}</p>
           </div>
           <div className="cta-band__actions">
-            <Link href="/devis" className="pds-btn pds-btn--primary pds-btn--lg">
+            <OpenQuoteButton className="pds-btn pds-btn--primary pds-btn--lg">
               {t('requestQuote')}
-            </Link>
+            </OpenQuoteButton>
             <Link
               href="/produits/produits-nettoyage"
               className="pds-btn pds-btn--ghost pds-btn--lg cta-band__ghost"

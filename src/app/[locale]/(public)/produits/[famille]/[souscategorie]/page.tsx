@@ -15,6 +15,7 @@ import { getCatalogueBySousCategorie, getCatalogueSearchCards } from '@/features
 import { CategorySidebar } from '@/components/catalogue/category-sidebar';
 import { ProductQuickSearch } from '@/components/catalogue/product-quick-search';
 import { ProductGrid } from '@/components/catalogue/product-grid';
+import { OpenQuoteButton } from '@/components/site/open-quote-button';
 import type { CatalogueCardProduct } from '@/types/product';
 
 export const revalidate = 300;
@@ -116,9 +117,9 @@ export default async function SousCategoriePage({
             <p>{tf('page.ctaBody')}</p>
           </div>
           <div className="cta-band__actions">
-            <Link className="pds-btn pds-btn--primary pds-btn--lg" href="/devis">
+            <OpenQuoteButton className="pds-btn pds-btn--primary pds-btn--lg">
               {tf('page.ctaQuote')}
-            </Link>
+            </OpenQuoteButton>
           </div>
         </div>
       </section>

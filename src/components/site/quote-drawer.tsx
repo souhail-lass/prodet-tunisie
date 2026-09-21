@@ -2,6 +2,8 @@
 
 import {
   createContext,
+  Suspense,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -10,15 +12,18 @@ import {
   type ReactNode,
 } from 'react';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { ArrowRight, Check, ChevronLeft, FileText, Shield, Trash2, X } from 'lucide-react';
 import { Button, Input, QuantityControl, Select } from '@/components/ds';
+import { ProductQuickSearch } from '@/components/catalogue/product-quick-search';
 import { listSectors } from '@/data/queries';
 import { localizeSectors } from '@/data/i18n/content';
 import { submitPublicDevisRequest } from '@/features/quote/actions';
 import { useQuoteSelection } from '@/lib/quote-cart-context';
 import { Link, type Locale } from '@/i18n/routing';
 import { HoneypotField } from '@/components/site/honeypot-field';
+import type { CatalogueCardProduct } from '@/types/product';
 
 type QuoteDrawerContextValue = {
   open: () => void;
@@ -39,20 +44,48 @@ type FormState = {
 
 const INITIAL_FORM: FormState = { company: '', email: '', phone: '', sectorId: '', website: '' };
 
-export function QuoteDrawerProvider({ children }: { children: ReactNode }) {
+export function QuoteDrawerProvider({
+  children,
+  products = [],
+}: {
+  children: ReactNode;
+  products?: CatalogueCardProduct[];
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const open = useCallback(() => setIsOpen(true), []);
+  const close = useCallback(() => setIsOpen(false), []);
   const value = useMemo<QuoteDrawerContextValue>(
-    () => ({ open: () => setIsOpen(true), close: () => setIsOpen(false), isOpen }),
-    [isOpen],
+    () => ({ open, close, isOpen }),
+    [open, close, isOpen],
   );
 
   return (
     <QuoteDrawerContext.Provider value={value}>
       {children}
-      <QuoteDrawer open={isOpen} onClose={() => setIsOpen(false)} />
+      <Suspense fallback={null}>
+        <DevisQueryOpener open={open} />
+      </Suspense>
+      <QuoteDrawer open={isOpen} onClose={close} products={products} />
     </QuoteDrawerContext.Provider>
   );
+}
+
+/** Old /devis bookmarks land on `?devis=1`; open the drawer and drop the flag. */
+function DevisQueryOpener({ open }: { open: () => void }) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (searchParams.get('devis') !== '1') return;
+    open();
+    const next = new URLSearchParams(searchParams.toString());
+    next.delete('devis');
+    const qs = next.toString();
+    router.replace(qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
+  }, [searchParams, open, router]);
+
+  return null;
 }
 
 export function useQuoteDrawer() {
@@ -61,7 +94,15 @@ export function useQuoteDrawer() {
   return value;
 }
 
-function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+function QuoteDrawer({
+  open,
+  onClose,
+  products,
+}: {
+  open: boolean;
+  onClose: () => void;
+  products: CatalogueCardProduct[];
+}) {
   const { items, setProductQuantity, clearSelection, removeProduct } = useQuoteSelection();
   const t = useTranslations('devis.drawer');
   const locale = useLocale() as Locale;
@@ -163,16 +204,23 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
             </div>
           </div>
         ) : step === 'list' ? (
-          <div className="qm__body">
+          <>
+            {products.length > 0 ? (
+              <div className="qm__search">
+                <ProductQuickSearch products={products} embedded className="qm__search-field" />
+              </div>
+            ) : null}
+            <div className="qm__body">
             {lines.length === 0 ? (
               <div className="qm__empty">
                 <span className="qm__empty-icon">
                   <FileText size={26} />
                 </span>
                 <p>{t('empty')}</p>
-                <Button variant="outline" onClick={onClose}>
-                  <Link href="/produits/produits-nettoyage">{t('browseCatalogue')}</Link>
-                </Button>
+                {products.length > 0 ? <p className="qm__empty-hint">{t('emptyHint')}</p> : null}
+                <Link href="/produits/produits-nettoyage" className="pds-btn pds-btn--outline" onClick={onClose}>
+                  {t('browseCatalogue')}
+                </Link>
               </div>
             ) : (
               <>
@@ -238,6 +286,7 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
               </>
             )}
           </div>
+          </>
         ) : (
           <div className="qm__body">
             <div className="qm__form">

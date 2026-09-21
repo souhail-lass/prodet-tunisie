@@ -20,6 +20,12 @@ export type ProductQuickSearchProps = {
   className?: string;
   /** Prefill from the search-results URL. */
   initialQuery?: string;
+  /**
+   * Stay on this screen: Enter adds nothing extra and the "see all" link is
+   * hidden. Used inside the quote drawer so a search does not dump the user
+   * onto /produits/recherche.
+   */
+  embedded?: boolean;
 };
 
 /**
@@ -33,6 +39,7 @@ export function ProductQuickSearch({
   align = 'start',
   className,
   initialQuery = '',
+  embedded = false,
 }: ProductQuickSearchProps) {
   const t = useTranslations('catalogue');
   const ta = useTranslations('common.actions');
@@ -66,6 +73,7 @@ export function ProductQuickSearch({
   }
 
   function goToResults() {
+    if (embedded) return;
     const q = (inputRef.current?.value ?? query).trim();
     if (!q) return;
     setOpen(false);
@@ -184,13 +192,15 @@ export function ProductQuickSearch({
                   </li>
                 ))}
               </ul>
-              <a
-                href={searchHref}
-                className="pq-search__more"
-                onClick={() => setOpen(false)}
-              >
-                {t('page.searchAll', { count: matches.length })}
-              </a>
+              {embedded ? null : (
+                <a
+                  href={searchHref}
+                  className="pq-search__more"
+                  onClick={() => setOpen(false)}
+                >
+                  {t('page.searchAll', { count: matches.length })}
+                </a>
+              )}
             </>
           ) : (
             <p className="pq-search__empty">{t('empty.text')}</p>

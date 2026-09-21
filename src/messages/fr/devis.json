@@ -38,6 +38,7 @@
     "sentTitle": "Demande envoyée",
     "close": "Fermer",
     "empty": "Votre liste de devis est vide.",
+    "emptyHint": "Recherchez un produit ci-dessus pour l’ajouter.",
     "browseCatalogue": "Parcourir le catalogue",
     "clearList": "Vider la liste",
     "manufactured": "Fabriqué par Prodet",

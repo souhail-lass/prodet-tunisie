@@ -173,8 +173,10 @@
 .site-footer__made { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; color: #fff; font-size: var(--text-sm); font-weight: var(--fw-medium); }
 .site-footer__made svg { color: var(--prodet-sky); }
 .site-footer__col h4 { color: #fff; font-size: var(--text-sm); font-weight: var(--fw-semibold); margin-bottom: 14px; }
-.site-footer__col a { display: block; color: var(--text-on-dark-soft); font-size: var(--text-sm); padding: 5px 0; cursor: pointer; }
-.site-footer__col a:hover { color: #fff; }
+.site-footer__col a,
+.site-footer__col .site-footer__link { display: block; width: 100%; text-align: start; color: var(--text-on-dark-soft); font-size: var(--text-sm); padding: 5px 0; cursor: pointer; background: none; border: none; font-family: inherit; }
+.site-footer__col a:hover,
+.site-footer__col .site-footer__link:hover { color: #fff; }
 /* Higher specificity than `.site-footer__col a { display:block }` so the phone
    and email links sit inline (icon + text) and align with the address. */
 .site-footer__col a.site-footer__contact,
