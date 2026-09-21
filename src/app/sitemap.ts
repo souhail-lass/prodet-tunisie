@@ -1,9 +1,9 @@
 import type { MetadataRoute } from 'next';
-import { listProducts, listSectors } from '@/data/queries';
+import { listSectors } from '@/data/queries';
 import { familleIds, getSousCategoriesForFamille } from '@/data/familles';
-import { listPublicOffers } from '@/data/public-offers';
+import { getVisibleCatalogue } from '@/features/catalogue/queries';
 import { locales } from '@/i18n/routing';
-import { resolveAuthOrigin } from '@/lib/site-origin';
+import { canonicalPublicOrigin } from '@/lib/seo/public-origin';
 
 type Entry = {
   path: string;
@@ -12,7 +12,7 @@ type Entry = {
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = (await resolveAuthOrigin()).replace(/\/$/, '');
+  const baseUrl = canonicalPublicOrigin();
   const lastModified = new Date();
 
   const entries: Entry[] = [
@@ -25,9 +25,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/cookies', priority: 0.2, changeFrequency: 'yearly' },
   ];
 
-  // Product family landing pages + their sub-categories — the primary targets
-  // for high-intent commercial queries ("produits de nettoyage", "papier
-  // hygiénique professionnel", …).
   for (const familleId of familleIds) {
     entries.push({ path: `/produits/${familleId}`, priority: 0.9, changeFrequency: 'weekly' });
     for (const sub of getSousCategoriesForFamille(familleId)) {
@@ -39,17 +36,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // Sector landing pages.
   for (const sector of listSectors()) {
     entries.push({ path: `/secteurs/${sector.slug}`, priority: 0.7, changeFrequency: 'monthly' });
   }
 
-  // Individual product / offer detail pages (deduped — the catalogue route
-  // serves both the legacy fixtures and the public offers).
-  const catalogueSlugs = new Set<string>([
-    ...listProducts().map((p) => p.slug),
-    ...listPublicOffers().map((o) => o.slug),
-  ]);
+  const catalogueSlugs = await loadCatalogueSlugs();
   for (const slug of catalogueSlugs) {
     entries.push({ path: `/catalogue/${slug}`, priority: 0.6, changeFrequency: 'monthly' });
   }
@@ -65,4 +56,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ),
     },
   }));
+}
+
+async function loadCatalogueSlugs(): Promise<string[]> {
+  try {
+    const products = await getVisibleCatalogue();
+    if (products.length > 0) {
+      return [...new Set(products.map((product) => product.slug))];
+    }
+  } catch {
+    // Build/runtime without DB: skip product URLs rather than emit stale fixtures.
+  }
+  return [];
 }

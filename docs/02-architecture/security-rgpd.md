@@ -117,7 +117,7 @@ We will request and review DPAs as part of the [hosting checklist](hosting.md#do
 
 ## Cookies
 
-- **MVP analytics** — Plausible (no cookies). No banner needed.
+- **MVP analytics** — Vercel Web Analytics (first-party, no cookies). Plausible optional. No banner needed.
 - **Functional cookies** — Supabase Auth session cookie (essential, no banner needed under RGPD if strictly necessary).
 - **Cloudflare Turnstile** — uses challenge mechanisms; documented in privacy policy.
 - If we ever add tracking cookies (advertising, GA), a real consent banner becomes mandatory. Out of scope.

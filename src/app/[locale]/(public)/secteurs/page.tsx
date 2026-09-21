@@ -5,11 +5,26 @@ import { isLocale } from '@/i18n/routing';
 import { listSectors } from '@/data/queries';
 import { localizeSectors } from '@/data/i18n/content';
 import { SectorsPage } from '@/components/sectors/sectors-page';
+import { pageAlternates } from '@/lib/seo/alternates';
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (locale === 'en') {
+    return {
+      title: 'Sectors we supply',
+      description:
+        'Professional cleaning products for hotels, restaurants, cleaning companies, businesses, wholesalers and institutions in Tunisia.',
+      alternates: pageAlternates(locale, '/secteurs'),
+    };
+  }
   return {
     title: siteContent.sectors.title,
     description: siteContent.sectors.subtitle,
+    alternates: pageAlternates(locale, '/secteurs'),
   };
 }
 

@@ -41,6 +41,7 @@ import { ProductHeroV2 } from '@/components/product/ProductHeroV2';
 import { OpenQuoteButton } from '@/components/site/open-quote-button';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbSchema, productSchema } from '@/lib/seo/structured-data';
+import { pageAlternates } from '@/lib/seo/alternates';
 
 // Static + ISR per slug: each product page is cached after first render and
 // regenerated in the background; admin edits revalidate the 'catalogue' tag.
@@ -67,10 +68,11 @@ export async function generateMetadata({
   const publicOffer = getPublicOfferBySlug(slug);
   if (publicOffer) {
     const section = getPublicOfferSectionById(publicOffer.sectionId);
-    return {
-      title: publicOffer.name,
-      description: buildOfferDescription(publicOffer, section?.label),
-    };
+  return {
+    title: publicOffer.name,
+    description: buildOfferDescription(publicOffer, section?.label),
+    alternates: pageAlternates(locale, `/catalogue/${publicOffer.slug}`),
+  };
   }
 
   const product = await getCatalogueProductBySlug(slug);
@@ -79,8 +81,11 @@ export async function generateMetadata({
   return {
     title: product.name,
     description: product.tagline || undefined,
-    alternates: {
-      canonical: `/${locale}/catalogue/${product.slug}`,
+    alternates: pageAlternates(locale, `/catalogue/${product.slug}`),
+    openGraph: {
+      title: product.name,
+      description: product.tagline || undefined,
+      images: product.image ? [{ url: product.image }] : undefined,
     },
   };
 }

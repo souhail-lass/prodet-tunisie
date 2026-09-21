@@ -1,11 +1,17 @@
 import type { MetadataRoute } from 'next';
-import { resolveAuthOrigin } from '@/lib/site-origin';
+import { canonicalPublicOrigin } from '@/lib/seo/public-origin';
+import { PUBLIC_ROBOTS_DISALLOW } from '@/lib/seo/robots-rules';
 
-export default async function robots(): Promise<MetadataRoute.Robots> {
-  // Derive the real deployment host (never the localhost-defaulted env).
-  const baseUrl = (await resolveAuthOrigin()).replace(/\/$/, '');
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl = canonicalPublicOrigin();
   return {
-    rules: [{ userAgent: '*', allow: '/' }],
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: [...PUBLIC_ROBOTS_DISALLOW],
+      },
+    ],
     sitemap: `${baseUrl}/sitemap.xml`,
   };
 }

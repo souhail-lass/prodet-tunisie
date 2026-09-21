@@ -19,6 +19,7 @@ import { ProductGrid } from '@/components/catalogue/product-grid';
 import { OpenQuoteButton } from '@/components/site/open-quote-button';
 import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbSchema } from '@/lib/seo/structured-data';
+import { pageAlternates } from '@/lib/seo/alternates';
 import type { CatalogueCardProduct } from '@/types/product';
 
 // Browse familles are known at build time — prerender them (ISR via the
@@ -41,6 +42,7 @@ export async function generateMetadata({
   return {
     title: tf(`items.${fam.id}.label`),
     description: tf(`items.${fam.id}.description`),
+    alternates: pageAlternates(locale, `/produits/${fam.id}`),
   };
 }
 

@@ -1,5 +1,6 @@
 import 'server-only';
 import { headers } from 'next/headers';
+import { normalizePublicOrigin } from '@/lib/seo/public-origin';
 
 const LOCAL_HOST = /^(localhost|127\.|0\.0\.0\.0|\[::1\])/u;
 
@@ -13,7 +14,7 @@ function configuredOrigin(): string | null {
     // exactly the misconfiguration that mails clients a login link pointing at
     // their own machine and bounces them to the home page.
     if (process.env.NODE_ENV === 'production' && LOCAL_HOST.test(url.hostname)) return null;
-    return url.origin; // strips any path ("/fr"), trailing slash, etc.
+    return normalizePublicOrigin(url.origin);
   } catch {
     return null;
   }

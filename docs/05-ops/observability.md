@@ -9,7 +9,7 @@
 | App errors | Sentry | Frontend + serverless. EU region. PII scrubbing on. |
 | Logs | Logtail (or Vercel Logs at MVP) | Structured JSON; per-request correlation ID. |
 | Uptime | Better Stack monitor (or self-hosted heartbeat) | One per public surface. |
-| Web analytics | Plausible | No cookies; EU-hosted. |
+| Web analytics | Vercel Web Analytics | First-party, no cookies. Plausible optional via env. |
 | Custom business events | Postgres `audit_log` | All approvals, alias creations, exports. |
 | Job runs | Inngest dashboard | Built-in. |
 | Synthetic checks | Playwright via GitHub Actions cron | Phase 2. |

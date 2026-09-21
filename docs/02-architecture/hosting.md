@@ -90,7 +90,7 @@ flowchart LR
 | App errors | Sentry (frontend + serverless) |
 | Logs | Logtail (or Vercel Logs at MVP) |
 | Uptime | Better Stack monitor (or self-hosted heartbeat) |
-| Web analytics | Plausible |
+| Web analytics | Vercel Web Analytics (Plausible optional) |
 | Custom business events | Postgres `audit_log` + Inngest dashboards |
 | Synthetic checks | Playwright smoke tests run from GitHub Actions on cron (Phase 2) |
 

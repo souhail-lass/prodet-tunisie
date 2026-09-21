@@ -18,6 +18,8 @@ Format: see [0001-record-format.md](0001-record-format.md).
 | [0010](0010-jobs-and-queues.md) | Inngest for background jobs | Proposed |
 | [0011](0011-client-portal-access-and-request-model.md) | Client portal access and request model | Proposed |
 | [0012](0012-swiver-integration-architecture.md) | Swiver integration architecture (adapter, sync boundaries, prerequisites) | Proposed |
+| [0013](0013-durable-rate-limiting.md) | Durable rate limiting | Proposed |
+| [0014](0014-vercel-web-analytics.md) | Vercel Web Analytics via `@vercel/analytics` | Accepted |
 
 ## When to write an ADR
 

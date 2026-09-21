@@ -145,10 +145,11 @@ Are any already registered? Are there existing email addresses (e.g. `contact@â€
 
 ### Q16. Analytics vendor
 
-**Status.** Open.
+**Status.** Answered 2026-09-21.
 **Blocks.** Public site instrumentation, cookie banner scope.
 **Question.** Preference for Plausible (privacy-first, no cookie banner needed), Vercel Analytics (free with our hosting), Google Analytics 4 (richest features but cookie banner required), or Matomo (self-hosted)?
 **Default if unanswered.** Plausible. Adds zero cookie-banner liability.
+**Answer.** Vercel Web Analytics at MVP (first-party script, no cookie, already on the host). Plausible remains optional via `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`. Google Analytics is out until we explicitly want a consent banner. Setup: [analytics-and-seo.md](../05-ops/analytics-and-seo.md).
 
 ### Q17. Cookie / consent UX
 

@@ -18,6 +18,10 @@ const scriptSrc = isProd
 
 const supabaseUrl = process.env.SUPABASE_URL?.trim();
 const connectSrc = ["'self'", 'https://api.resend.com'];
+if (process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN?.trim()) {
+  scriptSrc.push('https://plausible.io');
+  connectSrc.push('https://plausible.io');
+}
 if (supabaseUrl) {
   try {
     const origin = new URL(supabaseUrl).origin;

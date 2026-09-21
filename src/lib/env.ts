@@ -1,10 +1,13 @@
 import 'server-only';
 import { z } from 'zod';
+import { normalizePublicOrigin } from '@/lib/seo/public-origin';
 
 const ServerEnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   DATABASE_URL: z.string().url().optional(),
   NEXT_PUBLIC_SITE_URL: z.string().url().default('http://localhost:3004'),
+  NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: z.string().min(1).optional(),
+  NEXT_PUBLIC_PLAUSIBLE_DOMAIN: z.string().min(1).optional(),
   NEXT_PUBLIC_DEFAULT_WHATSAPP_E164: z
     .string()
     .regex(/^\+?[1-9]\d{6,14}$/u, 'Expected E.164 phone (e.g. +21671000000)')
@@ -48,6 +51,8 @@ const ServerEnvSchema = z.object({
 const PublicEnvSchema = ServerEnvSchema.pick({
   NEXT_PUBLIC_SITE_URL: true,
   NEXT_PUBLIC_DEFAULT_WHATSAPP_E164: true,
+  NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: true,
+  NEXT_PUBLIC_PLAUSIBLE_DOMAIN: true,
 });
 
 export type ServerEnv = z.infer<typeof ServerEnvSchema>;
@@ -72,8 +77,13 @@ export function getServerEnv(): ServerEnv {
 export function getPublicEnv(): PublicEnv {
   if (cachedPublic) return cachedPublic;
   cachedPublic = PublicEnvSchema.parse({
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3004',
+    NEXT_PUBLIC_SITE_URL: normalizePublicOrigin(
+      process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3004',
+    ),
     NEXT_PUBLIC_DEFAULT_WHATSAPP_E164: process.env.NEXT_PUBLIC_DEFAULT_WHATSAPP_E164,
+    NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    NEXT_PUBLIC_PLAUSIBLE_DOMAIN: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || undefined,
   });
   return cachedPublic;
 }

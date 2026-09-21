@@ -5,8 +5,8 @@ import type { MetadataRoute } from 'next';
  * and opens it full-screen like a native app. Next auto-links this at
  * /manifest.webmanifest.
  *
- * Icons: white circular badge + Prodet wordmark (padding tuned for 32–512px),
- * so the mark stays readable on dark browser chrome / SERP / home-screen masks.
+ * Icons: full-bleed white square + trimmed Prodet wordmark. Google SERP
+ * circle-crops favicons — an inner circle would double-pad and look broken.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -23,11 +23,11 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#08233f',
     categories: ['business', 'productivity'],
     icons: [
-      { src: '/brand/favicon.svg?v=20260921', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
-      { src: '/brand/icon-192.png?v=20260921', sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: '/brand/icon-512.png?v=20260921', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: '/brand/favicon.svg?v=20260921b', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+      { src: '/brand/icon-192.png?v=20260921b', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/brand/icon-512.png?v=20260921b', sizes: '512x512', type: 'image/png', purpose: 'any' },
       {
-        src: '/brand/icon-512-maskable.png?v=20260921',
+        src: '/brand/icon-512-maskable.png?v=20260921b',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'maskable',

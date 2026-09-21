@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, isLocale } from '@/i18n/routing';
+import { pageAlternates } from '@/lib/seo/alternates';
 import {
   familles,
   getFamilleBySlug,
@@ -35,7 +36,10 @@ export async function generateMetadata({
   const fam = getFamilleBySlug(famille);
   if (!isLocale(locale) || !fam) return {};
   const tf = await getTranslations({ locale, namespace: 'familles' });
-  return { title: tf(`souscats.${sousCatLabelKey(souscategorie)}`) };
+  return {
+    title: tf(`souscats.${sousCatLabelKey(souscategorie)}`),
+    alternates: pageAlternates(locale, `/produits/${fam.id}/${souscategorie}`),
+  };
 }
 
 export default async function SousCategoriePage({

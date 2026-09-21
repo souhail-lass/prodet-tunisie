@@ -28,7 +28,7 @@
 | DNS / Edge | Cloudflare | DDoS, WAF, optional Workers; full TLS. | [hosting.md](hosting.md) |
 | Error tracking | Sentry | Standard. Frontend + backend. | — |
 | Logs | Logtail (or Vercel Logs) | Cheap, queryable. | — |
-| Analytics | Plausible | Privacy-first; no cookie banner; lightweight. | — |
+| Analytics | Vercel Web Analytics (`@vercel/analytics`); Plausible optional | First-party, no cookie banner; Plausible via env if needed. | [ADR 0014](adr/0014-vercel-web-analytics.md) |
 | Tests | Vitest + Playwright | Fast unit; reliable E2E for critical user flows. | — |
 | Linting / format | ESLint + Prettier + `eslint-plugin-tailwindcss` | Standard. | — |
 | Package manager | pnpm | Fast, disk-efficient, monorepo-ready if we ever split. | — |

@@ -10,6 +10,6 @@
   },
   "cookies": {
     "title": "Cookies",
-    "intro": "Le site n'utilise pas de cookies de profilage publicitaire. Une analyse d'audience anonyme sera mise en place après la mise en production. Cette page sera mise à jour à ce moment-là."
+    "intro": "Le site n'utilise pas de cookies de profilage publicitaire. L'audience est mesurée de façon anonyme (sans cookie de tracking) pour comprendre quelles pages sont visitées."
   }
 }

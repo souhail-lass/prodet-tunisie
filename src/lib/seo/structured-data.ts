@@ -67,9 +67,12 @@ export function organizationNode() {
     email: companyInfo.email,
     telephone: companyInfo.phoneHref.replace('tel:', ''),
     address: postalAddress(),
-    areaServed: companyInfo.areaServed,
+    areaServed: {
+      '@type': 'Country',
+      name: 'Tunisia',
+    },
     hasMap: companyInfo.mapHref,
-    knowsLanguage: ['fr', 'ar'],
+    knowsLanguage: ['fr', 'en'],
     sameAs: sameAs(),
   };
 }
@@ -82,7 +85,7 @@ export function websiteNode() {
     '@id': `${base}/${WEBSITE_ID}`,
     url: base,
     name: companyInfo.name,
-    inLanguage: 'fr-TN',
+    inLanguage: ['fr-TN', 'en'],
     publisher: { '@id': `${base}/${ORGANIZATION_ID}` },
   };
 }

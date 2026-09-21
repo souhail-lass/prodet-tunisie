@@ -2,8 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { routing, isLocale, localeDirection, localeHtmlLang, type Locale } from '@/i18n/routing';
+import { routing, isLocale, localeDirection, localeHtmlLang } from '@/i18n/routing';
 import { getPublicEnv } from '@/lib/env';
+import { pageAlternates } from '@/lib/seo/alternates';
+import { Analytics } from '@/components/site/analytics';
 import '../globals.css';
 // Prodet design-system stylesheets (source-of-truth — see design_handoff_website).
 // Order matters: tokens first, then primitives, then layout/page kits.
@@ -24,68 +26,72 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const env = getPublicEnv();
-  const isFrench = locale === 'fr';
-  const defaultTitle = isFrench
-    ? "Prodet Tunisie — Produits d'entretien professionnels fabriqués en Tunisie"
-    : 'Prodet Tunisie';
-  const description = isFrench
-    ? "Prodet fabrique et distribue des produits d'entretien et d'hygiène pour hôtels, restaurants, entreprises et institutions en Tunisie. Devis sur demande."
-    : 'Tunisian manufacturer of professional cleaning and hygiene products.';
-  const ogTitle = isFrench
-    ? "Prodet Tunisie — Fournisseur B2B de produits d'entretien"
-    : defaultTitle;
-  const ogDescription = isFrench
-    ? 'Fabricant tunisien de produits d’entretien professionnels. Bidons 5L, 10L, 20L. Devis personnalisé.'
-    : description;
-  const ogLocale = isFrench ? 'fr_TN' : localeHtmlLang[locale as Locale] ?? 'fr-TN';
+  const copy =
+    locale === 'en'
+      ? {
+          defaultTitle: 'Prodet Tunisie — Professional cleaning products manufactured in Tunisia',
+          description:
+            'Prodet manufactures and supplies professional cleaning and hygiene products for hotels, restaurants, cleaning companies and institutions in Tunisia. Quotes on request.',
+          ogTitle: 'Prodet Tunisie — B2B cleaning products manufacturer in Tunisia',
+          ogDescription:
+            'Tunisian manufacturer of professional detergents and hygiene supplies. 5L, 10L and 20L formats. Custom quotes.',
+          ogLocale: 'en_GB',
+        }
+      : {
+          defaultTitle: "Prodet Tunisie — Produits d'entretien professionnels fabriqués en Tunisie",
+          description:
+            "Prodet fabrique et distribue des produits d'entretien et d'hygiène pour hôtels, restaurants, entreprises et institutions en Tunisie. Devis sur demande.",
+          ogTitle: "Prodet Tunisie — Fournisseur B2B de produits d'entretien",
+          ogDescription:
+            'Fabricant tunisien de produits d’entretien professionnels. Bidons 5L, 10L, 20L. Devis personnalisé.',
+          ogLocale: 'fr_TN',
+        };
 
   return {
     metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
     title: {
-      default: defaultTitle,
+      default: copy.defaultTitle,
       template: '%s · Prodet Tunisie',
     },
-    description,
-    alternates: {
-      canonical: `/${locale}`,
-      languages: {
-        'fr-TN': '/fr',
-        en: '/en',
-        'x-default': '/fr',
-      },
-    },
+    description: copy.description,
+    alternates: pageAlternates(locale),
     openGraph: {
       type: 'website',
       siteName: 'Prodet Tunisie',
-      title: ogTitle,
-      description: ogDescription,
-      locale: ogLocale,
+      title: copy.ogTitle,
+      description: copy.ogDescription,
+      locale: copy.ogLocale,
     },
     twitter: {
       card: 'summary_large_image',
-      title: ogTitle,
-      description: ogDescription,
+      title: copy.ogTitle,
+      description: copy.ogDescription,
     },
     robots: {
       index: true,
       follow: true,
     },
+    ...(env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { verification: { google: env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION } }
+      : {}),
     appleWebApp: {
       capable: true,
       title: 'Prodet',
       statusBarStyle: 'default',
     },
-    // v=20260921 busts sticky browser / Google favicon caches after deploy.
+    // v=20260921b: full-bleed white square (Google circle-crops SERP icons —
+    // an inner circle double-pads and makes the wordmark look broken).
     icons: {
       icon: [
-        { url: '/favicon.ico?v=20260921', sizes: '32x32' },
-        { url: '/brand/favicon.svg?v=20260921', type: 'image/svg+xml' },
-        { url: '/brand/favicon-32.png?v=20260921', sizes: '32x32', type: 'image/png' },
-        { url: '/brand/favicon-48.png?v=20260921', sizes: '48x48', type: 'image/png' },
-        { url: '/brand/icon-192.png?v=20260921', sizes: '192x192', type: 'image/png' },
+        { url: '/favicon.ico?v=20260921b', sizes: '48x48' },
+        { url: '/brand/favicon.svg?v=20260921b', type: 'image/svg+xml' },
+        { url: '/brand/favicon-32.png?v=20260921b', sizes: '32x32', type: 'image/png' },
+        { url: '/brand/favicon-48.png?v=20260921b', sizes: '48x48', type: 'image/png' },
+        { url: '/brand/favicon-96.png?v=20260921b', sizes: '96x96', type: 'image/png' },
+        { url: '/brand/icon-192.png?v=20260921b', sizes: '192x192', type: 'image/png' },
       ],
-      apple: [{ url: '/brand/apple-touch-icon.png?v=20260921', sizes: '180x180' }],
-      shortcut: '/brand/favicon-32.png?v=20260921',
+      apple: [{ url: '/brand/apple-touch-icon.png?v=20260921b', sizes: '180x180' }],
+      shortcut: '/brand/favicon-48.png?v=20260921b',
     },
   };
 }
@@ -118,6 +124,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages} locale={locale}>
           {children}
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
