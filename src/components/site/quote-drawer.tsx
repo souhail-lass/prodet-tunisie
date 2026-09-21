@@ -207,7 +207,6 @@ function QuoteDrawer({ open, onClose }: { open: boolean; onClose: () => void }) 
                       <strong>{line.productName}</strong>
                       <span>
                         {line.format ?? '—'}
-                        {line.category === 'manufactured' ? ` · ${t('manufactured')}` : ''}
                       </span>
                     </div>
                     <div className="qm__line-qty">

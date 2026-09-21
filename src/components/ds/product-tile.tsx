@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
-import { Check } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import { QuantityControl } from './quantity-control';
 
@@ -11,9 +10,6 @@ export type ProductTileProps = {
   tagline?: string;
   image?: string;
   format?: string;
-  manufactured?: boolean;
-  /** Localized "Fabriqué par Prodet" label — renders the green badge when set. */
-  madeLabel?: string;
   /** Quantity-control add-button label. Defaults to "Ajouter au devis"; the
    *  portal order builder overrides it with "Ajouter" (real order, not a quote). */
   addLabel?: string;
@@ -36,8 +32,6 @@ export function ProductTile({
   tagline,
   image,
   format,
-  manufactured = false,
-  madeLabel,
   addLabel,
   quantity = 0,
   onQuantityChange,
@@ -70,11 +64,6 @@ export function ProductTile({
           <img src={PLACEHOLDER_LOGO} alt="" className="pds-product__placeholder-logo" />
         </span>
       )}
-      {manufactured && madeLabel ? (
-        <span className="pds-product__badge">
-          <Check aria-hidden /> {madeLabel}
-        </span>
-      ) : null}
       {format ? <span className="pds-product__format">{format}</span> : null}
     </>
   );

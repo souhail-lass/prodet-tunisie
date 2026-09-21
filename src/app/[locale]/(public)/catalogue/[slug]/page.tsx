@@ -112,8 +112,6 @@ export default async function ProductDetailPage({
     permanentRedirect(`/${locale}/catalogue/${product.slug}`);
   }
 
-  const t = await getTranslations({ locale, namespace: 'catalogue' });
-
   // Back link and related products both follow the admin placement when there
   // is one, and the keyword classifier otherwise — a curated product must not
   // send the visitor back to the sous-catégorie it was moved out of.
@@ -147,7 +145,6 @@ export default async function ProductDetailPage({
         product={product}
         locale={locale}
         related={related}
-        madeLabel={t('page.manufacturedBadge')}
         toolbar={toolbar}
       />
     </>
@@ -155,7 +152,6 @@ export default async function ProductDetailPage({
 }
 
 async function buildProductToolbar(locale: Locale, backHref: string) {
-  const t = await getTranslations({ locale, namespace: 'catalogue' });
   const tCommon = await getTranslations({ locale, namespace: 'common' });
   let searchCards: CatalogueCardProduct[] = [];
   try {
@@ -166,7 +162,6 @@ async function buildProductToolbar(locale: Locale, backHref: string) {
   return (
     <ProductDetailToolbar
       products={searchCards}
-      madeLabel={t('page.manufacturedBadge')}
       backLabel={tCommon('actions.back')}
       backHref={backHref}
     />
@@ -433,13 +428,11 @@ function LegacyProductDetailPage({
   product,
   locale,
   related,
-  madeLabel,
   toolbar,
 }: {
   product: Product;
   locale: Locale;
   related: CatalogueCardProduct[];
-  madeLabel: string;
   toolbar: ReactNode;
 }) {
   const primaryUseCaseId = product.useCases[0];
@@ -465,7 +458,7 @@ function LegacyProductDetailPage({
               </h2>
             </div>
             <div className="mt-4">
-              <ProductGrid products={related} madeLabel={madeLabel} />
+              <ProductGrid products={related} />
             </div>
           </section>
         ) : null}

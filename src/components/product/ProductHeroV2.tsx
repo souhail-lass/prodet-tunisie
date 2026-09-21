@@ -101,15 +101,11 @@ export function ProductHeroV2({ product, locale, useCaseLabel }: ProductHeroV2Pr
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <span className="text-[var(--type-small)] font-semibold text-[var(--color-text-secondary)]">
-            {product.category === 'manufactured'
-              ? isEnglish
-                ? 'Manufactured by Prodet.'
-                : 'Produit fabriqué par Prodet.'
-              : isEnglish
-                ? 'Selected commercial product.'
-                : 'Article commercialisé.'}
-          </span>
+          {product.category === 'manufactured' ? null : (
+            <span className="text-[var(--type-small)] font-semibold text-[var(--color-text-secondary)]">
+              {isEnglish ? 'Selected commercial product.' : 'Article commercialisé.'}
+            </span>
+          )}
           <span className="text-[var(--type-small)] font-semibold text-prodet-green">{useCaseLabel}</span>
         </div>
 

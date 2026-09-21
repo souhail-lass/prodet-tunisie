@@ -87,7 +87,6 @@ export default async function CatalogueSearchPage({
               <ProductQuickSearch
                 key={query}
                 products={searchCards}
-                madeLabel={t('page.manufacturedBadge')}
                 initialQuery={query}
               />
             </div>
@@ -104,7 +103,7 @@ export default async function CatalogueSearchPage({
               <p>{t('page.emptySearchBody', { query })}</p>
             </div>
           ) : query ? (
-            <ProductGrid products={results} madeLabel={t('page.manufacturedBadge')} />
+            <ProductGrid products={results} />
           ) : (
             <div className="famille-empty">
               <h2>{t('page.searchPromptTitle')}</h2>

@@ -11,11 +11,8 @@ import type { CatalogueCardProduct } from '@/types/product';
  */
 export function ProductGrid({
   products,
-  madeLabel,
 }: {
   products: CatalogueCardProduct[];
-  /** Localized "Fabriqué par Prodet" label for the manufactured badge. */
-  madeLabel?: string;
 }) {
   const { getQuantity, setProductQuantity } = useQuoteSelection();
   return (
@@ -26,7 +23,6 @@ export function ProductGrid({
           product={product}
           quantity={getQuantity(product.id)}
           onQuantityChange={setProductQuantity}
-          madeLabel={madeLabel}
         />
       ))}
     </div>

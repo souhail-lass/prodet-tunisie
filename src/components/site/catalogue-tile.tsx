@@ -10,8 +10,6 @@ type CatalogueTileProps = {
   quantity: number;
   /** Stable setter from useQuoteSelection (setProductQuantity). */
   onQuantityChange: (product: QuoteSelectionProduct, quantity: number) => void;
-  /** Localized "Fabriqué par Prodet" label for the manufactured badge. */
-  madeLabel?: string;
 };
 
 /**
@@ -23,7 +21,6 @@ export const CatalogueTile = memo(function CatalogueTile({
   product,
   quantity,
   onQuantityChange,
-  madeLabel,
 }: CatalogueTileProps) {
   const format = product.formats[0]?.label;
 
@@ -33,8 +30,6 @@ export const CatalogueTile = memo(function CatalogueTile({
       tagline={product.tagline}
       image={product.image}
       format={format}
-      manufactured={product.category === 'manufactured'}
-      madeLabel={madeLabel}
       quantity={quantity}
       onQuantityChange={(n) =>
         onQuantityChange(

@@ -15,8 +15,6 @@ import type { CatalogueCardProduct } from '@/types/product';
 export type ProductQuickSearchProps = {
   /** Whole visible catalogue — the search is global, not scoped to the page. */
   products: CatalogueCardProduct[];
-  /** Localized "Fabriqué par Prodet" label. */
-  madeLabel?: string;
   /** Which edge the results panel hangs from. */
   align?: 'start' | 'end';
   className?: string;
@@ -32,7 +30,6 @@ export type ProductQuickSearchProps = {
  */
 export function ProductQuickSearch({
   products,
-  madeLabel,
   align = 'start',
   className,
   initialQuery = '',
@@ -162,9 +159,7 @@ export function ProductQuickSearch({
                       <span className="pq-search__text">
                         <span className="pq-search__name">{product.name}</span>
                         <span className="pq-search__meta">
-                          {product.category === 'manufactured' && madeLabel
-                            ? madeLabel
-                            : product.tagline || product.formats[0]?.label || ''}
+                          {product.tagline || product.formats[0]?.label || ''}
                         </span>
                       </span>
                     </Link>

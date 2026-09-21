@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { isLocale, type Locale } from '@/i18n/routing';
 import { getCatalogueSearchCards } from '@/features/catalogue/queries';
 import { DevisPageClient } from './_devis-page-client';
@@ -25,13 +25,11 @@ export default async function DevisPage({
   setRequestLocale(locale);
 
   const searchCards = await getCatalogueSearchCards();
-  const tc = await getTranslations({ locale, namespace: 'catalogue' });
 
   return (
     <DevisPageClient
       locale={locale as Locale}
       searchCards={searchCards}
-      madeLabel={tc('page.manufacturedBadge')}
     />
   );
 }

@@ -71,12 +71,10 @@ const fallbackEmail = 'contact@prodet.com.tn';
 export function DevisPageClient({
   locale,
   searchCards,
-  madeLabel,
 }: {
   locale: Locale;
   /** Live catalogue, for the quick-add search in the selection header. */
   searchCards: CatalogueCardProduct[];
-  madeLabel?: string;
 }) {
   const t = useTranslations('devis.quote');
   const {
@@ -195,7 +193,6 @@ export function DevisPageClient({
               <div className="flex w-full flex-col gap-2 sm:w-auto sm:min-w-[320px] sm:items-end">
                 <ProductQuickSearch
                   products={searchCards}
-                  madeLabel={madeLabel}
                   align="end"
                 />
                 <div className="flex items-center gap-2">
@@ -393,16 +390,9 @@ function SelectionRow({
               {item.format}
             </span>
           ) : null}
-          {item.category ? (
-            <span
-              className={cn(
-                'rounded-full px-2.5 py-1 text-[10px] font-semibold',
-                item.category === 'manufactured'
-                  ? 'bg-primary/8 text-primary'
-                  : 'bg-support/8 text-support',
-              )}
-            >
-              {t(item.category === 'manufactured' ? 'badges.manufactured' : 'badges.resold')}
+          {item.category && item.category !== 'manufactured' ? (
+            <span className="rounded-full bg-support/8 px-2.5 py-1 text-[10px] font-semibold text-support">
+              {t('badges.resold')}
             </span>
           ) : null}
         </div>
@@ -518,7 +508,7 @@ function hydrateSelectionItems(items: QuoteSelectionItem[]): HydratedSelectionIt
 }
 
 function formatCategory(category: ProductCategory): string {
-  return category === 'manufactured' ? 'Fabriqué Prodet' : 'Commercialisé';
+  return category === 'manufactured' ? 'Gamme Prodet' : 'Commercialisé';
 }
 
 function getInitials(value: string): string {

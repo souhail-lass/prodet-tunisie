@@ -56,7 +56,6 @@ export default async function FamillePage({
   if (!fam) return notFound();
 
   const tf = await getTranslations({ locale, namespace: 'familles' });
-  const tc = await getTranslations({ locale, namespace: 'catalogue' });
   const isAllProducts = fam.id === TOUS_LES_PRODUITS;
   const [sousCats, allProducts, searchCards] = await Promise.all([
     isAllProducts ? Promise.resolve([]) : getSousCategorieCounts(fam.id),
@@ -122,7 +121,6 @@ export default async function FamillePage({
             <div className="famille-hero__search">
               <ProductQuickSearch
                 products={searchCards}
-                madeLabel={tc('page.manufacturedBadge')}
               />
             </div>
           </div>
@@ -137,7 +135,7 @@ export default async function FamillePage({
 
         <main className="famille-main">
           {isAllProducts ? (
-            <ProductGrid products={allProductCards} madeLabel={tc('page.manufacturedBadge')} />
+            <ProductGrid products={allProductCards} />
           ) : sousCats.length === 0 ? (
             <div className="famille-empty">
               <h2>{tf('page.emptyTitle')}</h2>

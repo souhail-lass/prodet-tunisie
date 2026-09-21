@@ -4,12 +4,10 @@ import type { CatalogueCardProduct } from '@/types/product';
 
 export function ProductDetailToolbar({
   products,
-  madeLabel,
   backLabel,
   backHref,
 }: {
   products: CatalogueCardProduct[];
-  madeLabel?: string;
   backLabel: string;
   backHref: string;
 }) {
@@ -19,7 +17,6 @@ export function ProductDetailToolbar({
         <ProductBackLink href={backHref} label={backLabel} />
         <ProductQuickSearch
           products={products}
-          madeLabel={madeLabel}
           align="end"
           className="product-toolbar__search"
         />

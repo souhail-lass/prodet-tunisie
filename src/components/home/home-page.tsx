@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { ArrowRight, Check, FileText, Factory, Shield, Truck, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowRight, FileText, Factory, Shield, Truck, ChevronRight, Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/routing';
 import { Button } from '@/components/ds';
@@ -81,9 +81,6 @@ export function HomePage({
           <div className="hero__visual">
             <div className="hero__range">
               <div className="hero__range-made">
-                <span className="hero__made">
-                  <Check size={13} /> {t('hero.madeBadge')}
-                </span>
                 {/* LCP element — the Prodet formula (what we fabricate). */}
                 <Image
                   src="/images/products/sirafan.png"

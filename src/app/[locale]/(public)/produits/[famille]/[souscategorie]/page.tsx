@@ -57,7 +57,6 @@ export default async function SousCategoriePage({
   if (products.length === 0) return notFound();
 
   const tf = await getTranslations({ locale, namespace: 'familles' });
-  const tc = await getTranslations({ locale, namespace: 'catalogue' });
   const sub = getSousCategorie(fam.id, souscategorie);
   const label = tf(`souscats.${sousCatLabelKey(souscategorie)}`);
   // Search spans the whole catalogue, not just this sous-catégorie.
@@ -92,7 +91,6 @@ export default async function SousCategoriePage({
             <div className="famille-hero__search">
               <ProductQuickSearch
                 products={searchCards}
-                madeLabel={tc('page.manufacturedBadge')}
               />
             </div>
           </div>
@@ -107,7 +105,7 @@ export default async function SousCategoriePage({
       <div className="section-wrap famille-layout">
         <CategorySidebar locale={locale} activeFamille={fam.id} activeSousCat={souscategorie} />
         <main className="famille-main">
-          <ProductGrid products={cards} madeLabel={tc('page.manufacturedBadge')} />
+          <ProductGrid products={cards} />
         </main>
       </div>
 
