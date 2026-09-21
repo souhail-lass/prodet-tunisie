@@ -78,7 +78,7 @@ export function HomePage({
                 fill
                 priority
                 sizes="(max-width: 1080px) 92vw, 520px"
-                style={{ objectFit: 'cover', objectPosition: 'center 62%' }}
+                style={{ objectFit: 'contain', objectPosition: 'center 70%' }}
               />
             </div>
           </div>
