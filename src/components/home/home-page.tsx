@@ -23,15 +23,6 @@ const TRUST = [
   { key: 'quote', icon: FileText },
 ] as const;
 
-/** Interim hero "range" — a Prodet formula + real consommables we source.
- * Says the positioning visually: fabricant + fournisseur. Swap for one shot photo later. */
-const HERO_SUPPLIED = [
-  { src: '/images/products/resell/sac-poubelle-mm-noir.jpg', key: 'bags' },
-  { src: '/images/products/resell/lavette-microfibre.png', key: 'wipes' },
-  { src: '/images/products/resell/gant-latex.jpg', key: 'gloves' },
-  { src: '/images/products/resell/papier-hygienique-lilas-48.jpg', key: 'paper' },
-] as const;
-
 export function HomePage({
   showcase,
   sectors,
@@ -79,30 +70,16 @@ export function HomePage({
             </div>
           </div>
           <div className="hero__visual">
-            <div className="hero__range">
-              <div className="hero__range-made">
-                {/* LCP element — the Prodet formula (what we fabricate). */}
-                <Image
-                  src="/images/products/sirafan.png"
-                  alt={t('hero.madeAlt')}
-                  width={240}
-                  height={220}
-                  priority
-                  sizes="240px"
-                  style={{ height: '220px', width: 'auto' }}
-                />
-              </div>
-              <div className="hero__range-supplied">
-                <span className="hero__range-label">{t('hero.suppliedLabel')}</span>
-                <div className="hero__range-items">
-                  {HERO_SUPPLIED.map((item) => (
-                    <span className="hero__range-item" key={item.src} title={t(`hero.suppliedAlt.${item.key}`)}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={item.src} alt={t(`hero.suppliedAlt.${item.key}`)} loading="eager" />
-                    </span>
-                  ))}
-                </div>
-              </div>
+            <div className="hero__shot">
+              {/* LCP element — manufactured range (Pro Vitre, Profour, Prokill, DeoFresh). */}
+              <Image
+                src="/images/home/hero-range.jpg"
+                alt={t('hero.madeAlt')}
+                fill
+                priority
+                sizes="(max-width: 1080px) 92vw, 520px"
+                style={{ objectFit: 'cover', objectPosition: 'center 78%' }}
+              />
             </div>
           </div>
         </div>

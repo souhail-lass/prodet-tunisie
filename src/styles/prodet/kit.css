@@ -41,7 +41,7 @@
 .hero__meta b { color: #fff; font-weight: var(--fw-semibold); }
 .hero__dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.32); }
 
-.hero__visual { position: relative; display: flex; flex-direction: column; align-items: center; }
+.hero__visual { position: relative; display: flex; flex-direction: column; align-items: stretch; }
 .hero__packshot { position: relative; background: var(--surface-card); border-radius: var(--radius-panel); padding: 28px; width: 100%; max-width: 340px; display: flex; justify-content: center; box-shadow: 0 40px 80px -40px rgba(0,0,0,0.55); }
 .hero__packshot img { height: 320px; width: auto; object-fit: contain; }
 .hero__made { position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 5px; background: var(--prodet-green); color: #fff; font-size: var(--text-2xs); font-weight: var(--fw-semibold); padding: 5px 10px; border-radius: var(--radius-pill); }
@@ -49,15 +49,21 @@
 .hero__visual-card strong { color: #fff; font-size: var(--text-base); font-weight: var(--fw-semibold); }
 .hero__visual-card span { color: var(--text-on-dark-soft); font-size: var(--text-xs); }
 
-/* Hero "range" — one Prodet formula (fabricated) + real consommables (supplied). */
-.hero__range { position: relative; width: 100%; max-width: 360px; background: var(--surface-card); border-radius: var(--radius-panel); padding: 22px; box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.55); }
-.hero__range-made { position: relative; display: flex; justify-content: center; padding: 6px 0 18px; }
-.hero__range-made img { height: 220px; width: auto; object-fit: contain; }
-.hero__range-supplied { border-top: 1px solid var(--border-default); padding-top: 16px; }
-.hero__range-label { display: block; text-align: center; font-size: var(--text-2xs); font-weight: var(--fw-semibold); text-transform: uppercase; letter-spacing: var(--tracking-label); color: var(--text-tertiary); margin-bottom: 12px; }
-.hero__range-items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.hero__range-item { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; padding: 8px; background: var(--surface-sunken); border-radius: var(--radius-button); }
-.hero__range-item img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+.hero__shot {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.hero__shot img {
+  object-fit: cover;
+  object-position: center 78%;
+}
 
 /* ---------- TRUST ---------- */
 .trust { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; padding-top: 40px; padding-bottom: 40px; }
