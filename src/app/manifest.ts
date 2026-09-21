@@ -5,8 +5,8 @@ import type { MetadataRoute } from 'next';
  * and opens it full-screen like a native app. Next auto-links this at
  * /manifest.webmanifest.
  *
- * Icons: white circular badge + trimmed Prodet wordmark (transparent corners
- * so dark chrome shows a disc, not a white cube).
+ * Icons: monogram P on a white disc (Google SERP / tabs). Full wordmark stays
+ * in the site header logo — tiny SERP circles cannot carry "Prodet" text.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -23,11 +23,11 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#08233f',
     categories: ['business', 'productivity'],
     icons: [
-      { src: '/brand/favicon.svg?v=20260921c', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
-      { src: '/brand/icon-192.png?v=20260921c', sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: '/brand/icon-512.png?v=20260921c', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: '/brand/favicon.svg?v=20260921d', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+      { src: '/brand/icon-192.png?v=20260921d', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/brand/icon-512.png?v=20260921d', sizes: '512x512', type: 'image/png', purpose: 'any' },
       {
-        src: '/brand/icon-512-maskable.png?v=20260921c',
+        src: '/brand/icon-512-maskable.png?v=20260921d',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'maskable',
