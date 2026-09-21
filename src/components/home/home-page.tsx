@@ -73,12 +73,12 @@ export function HomePage({
             <div className="hero__shot">
               {/* LCP element — manufactured range (Pro Vitre, Profour, Prokill, DeoFresh). */}
               <Image
-                src="/images/home/hero-range-studio.jpg"
+                src="/images/home/hero-range-shelf.jpg"
                 alt={t('hero.madeAlt')}
                 fill
                 priority
                 sizes="(max-width: 1080px) 92vw, 520px"
-                style={{ objectFit: 'contain', objectPosition: 'center 70%' }}
+                style={{ objectFit: 'cover', objectPosition: 'center' }}
               />
             </div>
           </div>
