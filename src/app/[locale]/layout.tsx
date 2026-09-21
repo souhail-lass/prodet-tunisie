@@ -75,9 +75,17 @@ export async function generateMetadata({
       title: 'Prodet',
       statusBarStyle: 'default',
     },
+    // v=20260921 busts sticky browser / Google favicon caches after deploy.
     icons: {
-      icon: '/images/logo/prodet-logo.svg',
-      apple: '/brand/logo-prodet.png',
+      icon: [
+        { url: '/favicon.ico?v=20260921', sizes: '32x32' },
+        { url: '/brand/favicon.svg?v=20260921', type: 'image/svg+xml' },
+        { url: '/brand/favicon-32.png?v=20260921', sizes: '32x32', type: 'image/png' },
+        { url: '/brand/favicon-48.png?v=20260921', sizes: '48x48', type: 'image/png' },
+        { url: '/brand/icon-192.png?v=20260921', sizes: '192x192', type: 'image/png' },
+      ],
+      apple: [{ url: '/brand/apple-touch-icon.png?v=20260921', sizes: '180x180' }],
+      shortcut: '/brand/favicon-32.png?v=20260921',
     },
   };
 }

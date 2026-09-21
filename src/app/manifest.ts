@@ -5,8 +5,8 @@ import type { MetadataRoute } from 'next';
  * and opens it full-screen like a native app. Next auto-links this at
  * /manifest.webmanifest.
  *
- * TODO(polish): drop square PNG icons (192×192, 512×512 + a 512 maskable) in
- * /public/brand/ and point the entries below at them for a crisp install icon.
+ * Icons: white circular badge + Prodet wordmark (padding tuned for 32–512px),
+ * so the mark stays readable on dark browser chrome / SERP / home-screen masks.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -23,8 +23,15 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#08233f',
     categories: ['business', 'productivity'],
     icons: [
-      { src: '/brand/logo-prodet.png', sizes: 'any', type: 'image/png', purpose: 'any' },
-      { src: '/images/logo/prodet-logo.svg', sizes: 'any', type: 'image/svg+xml' },
+      { src: '/brand/favicon.svg?v=20260921', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+      { src: '/brand/icon-192.png?v=20260921', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/brand/icon-512.png?v=20260921', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      {
+        src: '/brand/icon-512-maskable.png?v=20260921',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
     ],
   };
 }
