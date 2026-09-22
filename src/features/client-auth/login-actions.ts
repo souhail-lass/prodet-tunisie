@@ -3,9 +3,12 @@
 import { redirect } from 'next/navigation';
 import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
+import { brandedHtml, sendEmail } from '@/lib/email';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { resolveAuthOrigin } from '@/lib/site-origin';
+import { createSupabaseAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { ensureConfirmedAuthUser } from '@/features/admin/clients';
 
 const ClientLoginSchema = z.object({
   email: z.string().trim().email(),
@@ -49,28 +52,99 @@ export async function requestClientMagicLink(formData: FormData): Promise<never>
     redirect(`/${locale}/connexion-client?error=rate-limited`);
   }
 
-  // We intentionally short-circuit on inactive accounts to avoid
-  // triggering Supabase magic-link emails for unknown addresses, but
-  // we return the same `sent=1` outcome the caller sees on success
-  // to avoid user enumeration. Inactive accounts get a friendly
-  // "check your email" page without an email actually being sent.
+  // Same sent=1 for unknown emails — anti-enumeration.
   const hasAccess = await hasActivatedClientAccess(email);
   if (!hasAccess) {
     redirect(`/${locale}/connexion-client?sent=1`);
   }
 
+  const origin = await resolveAuthOrigin();
+  const delivered = await sendResendMagicLink({ email, locale, nextPath, origin });
+  if (delivered === 'sent') {
+    redirect(`/${locale}/connexion-client?sent=1`);
+  }
+  if (delivered === 'failed') {
+    redirect(`/${locale}/connexion-client?error=failed`);
+  }
+
+  // Fallback when Resend / service-role is unavailable (local without keys).
+  await sendSupabaseHostedMagicLink({ email, nextPath, origin, locale });
+  redirect(`/${locale}/connexion-client?sent=1`);
+}
+
+/**
+ * Mint a token_hash via Admin API and email a /auth/confirm link through Resend.
+ * Survives Gmail prefetch and cross-device opens (no PKCE cookie required).
+ */
+async function sendResendMagicLink(input: {
+  email: string;
+  locale: 'fr' | 'en';
+  nextPath: string;
+  origin: string;
+}): Promise<'sent' | 'skipped' | 'failed'> {
+  if (!process.env.RESEND_API_KEY?.trim()) return 'skipped';
+
+  try {
+    await ensureConfirmedAuthUser(input.email);
+    const admin = createSupabaseAdminClient();
+    const { data, error } = await admin.auth.admin.generateLink({
+      type: 'magiclink',
+      email: input.email,
+    });
+
+    const tokenHash = data?.properties?.hashed_token;
+    if (error || !tokenHash) {
+      console.error('[client-login:generate-link]', {
+        message: error?.message,
+      });
+      return 'failed';
+    }
+
+    const confirmUrl = `${input.origin}/auth/confirm?token_hash=${encodeURIComponent(tokenHash)}&type=magiclink&next=${encodeURIComponent(input.nextPath)}`;
+    const isEnglish = input.locale === 'en';
+    const subject = isEnglish
+      ? 'Your Prodet client sign-in link'
+      : 'Votre lien de connexion Prodet';
+    const heading = isEnglish ? 'Sign in to your client space' : 'Connexion à votre espace client';
+    const lines = isEnglish
+      ? [
+          'Use the button below to sign in. The link works once and expires shortly.',
+          'If you did not request this, you can ignore this email.',
+        ]
+      : [
+          'Utilisez le bouton ci-dessous pour vous connecter. Le lien ne fonctionne qu’une fois et expire rapidement.',
+          'Si vous n’êtes pas à l’origine de cette demande, ignorez cet email.',
+        ];
+    const ctaLabel = isEnglish ? 'Confirm sign-in' : 'Confirmer la connexion';
+
+    return sendEmail({
+      to: input.email,
+      subject,
+      text: [...lines, '', confirmUrl].join('\n'),
+      html: brandedHtml(heading, lines, { label: ctaLabel, url: confirmUrl }),
+    });
+  } catch (error) {
+    console.error('[client-login:resend-magic]', error instanceof Error ? error.message : error);
+    return 'failed';
+  }
+}
+
+async function sendSupabaseHostedMagicLink(input: {
+  email: string;
+  nextPath: string;
+  origin: string;
+  locale: 'fr' | 'en';
+}): Promise<void> {
   let supabase;
   try {
     supabase = await createSupabaseServerClient();
   } catch {
-    redirect(`/${locale}/connexion-client?error=config`);
+    redirect(`/${input.locale}/connexion-client?error=config`);
   }
 
-  const origin = await resolveAuthOrigin();
-  const emailRedirectTo = `${origin}/auth/callback?next=${encodeURIComponent(nextPath)}`;
-
+  const emailRedirectTo = `${input.origin}/auth/callback?next=${encodeURIComponent(input.nextPath)}`;
   const { error } = await supabase.auth.signInWithOtp({
-    email,
+    email: input.email,
     options: {
       emailRedirectTo,
       shouldCreateUser: true,
@@ -82,10 +156,8 @@ export async function requestClientMagicLink(formData: FormData): Promise<never>
       message: error.message,
       status: error.status,
     });
-    redirect(`/${locale}/connexion-client?error=failed`);
+    redirect(`/${input.locale}/connexion-client?error=failed`);
   }
-
-  redirect(`/${locale}/connexion-client?sent=1`);
 }
 
 async function hasActivatedClientAccess(email: string): Promise<boolean> {

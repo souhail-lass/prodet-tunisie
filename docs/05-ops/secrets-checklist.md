@@ -92,6 +92,9 @@ lands on the homepage with no session.
   - `http://localhost:3004/auth/callback` (local)
 - [ ] Vercel `NEXT_PUBLIC_SITE_URL` = `https://www.prodet.com.tn`
 - [ ] Auth → Email provider enabled
+- [ ] `RESEND_API_KEY` set in Vercel — client magic links are sent via Resend to
+      `/auth/confirm` (click-to-confirm). Without Resend, the app falls back to
+      Supabase-hosted mail (PKCE), which Gmail prefetch often burns.
 - [ ] Storage → `customer-documents` bucket (private)
 - [ ] Database → migrations applied (`pnpm db:migrate`)
 - [ ] API keys → anon + service_role copied to `.env.local` / Vercel
