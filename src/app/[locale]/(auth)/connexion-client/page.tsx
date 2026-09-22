@@ -1,20 +1,24 @@
 import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
-import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { redirect } from 'next/navigation';
-import { ArrowRight, MailCheck, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { Link, isLocale } from '@/i18n/routing';
 import { AuthAtmosphere } from '@/components/auth/auth-atmosphere';
+import {
+  ClientLoginNextField,
+  ClientLoginQueryFeedback,
+} from '@/components/auth/client-login-query';
+import { ClientSessionRedirect } from '@/components/auth/client-session-redirect';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { requestClientMagicLink } from '@/features/client-auth/login-actions';
-import { requireClientPortalAccess } from '@/features/client-portal/auth';
-import { hasSupabaseAuthCookie } from '@/lib/supabase/auth-cookie';
 
-// Per-user by nature (session check + redirect). Must never be prerendered:
-// the try/catch below would swallow the static-bailout signal cookies() throws
-// during build and bake a form that ignores existing sessions.
-export const dynamic = 'force-dynamic';
+/**
+ * Static login shell — same navigation speed as Catalogue / Contact.
+ * Session skip + ?sent=/?error= run in a client Suspense island after paint.
+ */
+export const dynamic = 'force-static';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -24,47 +28,33 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-type PageSearchParams = Record<string, string | string[] | undefined>;
+export function generateStaticParams() {
+  return [{ locale: 'fr' }, { locale: 'en' }];
+}
 
-export default async function ClientLoginPage({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ locale: string }>;
-  searchParams?: Promise<PageSearchParams>;
-}) {
+export default async function ClientLoginPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) redirect('/fr/connexion-client');
+  setRequestLocale(locale);
 
-  const rawSearchParams = searchParams ? await searchParams : {};
-  const error = firstParam(rawSearchParams.error);
-  const sent = firstParam(rawSearchParams.sent);
-  const next = sanitizeNext(locale, firstParam(rawSearchParams.next));
   const t = await getTranslations({ locale, namespace: 'common.clientAccess' });
+  const fallbackNext = `/${locale}/client`;
 
-  // Returning client with a still-valid session: skip the form entirely and
-  // go straight to the portal. The magic link is only for the FIRST login on
-  // a device (or after sign-out) — never a per-visit requirement.
-  //
-  // Fast path for public-site visitors (no auth cookie): skip Supabase getUser()
-  // + DB membership lookup so "Espace client" feels as snappy as Catalogue.
-  const cookieStore = await cookies();
-  let alreadySignedIn = false;
-  if (hasSupabaseAuthCookie(cookieStore.getAll())) {
-    try {
-      await requireClientPortalAccess();
-      alreadySignedIn = true;
-    } catch {
-      // Cookie present but session invalid / no portal access — show the form.
-    }
-  }
-  // redirect() must stay outside try/catch — it throws NEXT_REDIRECT.
-  if (alreadySignedIn) redirect(next);
+  const feedbackMessages = {
+    sent: t('sentLogin'),
+    errors: {
+      'errors.invalidEmail': t('errors.invalidEmail'),
+      'errors.notActivated': t('errors.notActivated'),
+      'errors.notConfigured': t('errors.notConfigured'),
+      'errors.sendFailed': t('errors.sendFailed'),
+      'errors.badLink': t('errors.badLink'),
+      'errors.signInFailed': t('errors.signInFailed'),
+    },
+  };
 
   return (
     <main>
       <AuthAtmosphere>
-        {/* Heading — mirrors /espace-client for a consistent entry point. */}
         <header className="mb-8 flex flex-col items-center text-center">
           <p className="text-prodet-blue text-[11px] font-semibold tracking-[0.14em] uppercase">
             {t('eyebrow')}
@@ -80,7 +70,9 @@ export default async function ClientLoginPage({
         <div className="border-border bg-card rounded-xl border p-7 shadow-[0_1px_2px_rgba(6,53,97,0.04),0_20px_40px_-24px_rgba(6,53,97,0.22)]">
           <form action={requestClientMagicLink} className="space-y-3.5">
             <input type="hidden" name="locale" value={locale} />
-            <input type="hidden" name="next" value={next} />
+            <Suspense fallback={<input type="hidden" name="next" value={fallbackNext} />}>
+              <ClientLoginNextField locale={locale} />
+            </Suspense>
             <label className="block">
               <span className="text-prodet-text mb-1.5 block text-[12px] font-medium">
                 Email professionnel
@@ -99,27 +91,10 @@ export default async function ClientLoginPage({
             </Button>
           </form>
 
-          {sent === '1' ? (
-            <p
-              role="status"
-              className="border-prodet-green/20 bg-prodet-green/10 text-prodet-green mt-4 flex items-start gap-2 rounded-md border px-3 py-2.5 text-[12px] leading-5"
-            >
-              <MailCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-              <span>{t('sentLogin')}</span>
-            </p>
-          ) : null}
+          <Suspense fallback={null}>
+            <ClientLoginQueryFeedback messages={feedbackMessages} />
+          </Suspense>
 
-          {error ? (
-            <p
-              role="alert"
-              className="border-destructive/20 bg-destructive/10 text-destructive mt-4 flex items-start gap-2 rounded-md border px-3 py-2.5 text-[12px] leading-5"
-            >
-              <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
-              <span>{t(clientLoginErrorKey(error))}</span>
-            </p>
-          ) : null}
-
-          {/* Divider */}
           <div className="my-6 flex items-center gap-3" aria-hidden>
             <span className="bg-border h-px flex-1" />
             <span className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
@@ -128,7 +103,6 @@ export default async function ClientLoginPage({
             <span className="bg-border h-px flex-1" />
           </div>
 
-          {/* Secondary path — request access */}
           <div className="text-center">
             <p className="text-muted-foreground text-[13px]">{t('notYetClient')}</p>
             <Button asChild variant="neutral" size="lg" className="mt-2.5 w-full">
@@ -142,54 +116,10 @@ export default async function ClientLoginPage({
           {t('reassure')}
         </p>
       </AuthAtmosphere>
+
+      <Suspense fallback={null}>
+        <ClientSessionRedirect locale={locale} fallbackNext={fallbackNext} />
+      </Suspense>
     </main>
   );
-}
-
-type ClientLoginErrorKey =
-  | 'errors.invalidEmail'
-  | 'errors.notActivated'
-  | 'errors.notConfigured'
-  | 'errors.sendFailed'
-  | 'errors.badLink'
-  | 'errors.signInFailed';
-
-/** Map the ?error= code to a translation key under common.clientAccess. */
-function clientLoginErrorKey(error: string): ClientLoginErrorKey {
-  switch (error) {
-    case 'invalid':
-      return 'errors.invalidEmail';
-    case 'not-activated':
-      return 'errors.notActivated';
-    case 'config':
-      return 'errors.notConfigured';
-    case 'failed':
-      return 'errors.sendFailed';
-    case 'missing-code':
-    case 'callback':
-      return 'errors.badLink';
-    default:
-      return 'errors.signInFailed';
-  }
-}
-
-function firstParam(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
-
-function sanitizeNext(locale: 'fr' | 'en', value?: string): string {
-  if (!value) return `/${locale}/client`;
-
-  try {
-    const decoded = decodeURIComponent(value);
-    if (decoded.startsWith(`/${locale}/client`) && !decoded.startsWith('//')) {
-      return decoded;
-    }
-  } catch {
-    // Fall through to default.
-  }
-
-  if (value.startsWith(`/${locale}/client`) && !value.startsWith('//')) return value;
-
-  return `/${locale}/client`;
 }
