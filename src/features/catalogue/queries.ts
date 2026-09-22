@@ -479,28 +479,84 @@ export type OrderableProduct = {
   browseBucket: string | null;
 };
 
+/** Same packshot rules as the public catalogue tiles. */
+function resolveOrderableImage(row: {
+  name: string;
+  displayName: string | null;
+  imageUrl: string | null;
+  baseImageUrl: string | null;
+  baseCategory: string | null;
+}): string {
+  const realImage = row.imageUrl || row.baseImageUrl || '';
+  if (realImage) return realImage;
+  const label = row.displayName || row.name;
+  const resellImage = resolveResellImage(label);
+  if (resellImage) return resellImage;
+  return mapCategory(row.baseCategory) === 'manufactured' ? PRODET_PACKSHOT : '';
+}
+
+/**
+ * Commander order: products that display a real packshot first (same as the
+ * public site feeling), then admin catalogue_rank / sort_order, then name.
+ */
+function compareOrderableRows(
+  a: {
+    image: string;
+    catalogueRank: number | null;
+    sortOrder: number | null;
+    name: string;
+  },
+  b: {
+    image: string;
+    catalogueRank: number | null;
+    sortOrder: number | null;
+    name: string;
+  },
+): number {
+  const aPhoto = a.image ? 0 : 1;
+  const bPhoto = b.image ? 0 : 1;
+  if (aPhoto !== bPhoto) return aPhoto - bPhoto;
+
+  const ar = a.catalogueRank;
+  const br = b.catalogueRank;
+  if (ar != null && br != null && ar !== br) return ar - br;
+  if (ar != null && br == null) return -1;
+  if (ar == null && br != null) return 1;
+
+  const ao = a.sortOrder;
+  const bo = b.sortOrder;
+  if (ao != null && bo != null && ao !== bo) return ao - bo;
+  if (ao != null && bo == null) return -1;
+  if (ao == null && bo != null) return 1;
+
+  return a.name.localeCompare(b.name, 'fr');
+}
+
 /** Visible catalogue products that can be ordered (have a Swiver id). */
 export async function getOrderableCatalogue(): Promise<OrderableProduct[]> {
-  const rows = (await getCachedCatalogueRows()).filter((r) => !r.hidden);
-  return rows
-    .filter((r) => r.swiverId)
-    .map((r) => {
-      const placement = resolveRowPlacement(r);
-      const name = r.displayName || r.name;
-      return {
-        swiverId: r.swiverId as string,
-        sku: r.sku,
+  const rows = (await getCachedCatalogueRows()).filter((r) => !r.hidden && r.swiverId);
+  const prepared = rows.map((r) => {
+    const placement = resolveRowPlacement(r);
+    const name = r.displayName || r.name;
+    return {
+      swiverId: r.swiverId as string,
+      sku: r.sku,
+      name,
+      image: resolveOrderableImage(r),
+      unitPrice: r.unitPrice != null ? Number(r.unitPrice) : null,
+      categoryLabel: r.baseCategory ?? null,
+      browseBucket: assignReorderBucket({
         name,
-        image: r.imageUrl || r.baseImageUrl || '',
-        unitPrice: r.unitPrice != null ? Number(r.unitPrice) : null,
-        categoryLabel: r.baseCategory ?? null,
-        browseBucket: assignReorderBucket({
-          name,
-          familleId: placement.familleId,
-          sousCategorieSlug: placement.sousCategorieSlug,
-        }),
-      };
-    });
+        familleId: placement.familleId,
+        sousCategorieSlug: placement.sousCategorieSlug,
+      }),
+      catalogueRank: r.catalogueRank,
+      sortOrder: r.sortOrder,
+    };
+  });
+
+  prepared.sort(compareOrderableRows);
+  return prepared.map(({ catalogueRank: _r, sortOrder: _s, ...product }) => product);
 }
 
 /**
