@@ -29,19 +29,19 @@ export async function generateMetadata({
   const copy =
     locale === 'en'
       ? {
-          defaultTitle: 'Prodet Tunisie — Professional cleaning products manufactured in Tunisia',
+          defaultTitle: 'Prodet — Professional cleaning products manufactured in Tunisia',
           description:
             'Prodet manufactures and supplies professional cleaning and hygiene products for hotels, restaurants, cleaning companies and institutions in Tunisia. Quotes on request.',
-          ogTitle: 'Prodet Tunisie — B2B cleaning products manufacturer in Tunisia',
+          ogTitle: 'Prodet — B2B cleaning products manufacturer in Tunisia',
           ogDescription:
             'Tunisian manufacturer of professional detergents and hygiene supplies. 5L, 10L and 20L formats. Custom quotes.',
           ogLocale: 'en_GB',
         }
       : {
-          defaultTitle: "Prodet Tunisie — Produits d'entretien professionnels fabriqués en Tunisie",
+          defaultTitle: "Prodet — Produits d'entretien professionnels fabriqués en Tunisie",
           description:
             "Prodet fabrique et distribue des produits d'entretien et d'hygiène pour hôtels, restaurants, entreprises et institutions en Tunisie. Devis sur demande.",
-          ogTitle: "Prodet Tunisie — Fournisseur B2B de produits d'entretien",
+          ogTitle: "Prodet — Fournisseur B2B de produits d'entretien",
           ogDescription:
             'Fabricant tunisien de produits d’entretien professionnels. Bidons 5L, 10L, 20L. Devis personnalisé.',
           ogLocale: 'fr_TN',
@@ -51,13 +51,13 @@ export async function generateMetadata({
     metadataBase: new URL(env.NEXT_PUBLIC_SITE_URL),
     title: {
       default: copy.defaultTitle,
-      template: '%s · Prodet Tunisie',
+      template: '%s · Prodet',
     },
     description: copy.description,
     alternates: pageAlternates(locale),
     openGraph: {
       type: 'website',
-      siteName: 'Prodet Tunisie',
+      siteName: 'Prodet',
       title: copy.ogTitle,
       description: copy.ogDescription,
       locale: copy.ogLocale,

@@ -13,7 +13,7 @@ export async function generateMetadata({
   const { locale } = await params;
   if (locale === 'en') {
     return {
-      title: 'About Prodet Tunisie',
+      title: 'About Prodet',
       description:
         'Prodet is a Tunisian manufacturer and distributor of professional cleaning and hygiene products, based in L\'Aouina, Tunis.',
       alternates: pageAlternates(locale, '/a-propos'),

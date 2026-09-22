@@ -6,7 +6,7 @@ import { ImageResponse } from 'next/og';
  * wordmark and B2B positioning so a shared Prodet link looks deliberate, not
  * like a bare URL. Per-page metadata can still override this where needed.
  */
-export const alt = "Prodet Tunisie — Produits d'entretien professionnels";
+export const alt = "Prodet — Produits d'entretien professionnels";
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -39,7 +39,7 @@ export default function OpengraphImage() {
             }}
           />
           <div style={{ color: SAND, fontSize: 40, fontWeight: 700, letterSpacing: -1 }}>
-            Prodet Tunisie
+            Prodet
           </div>
         </div>
 
