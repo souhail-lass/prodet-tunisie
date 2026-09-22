@@ -72,11 +72,29 @@ If `RESEND_API_KEY` is unset, admin UI shows a dev activation link instead of se
 
 ## Supabase dashboard checklist
 
-- [ ] Auth → URL configuration: site URL + redirect `http://localhost:3004/auth/callback`
+### Local
+
+- [ ] Auth → URL configuration: Site URL `http://localhost:3004`
+- [ ] Redirect URLs include `http://localhost:3004/auth/callback`
+
+### Production (required for magic links)
+
+If Redirect URLs do not allow the callback, Supabase **silently replaces**
+`emailRedirectTo` with Site URL. The mail then contains
+`redirect_to=https://prodet.com.tn` (no `/auth/callback`) and the click
+lands on the homepage with no session.
+
+- [ ] Site URL: `https://www.prodet.com.tn`
+- [ ] Redirect URLs (exact or wildcards), all of:
+  - `https://www.prodet.com.tn/auth/callback`
+  - `https://www.prodet.com.tn/**`
+  - `https://prodet.com.tn/auth/callback` (apex, if used)
+  - `http://localhost:3004/auth/callback` (local)
+- [ ] Vercel `NEXT_PUBLIC_SITE_URL` = `https://www.prodet.com.tn`
 - [ ] Auth → Email provider enabled
 - [ ] Storage → `customer-documents` bucket (private)
 - [ ] Database → migrations applied (`pnpm db:migrate`)
-- [ ] API keys → anon + service_role copied to `.env.local`
+- [ ] API keys → anon + service_role copied to `.env.local` / Vercel
 
 ## Security rules
 

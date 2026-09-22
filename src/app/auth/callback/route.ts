@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 }
 
 function sanitizeNext(value: string | null): string {
-  if (!value) return '/fr/admin/overview';
+  if (!value) return '/fr/client';
 
   try {
     const decoded = decodeURIComponent(value);
@@ -45,7 +45,7 @@ function sanitizeNext(value: string | null): string {
 
   if (isAllowedAuthRedirect(value)) return value;
 
-  return '/fr/admin/overview';
+  return '/fr/client';
 }
 
 function isAllowedAuthRedirect(value: string): boolean {

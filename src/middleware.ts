@@ -74,6 +74,19 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // When Supabase rejects our emailRedirectTo (not on the allow-list), it falls
+  // back to Site URL and drops the user on `/` or `/fr` with ?code=. Forward
+  // that PKCE code to the real callback so magic links still complete.
+  const authCode = request.nextUrl.searchParams.get('code');
+  if (authCode && !pathname.startsWith('/auth/')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/auth/callback';
+    if (!url.searchParams.get('next')) {
+      url.searchParams.set('next', `/${defaultLocale}/client`);
+    }
+    return NextResponse.redirect(url);
+  }
+
   if (pathname === '/') {
     const url = request.nextUrl.clone();
     url.pathname = `/${defaultLocale}`;
