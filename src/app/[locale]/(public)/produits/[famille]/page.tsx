@@ -25,6 +25,7 @@ import { JsonLd } from '@/components/seo/json-ld';
 import { breadcrumbSchema } from '@/lib/seo/structured-data';
 import { pageAlternates } from '@/lib/seo/alternates';
 import type { CatalogueCardProduct } from '@/types/product';
+import { cn } from '@/lib/utils';
 
 // Browse familles are known at build time — prerender them (ISR via the
 // catalogue cache tag keeps counts fresh after admin edits).
@@ -168,7 +169,10 @@ export default async function FamillePage({
                       className="souscat-card souscat-card--product"
                     >
                       <span
-                        className={`souscat-card__media${sub?.tileFit === 'cover' ? 'souscat-card__media--photo' : ''}`}
+                        className={cn(
+                          'souscat-card__media',
+                          sub?.tileFit === 'cover' && 'souscat-card__media--photo',
+                        )}
                       >
                         {sub?.packshot ? (
                           <Image

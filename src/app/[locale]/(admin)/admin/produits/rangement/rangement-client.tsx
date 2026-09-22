@@ -24,6 +24,7 @@ import {
   setCataloguePinAction,
 } from '../actions';
 
+import { cn } from '@/lib/utils';
 function move<T>(list: readonly T[], from: number, to: number): T[] {
   if (from === to || from < 0 || to < 0 || from >= list.length || to >= list.length)
     return [...list];
@@ -230,7 +231,11 @@ export function RangementClient({
         {items.map((item, index) => (
           <div
             key={item.id}
-            className={`admin-row admin-order-row${draggingId === item.id ? 'is-dragging' : ''}${item.hidden ? 'is-dim' : ''}`}
+            className={cn(
+              'admin-row admin-order-row',
+              draggingId === item.id && 'is-dragging',
+              item.hidden && 'is-dim',
+            )}
             style={{ gridTemplateColumns: HEAD_COLS }}
             draggable
             onDragStart={(e) => {

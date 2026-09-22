@@ -10,6 +10,7 @@ import {
 import { Search } from 'lucide-react';
 import type { AcademyFamily, AcademyFamilyKey, AcademyProduct } from '../types';
 
+import { cn } from '@/lib/utils';
 type Lang = 'fr' | 'en';
 
 export function CommandPalette({
@@ -106,7 +107,7 @@ export function CommandPalette({
               return (
                 <div
                   key={p.n}
-                  className={`cmdk__item${idx === active ? 'on' : ''}`}
+                  className={cn('cmdk__item', idx === active && 'on')}
                   onMouseEnter={() => setActive(idx)}
                   onClick={() => onSelect(i)}
                 >

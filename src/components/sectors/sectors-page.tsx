@@ -7,6 +7,7 @@ import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ds';
 import { useQuoteDrawer } from '@/components/site/quote-drawer';
 import type { SectorId } from '@/types/sector';
+import { cn } from '@/lib/utils';
 
 type SectorCard = {
   id: SectorId;
@@ -37,7 +38,7 @@ export function SectorsPage({ sectors }: { sectors: SectorCard[] }) {
               <Link
                 key={sector.id}
                 href={`/secteurs/${sector.id}`}
-                className={`sector-cover${feature ? 'sector-cover--feature' : ''}`}
+                className={cn('sector-cover', feature && 'sector-cover--feature')}
               >
                 <span className="sector-cover__photo">
                   <Image

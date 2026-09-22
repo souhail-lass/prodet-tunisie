@@ -16,6 +16,7 @@ import {
 import { Link, useRouter } from '@/i18n/routing';
 import { createTicketAction, uploadTicketAttachmentAction } from './actions';
 
+import { cn } from '@/lib/utils';
 type Pending = {
   localId: string;
   name: string;
@@ -145,7 +146,7 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
               {files.map((f) => (
                 <div
                   key={f.localId}
-                  className={`ticket-chip${f.status === 'error' ? 'is-error' : ''}`}
+                  className={cn('ticket-chip', f.status === 'error' && 'is-error')}
                 >
                   {f.isImage && f.previewUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element

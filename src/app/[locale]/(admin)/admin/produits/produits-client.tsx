@@ -13,6 +13,7 @@ import {
   type AdminCatalogueQuery,
 } from '@/lib/admin-catalogue-query';
 import { setProductHiddenAction, syncCatalogueAction, toggleCategoryAction } from './actions';
+import { cn } from '@/lib/utils';
 
 export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
   const locale = useLocale();
@@ -185,7 +186,7 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
           return (
             <div
               key={it.id}
-              className={`admin-row${hidden ? 'is-dim' : ''}`}
+              className={cn('admin-row', hidden && 'is-dim')}
               style={{ gridTemplateColumns: cols }}
             >
               <div className="admin-namecell">
@@ -268,7 +269,7 @@ function Stat({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`stat-card stat-card--filter stat-card--${tone}${active ? 'is-active' : ''}`}
+      className={cn('stat-card', 'stat-card--filter', `stat-card--${tone}`, active && 'is-active')}
     >
       <div className="stat-card__value" style={{ color }}>
         {value}

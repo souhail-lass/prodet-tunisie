@@ -2,6 +2,8 @@ import { getTranslations } from 'next-intl/server';
 import { Link, type Locale } from '@/i18n/routing';
 import { familles, getSousCategoriesForFamille, type FamilleId } from '@/data/familles';
 
+import { cn } from '@/lib/utils';
+
 /**
  * Greenlab-style category tree shown on the famille / sous-catégorie pages.
  * Server component — reads labels from the `familles` namespace. The active
@@ -30,7 +32,7 @@ export async function CategorySidebar({
             <div className="cat-sidebar__group" key={famille.id}>
               <Link
                 href={`/produits/${famille.id}`}
-                className={`cat-sidebar__fam${isActive ? 'is-active' : ''}`}
+                className={cn('cat-sidebar__fam', isActive && 'is-active')}
               >
                 {tf(`items.${famille.id}.label`)}
               </Link>
@@ -40,7 +42,10 @@ export async function CategorySidebar({
                     <li key={sub.slug}>
                       <Link
                         href={`/produits/${famille.id}/${sub.slug}`}
-                        className={`cat-sidebar__sub${sub.slug === activeSousCat ? 'is-active' : ''}`}
+                        className={cn(
+                          'cat-sidebar__sub',
+                          sub.slug === activeSousCat && 'is-active',
+                        )}
                       >
                         {tf(`souscats.${sub.slug}`)}
                       </Link>

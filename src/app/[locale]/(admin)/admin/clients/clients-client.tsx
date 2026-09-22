@@ -11,6 +11,7 @@ import {
   removeClientAction,
   revokeAccessAction,
 } from './actions';
+import { cn } from '@/lib/utils';
 
 export function ClientsClient({ clients }: { clients: AdminSwiverClient[] }) {
   const router = useRouter();
@@ -122,7 +123,7 @@ export function ClientsClient({ clients }: { clients: AdminSwiverClient[] }) {
           return (
             <div
               key={c.swiverId}
-              className={`admin-row${active ? '' : 'is-dim'}`}
+              className={cn('admin-row', !active && 'is-dim')}
               style={{ gridTemplateColumns: cols }}
             >
               <div className="admin-namecell">

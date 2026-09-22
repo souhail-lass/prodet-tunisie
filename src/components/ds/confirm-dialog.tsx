@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { AlertTriangle } from 'lucide-react';
 
+import { cn } from '@/lib/utils';
 export type ConfirmDialogProps = {
   open: boolean;
   title?: string;
@@ -55,7 +56,7 @@ export function ConfirmDialog({
         aria-label={title ?? message}
         onClick={(e) => e.stopPropagation()}
       >
-        <span className={`pds-confirm__icon${danger ? 'pds-confirm__icon--danger' : ''}`}>
+        <span className={cn('pds-confirm__icon', danger && 'pds-confirm__icon--danger')}>
           <AlertTriangle size={20} />
         </span>
         {title ? <h3 className="pds-confirm__title">{title}</h3> : null}

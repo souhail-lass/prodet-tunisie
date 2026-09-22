@@ -197,7 +197,7 @@ export function FormulaDiff({ reform, lang }: { reform: Reform; lang: Lang }) {
               ? t(lang, 'Masquer les inchangés', 'Hide unchanged')
               : t(
                   lang,
-                  `Voir ${keptCount} ingrédient${keptCount > 1 ? 's' : ''} inchangé${keptCount > 1 ? 's' : ''}`,
+                  `Voir ${keptCount} ingrédient${keptCount > 1 ? ' s' : ''} inchangé${keptCount > 1 ? 's' : ''}`,
                   `Show ${keptCount} unchanged`,
                 )}
           </button>

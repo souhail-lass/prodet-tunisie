@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { FileText, ImageIcon, Loader2, Paperclip, Send, X } from 'lucide-react';
 import { useRouter } from '@/i18n/routing';
 
+import { cn } from '@/lib/utils';
 export type ThreadAttachment = {
   url: string;
   name: string;
@@ -200,9 +201,9 @@ export function TicketThread({
           const isEcho = m.id.startsWith('optimistic-');
           const atts = m.attachments ?? [];
           return (
-            <div key={m.id} className={`ticket-msg${mine ? 'ticket-msg--mine' : ''}`}>
+            <div key={m.id} className={cn('ticket-msg', mine && 'ticket-msg--mine')}>
               <div
-                className={`ticket-bubble${mine ? 'ticket-bubble--mine' : ''}${isEcho ? 'is-echo' : ''}`}
+                className={cn('ticket-bubble', mine && 'ticket-bubble--mine', isEcho && 'is-echo')}
               >
                 <div className="ticket-bubble__meta">
                   {m.authorRole === 'admin' ? m.authorName || 'Prodet' : m.authorName || 'Client'} ·{' '}
@@ -225,7 +226,7 @@ export function TicketThread({
                       ) : (
                         <a
                           key={i}
-                          className={`ticket-att-file${mine ? 'ticket-att-file--mine' : ''}`}
+                          className={cn('ticket-att-file', mine && 'ticket-att-file--mine')}
                           href={a.url}
                           target="_blank"
                           rel="noopener"
@@ -260,7 +261,7 @@ export function TicketThread({
       {pending.length > 0 ? (
         <div className="ticket-tray">
           {pending.map((p) => (
-            <div key={p.localId} className={`ticket-chip${p.status === 'error' ? 'is-error' : ''}`}>
+            <div key={p.localId} className={cn('ticket-chip', p.status === 'error' && 'is-error')}>
               {p.isImage && p.previewUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={p.previewUrl} alt="" className="ticket-chip__thumb" />

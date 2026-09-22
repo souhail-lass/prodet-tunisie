@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import type { MonthlySpend } from '@/features/client-portal/spending';
 
+import { cn } from '@/lib/utils';
 const moneyFmt = new Intl.NumberFormat('fr-TN', { maximumFractionDigits: 0 });
 
 /**
@@ -57,7 +58,11 @@ export function SpendingChart({
           <button
             key={m.key}
             type="button"
-            className={`fin-chart__col${i === shown ? 'is-active' : ''}${i === current ? 'is-current' : ''}`}
+            className={cn(
+              'fin-chart__col',
+              i === shown && 'is-active',
+              i === current && 'is-current',
+            )}
             onPointerEnter={() => setActive(i)}
             onFocus={() => setActive(i)}
             onBlur={() => setActive(null)}

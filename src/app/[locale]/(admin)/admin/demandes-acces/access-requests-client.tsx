@@ -9,6 +9,7 @@ import {
 } from '@/features/client-access/admin-actions';
 import type { AccessRequestStatus } from '@/features/client-access/admin-queries';
 
+import { cn } from '@/lib/utils';
 export type AccessRequestRow = {
   id: string;
   name: string;
@@ -75,14 +76,14 @@ export function AccessRequestsClient({
       <div className="acc-switch">
         <button
           type="button"
-          className={`orders__tab${!showHandled ? 'is-active' : ''}`}
+          className={cn('orders__tab', !showHandled && 'is-active')}
           onClick={() => setShowHandled(false)}
         >
           En attente{pending.length ? ` (${pending.length})` : ''}
         </button>
         <button
           type="button"
-          className={`orders__tab${showHandled ? 'is-active' : ''}`}
+          className={cn('orders__tab', showHandled && 'is-active')}
           onClick={() => setShowHandled(true)}
         >
           Traitées{handled.length ? ` (${handled.length})` : ''}

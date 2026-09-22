@@ -7,6 +7,7 @@ import type { AcademyFamily, AcademyFamilyKey, AcademyProduct } from '../types';
 import { ProductDetail } from './product-detail';
 import { CommandPalette } from './command-palette';
 
+import { cn } from '@/lib/utils';
 type Lang = 'fr' | 'en';
 const t = (lang: Lang, fr: string, en: string) => (lang === 'en' ? en : fr);
 
@@ -87,7 +88,7 @@ export function GammeWorkspace({
   const current = selected !== null ? products[selected] : null;
 
   return (
-    <div className={`gamme${selected !== null ? 'has-selection' : ''}`}>
+    <div className={cn('gamme', selected !== null && 'has-selection')}>
       <aside className="gamme__rail">
         <div className="gamme__railhead">
           <div className="gamme-search">
@@ -135,7 +136,7 @@ export function GammeWorkspace({
                   <button
                     key={p.n}
                     type="button"
-                    className={`gamme-item${selected === i ? 'on' : ''}`}
+                    className={cn('gamme-item', selected === i && 'on')}
                     onClick={() => setSelected(i)}
                     aria-pressed={selected === i}
                   >

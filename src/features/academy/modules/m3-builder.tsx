@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Check, Zap } from 'lucide-react';
 
+import { cn } from '@/lib/utils';
 type Row = { name: string; role: string; pct: number; col: string; extra?: boolean };
 type Product = {
   key: 'lessive' | 'degraissant' | 'detartrant' | 'assouplissant';
@@ -142,7 +143,7 @@ export function FormulaBuilder() {
           <button
             key={prod.key}
             type="button"
-            className={`academy-btype${idx === pi ? 'on' : ''}`}
+            className={cn('academy-btype', idx === pi && 'on')}
             onClick={() => setPi(idx)}
             aria-pressed={idx === pi}
           >
@@ -194,7 +195,7 @@ function Toggle({ on, set, label }: { on: boolean; set: (v: boolean) => void; la
   return (
     <button
       type="button"
-      className={`academy-toggle${on ? 'on' : ''}`}
+      className={cn('academy-toggle', on && 'on')}
       onClick={() => set(!on)}
       aria-pressed={on}
     >

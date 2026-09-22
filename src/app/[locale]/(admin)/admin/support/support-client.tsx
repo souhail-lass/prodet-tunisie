@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { LifeBuoy, Search } from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
 
+import { cn } from '@/lib/utils';
 export type AdminTicketRow = {
   id: string;
   subject: string;
@@ -59,7 +60,7 @@ export function AdminSupportClient({ tickets }: { tickets: AdminTicketRow[] }) {
         ].map((t) => (
           <button
             key={t.id}
-            className={`orders__tab${tab === t.id ? 'is-active' : ''}`}
+            className={cn('orders__tab', tab === t.id && 'is-active')}
             onClick={() => setTab(t.id as typeof tab)}
           >
             {t.label}

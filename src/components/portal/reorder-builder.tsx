@@ -20,6 +20,7 @@ import { submitPortalQuoteAction } from '@/features/client-portal/quote-actions'
 import { clearPortalCart, setPortalCart, usePortalCart, type PortalCart } from '@/lib/portal-cart';
 import type { PortalProductRef } from '@/features/client-portal/mock/portal-mock';
 
+import { cn } from '@/lib/utils';
 /** Cap the grid so a large catalogue never floods the DOM — search narrows it. */
 const DISPLAY_CAP = 60;
 
@@ -332,7 +333,7 @@ export function ReorderBuilder({
                   type="button"
                   role="tab"
                   aria-selected={!searching && filter === FREQUENT}
-                  className={`desk-chip${!searching && filter === FREQUENT ? 'is-active' : ''}`}
+                  className={cn('desk-chip', !searching && filter === FREQUENT && 'is-active')}
                   onClick={() => pickChip(FREQUENT)}
                 >
                   <Sparkles size={14} />
@@ -343,7 +344,7 @@ export function ReorderBuilder({
                 type="button"
                 role="tab"
                 aria-selected={!searching && filter === ALL}
-                className={`desk-chip${!searching && filter === ALL ? 'is-active' : ''}`}
+                className={cn('desk-chip', !searching && filter === ALL && 'is-active')}
                 onClick={() => pickChip(ALL)}
               >
                 {t('reorder.filterAll')}
@@ -354,7 +355,7 @@ export function ReorderBuilder({
                   type="button"
                   role="tab"
                   aria-selected={!searching && filter === c}
-                  className={`desk-chip${!searching && filter === c ? 'is-active' : ''}`}
+                  className={cn('desk-chip', !searching && filter === c && 'is-active')}
                   onClick={() => pickChip(c)}
                 >
                   {c}
@@ -402,7 +403,7 @@ export function ReorderBuilder({
       </div>
 
       {/* ---- Mobile sticky action bar ---- */}
-      <div className={`desk-bar${lines.length ? 'is-visible' : ''}`}>
+      <div className={cn('desk-bar', lines.length && 'is-visible')}>
         <a href="#cart" className="desk-bar__info">
           <ShoppingBasket size={20} />
           <span key={countKey} className="desk-bar__count">

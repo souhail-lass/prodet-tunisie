@@ -19,6 +19,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { usePortalCartCount } from '@/lib/portal-cart';
 
+import { cn } from '@/lib/utils';
 export type PortalShellAccount = {
   name: string;
   contact: string;
@@ -107,7 +108,7 @@ export function PortalShell({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`portal__nav-item${isActive(item.href, item.exact) ? 'is-active' : ''}`}
+                className={cn('portal__nav-item', isActive(item.href, item.exact) && 'is-active')}
               >
                 <Icon size={18} />
                 <span>{t(`nav.${item.key}`)}</span>
@@ -147,7 +148,7 @@ export function PortalShell({
               className="portal__cart"
               aria-label={
                 cartCount > 0
-                  ? `Commande en cours — ${cartCount} référence${cartCount > 1 ? 's' : ''}`
+                  ? `Commande en cours — ${cartCount} référence${cartCount > 1 ? ' s' : ''}`
                   : 'Commander'
               }
               title="Commande en cours"
@@ -180,7 +181,7 @@ export function PortalShell({
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`portal-bottomnav__item${active ? 'is-active' : ''}`}
+              className={cn('portal-bottomnav__item', active && 'is-active')}
             >
               <Icon size={19} />
               <span>{t(`navShort.${item.key}`)}</span>

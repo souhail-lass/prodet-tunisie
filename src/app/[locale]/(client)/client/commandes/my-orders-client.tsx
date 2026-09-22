@@ -7,6 +7,7 @@ import { ConfirmDialog } from '@/components/ds';
 import { Link, useRouter } from '@/i18n/routing';
 import { cancelOrderAction } from './actions';
 
+import { cn } from '@/lib/utils';
 export type MyOrderRow = {
   id: string;
   reference: string;
@@ -89,7 +90,7 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
           {TABS.map((t) => (
             <button
               key={t.id}
-              className={`otable-tab${tab === t.id ? 'is-active' : ''}`}
+              className={cn('otable-tab', tab === t.id && 'is-active')}
               onClick={() => setTab(t.id)}
             >
               {tr(`tabs.${t.key}`)}

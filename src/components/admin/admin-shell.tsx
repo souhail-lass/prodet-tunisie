@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 
+import { cn } from '@/lib/utils';
 export type AdminShellAccount = { name: string; email: string; initials: string };
 
 const NAV: { href: string; label: string; short: string; icon: LucideIcon }[] = [
@@ -100,7 +101,7 @@ export function AdminShell({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`portal__nav-item${isActive(item.href) ? 'is-active' : ''}`}
+                className={cn('portal__nav-item', isActive(item.href) && 'is-active')}
               >
                 <Icon size={18} />
                 <span>{item.label}</span>
@@ -157,7 +158,7 @@ export function AdminShell({
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`portal-bottomnav__item${active ? 'is-active' : ''}`}
+              className={cn('portal-bottomnav__item', active && 'is-active')}
             >
               <Icon size={19} />
               <span>{item.short}</span>

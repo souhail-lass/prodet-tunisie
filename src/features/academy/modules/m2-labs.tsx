@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { Zap } from 'lucide-react';
 
+import { cn } from '@/lib/utils';
 function LabBadge({ children }: { children: string }) {
   return (
     <span className="academy-lab__badge">
@@ -164,7 +165,7 @@ export function SurfactantTypes() {
           <button
             key={ty.nm}
             type="button"
-            className={`academy-typetab${idx === i ? 'on' : ''}`}
+            className={cn('academy-typetab', idx === i && 'on')}
             onClick={() => setI(idx)}
             aria-pressed={idx === i}
           >
@@ -187,7 +188,7 @@ export function SurfactantTypes() {
           <span>Mousse :</span>
           <div className="academy-foam__dots">
             {[0, 1, 2, 3].map((d) => (
-              <div key={d} className={`academy-foam__dot${d < t.foam ? 'fill' : ''}`} />
+              <div key={d} className={cn('academy-foam__dot', d < t.foam && 'fill')} />
             ))}
           </div>
         </div>
@@ -400,7 +401,7 @@ export function BleachLab() {
       <div className="academy-bleach-toggle">
         <button
           type="button"
-          className={`academy-bleach-opt${b === 'cl' ? 'on' : ''}`}
+          className={cn('academy-bleach-opt', b === 'cl' && 'on')}
           onClick={() => setB('cl')}
           aria-pressed={b === 'cl'}
         >
@@ -408,7 +409,7 @@ export function BleachLab() {
         </button>
         <button
           type="button"
-          className={`academy-bleach-opt${b === 'ox' ? 'on' : ''}`}
+          className={cn('academy-bleach-opt', b === 'ox' && 'on')}
           onClick={() => setB('ox')}
           aria-pressed={b === 'ox'}
         >
