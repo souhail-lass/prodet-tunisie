@@ -10,8 +10,8 @@ type PendingCookie = { name: string; value: string; options: CookieOptions };
  *
  * Supports:
  * - `?code=` (PKCE exchange after Supabase /verify redirect)
- * - `?token_hash=&type=` (server-side verifyOtp — works across devices and
- *   survives Gmail link prefetch when the email first lands on /auth/confirm)
+ * - `?token_hash=&type=` (server-side verifyOtp — works across devices without
+ *   needing a PKCE cookie from the browser that requested the link)
  *
  * Session cookies must be written onto the *redirect* response; setting them
  * only via `cookies()` from `next/headers` drops them on `NextResponse.redirect`.

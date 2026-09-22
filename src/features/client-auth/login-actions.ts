@@ -73,8 +73,8 @@ export async function requestClientMagicLink(formData: FormData): Promise<never>
 }
 
 /**
- * Mint a token_hash via Admin API and email a /auth/confirm link through Resend.
- * Survives Gmail prefetch and cross-device opens (no PKCE cookie required).
+ * Mint a token_hash via Admin API and email a direct /auth/callback link via Resend.
+ * No intermediate confirm page — click in the mail lands straight in the portal.
  */
 async function sendResendMagicLink(input: {
   email: string;
@@ -100,7 +100,7 @@ async function sendResendMagicLink(input: {
       return 'failed';
     }
 
-    const confirmUrl = `${input.origin}/auth/confirm?token_hash=${encodeURIComponent(tokenHash)}&type=magiclink&next=${encodeURIComponent(input.nextPath)}`;
+    const loginUrl = `${input.origin}/auth/callback?token_hash=${encodeURIComponent(tokenHash)}&type=magiclink&next=${encodeURIComponent(input.nextPath)}`;
     const isEnglish = input.locale === 'en';
     const subject = isEnglish
       ? 'Your Prodet client sign-in link'
@@ -115,13 +115,13 @@ async function sendResendMagicLink(input: {
           'Utilisez le bouton ci-dessous pour vous connecter. Le lien ne fonctionne qu’une fois et expire rapidement.',
           'Si vous n’êtes pas à l’origine de cette demande, ignorez cet email.',
         ];
-    const ctaLabel = isEnglish ? 'Confirm sign-in' : 'Confirmer la connexion';
+    const ctaLabel = isEnglish ? 'Enter client space' : 'Entrer dans l’espace client';
 
     return sendEmail({
       to: input.email,
       subject,
-      text: [...lines, '', confirmUrl].join('\n'),
-      html: brandedHtml(heading, lines, { label: ctaLabel, url: confirmUrl }),
+      text: [...lines, '', loginUrl].join('\n'),
+      html: brandedHtml(heading, lines, { label: ctaLabel, url: loginUrl }),
     });
   } catch (error) {
     console.error('[client-login:resend-magic]', error instanceof Error ? error.message : error);
