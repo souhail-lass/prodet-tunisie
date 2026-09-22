@@ -8,6 +8,7 @@ import { Link, usePathname, useRouter, locales, type Locale } from '@/i18n/routi
 import { Button } from '@/components/ds';
 import { useQuoteSelection } from '@/lib/quote-cart-context';
 import { useQuoteDrawer } from '@/components/site/quote-drawer';
+import { cn } from '@/lib/utils';
 
 const LANG_LABEL: Record<Locale, string> = { fr: 'FR', en: 'EN' };
 
@@ -66,7 +67,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`site-nav-link${isActive(item.href) ? 'is-active' : ''}`}
+                className={cn('site-nav-link', isActive(item.href) && 'is-active')}
               >
                 {item.label}
               </Link>
@@ -123,7 +124,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`site-menu__link${isActive(item.href) ? 'is-active' : ''}`}
+                className={cn('site-menu__link', isActive(item.href) && 'is-active')}
               >
                 {item.label}
               </Link>
@@ -185,7 +186,7 @@ function LangSwitch() {
         <button
           key={locale}
           type="button"
-          className={`lang-switch__opt${locale === current ? 'is-active' : ''}`}
+          className={cn('lang-switch__opt', locale === current && 'is-active')}
           onClick={() => switchTo(locale)}
         >
           {LANG_LABEL[locale]}
