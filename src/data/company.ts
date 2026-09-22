@@ -19,7 +19,10 @@ export const companyInfo = {
     "Fabricant et distributeur de produits d'entretien professionnels · Tunis, Tunisie",
   deliveryZoneLabel: null,
   hoursLabel: null,
-  whatsappNumber: null,
+  /** Mobile WhatsApp (distinct from the landline above). */
+  whatsappDisplay: '98 997 833',
+  whatsappE164: '+21698997833',
+  whatsappHref: 'https://wa.me/21698997833',
   copyrightYear: 2026,
   // SEO entity signals. Fill these in as the brand's official profiles go live —
   // they feed the `sameAs` array in the Organization JSON-LD, which is what links

@@ -32,7 +32,7 @@ const INITIAL: FormState = {
   website: '',
 };
 
-const WHATSAPP_HREF = `https://wa.me/${companyInfo.phoneHref.replace(/[^0-9]/g, '')}`;
+const WHATSAPP_HREF = companyInfo.whatsappHref;
 
 export function ContactPage() {
   const t = useTranslations('contact');
@@ -209,6 +209,17 @@ export function ContactPage() {
             <div>
               <strong>{t('info.phone')}</strong>
               <span>{companyInfo.phoneDisplay}</span>
+            </div>
+          </div>
+          <div className="contact__info-item">
+            <span className="contact__info-icon">
+              <WhatsappIcon size={18} />
+            </span>
+            <div>
+              <strong>{t('whatsapp')}</strong>
+              <a href={companyInfo.whatsappHref} target="_blank" rel="noopener noreferrer">
+                {companyInfo.whatsappDisplay}
+              </a>
             </div>
           </div>
           <div className="contact__info-item">

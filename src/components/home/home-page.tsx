@@ -8,6 +8,7 @@ import { Button } from '@/components/ds';
 import { ProductMarquee } from '@/components/home/product-marquee';
 import { ClientWall } from '@/components/home/client-wall';
 import { WhatsappIcon } from '@/components/site/whatsapp-icon';
+import { companyInfo } from '@/data/company';
 import { useQuoteDrawer } from '@/components/site/quote-drawer';
 import type { Product } from '@/types/product';
 import type { SectorId } from '@/types/sector';
@@ -225,7 +226,7 @@ export function HomePage({
               variant="ghost"
               size="lg"
               className="cta-band__ghost"
-              onClick={() => router.push('/contact')}
+              onClick={() => window.open(companyInfo.whatsappHref, '_blank', 'noopener,noreferrer')}
               iconLeft={<WhatsappIcon size={18} />}
             >
               {t('cta.contact')}
