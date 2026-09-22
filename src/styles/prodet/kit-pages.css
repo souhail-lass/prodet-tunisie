@@ -278,6 +278,17 @@
 .famille-empty p { font-size: var(--text-base); color: var(--text-secondary); margin-top: 8px; }
 .famille-empty__link { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; color: var(--prodet-blue); font-weight: var(--fw-semibold); }
 
+/* ---------- LEGAL PAGES ---------- */
+.legal-page { padding-top: 56px; padding-bottom: 72px; max-width: 720px; }
+.legal-page__title { font-size: clamp(1.75rem, 1.2rem + 1.5vw, 2.25rem); font-weight: var(--fw-bold); letter-spacing: var(--tracking-tight); line-height: 1.15; }
+.legal-page__intro { margin-top: 16px; font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed); }
+.legal-page__body { margin-top: 36px; display: flex; flex-direction: column; gap: 28px; }
+.legal-page__section h2 { font-size: var(--text-h4); font-weight: var(--fw-semibold); letter-spacing: var(--tracking-tight); }
+.legal-page__section p { margin-top: 10px; font-size: var(--text-base); color: var(--text-secondary); line-height: var(--leading-relaxed); }
+.legal-page__section a { color: var(--prodet-blue); font-weight: var(--fw-medium); text-decoration: underline; text-underline-offset: 3px; }
+.legal-page__section a:hover { color: var(--prodet-blue-hover); }
+.legal-page__updated { margin-top: 40px; font-size: var(--text-sm); color: var(--text-tertiary); }
+
 /* ---------- ABOUT ---------- */
 .about__hero { background: var(--surface-navy); color: #fff; padding: 56px 0 64px; }
 .about__title { font-size: var(--text-h1); font-weight: var(--fw-bold); color: #fff; margin-top: 10px; }
@@ -560,4 +571,49 @@
   .pq-search__panel { width: 100%; }
   .pq-search__row { flex-wrap: wrap; row-gap: 8px; }
   .pq-search__qty { margin-inline-start: auto; }
+}
+
+/* ---------- AUTH ATMOSPHERE (connexion-client, espace-client) ----------
+   Fills the large empty canvas around the login card: warm wash, fine
+   navy dots, soft pointer spotlight. Prefer-reduced-motion keeps the
+   pattern but freezes the spotlight (handled in the React component). */
+.auth-atmosphere {
+  background: var(--surface-page);
+}
+.auth-atmosphere__wash,
+.auth-atmosphere__grid,
+.auth-atmosphere__spot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.auth-atmosphere__wash {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% -10%, rgba(9, 82, 150, 0.07), transparent 60%),
+    radial-gradient(ellipse 45% 40% at 100% 100%, rgba(6, 53, 97, 0.045), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 0% 90%, rgba(65, 170, 226, 0.04), transparent 50%);
+}
+.auth-atmosphere__grid {
+  opacity: 0.55;
+  background-image: radial-gradient(rgba(9, 82, 150, 0.14) 1px, transparent 1px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 42%, #000 15%, transparent 78%);
+  mask-image: radial-gradient(ellipse 72% 68% at 50% 42%, #000 15%, transparent 78%);
+}
+.auth-atmosphere__spot {
+  background: radial-gradient(
+    480px circle at var(--auth-spot-x, 50%) var(--auth-spot-y, 38%),
+    rgba(9, 82, 150, 0.1),
+    transparent 58%
+  );
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-atmosphere__spot {
+    background: radial-gradient(
+      420px circle at 50% 38%,
+      rgba(9, 82, 150, 0.07),
+      transparent 58%
+    );
+  }
 }

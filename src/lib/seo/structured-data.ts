@@ -37,7 +37,7 @@ function sameAs(): string[] {
 function postalAddress() {
   return {
     '@type': 'PostalAddress',
-    streetAddress: '20 Rue de Somalie',
+    streetAddress: '20 Rue de Somalie, Cité El Bassatine',
     addressLocality: "L'Aouina, Tunis",
     postalCode: '2045',
     addressCountry: 'TN',

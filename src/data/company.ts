@@ -1,7 +1,16 @@
 export const companyInfo = {
   name: 'Prodet Tunisie',
-  addressLine: "20 Rue de Somalie, L'Aouina, Tunis 2045",
-  addressFull: "20 Rue de Somalie, L'Aouina, Tunis 2045, Tunisie",
+  legalName: 'PRODET TUNISIE',
+  legalForm: 'SARL',
+  shareCapitalTnd: 100_000,
+  /** Identifiant unique RNE */
+  rne: '0848611G',
+  matriculeFiscal: '848611GAM000',
+  publicationDirector: 'Mouldi Lassoued',
+  manager: 'Houda Jlidi',
+  activityStartDate: '2003-09-05',
+  addressLine: "20 Rue de Somalie, Cité El Bassatine, L'Aouina 2045",
+  addressFull: "20 Rue de Somalie, Cité El Bassatine, L'Aouina 2045, Tunisie",
   phoneDisplay: '71 758 468',
   phoneHref: 'tel:+21671758468',
   email: 'contact@prodet.com.tn',
@@ -10,7 +19,7 @@ export const companyInfo = {
   deliveryZoneLabel: null,
   hoursLabel: null,
   whatsappNumber: null,
-  copyrightYear: 2025,
+  copyrightYear: 2026,
   // SEO entity signals. Fill these in as the brand's official profiles go live —
   // they feed the `sameAs` array in the Organization JSON-LD, which is what links
   // every Prodet profile into one entity for Google's Knowledge Panel.
@@ -42,5 +51,5 @@ export const companyInfo = {
     },
   ],
   mapHref:
-    "https://www.google.com/maps/search/?api=1&query=20+Rue+de+Somalie,+L'Aouina,+Tunis+2045,+Tunisie",
+    "https://www.google.com/maps/search/?api=1&query=20+Rue+de+Somalie,+Cite+El+Bassatine,+L'Aouina,+Tunis+2045,+Tunisie",
 } as const;

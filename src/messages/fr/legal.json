@@ -1,15 +1,171 @@
 {
-  "comingSoon": "Cette page sera publiée à la mise en production. Elle inscrira les mentions conformes au droit tunisien (loi 2004-63) et alignées sur les pratiques RGPD.",
   "mentions": {
     "title": "Mentions légales",
-    "intro": "Cette page est en cours de rédaction. À la mise en production, elle indiquera l'éditeur du site, le directeur de la publication, l'hébergeur, le numéro RNE et le numéro fiscal de Prodet Tunisie."
+    "intro": "Informations légales relatives à l’éditeur du site www.prodet.com.tn, conformément aux usages applicables aux sites professionnels en Tunisie et à la loi organique n° 2004-63 relative à la protection des données à caractère personnel.",
+    "updated": "Dernière mise à jour : 22 septembre 2026.",
+    "sections": [
+      {
+        "heading": "1. Éditeur du site",
+        "paragraphs": [
+          "Le site www.prodet.com.tn est édité par PRODET TUNISIE, Société à Responsabilité Limitée (SARL) au capital de 100 000 TND, immatriculée au Registre National des Entreprises sous l’identifiant unique 0848611G, matricule fiscal 848611GAM000.",
+          "Siège social : 20 Rue de Somalie, Cité El Bassatine, L’Aouina 2045, Tunisie.",
+          "Téléphone : 71 758 468 — Email : contact@prodet.com.tn",
+          "Date de début d’activité : 5 septembre 2003."
+        ]
+      },
+      {
+        "heading": "2. Direction de la publication",
+        "paragraphs": [
+          "Directeur de la publication : Mouldi Lassoued.",
+          "Gérante : Houda Jlidi."
+        ]
+      },
+      {
+        "heading": "3. Hébergement et nom de domaine",
+        "paragraphs": [
+          "Le site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis, avec une infrastructure d’exécution en Europe (région Paris).",
+          "Le nom de domaine prodet.com.tn est enregistré et géré auprès d’Oxahost (Tunisie).",
+          "Les données applicatives sont stockées chez Supabase (Union européenne, région Francfort), dans le cadre du fonctionnement du site et de l’espace client."
+        ]
+      },
+      {
+        "heading": "4. Objet du site",
+        "paragraphs": [
+          "Le site présente l’activité de PRODET TUNISIE (fabrication et distribution de produits d’entretien et d’hygiène professionnels), le catalogue, les secteurs d’activité, ainsi que les moyens de contact et de demande de devis.",
+          "Aucun paiement en ligne n’est proposé. Les prix et stocks ne sont pas affichés publiquement ; ils sont confirmés dans le cadre d’une réponse commerciale."
+        ]
+      },
+      {
+        "heading": "5. Propriété intellectuelle",
+        "paragraphs": [
+          "L’ensemble des contenus du site (textes, photographies, logos, éléments graphiques, structure) est protégé. Toute reproduction, représentation ou diffusion, totale ou partielle, sans autorisation écrite préalable de PRODET TUNISIE est interdite."
+        ]
+      },
+      {
+        "heading": "6. Données personnelles",
+        "paragraphs": [
+          "Les traitements de données personnelles réalisés via le site sont décrits dans la [[Politique de confidentialité|/confidentialite]] et la page [[Cookies|/cookies]]."
+        ]
+      },
+      {
+        "heading": "7. Limitation de responsabilité",
+        "paragraphs": [
+          "Les informations publiées sur le site le sont à titre indicatif. PRODET TUNISIE s’efforce de les maintenir exactes et à jour, sans garantir l’absence d’erreur, d’omission ou d’indisponibilité temporaire du service."
+        ]
+      },
+      {
+        "heading": "8. Droit applicable",
+        "paragraphs": [
+          "Les présentes mentions sont régies par le droit tunisien. Sous réserve des règles d’ordre public applicables, les tribunaux de Tunis sont compétents."
+        ]
+      }
+    ]
   },
   "privacy": {
     "title": "Politique de confidentialité",
-    "intro": "Cette page est en cours de rédaction. À la mise en production, elle décrira les données personnelles collectées, leurs finalités, leurs durées de conservation, vos droits (accès, rectification, suppression, portabilité, opposition) et le contact du référent données."
+    "intro": "Cette politique explique quelles données personnelles PRODET TUNISIE collecte via www.prodet.com.tn, pourquoi, combien de temps, avec qui, et quels sont vos droits. Elle s’applique dans le cadre de la loi tunisienne n° 2004-63 et des pratiques alignées sur le RGPD.",
+    "updated": "Dernière mise à jour : 22 septembre 2026.",
+    "sections": [
+      {
+        "heading": "1. Responsable du traitement",
+        "paragraphs": [
+          "PRODET TUNISIE (SARL), 20 Rue de Somalie, Cité El Bassatine, L’Aouina 2045, Tunisie.",
+          "Contact : contact@prodet.com.tn — Téléphone : 71 758 468."
+        ]
+      },
+      {
+        "heading": "2. Données collectées",
+        "paragraphs": [
+          "Via les formulaires de contact et de demande de devis : nom, prénom ou raison sociale, email professionnel, téléphone, message, produits et quantités demandés.",
+          "Via l’espace client (comptes activés par Prodet) : email de connexion, historique de demandes et documents liés au compte.",
+          "Données techniques de navigation : pages vues, référent, pays approximatif, type d’appareil — via Vercel Web Analytics, sans cookies publicitaires de profilage."
+        ]
+      },
+      {
+        "heading": "3. Finalités",
+        "paragraphs": [
+          "Répondre aux demandes de devis et de contact.",
+          "Gérer la relation commerciale B2B et l’accès à l’espace client.",
+          "Améliorer le site (statistiques d’audience anonymisées ou agrégées).",
+          "Assurer la sécurité du service (prévention des abus, journalisation technique)."
+        ]
+      },
+      {
+        "heading": "4. Base et durée de conservation",
+        "paragraphs": [
+          "Les données de contact et de devis sont conservées le temps nécessaire au traitement de la demande, puis pendant la durée de la relation commerciale, et au-delà lorsque la loi l’exige (notamment obligations comptables et commerciales).",
+          "Les données de compte client sont conservées tant que le compte est actif, puis archivées ou supprimées selon les besoins opérationnels et légaux.",
+          "Les journaux techniques et mesures d’audience suivent les durées des prestataires concernés."
+        ]
+      },
+      {
+        "heading": "5. Destinataires et sous-traitants",
+        "paragraphs": [
+          "Les données sont accessibles aux équipes habilitées de PRODET TUNISIE.",
+          "Prestataires techniques : Vercel (hébergement du site), Supabase (base de données et authentification en Union européenne), et, le cas échéant, des outils d’envoi d’emails transactionnels nécessaires au traitement des demandes.",
+          "Nous ne vendons pas vos données et ne les utilisons pas pour de la publicité comportementale tierce."
+        ]
+      },
+      {
+        "heading": "6. Transferts",
+        "paragraphs": [
+          "Le site est opéré avec une infrastructure européenne pour l’application et la base de données. Certains prestataires (notamment l’éditeur de la plateforme d’hébergement) peuvent être établis hors Tunisie ; des garanties contractuelles adaptées sont mises en place dans la mesure applicable."
+        ]
+      },
+      {
+        "heading": "7. Vos droits",
+        "paragraphs": [
+          "Conformément à la loi n° 2004-63, vous pouvez demander l’accès, la rectification, la suppression ou la limitation du traitement de vos données, ainsi que vous opposer à certains traitements, dans les limites prévues par la loi.",
+          "Pour exercer ces droits : contact@prodet.com.tn. Nous répondons dans les meilleurs délais et au plus tard dans le délai légalement applicable.",
+          "Vous pouvez également saisir l’Instance Nationale de Protection des Données Personnelles (INPDP) en cas de litige."
+        ]
+      },
+      {
+        "heading": "8. Sécurité",
+        "paragraphs": [
+          "Nous mettons en œuvre des mesures techniques et organisationnelles raisonnables (HTTPS, contrôle d’accès, validation des entrées, journalisation des actions administratives sensibles) pour protéger les données contre l’accès non autorisé, la perte ou l’altération."
+        ]
+      },
+      {
+        "heading": "9. Cookies",
+        "paragraphs": [
+          "Le détail des cookies et mesures d’audience figure sur la page [[Cookies|/cookies]]."
+        ]
+      }
+    ]
   },
   "cookies": {
     "title": "Cookies",
-    "intro": "Le site n'utilise pas de cookies de profilage publicitaire. L'audience est mesurée de façon anonyme (sans cookie de tracking) pour comprendre quelles pages sont visitées."
+    "intro": "Cette page décrit l’usage des cookies et des mesures d’audience sur www.prodet.com.tn.",
+    "updated": "Dernière mise à jour : 22 septembre 2026.",
+    "sections": [
+      {
+        "heading": "1. Pas de cookies publicitaires",
+        "paragraphs": [
+          "Le site n’utilise pas de cookies de publicité, de remarketing ou de profilage publicitaire tiers (pas de Google Analytics, pas de pixels publicitaires)."
+        ]
+      },
+      {
+        "heading": "2. Mesure d’audience",
+        "paragraphs": [
+          "Nous utilisons Vercel Web Analytics pour compter les pages vues et comprendre l’usage du site (pages, pays, référents). Cette mesure est conçue pour fonctionner sans cookies de tracking publicitaire.",
+          "Ces informations servent uniquement à améliorer le site et ne sont pas vendues."
+        ]
+      },
+      {
+        "heading": "3. Cookies techniques / session",
+        "paragraphs": [
+          "Des cookies ou stockages strictement nécessaires peuvent être utilisés pour le fonctionnement du site (par exemple la langue choisie, ou la session de l’espace client après connexion).",
+          "Sans ces éléments, certaines fonctions (connexion client, préférence de langue) ne peuvent pas fonctionner correctement."
+        ]
+      },
+      {
+        "heading": "4. Gestion",
+        "paragraphs": [
+          "Vous pouvez paramétrer votre navigateur pour refuser ou supprimer les cookies. Le refus des cookies techniques peut limiter l’accès à l’espace client.",
+          "Pour toute question : contact@prodet.com.tn. Voir aussi la [[Politique de confidentialité|/confidentialite]]."
+        ]
+      }
+    ]
   }
 }
