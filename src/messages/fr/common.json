@@ -71,7 +71,7 @@
   "clientAccess": {
     "title": "Accédez à votre espace Prodet",
     "titleLogin": "Connexion à votre espace",
-    "lead": "Connexion sans mot de passe, réservée aux comptes professionnels validés.",
+    "lead": "Connexion sans mot de passe —\nréservée aux comptes professionnels validés.",
     "submit": "Recevoir le lien de connexion",
     "sentEspace": "Si cet email dispose d'un accès activé, un lien de connexion arrive sous peu (pensez aux indésirables).",
     "sentLogin": "Lien envoyé. Vérifiez votre boîte mail (pensez aux courriers indésirables).",

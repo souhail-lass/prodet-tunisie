@@ -71,7 +71,7 @@
   "clientAccess": {
     "title": "Access your Prodet account",
     "titleLogin": "Sign in to your account",
-    "lead": "Passwordless sign-in, reserved for approved business accounts.",
+    "lead": "Passwordless sign-in —\nreserved for approved business accounts.",
     "submit": "Send me the sign-in link",
     "sentEspace": "If this email has an active account, a sign-in link is on its way (check your spam folder).",
     "sentLogin": "Link sent. Check your inbox (and your spam folder).",

@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 import { ArrowRight, MailCheck, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { Link, isLocale } from '@/i18n/routing';
+import { AuthAtmosphere } from '@/components/auth/auth-atmosphere';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { requestClientMagicLink } from '@/features/client-auth/login-actions';
@@ -52,17 +53,17 @@ export default async function ClientLoginPage({
   if (alreadySignedIn) redirect(next);
 
   return (
-    <main className="bg-prodet-wash flex min-h-[100dvh] items-center justify-center px-5 py-16">
-      <div className="w-full max-w-[440px]">
+    <main>
+      <AuthAtmosphere>
         {/* Heading — mirrors /espace-client for a consistent entry point. */}
-        <header className="mb-8 text-center">
+        <header className="mb-8 flex flex-col items-center text-center">
           <p className="text-prodet-blue text-[11px] font-semibold tracking-[0.14em] uppercase">
             {t('eyebrow')}
           </p>
           <h1 className="text-prodet-text mt-2.5 text-[28px] leading-[1.15] font-semibold">
             {t('titleLogin')}
           </h1>
-          <p className="text-muted-foreground mx-auto mt-3 max-w-[320px] text-[14px] leading-6">
+          <p className="text-muted-foreground max-w-[22rem] pt-5 text-[14px] leading-6 whitespace-pre-line">
             {t('lead')}
           </p>
         </header>
@@ -131,7 +132,7 @@ export default async function ClientLoginPage({
           <ShieldCheck className="text-prodet-blue h-3.5 w-3.5" aria-hidden />
           {t('reassure')}
         </p>
-      </div>
+      </AuthAtmosphere>
     </main>
   );
 }
