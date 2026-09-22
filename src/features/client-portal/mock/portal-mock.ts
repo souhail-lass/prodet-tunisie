@@ -44,6 +44,8 @@ export type PortalProductRef = {
   unitPrice?: number | null;
   /** Catalogue category label — powers the order-desk filter chips. */
   category?: string | null;
+  /** UX browse bucket id (cuisine / etage / …) for Commander chips. */
+  browseBucket?: string | null;
 };
 
 export type PortalOrderLine = PortalProductRef & { qty: number };

@@ -29,6 +29,7 @@ import {
   sortCurationRows,
   type ExtraPlacement,
 } from './placement';
+import { assignReorderBucket } from '@/features/client-portal/reorder-buckets';
 
 /**
  * Cache tag for everything derived from catalogue_product. Admin mutations
@@ -472,7 +473,10 @@ export type OrderableProduct = {
   name: string;
   image: string;
   unitPrice: number | null;
+  /** Legacy ERP label — kept for display hints, not Commander chips. */
   categoryLabel: string | null;
+  /** UX browse bucket for Commander filters (cuisine / étage / …). */
+  browseBucket: string | null;
 };
 
 /** Visible catalogue products that can be ordered (have a Swiver id). */
@@ -480,14 +484,23 @@ export async function getOrderableCatalogue(): Promise<OrderableProduct[]> {
   const rows = (await getCachedCatalogueRows()).filter((r) => !r.hidden);
   return rows
     .filter((r) => r.swiverId)
-    .map((r) => ({
-      swiverId: r.swiverId as string,
-      sku: r.sku,
-      name: r.displayName || r.name,
-      image: r.imageUrl || r.baseImageUrl || '',
-      unitPrice: r.unitPrice != null ? Number(r.unitPrice) : null,
-      categoryLabel: r.baseCategory ?? null,
-    }));
+    .map((r) => {
+      const placement = resolveRowPlacement(r);
+      const name = r.displayName || r.name;
+      return {
+        swiverId: r.swiverId as string,
+        sku: r.sku,
+        name,
+        image: r.imageUrl || r.baseImageUrl || '',
+        unitPrice: r.unitPrice != null ? Number(r.unitPrice) : null,
+        categoryLabel: r.baseCategory ?? null,
+        browseBucket: assignReorderBucket({
+          name,
+          familleId: placement.familleId,
+          sousCategorieSlug: placement.sousCategorieSlug,
+        }),
+      };
+    });
 }
 
 /**

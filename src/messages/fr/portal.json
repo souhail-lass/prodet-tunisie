@@ -144,6 +144,14 @@
     "viewDevis": "Voir mes devis",
     "filterFrequent": "Mes habituels",
     "filterAll": "Tout le catalogue",
+    "emptyFrequent": "Pas encore d’habituels — dès que vos factures Prodet sont liées, vos produits récurrents apparaissent ici. En attendant, choisissez une catégorie ou cherchez.",
+    "buckets": {
+      "cuisine": "Cuisine",
+      "etage": "Étage",
+      "buanderie": "Buanderie",
+      "vitres": "Vitres",
+      "materiel": "Matériel & hygiène"
+    },
     "cartTotal": "Total",
     "cartEmpty": "Votre sélection est vide",
     "cartEmptyHint": "Ajoutez des produits depuis le catalogue.",

@@ -144,6 +144,14 @@
     "viewDevis": "View my quotes",
     "filterFrequent": "My usual items",
     "filterAll": "Full catalogue",
+    "emptyFrequent": "No usual items yet — once your Prodet invoices are linked, recurring products show up here. Until then, pick a category or search.",
+    "buckets": {
+      "cuisine": "Kitchen",
+      "etage": "Floors",
+      "buanderie": "Laundry",
+      "vitres": "Glass",
+      "materiel": "Equipment & hygiene"
+    },
     "cartTotal": "Total",
     "cartEmpty": "Your selection is empty",
     "cartEmptyHint": "Add products from the catalogue.",

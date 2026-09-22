@@ -17,10 +17,11 @@ import { useTranslations } from 'next-intl';
 import { Button, Input, ProductTile, QuantityControl } from '@/components/ds';
 import { Link } from '@/i18n/routing';
 import { submitPortalQuoteAction } from '@/features/client-portal/quote-actions';
-import { clearPortalCart, setPortalCart, usePortalCart, type PortalCart } from '@/lib/portal-cart';
+import { REORDER_BUCKETS, type ReorderBucketId } from '@/features/client-portal/reorder-buckets';
 import type { PortalProductRef } from '@/features/client-portal/mock/portal-mock';
-
+import { clearPortalCart, setPortalCart, usePortalCart, type PortalCart } from '@/lib/portal-cart';
 import { cn } from '@/lib/utils';
+
 /** Cap the grid so a large catalogue never floods the DOM — search narrows it. */
 const DISPLAY_CAP = 60;
 
@@ -58,7 +59,8 @@ export function ReorderBuilder({
 
   const writeCart = (next: Partial<PortalCart>) => setPortalCart({ qty, extra, picked, ...next });
   const [query, setQuery] = useState(initialQuery ?? '');
-  const [filter, setFilter] = useState<string>(frequent.length ? FREQUENT : ALL);
+  // Always start on Mes habituels — empty state nudges the usage buckets.
+  const [filter, setFilter] = useState<string>(FREQUENT);
   const [submitted, setSubmitted] = useState(false);
   const [reference, setReference] = useState<string | null>(null);
   const [pushed, setPushed] = useState(false);
@@ -75,11 +77,15 @@ export function ReorderBuilder({
     return map;
   }, [catalogue, frequent, extra]);
 
-  // Distinct category labels present in the orderable catalogue.
-  const categories = useMemo(() => {
-    const set = new Set<string>();
-    for (const p of catalogue) if (p.category) set.add(p.category);
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr'));
+  // Only show UX buckets that actually have at least one product.
+  const buckets = useMemo(() => {
+    const counts = new Map<ReorderBucketId, number>();
+    for (const p of catalogue) {
+      const b = p.browseBucket as ReorderBucketId | null | undefined;
+      if (!b || !REORDER_BUCKETS.includes(b)) continue;
+      counts.set(b, (counts.get(b) ?? 0) + 1);
+    }
+    return REORDER_BUCKETS.filter((id) => (counts.get(id) ?? 0) > 0);
   }, [catalogue]);
 
   const q = query.trim().toLowerCase();
@@ -93,7 +99,7 @@ export function ReorderBuilder({
     }
     if (filter === FREQUENT) return frequent;
     if (filter === ALL) return catalogue;
-    return catalogue.filter((p) => (p.category ?? '') === filter);
+    return catalogue.filter((p) => p.browseBucket === filter);
   }, [searching, q, filter, catalogue, frequent]);
 
   const shown = visible.slice(0, DISPLAY_CAP);
@@ -328,18 +334,16 @@ export function ReorderBuilder({
               />
             </div>
             <div className="desk__chips" role="tablist" aria-label={t('reorder.catalogueTitle')}>
-              {frequent.length ? (
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={!searching && filter === FREQUENT}
-                  className={cn('desk-chip', !searching && filter === FREQUENT && 'is-active')}
-                  onClick={() => pickChip(FREQUENT)}
-                >
-                  <Sparkles size={14} />
-                  {t('reorder.filterFrequent')}
-                </button>
-              ) : null}
+              <button
+                type="button"
+                role="tab"
+                aria-selected={!searching && filter === FREQUENT}
+                className={cn('desk-chip', !searching && filter === FREQUENT && 'is-active')}
+                onClick={() => pickChip(FREQUENT)}
+              >
+                <Sparkles size={14} />
+                {t('reorder.filterFrequent')}
+              </button>
               <button
                 type="button"
                 role="tab"
@@ -349,16 +353,16 @@ export function ReorderBuilder({
               >
                 {t('reorder.filterAll')}
               </button>
-              {categories.map((c) => (
+              {buckets.map((id) => (
                 <button
-                  key={c}
+                  key={id}
                   type="button"
                   role="tab"
-                  aria-selected={!searching && filter === c}
-                  className={cn('desk-chip', !searching && filter === c && 'is-active')}
-                  onClick={() => pickChip(c)}
+                  aria-selected={!searching && filter === id}
+                  className={cn('desk-chip', !searching && filter === id && 'is-active')}
+                  onClick={() => pickChip(id)}
                 >
-                  {c}
+                  {t(`reorder.buckets.${id}`)}
                 </button>
               ))}
             </div>
@@ -371,7 +375,12 @@ export function ReorderBuilder({
                   <ProductTile
                     key={product.slug}
                     name={product.name}
-                    tagline={product.last ?? product.category ?? product.sku ?? ''}
+                    tagline={
+                      product.last ??
+                      (product.browseBucket
+                        ? t(`reorder.buckets.${product.browseBucket as ReorderBucketId}`)
+                        : (product.sku ?? ''))
+                    }
                     image={product.image}
                     addLabel={t('reorder.add')}
                     quantity={qty[product.slug] ?? 0}
@@ -390,7 +399,9 @@ export function ReorderBuilder({
               <p>
                 {searching
                   ? t('reorder.noMatch', { query: query.trim() })
-                  : t('reorder.emptyCatalogue')}
+                  : filter === FREQUENT
+                    ? t('reorder.emptyFrequent')
+                    : t('reorder.emptyCatalogue')}
               </p>
             </div>
           )}
