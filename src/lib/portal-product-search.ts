@@ -12,17 +12,20 @@ export function normalizePortalSearchText(value: string): string {
 export function portalProductHaystack(product: PortalProductOption): string {
   const slugPhrase = product.slug.replace(/-/g, ' ');
   return normalizePortalSearchText(
-    [product.productName, slugPhrase, product.categoryName, product.conditionnement, product.unitOfSale]
+    [
+      product.productName,
+      slugPhrase,
+      product.categoryName,
+      product.conditionnement,
+      product.unitOfSale,
+    ]
       .filter(Boolean)
       .join(' '),
   );
 }
 
 /** Même logique que le catalogue : chaque « mot » du texte doit apparaître dans le champ texte. */
-export function portalProductMatchesQuery(
-  product: PortalProductOption,
-  rawQuery: string,
-): boolean {
+export function portalProductMatchesQuery(product: PortalProductOption, rawQuery: string): boolean {
   const q = normalizePortalSearchText(rawQuery).slice(0, 80);
   if (!q) return false;
 

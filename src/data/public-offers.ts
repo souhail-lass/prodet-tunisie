@@ -70,8 +70,7 @@ const SECTION_META: Record<
     image: '/images/contexts/kitchen-dishwashing-02.jpg',
     kind: 'core',
     anchorTitle: 'Cuisine professionnelle',
-    note:
-      "Selection orientee restauration, plonge, hygiene de surface et entretien quotidien des zones de service.",
+    note: 'Selection orientee restauration, plonge, hygiene de surface et entretien quotidien des zones de service.',
   },
   buanderie: {
     audience: 'Hotels, blanchisseries, maisons d hotes, institutions, prestataires linge',
@@ -79,8 +78,7 @@ const SECTION_META: Record<
     image: '/images/contexts/laundry-hotel-02.jpg',
     kind: 'core',
     anchorTitle: 'Buanderie et blanchisserie',
-    note:
-      'Offre construite pour les rotations de linge, le lavage professionnel et les besoins de dosage repetitifs.',
+    note: 'Offre construite pour les rotations de linge, le lavage professionnel et les besoins de dosage repetitifs.',
   },
   'etage-housekeeping': {
     audience: 'Hotels, residences, entreprises de nettoyage, bureaux, institutions',
@@ -88,8 +86,7 @@ const SECTION_META: Record<
     image: '/images/contexts/disinfection-02.jpg',
     kind: 'core',
     anchorTitle: 'Housekeeping et entretien etage',
-    note:
-      'References utiles pour les chambres, sanitaires, couloirs, surfaces visibles et hygiene courante.',
+    note: 'References utiles pour les chambres, sanitaires, couloirs, surfaces visibles et hygiene courante.',
   },
   'articles-menagers': {
     audience: 'Revendeurs, societes de nettoyage, entreprises, institutions, CHR',
@@ -97,8 +94,7 @@ const SECTION_META: Record<
     image: '/images/contexts/hand-hygiene-02.jpg',
     kind: 'commercialized',
     anchorTitle: 'Articles menagers et hygiene',
-    note:
-      "Cette section regroupe des articles commercialises et revendus. Ils ne sont pas presentes comme fabriques par Prodet.",
+    note: 'Cette section regroupe des articles commercialises et revendus. Ils ne sont pas presentes comme fabriques par Prodet.',
   },
 };
 
@@ -175,7 +171,9 @@ const ALL_PUBLIC_OFFERS = BASE_SECTIONS.flatMap((section) => section.products);
 const OFFER_BY_ID = new Map(ALL_PUBLIC_OFFERS.map((offer) => [offer.id, offer]));
 const OFFER_BY_SLUG = new Map(ALL_PUBLIC_OFFERS.map((offer) => [offer.slug, offer]));
 const SEARCH_DOCUMENTS = ALL_PUBLIC_OFFERS.map(buildSearchDocument);
-const SEARCH_DOCUMENT_BY_ID = new Map(SEARCH_DOCUMENTS.map((document) => [document.offer.id, document]));
+const SEARCH_DOCUMENT_BY_ID = new Map(
+  SEARCH_DOCUMENTS.map((document) => [document.offer.id, document]),
+);
 const SEARCH_TOKEN_INDEX = buildSearchTokenIndex(SEARCH_DOCUMENTS);
 const SEARCH_PREFIX_INDEX = buildSearchPrefixIndex(SEARCH_DOCUMENTS);
 const LEGACY_PRODUCTS = [...products];
@@ -273,7 +271,10 @@ export function getLegacyProductForPublicOffer(offer: PublicOffer): Product | un
 
   for (const product of LEGACY_PRODUCTS) {
     const normalizedProductName = normalizeSearchText(product.name);
-    if (normalizedProductName.includes(normalizedOfferName) || normalizedOfferName.includes(normalizedProductName)) {
+    if (
+      normalizedProductName.includes(normalizedOfferName) ||
+      normalizedOfferName.includes(normalizedProductName)
+    ) {
       return product;
     }
 
@@ -367,10 +368,7 @@ function normalizeSectionIds(
   return [...next];
 }
 
-function resolveOfferSort(
-  sort: PublicOfferSort | undefined,
-  query: string,
-): PublicOfferSort {
+function resolveOfferSort(sort: PublicOfferSort | undefined, query: string): PublicOfferSort {
   if (!sort) return query ? 'relevance' : 'catalogue';
   if (sort === 'relevance' && !query) return 'catalogue';
   return sort;
@@ -452,9 +450,7 @@ function getRelevanceScore(document: OfferSearchDocument, terms: readonly string
 
 function buildSearchDocument(offer: PublicOffer): OfferSearchDocument {
   const variantText = normalizeSearchText(
-    offer.variants
-      .flatMap((variant) => [variant.unit ?? '', variant.dosage ?? ''])
-      .join(' '),
+    offer.variants.flatMap((variant) => [variant.unit ?? '', variant.dosage ?? '']).join(' '),
   );
   const nameText = normalizeSearchText(offer.name);
   const usageText = normalizeSearchText(`${offer.shortDescription} ${offer.usageSummary}`);
@@ -524,10 +520,7 @@ function buildShortDescription(usage: string): string {
   const keywords = tokenize(usage).filter((token) => !FRENCH_STOPWORDS.has(token));
   if (keywords.length === 0) return 'Usage pro';
 
-  return keywords
-    .slice(0, 2)
-    .map(capitalize)
-    .join(' ');
+  return keywords.slice(0, 2).map(capitalize).join(' ');
 }
 
 function buildUsageSummary(usage: string): string {
@@ -545,7 +538,10 @@ function slugify(value: string): string {
 }
 
 function cleanCompactText(value: string | undefined): string | undefined {
-  const cleaned = value?.replace(/\s+/g, ' ').replace(/\s*,\s*/g, ', ').trim();
+  const cleaned = value
+    ?.replace(/\s+/g, ' ')
+    .replace(/\s*,\s*/g, ', ')
+    .trim();
   return cleaned ? cleaned : undefined;
 }
 

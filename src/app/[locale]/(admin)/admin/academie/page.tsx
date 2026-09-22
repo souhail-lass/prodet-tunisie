@@ -1,4 +1,8 @@
-import { ACADEMY_FAMILY_ORDER, ACADEMY_FAMILIES, ACADEMY_PRODUCTS } from '@/features/academy/range-data';
+import {
+  ACADEMY_FAMILY_ORDER,
+  ACADEMY_FAMILIES,
+  ACADEMY_PRODUCTS,
+} from '@/features/academy/range-data';
 import { isAcademyUnlocked } from '@/features/academy/session';
 import { GammeWorkspace } from '@/features/academy/gamme/gamme-workspace';
 import { UnlockScreen } from '@/features/academy/unlock-screen';

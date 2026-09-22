@@ -29,7 +29,8 @@ export function SiteHeader() {
   function isActive(href: string) {
     if (href === '/') return pathname === '/';
     // "Catalogue" covers the whole browse surface: /produits/* and legacy /catalogue/*.
-    if (href.startsWith('/produits')) return pathname.startsWith('/produits') || pathname.startsWith('/catalogue');
+    if (href.startsWith('/produits'))
+      return pathname.startsWith('/produits') || pathname.startsWith('/catalogue');
     return pathname === href || pathname.startsWith(`${href}/`);
   }
 
@@ -49,58 +50,70 @@ export function SiteHeader() {
   return (
     <>
       <header className="site-header">
-      <div className="site-header__inner">
-        <Link href="/" className="site-header__logo" aria-label="Prodet Tunisie">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/logo/prodet-logo.svg" alt="Prodet Tunisie" width={2117} height={1148} />
-        </Link>
-
-        <nav className="site-header__nav" aria-label={t('navigation.home')}>
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`site-nav-link${isActive(item.href) ? ' is-active' : ''}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="site-header__actions">
-          <LangSwitch />
-          <Link href="/connexion-client" className="pds-btn pds-btn--outline pds-btn--sm">
-            <UserRound size={16} />
-            <span>{t('navigation.clientSpace')}</span>
+        <div className="site-header__inner">
+          <Link href="/" className="site-header__logo" aria-label="Prodet Tunisie">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo/prodet-logo.svg"
+              alt="Prodet Tunisie"
+              width={2117}
+              height={1148}
+            />
           </Link>
-          <Button variant="primary" size="sm" onClick={openQuote} iconLeft={<FileText size={16} />}>
-            {t('navigation.quote')}
-            {totalProducts > 0 ? ` · ${totalProducts}` : ''}
-          </Button>
-        </div>
 
-        {/* Mobile: compact quote button + hamburger */}
-        <div className="site-header__mobile">
-          <button
-            type="button"
-            className="site-header__quote-icon"
-            onClick={openQuote}
-            aria-label={t('navigation.quote')}
-          >
-            <FileText size={19} />
-            {totalProducts > 0 ? <span className="site-header__badge">{totalProducts}</span> : null}
-          </button>
-          <button
-            type="button"
-            className="site-header__burger"
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-label="Menu"
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          <nav className="site-header__nav" aria-label={t('navigation.home')}>
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`site-nav-link${isActive(item.href) ? 'is-active' : ''}`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="site-header__actions">
+            <LangSwitch />
+            <Link href="/connexion-client" className="pds-btn pds-btn--outline pds-btn--sm">
+              <UserRound size={16} />
+              <span>{t('navigation.clientSpace')}</span>
+            </Link>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={openQuote}
+              iconLeft={<FileText size={16} />}
+            >
+              {t('navigation.quote')}
+              {totalProducts > 0 ? ` · ${totalProducts}` : ''}
+            </Button>
+          </div>
+
+          {/* Mobile: compact quote button + hamburger */}
+          <div className="site-header__mobile">
+            <button
+              type="button"
+              className="site-header__quote-icon"
+              onClick={openQuote}
+              aria-label={t('navigation.quote')}
+            >
+              <FileText size={19} />
+              {totalProducts > 0 ? (
+                <span className="site-header__badge">{totalProducts}</span>
+              ) : null}
+            </button>
+            <button
+              type="button"
+              className="site-header__burger"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label="Menu"
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
-      </div>
       </header>
 
       {menuOpen ? (
@@ -110,7 +123,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`site-menu__link${isActive(item.href) ? ' is-active' : ''}`}
+                className={`site-menu__link${isActive(item.href) ? 'is-active' : ''}`}
               >
                 {item.label}
               </Link>
@@ -172,7 +185,7 @@ function LangSwitch() {
         <button
           key={locale}
           type="button"
-          className={`lang-switch__opt${locale === current ? ' is-active' : ''}`}
+          className={`lang-switch__opt${locale === current ? 'is-active' : ''}`}
           onClick={() => switchTo(locale)}
         >
           {LANG_LABEL[locale]}

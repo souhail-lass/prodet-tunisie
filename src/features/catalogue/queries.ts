@@ -205,7 +205,9 @@ export async function getCatalogueSearchCards(): Promise<CatalogueCardProduct[]>
 
 export async function getCatalogueCategories(): Promise<string[]> {
   const products = await getVisibleCatalogue();
-  return Array.from(new Set(products.map((p) => p.categoryLabel).filter((c): c is string => Boolean(c)))).sort();
+  return Array.from(
+    new Set(products.map((p) => p.categoryLabel).filter((c): c is string => Boolean(c))),
+  ).sort();
 }
 
 async function getVisibleRows(): Promise<AdminProductRow[]> {
@@ -237,9 +239,7 @@ export async function getCatalogueByFamille(familleId: FamilleId): Promise<Produ
   if (familleId === TOUS_LES_PRODUITS) {
     return mapSelectedRows(allRows, [...rows].sort(compareCatalogueRank));
   }
-  const selected = sortCurationRows(
-    rows.filter((row) => famillesOf(row).includes(familleId)),
-  );
+  const selected = sortCurationRows(rows.filter((row) => famillesOf(row).includes(familleId)));
   return mapSelectedRows(allRows, selected);
 }
 
@@ -302,7 +302,9 @@ export async function getRelatedCatalogue(slug: string, limit = 4): Promise<Prod
   const placement = resolveRowPlacement(target);
 
   const siblings = sortCurationRows(
-    rows.filter((row) => row.id !== target.id && resolveRowPlacement(row).familleId === placement.familleId),
+    rows.filter(
+      (row) => row.id !== target.id && resolveRowPlacement(row).familleId === placement.familleId,
+    ),
   );
   const selected = siblings
     .sort(
@@ -374,7 +376,10 @@ export type CurationFamille = {
 export async function listCurationGroups(): Promise<CurationFamille[]> {
   const rows = await selectRows();
 
-  const toCurationProduct = (row: AdminProductRow, origin: CurationProduct['origin']): CurationProduct => ({
+  const toCurationProduct = (
+    row: AdminProductRow,
+    origin: CurationProduct['origin'],
+  ): CurationProduct => ({
     id: row.id,
     name: row.displayName || row.name,
     sku: row.sku,

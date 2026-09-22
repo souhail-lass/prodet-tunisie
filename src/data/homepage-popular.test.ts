@@ -10,7 +10,9 @@ describe('popularLineKey', () => {
   });
 
   it('keeps distinct lines apart', () => {
-    expect(popularLineKey('JAVEL PRODET BID 5KG')).not.toBe(popularLineKey('PROFOUR DEGRAISSANT FOUR 5KG'));
+    expect(popularLineKey('JAVEL PRODET BID 5KG')).not.toBe(
+      popularLineKey('PROFOUR DEGRAISSANT FOUR 5KG'),
+    );
     expect(popularLineKey('PROVITRE BID 5KG')).not.toBe(popularLineKey('PROGERME VERT BID 05 KG'));
   });
 });

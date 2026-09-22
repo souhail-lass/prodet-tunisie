@@ -41,9 +41,8 @@ vi.mock('next/cache', () => ({
   revalidatePath: (...args: unknown[]) => revalidatePath(...args),
 }));
 
-const { reorderSousCategorieAction, setProductPlacementAction } = await import(
-  '@/app/[locale]/(admin)/admin/produits/actions'
-);
+const { reorderSousCategorieAction, setProductPlacementAction } =
+  await import('@/app/[locale]/(admin)/admin/produits/actions');
 
 const SOLS = { familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols' };
 const ID_A = '11111111-1111-4111-8111-111111111111';
@@ -130,7 +129,9 @@ describe('setProductPlacementAction', () => {
       id: ID_A,
       familleSlug: 'produits-nettoyage',
       sousCategorieSlug: 'sols',
-      extraPlacements: [{ familleSlug: 'collecte-dechets', sousCategorieSlug: 'poubelles', sortOrder: 2 }],
+      extraPlacements: [
+        { familleSlug: 'collecte-dechets', sousCategorieSlug: 'poubelles', sortOrder: 2 },
+      ],
     });
 
     expect(setProductPlacement).toHaveBeenCalledWith(
@@ -138,7 +139,9 @@ describe('setProductPlacementAction', () => {
       {
         familleSlug: 'produits-nettoyage',
         sousCategorieSlug: 'sols',
-        extraPlacements: [{ familleSlug: 'collecte-dechets', sousCategorieSlug: 'poubelles', sortOrder: 2 }],
+        extraPlacements: [
+          { familleSlug: 'collecte-dechets', sousCategorieSlug: 'poubelles', sortOrder: 2 },
+        ],
       },
       'user-1',
     );
@@ -162,7 +165,11 @@ describe('setProductPlacementAction', () => {
     assertRole.mockRejectedValue(new ForbiddenAdminError());
 
     expect(
-      await setProductPlacementAction({ id: ID_A, familleSlug: 'papier-epi', sousCategorieSlug: null }),
+      await setProductPlacementAction({
+        id: ID_A,
+        familleSlug: 'papier-epi',
+        sousCategorieSlug: null,
+      }),
     ).toEqual({ ok: false, error: 'forbidden' });
     expect(setProductPlacement).not.toHaveBeenCalled();
   });

@@ -52,8 +52,7 @@ export default async function ClientLayout({
   // data so the UI is fully viewable. Requires an EXPLICIT opt-in
   // (PORTAL_DEMO_MODE=1) AND a non-production build — never activates in
   // production. Mirrors the matching gate in src/middleware.ts.
-  const demoMode =
-    process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
+  const demoMode = process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
   const demoAccount: PortalShellAccount = {
     name: mockAccount.name,
     contact: mockAccount.contact,
@@ -90,7 +89,9 @@ export default async function ClientLayout({
             <p className="eyebrow" style={{ marginTop: 16 }}>
               Espace client
             </p>
-            <h1 className="mt-1 text-[20px] font-semibold text-[var(--text-primary)]">{t('access.notActivatedTitle')}</h1>
+            <h1 className="mt-1 text-[20px] font-semibold text-[var(--text-primary)]">
+              {t('access.notActivatedTitle')}
+            </h1>
             <p className="mt-2 text-[13px] leading-6 text-[var(--text-secondary)]">
               {t('access.notActivatedBody')}
             </p>

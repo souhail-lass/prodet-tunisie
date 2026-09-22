@@ -57,7 +57,7 @@ export function SpendingChart({
           <button
             key={m.key}
             type="button"
-            className={`fin-chart__col${i === shown ? ' is-active' : ''}${i === current ? ' is-current' : ''}`}
+            className={`fin-chart__col${i === shown ? 'is-active' : ''}${i === current ? 'is-current' : ''}`}
             onPointerEnter={() => setActive(i)}
             onFocus={() => setActive(i)}
             onBlur={() => setActive(null)}

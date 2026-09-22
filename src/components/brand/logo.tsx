@@ -19,7 +19,11 @@ export function Logo({ className, size = 'md', variant = 'default', ...props }: 
   if (variant === 'light') {
     return (
       <div
-        className={cn('relative max-w-[160px] shrink-0 overflow-hidden', sizeClasses[size], className)}
+        className={cn(
+          'relative max-w-[160px] shrink-0 overflow-hidden',
+          sizeClasses[size],
+          className,
+        )}
         {...props}
       >
         <Image
@@ -28,7 +32,7 @@ export function Logo({ className, size = 'md', variant = 'default', ...props }: 
           fill
           priority
           sizes="160px"
-          className="[filter:brightness(0)_invert(1)] object-contain object-left"
+          className="object-contain object-left [filter:brightness(0)_invert(1)]"
         />
         <svg
           aria-hidden
@@ -58,7 +62,11 @@ export function Logo({ className, size = 'md', variant = 'default', ...props }: 
 
   return (
     <div
-      className={cn('relative max-w-[160px] shrink-0 overflow-hidden', sizeClasses[size], className)}
+      className={cn(
+        'relative max-w-[160px] shrink-0 overflow-hidden',
+        sizeClasses[size],
+        className,
+      )}
       {...props}
     >
       <Image

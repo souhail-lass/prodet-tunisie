@@ -18,2740 +18,2041 @@ export type ProdetCatalogSection = {
 
 export const prodetCatalogSections: ProdetCatalogSection[] = [
   {
-    "id": "restauration-cuisine",
-    "label": "Service restauration & cuisine",
-    "description": "Produits destinés aux cuisines professionnelles, salles de restauration, surfaces, vaisselle, sols, inox, mains, canalisations et désinfection.",
-    "products": [
+    id: 'restauration-cuisine',
+    label: 'Service restauration & cuisine',
+    description:
+      'Produits destinés aux cuisines professionnelles, salles de restauration, surfaces, vaisselle, sols, inox, mains, canalisations et désinfection.',
+    products: [
       {
-        "name": "Nettoyant inox",
-        "usages": [
-          "entretien et brillance des inox sans rinçage"
-        ],
-        "variants": [
+        name: 'Nettoyant inox',
+        usages: ['entretien et brillance des inox sans rinçage'],
+        variants: [
           {
-            "unit": "bombe 500 ml",
-            "dosage": "pur"
-          }
+            unit: 'bombe 500 ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          10
-        ]
+        sourceLines: [10],
       },
       {
-        "name": "C’ SIMPLE (pastilles chloré)",
-        "usages": [
-          "désinfectant chloré pour sanitaires,sols,vaisselles,,)"
-        ],
-        "variants": [
+        name: 'C’ SIMPLE (pastilles chloré)',
+        usages: ['désinfectant chloré pour sanitaires,sols,vaisselles,,)'],
+        variants: [
           {
-            "unit": "boite de 300 pièces",
-            "dosage": "1 à 2 comprimés par 10 L"
-          }
+            unit: 'boite de 300 pièces',
+            dosage: '1 à 2 comprimés par 10 L',
+          },
         ],
-        "sourceLines": [
-          11
-        ]
+        sourceLines: [11],
       },
       {
-        "name": "oasis 255",
-        "usages": [
-          "produit pour vitre"
-        ],
-        "variants": [
+        name: 'oasis 255',
+        usages: ['produit pour vitre'],
+        variants: [
           {
-            "unit": "Etui 10 kg",
-            "dosage": "170"
-          }
+            unit: 'Etui 10 kg',
+            dosage: '170',
+          },
         ],
-        "sourceLines": [
-          12
-        ]
+        sourceLines: [12],
       },
       {
-        "name": "oasis 266",
-        "usages": [
-          "nettoyant universel (bois,mur….)"
-        ],
-        "variants": [
+        name: 'oasis 266',
+        usages: ['nettoyant universel (bois,mur….)'],
+        variants: [
           {
-            "unit": "Etui 10 kg",
-            "dosage": "1200"
-          }
+            unit: 'Etui 10 kg',
+            dosage: '1200',
+          },
         ],
-        "sourceLines": [
-          13
-        ]
+        sourceLines: [13],
       },
       {
-        "name": "oasis 275,276,277",
-        "usages": [
-          "désodorisant d'ambiance"
-        ],
-        "variants": [
+        name: 'oasis 275,276,277',
+        usages: ["désodorisant d'ambiance"],
+        variants: [
           {
-            "unit": "Etui 10 kg",
-            "dosage": "330"
-          }
+            unit: 'Etui 10 kg',
+            dosage: '330',
+          },
         ],
-        "sourceLines": [
-          14
-        ]
+        sourceLines: [14],
       },
       {
-        "name": "oasis 299,297",
-        "usages": [
-          "nettoyant désinfectant sanitaire"
-        ],
-        "variants": [
+        name: 'oasis 299,297',
+        usages: ['nettoyant désinfectant sanitaire'],
+        variants: [
           {
-            "unit": "Etui 10 kg",
-            "dosage": "220"
-          }
+            unit: 'Etui 10 kg',
+            dosage: '220',
+          },
         ],
-        "sourceLines": [
-          15
-        ]
+        sourceLines: [15],
       },
       {
-        "name": "oasis 499",
-        "usages": [
-          "nettoyant désinfectant sanitaire"
-        ],
-        "variants": [
+        name: 'oasis 499',
+        usages: ['nettoyant désinfectant sanitaire'],
+        variants: [
           {
-            "unit": "Etui 10 kg",
-            "dosage": "640"
-          }
+            unit: 'Etui 10 kg',
+            dosage: '640',
+          },
         ],
-        "sourceLines": [
-          16
-        ]
+        sourceLines: [16],
       },
       {
-        "name": "Sigofix",
-        "usages": [
-          "décapant alcalin marbre,carrelage"
-        ],
-        "variants": [
+        name: 'Sigofix',
+        usages: ['décapant alcalin marbre,carrelage'],
+        variants: [
           {
-            "unit": "Bid 10 kg",
-            "dosage": "200"
-          }
+            unit: 'Bid 10 kg',
+            dosage: '200',
+          },
         ],
-        "sourceLines": [
-          17
-        ]
+        sourceLines: [17],
       },
       {
-        "name": "bendurol forte",
-        "usages": [
-          "décapant alcalin marbre,carrelage"
-        ],
-        "variants": [
+        name: 'bendurol forte',
+        usages: ['décapant alcalin marbre,carrelage'],
+        variants: [
           {
-            "unit": "Bid 10 kg",
-            "dosage": "200"
-          }
+            unit: 'Bid 10 kg',
+            dosage: '200',
+          },
         ],
-        "sourceLines": [
-          18
-        ]
+        sourceLines: [18],
       },
       {
-        "name": "nettoclar",
-        "usages": [
-          "cristallisant marbre"
-        ],
-        "variants": [
+        name: 'nettoclar',
+        usages: ['cristallisant marbre'],
+        variants: [
           {
-            "unit": "Bid 10 kg",
-            "dosage": "pur"
-          }
+            unit: 'Bid 10 kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          19
-        ]
+        sourceLines: [19],
       },
       {
-        "name": "cristal MH",
-        "usages": [
-          "cristallisant marbre"
-        ],
-        "variants": [
+        name: 'cristal MH',
+        usages: ['cristallisant marbre'],
+        variants: [
           {
-            "unit": "Bid 05 kg",
-            "dosage": "pur"
-          }
+            unit: 'Bid 05 kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          20
-        ]
+        sourceLines: [20],
       },
       {
-        "name": "polybrite prestige",
-        "usages": [
-          "lustrant marbre et sol thermoplastique"
-        ],
-        "variants": [
+        name: 'polybrite prestige',
+        usages: ['lustrant marbre et sol thermoplastique'],
+        variants: [
           {
-            "unit": "Bid 10 kg",
-            "dosage": "pur"
-          }
+            unit: 'Bid 10 kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          21
-        ]
+        sourceLines: [21],
       },
       {
-        "name": "polli",
-        "usages": [
-          "lustrant marbre et sol thermoplastique"
-        ],
-        "variants": [
+        name: 'polli',
+        usages: ['lustrant marbre et sol thermoplastique'],
+        variants: [
           {
-            "unit": "Bid 10 kg",
-            "dosage": "100"
-          }
+            unit: 'Bid 10 kg',
+            dosage: '100',
+          },
         ],
-        "sourceLines": [
-          22
-        ]
+        sourceLines: [22],
       },
       {
-        "name": "sigla",
-        "usages": [
-          "entretien quotidien sol brillant"
-        ],
-        "variants": [
+        name: 'sigla',
+        usages: ['entretien quotidien sol brillant'],
+        variants: [
           {
-            "unit": "Bid 10 kg",
-            "dosage": "1000"
-          }
+            unit: 'Bid 10 kg',
+            dosage: '1000',
+          },
         ],
-        "sourceLines": [
-          23
-        ]
+        sourceLines: [23],
       },
       {
-        "name": "korda",
-        "usages": [
-          "entretien quotidien sol brillant"
-        ],
-        "variants": [
+        name: 'korda',
+        usages: ['entretien quotidien sol brillant'],
+        variants: [
           {
-            "unit": "Bid 10 kg",
-            "dosage": "1000"
-          }
+            unit: 'Bid 10 kg',
+            dosage: '1000',
+          },
         ],
-        "sourceLines": [
-          24
-        ]
+        sourceLines: [24],
       },
       {
-        "name": "Détartrant bowl cleans",
-        "usages": [
-          "nettoyant à fond cuvette WC"
-        ],
-        "variants": [
+        name: 'Détartrant bowl cleans',
+        usages: ['nettoyant à fond cuvette WC'],
+        variants: [
           {
-            "unit": "CT 12 flacon 1L",
-            "dosage": "pur"
-          }
+            unit: 'CT 12 flacon 1L',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          25
-        ]
+        sourceLines: [25],
       },
       {
-        "name": "sapur shampooing",
-        "usages": [
-          "produit nettoyage moquette(monobrosse)"
-        ],
-        "variants": [
+        name: 'sapur shampooing',
+        usages: ['produit nettoyage moquette(monobrosse)'],
+        variants: [
           {
-            "unit": "Bid 10 kg",
-            "dosage": "200"
-          }
+            unit: 'Bid 10 kg',
+            dosage: '200',
+          },
         ],
-        "sourceLines": [
-          26
-        ]
+        sourceLines: [26],
       },
       {
-        "name": "sapur duo",
-        "usages": [
-          "produit moquette par machine injection"
-        ],
-        "variants": [
+        name: 'sapur duo',
+        usages: ['produit moquette par machine injection'],
+        variants: [
           {
-            "unit": "Bid 10 kg",
-            "dosage": "1000"
-          }
+            unit: 'Bid 10 kg',
+            dosage: '1000',
+          },
         ],
-        "sourceLines": [
-          27
-        ]
+        sourceLines: [27],
       },
       {
-        "name": "sapur A",
-        "usages": [
-          "détacheur moquette(taches soluble eau)"
-        ],
-        "variants": [
+        name: 'sapur A',
+        usages: ['détacheur moquette(taches soluble eau)'],
+        variants: [
           {
-            "unit": "CT de 6 flac500ml",
-            "dosage": "pur"
-          }
+            unit: 'CT de 6 flac500ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          28
-        ]
+        sourceLines: [28],
       },
       {
-        "name": "sapur B",
-        "usages": [
-          "détacheur moquette(taches soluble huile)"
-        ],
-        "variants": [
+        name: 'sapur B',
+        usages: ['détacheur moquette(taches soluble huile)'],
+        variants: [
           {
-            "unit": "CT de 6 flac500ml",
-            "dosage": "pur"
-          }
+            unit: 'CT de 6 flac500ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          29
-        ]
+        sourceLines: [29],
       },
       {
-        "name": "amor liquide",
-        "usages": [
-          "nettoyage cuivre bronze et alliages légers"
-        ],
-        "variants": [
+        name: 'amor liquide',
+        usages: ['nettoyage cuivre bronze et alliages légers'],
+        variants: [
           {
-            "unit": "Bid 5 kg",
-            "dosage": "pur"
-          }
+            unit: 'Bid 5 kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          30
-        ]
+        sourceLines: [30],
       },
       {
-        "name": "main pur",
-        "usages": [
-          "savon pour l'hygiène des mains"
-        ],
-        "variants": [
+        name: 'main pur',
+        usages: ["savon pour l'hygiène des mains"],
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": "pur"
-          }
+            unit: 'Bid de 20 kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          31
-        ]
+        sourceLines: [31],
       },
       {
-        "name": "rinsola",
-        "usages": [
-          "détartrant acide très fort sanitaire"
-        ],
-        "variants": [
+        name: 'rinsola',
+        usages: ['détartrant acide très fort sanitaire'],
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": "100"
-          }
+            unit: 'Bid de 20 kg',
+            dosage: '100',
+          },
         ],
-        "sourceLines": [
-          32
-        ]
+        sourceLines: [32],
       },
       {
-        "name": "axa D01",
-        "usages": [
-          "produit désinfectant pour toutes surfaces"
-        ],
-        "variants": [
+        name: 'axa D01',
+        usages: ['produit désinfectant pour toutes surfaces'],
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": "500"
-          }
+            unit: 'Bid de 20 kg',
+            dosage: '500',
+          },
         ],
-        "sourceLines": [
-          33
-        ]
+        sourceLines: [33],
       },
       {
-        "name": "Optir 737",
-        "usages": [
-          "entretien special du bois"
-        ],
-        "variants": [
+        name: 'Optir 737',
+        usages: ['entretien special du bois'],
+        variants: [
           {
-            "unit": "CT de 12 flacons",
-            "dosage": "pur"
-          }
+            unit: 'CT de 12 flacons',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          34
-        ]
+        sourceLines: [34],
       },
       {
-        "name": "Polish cleaner",
-        "usages": [
-          "entretien et pollisage appareils en inox",
-          "entretien machine en inox"
-        ],
-        "variants": [
+        name: 'Polish cleaner',
+        usages: ['entretien et pollisage appareils en inox', 'entretien machine en inox'],
+        variants: [
           {
-            "unit": "CT de 12 bombes",
-            "dosage": "pur"
+            unit: 'CT de 12 bombes',
+            dosage: 'pur',
           },
           {
-            "unit": "CT de 12 bombes",
-            "dosage": ""
-          }
+            unit: 'CT de 12 bombes',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          35,
-          56
-        ]
+        sourceLines: [35, 56],
       },
       {
-        "name": "PROLAV",
-        "usages": [
-          "liquide pour le lavage vaisselle en machine"
-        ],
-        "variants": [
+        name: 'PROLAV',
+        usages: ['liquide pour le lavage vaisselle en machine'],
+        variants: [
           {
-            "unit": "bidon de 20 kg",
-            "dosage": "3ml par litre d'eau ( 0,2 %)"
+            unit: 'bidon de 20 kg',
+            dosage: "3ml par litre d'eau ( 0,2 %)",
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "3ml par litre d'eau (0,2%)"
-          }
+            unit: 'bidon de 20kg',
+            dosage: "3ml par litre d'eau (0,2%)",
+          },
         ],
-        "sourceLines": [
-          46,
-          140
-        ]
+        sourceLines: [46, 140],
       },
       {
-        "name": "Perclin intensiv",
-        "usages": [
-          "liquide pour le lavage vaisselle en machine"
-        ],
-        "variants": [
+        name: 'Perclin intensiv',
+        usages: ['liquide pour le lavage vaisselle en machine'],
+        variants: [
           {
-            "unit": "Bid 20 kg",
-            "dosage": ""
-          }
+            unit: 'Bid 20 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          47
-        ]
+        sourceLines: [47],
       },
       {
-        "name": "PRORINSE",
-        "usages": [
-          "additif de rinçage pour vaisselle en machine"
-        ],
-        "variants": [
+        name: 'PRORINSE',
+        usages: ['additif de rinçage pour vaisselle en machine'],
+        variants: [
           {
-            "unit": "bidon de 10 kg",
-            "dosage": "0,2 à 0,3 ml par litre d'eau ( 0,02% )"
+            unit: 'bidon de 10 kg',
+            dosage: "0,2 à 0,3 ml par litre d'eau ( 0,02% )",
           },
           {
-            "unit": "bidon de 10kg",
-            "dosage": "0,2 à 0,3 ml par litre d'eau (0,025%)"
-          }
+            unit: 'bidon de 10kg',
+            dosage: "0,2 à 0,3 ml par litre d'eau (0,025%)",
+          },
         ],
-        "sourceLines": [
-          48,
-          141
-        ]
+        sourceLines: [48, 141],
       },
       {
-        "name": "PROKILL",
-        "usages": [
-          "nettoyant désinfectant toutes surfaces (matériel,,,)",
-          "nettoyant désinfectant toutes surfaces (matériel…)"
+        name: 'PROKILL',
+        usages: [
+          'nettoyant désinfectant toutes surfaces (matériel,,,)',
+          'nettoyant désinfectant toutes surfaces (matériel…)',
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "bidon de 05 kg",
-            "dosage": "200 à 300 ml par 10 litres d'eau"
+            unit: 'bidon de 05 kg',
+            dosage: "200 à 300 ml par 10 litres d'eau",
           },
           {
-            "unit": "bidon de 05kg",
-            "dosage": "200 à 300 ml par 10 litres d'eau"
-          }
+            unit: 'bidon de 05kg',
+            dosage: "200 à 300 ml par 10 litres d'eau",
+          },
         ],
-        "sourceLines": [
-          49,
-          144
-        ]
+        sourceLines: [49, 144],
       },
       {
-        "name": "Absorbit CMD",
-        "usages": [
-          "dégraissant par trempage:filtre,friteuse…."
-        ],
-        "variants": [
+        name: 'Absorbit CMD',
+        usages: ['dégraissant par trempage:filtre,friteuse….'],
+        variants: [
           {
-            "unit": "Seau de 25 kg",
-            "dosage": ""
-          }
+            unit: 'Seau de 25 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          50
-        ]
+        sourceLines: [50],
       },
       {
-        "name": "PROFOUR",
-        "usages": [
-          "dégraissant par pulverisation:fours,hottes…",
-          "nettoyant fours, friteuses, grills et hottes",
-          "nettoyant fours et hottes"
+        name: 'PROFOUR',
+        usages: [
+          'dégraissant par pulverisation:fours,hottes…',
+          'nettoyant fours, friteuses, grills et hottes',
+          'nettoyant fours et hottes',
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "CT 4B de 4 kg",
-            "dosage": ""
+            unit: 'CT 4B de 4 kg',
+            dosage: '',
           },
           {
-            "unit": "bidon de 05 kg",
-            "dosage": "pur et 50 % pour les hottes"
+            unit: 'bidon de 05 kg',
+            dosage: 'pur et 50 % pour les hottes',
           },
           {
-            "unit": "bidon de 05 kg",
-            "dosage": "pur et 50% pour les hottes"
-          }
+            unit: 'bidon de 05 kg',
+            dosage: 'pur et 50% pour les hottes',
+          },
         ],
-        "sourceLines": [
-          51,
-          52,
-          146
-        ]
+        sourceLines: [51, 52, 146],
       },
       {
-        "name": "décapant sol (01 fois /semaine)",
-        "usages": [],
-        "variants": [
+        name: 'décapant sol (01 fois /semaine)',
+        usages: [],
+        variants: [
           {
-            "unit": "bidon de 05 kg",
-            "dosage": ""
-          }
+            unit: 'bidon de 05 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          54
-        ]
+        sourceLines: [54],
       },
       {
-        "name": "Contra",
-        "usages": [
-          "détartrant machineet bain marie"
-        ],
-        "variants": [
+        name: 'Contra',
+        usages: ['détartrant machineet bain marie'],
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": ""
-          }
+            unit: 'Bid de 20 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          55
-        ]
+        sourceLines: [55],
       },
       {
-        "name": "Lemon inox",
-        "usages": [
-          "nettoyage machine en inox"
-        ],
-        "variants": [
+        name: 'Lemon inox',
+        usages: ['nettoyage machine en inox'],
+        variants: [
           {
-            "unit": "CT de 12bouteilles",
-            "dosage": ""
-          }
+            unit: 'CT de 12bouteilles',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          57
-        ]
+        sourceLines: [57],
       },
       {
-        "name": "PROLAC",
-        "usages": [
-          "détartrant machines lave vaisselle, bain marie"
-        ],
-        "variants": [
+        name: 'PROLAC',
+        usages: ['détartrant machines lave vaisselle, bain marie'],
+        variants: [
           {
-            "unit": "bidon de 20 kg",
-            "dosage": "1 à 2 litres par 10 L d'eau (5 à 10%)"
+            unit: 'bidon de 20 kg',
+            dosage: "1 à 2 litres par 10 L d'eau (5 à 10%)",
           },
           {
-            "unit": "bidon de 05 kg",
-            "dosage": "1 à 2 litres par 10 L d'eau (5 à 10%)"
+            unit: 'bidon de 05 kg',
+            dosage: "1 à 2 litres par 10 L d'eau (5 à 10%)",
           },
           {
-            "unit": "bidon de 06 kg",
-            "dosage": "1à2 litres par 10L d'eau (5à10%)"
-          }
+            unit: 'bidon de 06 kg',
+            dosage: "1à2 litres par 10L d'eau (5à10%)",
+          },
         ],
-        "sourceLines": [
-          58,
-          65,
-          148
-        ]
+        sourceLines: [58, 65, 148],
       },
       {
-        "name": "SANIHAND",
-        "usages": [
+        name: 'SANIHAND',
+        usages: [
           "savon liquide pour l'hygiéne des mains",
-          "savon liquide pour l'hygiène des mains"
+          "savon liquide pour l'hygiène des mains",
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "bidon de 20 kg",
-            "dosage": "pur"
+            unit: 'bidon de 20 kg',
+            dosage: 'pur',
           },
           {
-            "unit": "bid de 05 kg",
-            "dosage": "pur"
-          }
+            unit: 'bid de 05 kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          59,
-          152
-        ]
+        sourceLines: [59, 152],
       },
       {
-        "name": "carolin inox ( carton de 12p)",
-        "usages": [
-          "nettoyant du matériel en inox"
-        ],
-        "variants": [
+        name: 'carolin inox ( carton de 12p)',
+        usages: ['nettoyant du matériel en inox'],
+        variants: [
           {
-            "unit": "flacon de 500 ml",
-            "dosage": "pur"
-          }
+            unit: 'flacon de 500 ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          60
-        ]
+        sourceLines: [60],
       },
       {
-        "name": "soil master",
-        "usages": [
-          "nettoyant argenterie"
-        ],
-        "variants": [
+        name: 'soil master',
+        usages: ['nettoyant argenterie'],
+        variants: [
           {
-            "unit": "paquet de 1 kg",
-            "dosage": ""
-          }
+            unit: 'paquet de 1 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          61
-        ]
+        sourceLines: [61],
       },
       {
-        "name": "MANOCID",
-        "usages": [
-          "savon liquide bactéricide pour les mains"
-        ],
-        "variants": [
+        name: 'MANOCID',
+        usages: ['savon liquide bactéricide pour les mains'],
+        variants: [
           {
-            "unit": "bid de 05 kg",
-            "dosage": "pur"
+            unit: 'bid de 05 kg',
+            dosage: 'pur',
           },
           {
-            "unit": "bidon de 05kg",
-            "dosage": "pur"
-          }
+            unit: 'bidon de 05kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          62,
-          153
-        ]
+        sourceLines: [62, 153],
       },
       {
-        "name": "PROFON",
-        "usages": [
-          "nettoyant acide fort pour WC, urinoirs,surface dure",
-          "nettoyant acide fort pour WC, urinoirs, surface dure"
+        name: 'PROFON',
+        usages: [
+          'nettoyant acide fort pour WC, urinoirs,surface dure',
+          'nettoyant acide fort pour WC, urinoirs, surface dure',
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "bidon de 20 kg",
-            "dosage": "1 à 2 litres par 10 L d'eau"
+            unit: 'bidon de 20 kg',
+            dosage: "1 à 2 litres par 10 L d'eau",
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "1à2 litres par 10L d'eau"
-          }
+            unit: 'bidon de 20kg',
+            dosage: "1à2 litres par 10L d'eau",
+          },
         ],
-        "sourceLines": [
-          64,
-          156
-        ]
+        sourceLines: [64, 156],
       },
       {
-        "name": "PRONET",
-        "usages": [
-          "nettoyant dégraissant journalier pour sols, murs…"
-        ],
-        "variants": [
+        name: 'PRONET',
+        usages: ['nettoyant dégraissant journalier pour sols, murs…'],
+        variants: [
           {
-            "unit": "bidon de 20 kg",
-            "dosage": "0,5 à 1 litre par 10 L d'eau"
+            unit: 'bidon de 20 kg',
+            dosage: "0,5 à 1 litre par 10 L d'eau",
           },
           {
-            "unit": "bidon de 06kg",
-            "dosage": "0,5 à 1 litre par 10L d'eau"
-          }
+            unit: 'bidon de 06kg',
+            dosage: "0,5 à 1 litre par 10L d'eau",
+          },
         ],
-        "sourceLines": [
-          66,
-          158
-        ]
+        sourceLines: [66, 158],
       },
       {
-        "name": "PRONET PLUS",
-        "usages": [
-          "nettoyant dégraissant à fond pour sols très sales.",
-          "nettoyant dégraissant à fond pour sols très sales…"
+        name: 'PRONET PLUS',
+        usages: [
+          'nettoyant dégraissant à fond pour sols très sales.',
+          'nettoyant dégraissant à fond pour sols très sales…',
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "bidon de 20 kg",
-            "dosage": "0,5 à 1 litre par 10 L d'eau"
+            unit: 'bidon de 20 kg',
+            dosage: "0,5 à 1 litre par 10 L d'eau",
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "0,5 à 1 litre par 10L d'eau"
-          }
+            unit: 'bidon de 20kg',
+            dosage: "0,5 à 1 litre par 10L d'eau",
+          },
         ],
-        "sourceLines": [
-          67,
-          159
-        ]
+        sourceLines: [67, 159],
       },
       {
-        "name": "GRESIL PRODET",
-        "usages": [
-          "désodorisant pour toutes surfaces"
-        ],
-        "variants": [
+        name: 'GRESIL PRODET',
+        usages: ['désodorisant pour toutes surfaces'],
+        variants: [
           {
-            "unit": "bidon de 20 kg",
-            "dosage": "200 ml par 10 litres d'eau"
+            unit: 'bidon de 20 kg',
+            dosage: "200 ml par 10 litres d'eau",
           },
           {
-            "unit": "bidon de 05L",
-            "dosage": "200ml par 10 litres d'eau"
-          }
+            unit: 'bidon de 05L',
+            dosage: "200ml par 10 litres d'eau",
+          },
         ],
-        "sourceLines": [
-          68,
-          164
-        ]
+        sourceLines: [68, 164],
       },
       {
-        "name": "JAVEL PRODET",
-        "usages": [
-          "désinfectant chloré pour toutes surfaces"
-        ],
-        "variants": [
+        name: 'JAVEL PRODET',
+        usages: ['désinfectant chloré pour toutes surfaces'],
+        variants: [
           {
-            "unit": "bidon de 20 kg",
-            "dosage": "200 ml par 10 litres d'eau"
+            unit: 'bidon de 20 kg',
+            dosage: "200 ml par 10 litres d'eau",
           },
           {
-            "unit": "bidon de 05L",
-            "dosage": "500ml par 10 litres d'eau"
-          }
+            unit: 'bidon de 05L',
+            dosage: "500ml par 10 litres d'eau",
+          },
         ],
-        "sourceLines": [
-          70,
-          166
-        ]
+        sourceLines: [70, 166],
       },
       {
-        "name": "PILAX",
-        "usages": [
-          "détartrant wc"
-        ],
-        "variants": [
+        name: 'PILAX',
+        usages: ['détartrant wc'],
+        variants: [
           {
-            "unit": "flacon 750 ml",
-            "dosage": "pur"
-          }
+            unit: 'flacon 750 ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          71
-        ]
+        sourceLines: [71],
       },
       {
-        "name": "solitaire vaisselle (dinol)",
-        "usages": [
-          "détergent tout usage (plonge vaisselle,surfaces,,,,)"
-        ],
-        "variants": [
+        name: 'solitaire vaisselle (dinol)',
+        usages: ['détergent tout usage (plonge vaisselle,surfaces,,,,)'],
+        variants: [
           {
-            "unit": "bidon de 20 kg",
-            "dosage": "200 ml par 10 litres d'eau"
-          }
+            unit: 'bidon de 20 kg',
+            dosage: "200 ml par 10 litres d'eau",
+          },
         ],
-        "sourceLines": [
-          72
-        ]
+        sourceLines: [72],
       },
       {
-        "name": "VIT NET",
-        "usages": [
-          "déboucheur pour tous genres de canalisation"
-        ],
-        "variants": [
+        name: 'VIT NET',
+        usages: ['déboucheur pour tous genres de canalisation'],
+        variants: [
           {
-            "unit": "seau de 05 kg",
-            "dosage": "1 kg pour 10 litres d'eau"
+            unit: 'seau de 05 kg',
+            dosage: "1 kg pour 10 litres d'eau",
           },
           {
-            "unit": "seau de 05kg",
-            "dosage": "1kg pour 10 litres d'eau"
-          }
+            unit: 'seau de 05kg',
+            dosage: "1kg pour 10 litres d'eau",
+          },
         ],
-        "sourceLines": [
-          73,
-          169
-        ]
+        sourceLines: [73, 169],
       },
       {
-        "name": "PROVITRE",
-        "usages": [
-          "nettoyant vitre ammoniaqué",
-          "nettoyant toutes surfaces vitrées"
-        ],
-        "variants": [
+        name: 'PROVITRE',
+        usages: ['nettoyant vitre ammoniaqué', 'nettoyant toutes surfaces vitrées'],
+        variants: [
           {
-            "unit": "bidon de 05 kg",
-            "dosage": "pur"
+            unit: 'bidon de 05 kg',
+            dosage: 'pur',
           },
           {
-            "unit": "BID 5 L / 500 ML",
-            "dosage": "pur"
-          }
+            unit: 'BID 5 L / 500 ML',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          74,
-          170
-        ]
+        sourceLines: [74, 170],
       },
       {
-        "name": "HILAC",
-        "usages": [
-          "Insecticide consentré"
-        ],
-        "variants": [
+        name: 'HILAC',
+        usages: ['Insecticide consentré'],
+        variants: [
           {
-            "unit": "B 1litre",
-            "dosage": "1 litre par 40 à 50 litres d'eau"
-          }
+            unit: 'B 1litre',
+            dosage: "1 litre par 40 à 50 litres d'eau",
+          },
         ],
-        "sourceLines": [
-          75
-        ]
+        sourceLines: [75],
       },
       {
-        "name": "Détacheur C",
-        "usages": [
-          "fruits, thé, vin…",
-          "Fruits, thé, vin….",
-          "fruits, thé, vin..."
-        ],
-        "variants": [
+        name: 'Détacheur C',
+        usages: ['fruits, thé, vin…', 'Fruits, thé, vin….', 'fruits, thé, vin...'],
+        variants: [
           {
-            "unit": "Flacon de 500 ml",
-            "dosage": "pur"
+            unit: 'Flacon de 500 ml',
+            dosage: 'pur',
           },
           {
-            "unit": "flacon de 500 ml",
-            "dosage": "pur"
+            unit: 'flacon de 500 ml',
+            dosage: 'pur',
           },
           {
-            "unit": "flacon de 500ml",
-            "dosage": "pur"
-          }
+            unit: 'flacon de 500ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          99,
-          126,
-          187,
-          221
-        ]
+        sourceLines: [99, 126, 187, 221],
       },
       {
-        "name": "WEICODISH M (TENSID CHEMIE)",
-        "usages": [
-          "liquide pour le lavage vaisselle en machine"
-        ],
-        "variants": [
+        name: 'WEICODISH M (TENSID CHEMIE)',
+        usages: ['liquide pour le lavage vaisselle en machine'],
+        variants: [
           {
-            "unit": "bid de 24 kg",
-            "dosage": "2ml par litre d'eau"
-          }
+            unit: 'bid de 24 kg',
+            dosage: "2ml par litre d'eau",
+          },
         ],
-        "sourceLines": [
-          142
-        ]
+        sourceLines: [142],
       },
       {
-        "name": "WEICORINSE (TENSID CHEMIE)",
-        "usages": [
-          "additif de rinçage pour vaisselle en machine"
-        ],
-        "variants": [
+        name: 'WEICORINSE (TENSID CHEMIE)',
+        usages: ['additif de rinçage pour vaisselle en machine'],
+        variants: [
           {
-            "unit": "bid de 20 kg",
-            "dosage": "0.1 ml par litre d'eau"
-          }
+            unit: 'bid de 20 kg',
+            dosage: "0.1 ml par litre d'eau",
+          },
         ],
-        "sourceLines": [
-          143
-        ]
+        sourceLines: [143],
       },
       {
-        "name": "PRODESAN-AD10 (TENSID CHEMIE)",
-        "usages": [
-          "nettoyant désinfectant toutes surfaces (matériel…)"
-        ],
-        "variants": [
+        name: 'PRODESAN-AD10 (TENSID CHEMIE)',
+        usages: ['nettoyant désinfectant toutes surfaces (matériel…)'],
+        variants: [
           {
-            "unit": "bid de 20 kg",
-            "dosage": "0.5 a 2% (500ml a 2 L par100 L eau"
-          }
+            unit: 'bid de 20 kg',
+            dosage: '0.5 a 2% (500ml a 2 L par100 L eau',
+          },
         ],
-        "sourceLines": [
-          145
-        ]
+        sourceLines: [145],
       },
       {
-        "name": "RIMANO 16 (TENSID CHEMIE)",
-        "usages": [
-          "dégraissant pour grillade, friteuses, filtres et marmittes"
-        ],
-        "variants": [
+        name: 'RIMANO 16 (TENSID CHEMIE)',
+        usages: ['dégraissant pour grillade, friteuses, filtres et marmittes'],
+        variants: [
           {
-            "unit": "bid 24 kg",
-            "dosage": "pur a 20 %"
-          }
+            unit: 'bid 24 kg',
+            dosage: 'pur a 20 %',
+          },
         ],
-        "sourceLines": [
-          147
-        ]
+        sourceLines: [147],
       },
       {
-        "name": "BIOSPOT",
-        "usages": [
-          "pastilles chlorés pour désinfection des légumes et fruits"
-        ],
-        "variants": [
+        name: 'BIOSPOT',
+        usages: ['pastilles chlorés pour désinfection des légumes et fruits'],
+        variants: [
           {
-            "unit": "boite 600 pastilles",
-            "dosage": "02 pastilles par 10 l d'eau"
-          }
+            unit: 'boite 600 pastilles',
+            dosage: "02 pastilles par 10 l d'eau",
+          },
         ],
-        "sourceLines": [
-          149
-        ]
+        sourceLines: [149],
       },
       {
-        "name": "FINISH",
-        "usages": [
-          "Pastilles pour lavage vaisselle en machine monobac"
-        ],
-        "variants": [
+        name: 'FINISH',
+        usages: ['Pastilles pour lavage vaisselle en machine monobac'],
+        variants: [
           {
-            "unit": "paquet 40 pastilles",
-            "dosage": "01 a 02 pastilles par bac"
-          }
+            unit: 'paquet 40 pastilles',
+            dosage: '01 a 02 pastilles par bac',
+          },
         ],
-        "sourceLines": [
-          150
-        ]
+        sourceLines: [150],
       },
       {
-        "name": "ALCOGEL",
-        "usages": [
-          "gel hydroalcoolique pour la désinfection des mains"
-        ],
-        "variants": [
+        name: 'ALCOGEL',
+        usages: ['gel hydroalcoolique pour la désinfection des mains'],
+        variants: [
           {
-            "unit": "bidon 05kg/500ML",
-            "dosage": "pur"
-          }
+            unit: 'bidon 05kg/500ML',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          151
-        ]
+        sourceLines: [151],
       },
       {
-        "name": "ALCOHAND",
-        "usages": [
-          "solution désinfectante pour Sols, surfaces et mains"
-        ],
-        "variants": [
+        name: 'ALCOHAND',
+        usages: ['solution désinfectante pour Sols, surfaces et mains'],
+        variants: [
           {
-            "unit": "bid de 05 kg",
-            "dosage": "pur"
-          }
+            unit: 'bid de 05 kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          155
-        ]
+        sourceLines: [155],
       },
       {
-        "name": "MOLKABIN (TENSID CHEMIE)",
-        "usages": [
-          "entretien et brillance des équipements en inox"
-        ],
-        "variants": [
+        name: 'MOLKABIN (TENSID CHEMIE)',
+        usages: ['entretien et brillance des équipements en inox'],
+        variants: [
           {
-            "unit": "pulv 500 ml",
-            "dosage": "pur"
-          }
+            unit: 'pulv 500 ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          161
-        ]
+        sourceLines: [161],
       },
       {
-        "name": "SOLITAIRE VAISSELLE",
-        "usages": [
-          "détergent tout usage (plonge vaisselle, surfaces…)"
-        ],
-        "variants": [
+        name: 'SOLITAIRE VAISSELLE',
+        usages: ['détergent tout usage (plonge vaisselle, surfaces…)'],
+        variants: [
           {
-            "unit": "bidon de 05L",
-            "dosage": "50ml par 10litres deau"
-          }
+            unit: 'bidon de 05L',
+            dosage: '50ml par 10litres deau',
+          },
         ],
-        "sourceLines": [
-          168
-        ]
+        sourceLines: [168],
       },
       {
-        "name": "SIRAFAN DESINFECTANT",
-        "usages": [
-          "Désinfectant toutes surfaces sans rinçage"
-        ],
-        "variants": [
+        name: 'SIRAFAN DESINFECTANT',
+        usages: ['Désinfectant toutes surfaces sans rinçage'],
+        variants: [
           {
-            "unit": "bidon de 05 L",
-            "dosage": "pur"
-          }
+            unit: 'bidon de 05 L',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          171
-        ]
+        sourceLines: [171],
       },
       {
-        "name": "BIOSPOT CHLORE",
-        "usages": [
-          "Nettoyage et désinfection des légumes et des fruits"
-        ],
-        "variants": [
+        name: 'BIOSPOT CHLORE',
+        usages: ['Nettoyage et désinfection des légumes et des fruits'],
+        variants: [
           {
-            "unit": "boite 600p",
-            "dosage": "1 à 2 capsule par 10L d'eau"
-          }
+            unit: 'boite 600p',
+            dosage: "1 à 2 capsule par 10L d'eau",
+          },
         ],
-        "sourceLines": [
-          197
-        ]
-      }
+        sourceLines: [197],
+      },
     ],
-    "ctaLabel": "Demander un devis"
+    ctaLabel: 'Demander un devis',
   },
   {
-    "id": "buanderie",
-    "label": "Service buanderie / blanchisserie",
-    "description": "Produits destinés au lavage professionnel du linge, détachage, blanchiment, assouplissement, neutralisation et entretien des machines.",
-    "products": [
+    id: 'buanderie',
+    label: 'Service buanderie / blanchisserie',
+    description:
+      'Produits destinés au lavage professionnel du linge, détachage, blanchiment, assouplissement, neutralisation et entretien des machines.',
+    products: [
       {
-        "name": "L2000XP",
-        "usages": [
-          "détergent liquide concentré de lavage"
-        ],
-        "variants": [
+        name: 'L2000XP',
+        usages: ['détergent liquide concentré de lavage'],
+        variants: [
           {
-            "unit": "Bid 27 kg",
-            "dosage": "2 à 4 ml"
-          }
+            unit: 'Bid 27 kg',
+            dosage: '2 à 4 ml',
+          },
         ],
-        "sourceLines": [
-          82
-        ]
+        sourceLines: [82],
       },
       {
-        "name": "PROLAX 100",
-        "usages": [
-          "agent mouillant et renforçateur de lavage",
-          "Agent mouillant et renforçateur de lavage"
+        name: 'PROLAX 100',
+        usages: [
+          'agent mouillant et renforçateur de lavage',
+          'Agent mouillant et renforçateur de lavage',
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "Bid 20 kg",
-            "dosage": "3 à 5 ml"
+            unit: 'Bid 20 kg',
+            dosage: '3 à 5 ml',
           },
           {
-            "unit": "bidon 20kg",
-            "dosage": "3 à 5 ml"
+            unit: 'bidon 20kg',
+            dosage: '3 à 5 ml',
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "3 à 5 ml"
-          }
+            unit: 'bidon de 20kg',
+            dosage: '3 à 5 ml',
+          },
         ],
-        "sourceLines": [
-          83,
-          117,
-          177,
-          205
-        ]
+        sourceLines: [83, 117, 177, 205],
       },
       {
-        "name": "PROLAX 200",
-        "usages": [
-          "dégraissant puissant pour les taches difficilles",
-          "Dégraissant puissant pour les taches difficilles",
-          "dégraissant puissant pour les taches difficiles"
+        name: 'PROLAX 200',
+        usages: [
+          'dégraissant puissant pour les taches difficilles',
+          'Dégraissant puissant pour les taches difficilles',
+          'dégraissant puissant pour les taches difficiles',
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "Bid 20 kg",
-            "dosage": "5 à 10 ml"
+            unit: 'Bid 20 kg',
+            dosage: '5 à 10 ml',
           },
           {
-            "unit": "bidon 20kg",
-            "dosage": "5 à 10 ml"
+            unit: 'bidon 20kg',
+            dosage: '5 à 10 ml',
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "8 a 15 ml"
+            unit: 'bidon de 20kg',
+            dosage: '8 a 15 ml',
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "5 à 10 ml"
-          }
+            unit: 'bidon de 20kg',
+            dosage: '5 à 10 ml',
+          },
         ],
-        "sourceLines": [
-          84,
-          118,
-          178,
-          206
-        ]
+        sourceLines: [84, 118, 178, 206],
       },
       {
-        "name": "PROLAX 400",
-        "usages": [
-          "poudre chlorée pour le blanchiment et désinfection",
-          "Poudre chloré pour le blanchiment et désinfection",
-          "poudre chloré pour le blanchiment et désinfection"
+        name: 'PROLAX 400',
+        usages: [
+          'poudre chlorée pour le blanchiment et désinfection',
+          'Poudre chloré pour le blanchiment et désinfection',
+          'poudre chloré pour le blanchiment et désinfection',
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "seau de 10 kg",
-            "dosage": "3 à 5 grammes"
+            unit: 'seau de 10 kg',
+            dosage: '3 à 5 grammes',
           },
           {
-            "unit": "seau de 10kg",
-            "dosage": "3 à 5 grammes"
-          }
+            unit: 'seau de 10kg',
+            dosage: '3 à 5 grammes',
+          },
         ],
-        "sourceLines": [
-          85,
-          119,
-          179
-        ]
+        sourceLines: [85, 119, 179],
       },
       {
-        "name": "PROLAX 500",
-        "usages": [
-          "produit adoucissant et assouplissant",
-          "Produit adoucissant et assouplissant"
-        ],
-        "variants": [
+        name: 'PROLAX 500',
+        usages: ['produit adoucissant et assouplissant', 'Produit adoucissant et assouplissant'],
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": "10 à 20 ml"
+            unit: 'Bid de 20 kg',
+            dosage: '10 à 20 ml',
           },
           {
-            "unit": "bidon 20kg",
-            "dosage": "10 à 20 ml"
+            unit: 'bidon 20kg',
+            dosage: '10 à 20 ml',
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "10 à 15 ml"
-          }
+            unit: 'bidon de 20kg',
+            dosage: '10 à 15 ml',
+          },
         ],
-        "sourceLines": [
-          86,
-          120,
-          180,
-          207
-        ]
+        sourceLines: [86, 120, 180, 207],
       },
       {
-        "name": "Mouillant MH",
-        "usages": [
-          "produit mouillant"
-        ],
-        "variants": [
+        name: 'Mouillant MH',
+        usages: ['produit mouillant'],
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": ""
-          }
+            unit: 'Bid de 20 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          87
-        ]
+        sourceLines: [87],
       },
       {
-        "name": "Souplex",
-        "usages": [
-          "assouplissant linge éponge"
-        ],
-        "variants": [
+        name: 'Souplex',
+        usages: ['assouplissant linge éponge'],
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": ""
-          }
+            unit: 'Bid de 20 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          88
-        ]
+        sourceLines: [88],
       },
       {
-        "name": "OXY MH",
-        "usages": [
-          "agent de blanchiment chloré en poudre"
-        ],
-        "variants": [
+        name: 'OXY MH',
+        usages: ['agent de blanchiment chloré en poudre'],
+        variants: [
           {
-            "unit": "Seau de 12 kg",
-            "dosage": ""
-          }
+            unit: 'Seau de 12 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          90
-        ]
+        sourceLines: [90],
       },
       {
-        "name": "Dégraissant MH",
-        "usages": [
-          "dégraissant puissant pour taches huileuses"
-        ],
-        "variants": [
+        name: 'Dégraissant MH',
+        usages: ['dégraissant puissant pour taches huileuses'],
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": ""
-          }
+            unit: 'Bid de 20 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          91
-        ]
+        sourceLines: [91],
       },
       {
-        "name": "Prep plus",
-        "usages": [
-          "détacheur pour taches organiques"
-        ],
-        "variants": [
+        name: 'Prep plus',
+        usages: ['détacheur pour taches organiques'],
+        variants: [
           {
-            "unit": "Etui de 10 kg",
-            "dosage": ""
-          }
+            unit: 'Etui de 10 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          92
-        ]
+        sourceLines: [92],
       },
       {
-        "name": "PROLAX LIQUIDE",
-        "usages": [
-          "lessive liquide spécial pour linge couleur et délicat",
-          "Lessive liquide spécial pour linge couleur et délicat",
-          "lessive liquide spécial pour linge couleur et blanc"
+        name: 'PROLAX LIQUIDE',
+        usages: [
+          'lessive liquide spécial pour linge couleur et délicat',
+          'Lessive liquide spécial pour linge couleur et délicat',
+          'lessive liquide spécial pour linge couleur et blanc',
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": "10 à 20 ml"
+            unit: 'Bid de 20 kg',
+            dosage: '10 à 20 ml',
           },
           {
-            "unit": "bidon 20kg",
-            "dosage": "10 à 20 ml"
+            unit: 'bidon 20kg',
+            dosage: '10 à 20 ml',
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "10 à 15 ml"
-          }
+            unit: 'bidon de 20kg',
+            dosage: '10 à 15 ml',
+          },
         ],
-        "sourceLines": [
-          93,
-          122,
-          183,
-          210
-        ]
+        sourceLines: [93, 122, 183, 210],
       },
       {
-        "name": "Complet détacheurs",
-        "usages": [
-          "détacheur pour toute sorte de tache"
-        ],
-        "variants": [
+        name: 'Complet détacheurs',
+        usages: ['détacheur pour toute sorte de tache'],
+        variants: [
           {
-            "unit": "Pièce",
-            "dosage": ""
-          }
+            unit: 'Pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          94
-        ]
+        sourceLines: [94],
       },
       {
-        "name": "Détacheur R",
-        "usages": [
-          "rouilles , taches oxydées",
-          "Rouille, taches oxydées",
-          "rouile, taches oxydées"
-        ],
-        "variants": [
+        name: 'Détacheur R',
+        usages: ['rouilles , taches oxydées', 'Rouille, taches oxydées', 'rouile, taches oxydées'],
+        variants: [
           {
-            "unit": "Flacon de 500 ml",
-            "dosage": "pur"
+            unit: 'Flacon de 500 ml',
+            dosage: 'pur',
           },
           {
-            "unit": "flacon de 500 ml",
-            "dosage": "pur"
+            unit: 'flacon de 500 ml',
+            dosage: 'pur',
           },
           {
-            "unit": "flacon de 500ml",
-            "dosage": "pur"
-          }
+            unit: 'flacon de 500ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          95,
-          123,
-          184,
-          218
-        ]
+        sourceLines: [95, 123, 184, 218],
       },
       {
-        "name": "DétacheurR*",
-        "usages": [
-          "anti-rouille"
-        ],
-        "variants": [
+        name: 'DétacheurR*',
+        usages: ['anti-rouille'],
+        variants: [
           {
-            "unit": "Flacon de 700 ml",
-            "dosage": ""
-          }
+            unit: 'Flacon de 700 ml',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          96
-        ]
+        sourceLines: [96],
       },
       {
-        "name": "Détacheur A",
-        "usages": [
-          "sang, café, boissons…",
-          "Sang, café, boissons….."
-        ],
-        "variants": [
+        name: 'Détacheur A',
+        usages: ['sang, café, boissons…', 'Sang, café, boissons…..'],
+        variants: [
           {
-            "unit": "Flacon de 500 ml",
-            "dosage": "pur"
+            unit: 'Flacon de 500 ml',
+            dosage: 'pur',
           },
           {
-            "unit": "flacon de 500 ml",
-            "dosage": "pur"
+            unit: 'flacon de 500 ml',
+            dosage: 'pur',
           },
           {
-            "unit": "flacon de 500ml",
-            "dosage": "pur"
-          }
+            unit: 'flacon de 500ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          97,
-          124,
-          185,
-          219
-        ]
+        sourceLines: [97, 124, 185, 219],
       },
       {
-        "name": "Détacheur B",
-        "usages": [
-          "encres , colles, cirages",
-          "Encre, colles, cirages",
-          "encre, colles, cirages"
-        ],
-        "variants": [
+        name: 'Détacheur B',
+        usages: ['encres , colles, cirages', 'Encre, colles, cirages', 'encre, colles, cirages'],
+        variants: [
           {
-            "unit": "Flacon de 500 ml",
-            "dosage": "pur"
+            unit: 'Flacon de 500 ml',
+            dosage: 'pur',
           },
           {
-            "unit": "flacon de 500 ml",
-            "dosage": "pur"
+            unit: 'flacon de 500 ml',
+            dosage: 'pur',
           },
           {
-            "unit": "flacon de 500ml",
-            "dosage": "pur"
-          }
+            unit: 'flacon de 500ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          98,
-          125,
-          186,
-          220
-        ]
+        sourceLines: [98, 125, 186, 220],
       },
       {
-        "name": "PROLAC",
-        "usages": [
-          "détartrant tambours des machines",
-          "Détartrant tambours des machines"
-        ],
-        "variants": [
+        name: 'PROLAC',
+        usages: ['détartrant tambours des machines', 'Détartrant tambours des machines'],
+        variants: [
           {
-            "unit": "Bid de 20 kg",
-            "dosage": "1 à 2 litres par 10 litres d'eau"
+            unit: 'Bid de 20 kg',
+            dosage: "1 à 2 litres par 10 litres d'eau",
           },
           {
-            "unit": "bidon 20kg",
-            "dosage": "1 à 2 litres par 10litres d'eau"
+            unit: 'bidon 20kg',
+            dosage: "1 à 2 litres par 10litres d'eau",
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "1 à 2 litres par 10 litres d'eau"
-          }
+            unit: 'bidon de 20kg',
+            dosage: "1 à 2 litres par 10 litres d'eau",
+          },
         ],
-        "sourceLines": [
-          100,
-          127,
-          189,
-          222
-        ]
+        sourceLines: [100, 127, 189, 222],
       },
       {
-        "name": "Neutralisant chlore",
-        "usages": [
+        name: 'Neutralisant chlore',
+        usages: [
           "poudre neutralisant l'effet résiduel du chlore",
-          "Poudre neutralisant l'effet résiduel du chlore"
+          "Poudre neutralisant l'effet résiduel du chlore",
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "Seau de 10 kg",
-            "dosage": "2 grammes"
+            unit: 'Seau de 10 kg',
+            dosage: '2 grammes',
           },
           {
-            "unit": "seau de 10kg",
-            "dosage": "2 gammes"
-          }
+            unit: 'seau de 10kg',
+            dosage: '2 gammes',
+          },
         ],
-        "sourceLines": [
-          101,
-          128
-        ]
+        sourceLines: [101, 128],
       },
       {
-        "name": "proxy",
-        "usages": [
-          "agent de blanchiment oxygéné",
-          "Agent de blanchiment oxygéné",
-          "agent de blanchiment oxygéné linge couleur"
+        name: 'proxy',
+        usages: [
+          'agent de blanchiment oxygéné',
+          'Agent de blanchiment oxygéné',
+          'agent de blanchiment oxygéné linge couleur',
         ],
-        "variants": [
+        variants: [
           {
-            "unit": "bid 20kg",
-            "dosage": "pur"
+            unit: 'bid 20kg',
+            dosage: 'pur',
           },
           {
-            "unit": "bidon 20kg",
-            "dosage": "pur"
+            unit: 'bidon 20kg',
+            dosage: 'pur',
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "10 a 15 ML"
+            unit: 'bidon de 20kg',
+            dosage: '10 a 15 ML',
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "10 à 15 ml"
-          }
+            unit: 'bidon de 20kg',
+            dosage: '10 à 15 ml',
+          },
         ],
-        "sourceLines": [
-          102,
-          129,
-          214,
-          224
-        ]
+        sourceLines: [102, 129, 214, 224],
       },
       {
-        "name": "Acide acétique",
-        "usages": [
-          "neutralisant de la lessive de lavage"
-        ],
-        "variants": [
+        name: 'Acide acétique',
+        usages: ['neutralisant de la lessive de lavage'],
+        variants: [
           {
-            "unit": "bidon de 35 kg",
-            "dosage": "2 ml"
+            unit: 'bidon de 35 kg',
+            dosage: '2 ml',
           },
           {
-            "unit": "bidon 20kg",
-            "dosage": "2 ml"
+            unit: 'bidon 20kg',
+            dosage: '2 ml',
           },
           {
-            "unit": "bidon de 20kg",
-            "dosage": "2 ml"
-          }
+            unit: 'bidon de 20kg',
+            dosage: '2 ml',
+          },
         ],
-        "sourceLines": [
-          103,
-          130,
-          225
-        ]
+        sourceLines: [103, 130, 225],
       },
       {
-        "name": "Lemon inox",
-        "usages": [
-          "nettoyage machine en inox"
-        ],
-        "variants": [
+        name: 'Lemon inox',
+        usages: ['nettoyage machine en inox'],
+        variants: [
           {
-            "unit": "CT de 12 bouteilles",
-            "dosage": "pur"
-          }
+            unit: 'CT de 12 bouteilles',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          104
-        ]
+        sourceLines: [104],
       },
       {
-        "name": "PROLAX couleur",
-        "usages": [
-          "poudre pour le lavage principal tous types de linge"
-        ],
-        "variants": [
+        name: 'PROLAX couleur',
+        usages: ['poudre pour le lavage principal tous types de linge'],
+        variants: [
           {
-            "unit": "sac de 25 kg",
-            "dosage": "10 à 20 grammes"
-          }
+            unit: 'sac de 25 kg',
+            dosage: '10 à 20 grammes',
+          },
         ],
-        "sourceLines": [
-          181,
-          208
-        ]
+        sourceLines: [181, 208],
       },
       {
-        "name": "PROLAX blanc",
-        "usages": [
-          "poudre pour le lavage principal linge blanc"
-        ],
-        "variants": [
+        name: 'PROLAX blanc',
+        usages: ['poudre pour le lavage principal linge blanc'],
+        variants: [
           {
-            "unit": "sac de 25 kg",
-            "dosage": "10 à 20 grammes"
-          }
+            unit: 'sac de 25 kg',
+            dosage: '10 à 20 grammes',
+          },
         ],
-        "sourceLines": [
-          182,
-          209
-        ]
+        sourceLines: [182, 209],
       },
       {
-        "name": "Détacheur speciale",
-        "usages": [
-          "taches rebelles"
-        ],
-        "variants": [
+        name: 'Détacheur speciale',
+        usages: ['taches rebelles'],
+        variants: [
           {
-            "unit": "bidon de 20kg",
-            "dosage": "pur"
-          }
+            unit: 'bidon de 20kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          188
-        ]
+        sourceLines: [188],
       },
       {
-        "name": "métabisulfite de sodium",
-        "usages": [
-          "poudre neutralisant l'effet résiduel du chlore"
-        ],
-        "variants": [
+        name: 'métabisulfite de sodium',
+        usages: ["poudre neutralisant l'effet résiduel du chlore"],
+        variants: [
           {
-            "unit": "sac de 25 kg",
-            "dosage": "2 grammes"
+            unit: 'sac de 25 kg',
+            dosage: '2 grammes',
           },
           {
-            "unit": "seau de 10 kg",
-            "dosage": "2 grammes"
-          }
+            unit: 'seau de 10 kg',
+            dosage: '2 grammes',
+          },
         ],
-        "sourceLines": [
-          190,
-          223
-        ]
+        sourceLines: [190, 223],
       },
       {
-        "name": "CLORAX LIQUIDE",
-        "usages": [
-          "agent de blanchiment chloré pour linge blanc"
-        ],
-        "variants": [
+        name: 'CLORAX LIQUIDE',
+        usages: ['agent de blanchiment chloré pour linge blanc'],
+        variants: [
           {
-            "unit": "bidon de 20kg",
-            "dosage": "7 a 20 ml par kg du linge"
-          }
+            unit: 'bidon de 20kg',
+            dosage: '7 a 20 ml par kg du linge',
+          },
         ],
-        "sourceLines": [
-          211
-        ]
+        sourceLines: [211],
       },
       {
-        "name": "PROLAX DELICAT",
-        "usages": [
-          "lessive liquide pour linge client"
-        ],
-        "variants": [
+        name: 'PROLAX DELICAT',
+        usages: ['lessive liquide pour linge client'],
+        variants: [
           {
-            "unit": "bid de 20 kg",
-            "dosage": "10 ml par kg du linge"
-          }
+            unit: 'bid de 20 kg',
+            dosage: '10 ml par kg du linge',
+          },
         ],
-        "sourceLines": [
-          213
-        ]
+        sourceLines: [213],
       },
       {
-        "name": "PROGRAS",
-        "usages": [
-          "poudre de dégraissage du linge gras et taché"
-        ],
-        "variants": [
+        name: 'PROGRAS',
+        usages: ['poudre de dégraissage du linge gras et taché'],
+        variants: [
           {
-            "unit": "SAC 25 KG",
-            "dosage": "15 a 20 grammes par kg du linge"
-          }
+            unit: 'SAC 25 KG',
+            dosage: '15 a 20 grammes par kg du linge',
+          },
         ],
-        "sourceLines": [
-          215
-        ]
+        sourceLines: [215],
       },
       {
-        "name": "DEOFRESH LINGE",
-        "usages": [
-          "AIR FRESH LINGE"
-        ],
-        "variants": [
+        name: 'DEOFRESH LINGE',
+        usages: ['AIR FRESH LINGE'],
+        variants: [
           {
-            "unit": "BID 05 KG",
-            "dosage": "PUR"
-          }
+            unit: 'BID 05 KG',
+            dosage: 'PUR',
+          },
         ],
-        "sourceLines": [
-          217
-        ]
-      }
+        sourceLines: [217],
+      },
     ],
-    "ctaLabel": "Demander un devis"
+    ctaLabel: 'Demander un devis',
   },
   {
-    "id": "etage-housekeeping",
-    "label": "Service étage / housekeeping",
-    "description": "Produits destinés à l’entretien des chambres, sanitaires, vitres, meubles, sols, moquettes, désodorisation et hygiène des mains.",
-    "products": [
+    id: 'etage-housekeeping',
+    label: 'Service étage / housekeeping',
+    description:
+      'Produits destinés à l’entretien des chambres, sanitaires, vitres, meubles, sols, moquettes, désodorisation et hygiène des mains.',
+    products: [
       {
-        "name": "PROGERME",
-        "usages": [
-          "nettoyant désodorisant toutes surfaces"
-        ],
-        "variants": [
+        name: 'PROGERME',
+        usages: ['nettoyant désodorisant toutes surfaces'],
+        variants: [
           {
-            "unit": "bid 05 kg",
-            "dosage": "200 ml par 10 l d'eau"
-          }
+            unit: 'bid 05 kg',
+            dosage: "200 ml par 10 l d'eau",
+          },
         ],
-        "sourceLines": [
-          230
-        ]
+        sourceLines: [230],
       },
       {
-        "name": "PROVITRE",
-        "usages": [
-          "nettoyant toutes surfaces vitrées"
-        ],
-        "variants": [
+        name: 'PROVITRE',
+        usages: ['nettoyant toutes surfaces vitrées'],
+        variants: [
           {
-            "unit": "bidon de 05 L / 750 ML",
-            "dosage": "pur"
-          }
+            unit: 'bidon de 05 L / 750 ML',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          231
-        ]
+        sourceLines: [231],
       },
       {
-        "name": "PILAX",
-        "usages": [
-          "détartrant puissant pour les fonds des WC."
-        ],
-        "variants": [
+        name: 'PILAX',
+        usages: ['détartrant puissant pour les fonds des WC.'],
+        variants: [
           {
-            "unit": "Flacon de 750 ml",
-            "dosage": "pur"
-          }
+            unit: 'Flacon de 750 ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          232
-        ]
+        sourceLines: [232],
       },
       {
-        "name": "PROSTAR",
-        "usages": [
-          "nettoyant désinfectant pour les salles de bains"
-        ],
-        "variants": [
+        name: 'PROSTAR',
+        usages: ['nettoyant désinfectant pour les salles de bains'],
+        variants: [
           {
-            "unit": "bid 05 kg /750 ML",
-            "dosage": "pur"
-          }
+            unit: 'bid 05 kg /750 ML',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          234
-        ]
+        sourceLines: [234],
       },
       {
-        "name": "PLIZ MEUBLES",
-        "usages": [
-          "Entretien des meubles eb bois"
-        ],
-        "variants": [
+        name: 'PLIZ MEUBLES',
+        usages: ['Entretien des meubles eb bois'],
+        variants: [
           {
-            "unit": "bombe de 300 ml",
-            "dosage": "pur"
-          }
+            unit: 'bombe de 300 ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          235
-        ]
+        sourceLines: [235],
       },
       {
-        "name": "DIPTOX",
-        "usages": [
-          "insecticide pour mouches et moustiques"
-        ],
-        "variants": [
+        name: 'DIPTOX',
+        usages: ['insecticide pour mouches et moustiques'],
+        variants: [
           {
-            "unit": "bombe GM",
-            "dosage": "pur"
-          }
+            unit: 'bombe GM',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          238
-        ]
+        sourceLines: [238],
       },
       {
-        "name": "DEOFRESH",
-        "usages": [
-          "désodorisant d'ambiance (lavande, fleurs….)"
-        ],
-        "variants": [
+        name: 'DEOFRESH',
+        usages: ["désodorisant d'ambiance (lavande, fleurs….)"],
+        variants: [
           {
-            "unit": "bid 05 kg / 750 ml",
-            "dosage": "pur"
-          }
+            unit: 'bid 05 kg / 750 ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          240
-        ]
+        sourceLines: [240],
       },
       {
-        "name": "AIR FRESH NASSIM",
-        "usages": [
-          "désodorisant d'ambiance (citron,pin et lavande)"
-        ],
-        "variants": [
+        name: 'AIR FRESH NASSIM',
+        usages: ["désodorisant d'ambiance (citron,pin et lavande)"],
+        variants: [
           {
-            "unit": "bombe 300ml",
-            "dosage": "pur"
-          }
+            unit: 'bombe 300ml',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          241
-        ]
+        sourceLines: [241],
       },
       {
-        "name": "SANIHAND",
-        "usages": [
-          "Savon liquide pour l'hygiène des mains"
-        ],
-        "variants": [
+        name: 'SANIHAND',
+        usages: ["Savon liquide pour l'hygiène des mains"],
+        variants: [
           {
-            "unit": "bidon 05 kg",
-            "dosage": "pur"
-          }
+            unit: 'bidon 05 kg',
+            dosage: 'pur',
+          },
         ],
-        "sourceLines": [
-          243
-        ]
+        sourceLines: [243],
       },
       {
-        "name": "SUPER CLEAN",
-        "usages": [
-          "shampoing pour moquettes et tapis"
-        ],
-        "variants": [
+        name: 'SUPER CLEAN',
+        usages: ['shampoing pour moquettes et tapis'],
+        variants: [
           {
-            "unit": "bidon 05 kg",
-            "dosage": "200ml par 10 litres d'eau"
-          }
+            unit: 'bidon 05 kg',
+            dosage: "200ml par 10 litres d'eau",
+          },
         ],
-        "sourceLines": [
-          245
-        ]
+        sourceLines: [245],
       },
       {
-        "name": "PRPFOUR",
-        "usages": [
-          "nettoyant graisse carbonisée"
-        ],
-        "variants": [
+        name: 'PRPFOUR',
+        usages: ['nettoyant graisse carbonisée'],
+        variants: [
           {
-            "unit": "pulvérisat 750 ml",
-            "dosage": ""
-          }
+            unit: 'pulvérisat 750 ml',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          246
-        ]
+        sourceLines: [246],
       },
       {
-        "name": "PROFON",
-        "usages": [
-          "détartrant puissant piscines,WC et surfaces dures."
-        ],
-        "variants": [
+        name: 'PROFON',
+        usages: ['détartrant puissant piscines,WC et surfaces dures.'],
+        variants: [
           {
-            "unit": "bidon 05 kg",
-            "dosage": "1 à 2 litres par 10 litres d'eau"
-          }
+            unit: 'bidon 05 kg',
+            dosage: "1 à 2 litres par 10 litres d'eau",
+          },
         ],
-        "sourceLines": [
-          248
-        ]
-      }
+        sourceLines: [248],
+      },
     ],
-    "ctaLabel": "Demander un devis"
+    ctaLabel: 'Demander un devis',
   },
   {
-    "id": "articles-menagers",
-    "label": "Vente articles ménagers & hygiène",
-    "description": "Articles commercialisés et accessoires de nettoyage/hygiène vendus comme compléments aux produits Prodet.",
-    "products": [
+    id: 'articles-menagers',
+    label: 'Vente articles ménagers & hygiène',
+    description:
+      'Articles commercialisés et accessoires de nettoyage/hygiène vendus comme compléments aux produits Prodet.',
+    products: [
       {
-        "name": "Jex carré",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Jex carré',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "paquet de 100",
-            "dosage": ""
-          }
+            unit: 'paquet de 100',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          254
-        ]
+        sourceLines: [254],
       },
       {
-        "name": "Jex galvanisé",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Jex galvanisé',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "paquet de 25",
-            "dosage": ""
-          }
+            unit: 'paquet de 25',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          255
-        ]
+        sourceLines: [255],
       },
       {
-        "name": "Jex galvanisé fort sac 12p",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Jex galvanisé fort sac 12p',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "piece",
-            "dosage": ""
-          }
+            unit: 'piece',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          256
-        ]
+        sourceLines: [256],
       },
       {
-        "name": "Eponge mousse",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Eponge mousse',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "SAC 60 P",
-            "dosage": ""
-          }
+            unit: 'SAC 60 P',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          257
-        ]
+        sourceLines: [257],
       },
       {
-        "name": "balais cristal",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [],
-        "sourceLines": [
-          258,
-          286
-        ]
+        name: 'balais cristal',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [],
+        sourceLines: [258, 286],
       },
       {
-        "name": "raclette cristal",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'raclette cristal',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          259,
-          282,
-          287
-        ]
+        sourceLines: [259, 282, 287],
       },
       {
-        "name": "éponge végétale viléda S",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'éponge végétale viléda S',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          260
-        ]
+        sourceLines: [260],
       },
       {
-        "name": "lavette éponge velida",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'lavette éponge velida',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          261
-        ]
+        sourceLines: [261],
       },
       {
-        "name": "essuit vitre viléda",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'essuit vitre viléda',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          262
-        ]
+        sourceLines: [262],
       },
       {
-        "name": "tampon sur éponge viléda",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'tampon sur éponge viléda',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          263
-        ]
+        sourceLines: [263],
       },
       {
-        "name": "sac poubelle géant orca",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'sac poubelle géant orca',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "paquet de 20 (0,375 millimes/p)",
-            "dosage": ""
-          }
+            unit: 'paquet de 20 (0,375 millimes/p)',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          265
-        ]
+        sourceLines: [265],
       },
       {
-        "name": "Sac poubelle NOIR géant",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Sac poubelle NOIR géant',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "lot de 125 pieces",
-            "dosage": ""
+            unit: 'lot de 125 pieces',
+            dosage: '',
           },
           {
-            "unit": "lot de 200 pieces",
-            "dosage": ""
-          }
+            unit: 'lot de 200 pieces',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          266,
-          275
-        ]
+        sourceLines: [266, 275],
       },
       {
-        "name": "sac poubelle GM",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'sac poubelle GM',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "paquet de 10/p",
-            "dosage": ""
-          }
+            unit: 'paquet de 10/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          267
-        ]
+        sourceLines: [267],
       },
       {
-        "name": "sac poubelle MM",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'sac poubelle MM',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "paquet de 10 (0,115 millimes/p)",
-            "dosage": ""
-          }
+            unit: 'paquet de 10 (0,115 millimes/p)',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          270
-        ]
+        sourceLines: [270],
       },
       {
-        "name": "sa poubelle PM",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'sa poubelle PM',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "paquet de 10/p",
-            "dosage": ""
-          }
+            unit: 'paquet de 10/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          271
-        ]
+        sourceLines: [271],
       },
       {
-        "name": "sachet de congélation 2kg",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'sachet de congélation 2kg',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "sac de 75/p",
-            "dosage": ""
-          }
+            unit: 'sac de 75/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          272
-        ]
+        sourceLines: [272],
       },
       {
-        "name": "sachet de congélation 5kg",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'sachet de congélation 5kg',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "sac de 50/p",
-            "dosage": ""
-          }
+            unit: 'sac de 50/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          273
-        ]
+        sourceLines: [273],
       },
       {
-        "name": "Sac poubelle NOIR MOYEN MOD",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Sac poubelle NOIR MOYEN MOD',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "500P",
-            "dosage": ""
-          }
+            unit: '500P',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          276
-        ]
+        sourceLines: [276],
       },
       {
-        "name": "Serpillère coton sonit LOT 12p",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Serpillère coton sonit LOT 12p',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "12p",
-            "dosage": ""
-          }
+            unit: '12p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          277
-        ]
+        sourceLines: [277],
       },
       {
-        "name": "serpillière viléda",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'serpillière viléda',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          278
-        ]
+        sourceLines: [278],
       },
       {
-        "name": "Serpillere microfibre",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Serpillere microfibre',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "piece",
-            "dosage": ""
-          }
+            unit: 'piece',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          279
-        ]
+        sourceLines: [279],
       },
       {
-        "name": "lavette microfibre",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'lavette microfibre',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "piece",
-            "dosage": ""
-          }
+            unit: 'piece',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          280
-        ]
+        sourceLines: [280],
       },
       {
-        "name": "Balai cristal flouka",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Balai cristal flouka',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          281
-        ]
+        sourceLines: [281],
       },
       {
-        "name": "Raclette SUPER LION",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Raclette SUPER LION',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          283
-        ]
+        sourceLines: [283],
       },
       {
-        "name": "Manche en bois 1.20 m",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Manche en bois 1.20 m',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          284
-        ]
+        sourceLines: [284],
       },
       {
-        "name": "manche en bois 1,70 m",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [],
-        "sourceLines": [
-          285
-        ]
+        name: 'manche en bois 1,70 m',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [],
+        sourceLines: [285],
       },
       {
-        "name": "Manche en bois 1.5 m",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Manche en bois 1.5 m',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          288
-        ]
+        sourceLines: [288],
       },
       {
-        "name": "Côte boulangére cristal",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Côte boulangére cristal',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          289
-        ]
+        sourceLines: [289],
       },
       {
-        "name": "tête de loup cristal",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'tête de loup cristal',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          290
-        ]
+        sourceLines: [290],
       },
       {
-        "name": "manche tête de loup",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'manche tête de loup',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          291
-        ]
+        sourceLines: [291],
       },
       {
-        "name": "Brosse à cuvette avec socle",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Brosse à cuvette avec socle',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          292
-        ]
+        sourceLines: [292],
       },
       {
-        "name": "Pelle",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Pelle',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          294
-        ]
+        sourceLines: [294],
       },
       {
-        "name": "déboucheur (300gr)",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'déboucheur (300gr)',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "flacon de 300 gr",
-            "dosage": ""
-          }
+            unit: 'flacon de 300 gr',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          295
-        ]
+        sourceLines: [295],
       },
       {
-        "name": "Gant de ménage",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Gant de ménage',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          300
-        ]
+        sourceLines: [300],
       },
       {
-        "name": "gant latex",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'gant latex',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "paquet 100/p",
-            "dosage": ""
-          }
+            unit: 'paquet 100/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          301,
-          303
-        ]
+        sourceLines: [301, 303],
       },
       {
-        "name": "gant vinyl",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'gant vinyl',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "paquet 100/p",
-            "dosage": ""
-          }
+            unit: 'paquet 100/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          302
-        ]
+        sourceLines: [302],
       },
       {
-        "name": "gant vinyl noir",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'gant vinyl noir',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "paquet 100 P",
-            "dosage": ""
-          }
+            unit: 'paquet 100 P',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          304
-        ]
+        sourceLines: [304],
       },
       {
-        "name": "CACHMIR BLANC",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'CACHMIR BLANC',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "LOT 25P",
-            "dosage": ""
-          }
+            unit: 'LOT 25P',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          305
-        ]
+        sourceLines: [305],
       },
       {
-        "name": "savon lux 75g",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'savon lux 75g',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          306
-        ]
+        sourceLines: [306],
       },
       {
-        "name": "savon vert tej 1 kg",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'savon vert tej 1 kg',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "barre de 01 kg",
-            "dosage": ""
-          }
+            unit: 'barre de 01 kg',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          308
-        ]
+        sourceLines: [308],
       },
       {
-        "name": "Chamoisine orange",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Chamoisine orange',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "sac 50/p",
-            "dosage": ""
-          }
+            unit: 'sac 50/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          310
-        ]
+        sourceLines: [310],
       },
       {
-        "name": "Seau en plastic",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Seau en plastic',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          311
-        ]
+        sourceLines: [311],
       },
       {
-        "name": "papier hygienique",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [],
-        "sourceLines": [
-          315
-        ]
+        name: 'papier hygienique',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [],
+        sourceLines: [315],
       },
       {
-        "name": "vim",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [],
-        "sourceLines": [
-          316
-        ]
+        name: 'vim',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [],
+        sourceLines: [316],
       },
       {
-        "name": "OMO 500g",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'OMO 500g',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "carton de 20/p",
-            "dosage": ""
-          }
+            unit: 'carton de 20/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          317
-        ]
+        sourceLines: [317],
       },
       {
-        "name": "fino 500g",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'fino 500g',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "carton de 20/p",
-            "dosage": ""
-          }
+            unit: 'carton de 20/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          318
-        ]
+        sourceLines: [318],
       },
       {
-        "name": "brosse à linge avec manche",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'brosse à linge avec manche',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          319
-        ]
+        sourceLines: [319],
       },
       {
-        "name": "balai cristal dure",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'balai cristal dure',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          320
-        ]
+        sourceLines: [320],
       },
       {
-        "name": "brosse métallique avec manche",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'brosse métallique avec manche',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          321
-        ]
+        sourceLines: [321],
       },
       {
-        "name": "bref poudre à récurer",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'bref poudre à récurer',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "flacon de 500 gr",
-            "dosage": ""
-          }
+            unit: 'flacon de 500 gr',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          322
-        ]
+        sourceLines: [322],
       },
       {
-        "name": "Poudre A MAIN DEXEL",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Poudre A MAIN DEXEL',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "SAC 10 KG",
-            "dosage": ""
-          }
+            unit: 'SAC 10 KG',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          323
-        ]
+        sourceLines: [323],
       },
       {
-        "name": "nassim: pin,citron et lavande",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'nassim: pin,citron et lavande',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "bombe de 300 ml",
-            "dosage": ""
-          }
+            unit: 'bombe de 300 ml',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          324
-        ]
+        sourceLines: [324],
       },
       {
-        "name": "papier hygienique 2 plis",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'papier hygienique 2 plis',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "sac 60/p",
-            "dosage": ""
-          }
+            unit: 'sac 60/p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          325
-        ]
+        sourceLines: [325],
       },
       {
-        "name": "Rouleau aluminium KAPPO",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Rouleau aluminium KAPPO',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          334
-        ]
+        sourceLines: [334],
       },
       {
-        "name": "Film étirable rouleau 300m KAPPO",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Film étirable rouleau 300m KAPPO',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          335
-        ]
+        sourceLines: [335],
       },
       {
-        "name": "sac de congélation",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'sac de congélation',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          336
-        ]
+        sourceLines: [336],
       },
       {
-        "name": "Brosse métallique pour grillade",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Brosse métallique pour grillade',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "pièce",
-            "dosage": ""
-          }
+            unit: 'pièce',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          337
-        ]
+        sourceLines: [337],
       },
       {
-        "name": "Rouleau jumbo grand model XXL",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Rouleau jumbo grand model XXL',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "ct 06p",
-            "dosage": ""
-          }
+            unit: 'ct 06p',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          338
-        ]
+        sourceLines: [338],
       },
       {
-        "name": "Papier hygienique LILAS CLEAN",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Papier hygienique LILAS CLEAN',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "SAC 48 P",
-            "dosage": ""
-          }
+            unit: 'SAC 48 P',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          339
-        ]
+        sourceLines: [339],
       },
       {
-        "name": "Papier hygienique LILAS VRAC",
-        "usages": [
-          "Article ménager / hygiène / accessoire de nettoyage"
-        ],
-        "variants": [
+        name: 'Papier hygienique LILAS VRAC',
+        usages: ['Article ménager / hygiène / accessoire de nettoyage'],
+        variants: [
           {
-            "unit": "SAC 48 P",
-            "dosage": ""
-          }
+            unit: 'SAC 48 P',
+            dosage: '',
+          },
         ],
-        "sourceLines": [
-          340
-        ]
-      }
+        sourceLines: [340],
+      },
     ],
-    "ctaLabel": "Demander un devis"
-  }
+    ctaLabel: 'Demander un devis',
+  },
 ] as const;

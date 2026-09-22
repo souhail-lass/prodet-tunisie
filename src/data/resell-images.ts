@@ -25,9 +25,16 @@ const RESELL_PHOTOS: readonly ResellPhoto[] = [
   // — Matériel d'hygiène : lavettes, éponges, chiffons —
   {
     image: `${BASE}/lavette-microfibre.png`,
-    names: ['LAVETTE MICROFIBRE PIECE', 'LAVETTE MICROFIBRE 3P', 'LAVETTE MICRO FIBRE LOT 24PIECES'],
+    names: [
+      'LAVETTE MICROFIBRE PIECE',
+      'LAVETTE MICROFIBRE 3P',
+      'LAVETTE MICRO FIBRE LOT 24PIECES',
+    ],
   },
-  { image: `${BASE}/cachemire-blanc.webp`, names: ['CACHEMIRE BLANC PIECE', 'CACHEMIRE BLANC LOT 25P', 'CACHEMIRE BLANC LOT 20'] },
+  {
+    image: `${BASE}/cachemire-blanc.webp`,
+    names: ['CACHEMIRE BLANC PIECE', 'CACHEMIRE BLANC LOT 25P', 'CACHEMIRE BLANC LOT 20'],
+  },
   { image: `${BASE}/chamoisine-orange.jpg`, names: ['CHAMOISINE ORANGER PIECE'] },
   { image: `${BASE}/cote-boulangere.webp`, names: ['COTE BOULANGER CRISTAL PIECE'] },
   { image: `${BASE}/eponge-mousse.jpg`, names: ['EPONGE MOUSSE LOT 60P', 'EPONGE MOUSSE PIECE'] },
@@ -39,7 +46,10 @@ const RESELL_PHOTOS: readonly ResellPhoto[] = [
 
   // — Matériel d'hygiène : balais, brosses, manches, raclettes, pelles —
   { image: `${BASE}/brosse-a-linge.jpg`, names: ['BROSSE A LINGE CRISTAL'] },
-  { image: `${BASE}/brosse-metallique.jpg`, names: ['BROSSE METALIQUE AVEC MANCHE CRISTAL', 'BROSSE METALIQUE'] },
+  {
+    image: `${BASE}/brosse-metallique.jpg`,
+    names: ['BROSSE METALIQUE AVEC MANCHE CRISTAL', 'BROSSE METALIQUE'],
+  },
   { image: `${BASE}/brosse-wc-socle.png`, names: ['BROSSE WC AVEC SOCLE'] },
   { image: `${BASE}/raclette-lion.webp`, names: ['RACLETTE LION'] },
   { image: `${BASE}/tete-de-loup.webp`, names: ['TETE DE LOUP CRISTAL PIECE'] },
@@ -48,13 +58,22 @@ const RESELL_PHOTOS: readonly ResellPhoto[] = [
   { image: `${BASE}/seau.jpg`, names: ['SEAU PRINCE A BEC 11L GRADUE PIECE'] },
 
   // — Matériel d'hygiène : serpillières —
-  { image: `${BASE}/serpillere-microfibre.webp`, names: ['SERPILLIERE MICROFIBRE PIECE', 'SERPILLIERE MICROFIBRE LOT 12PIECES'] },
+  {
+    image: `${BASE}/serpillere-microfibre.webp`,
+    names: ['SERPILLIERE MICROFIBRE PIECE', 'SERPILLIERE MICROFIBRE LOT 12PIECES'],
+  },
   { image: `${BASE}/serpillere-sonit.webp`, names: ['SERPILLERE SONIT 0.70 LOT 12P'] },
 
   // — Papier & EPI jetables —
   { image: `${BASE}/essuie-tout-jumbo-xl.jpg`, names: ['ESSUIE TOUT JUMBO XL LOT 06 P'] },
-  { image: `${BASE}/papier-hygienique-lilas-48.jpg`, names: ['PAPIER HYG LILAS ULTRA DOUX LOT DE 48P'] },
-  { image: `${BASE}/papier-hygienique-lilas-vrac.webp`, names: ['PAPIER HYGIENIQUE LILAS VRAC 48P'] },
+  {
+    image: `${BASE}/papier-hygienique-lilas-48.jpg`,
+    names: ['PAPIER HYG LILAS ULTRA DOUX LOT DE 48P'],
+  },
+  {
+    image: `${BASE}/papier-hygienique-lilas-vrac.webp`,
+    names: ['PAPIER HYGIENIQUE LILAS VRAC 48P'],
+  },
   { image: `${BASE}/rouleau-aluminium-kappo.png`, names: ['ROULEAU ALUMINUIM KAPPO 100M'] },
   { image: `${BASE}/film-alimentaire-kappo.webp`, names: ['FILM ALIMENTAIRE KAPPO 300M'] },
   { image: `${BASE}/gant-de-menage.jpg`, names: ['GANT DE MENAGE PIECE'] },
@@ -66,7 +85,11 @@ const RESELL_PHOTOS: readonly ResellPhoto[] = [
   { image: `${BASE}/sac-poubelle-mm-noir.jpg`, names: ['SAC POUBELLE NOIR MM LOT 25P'] },
   {
     image: `${BASE}/sac-congelation.jpg`,
-    names: ['SAC DE CONGELATION 5KG LOT 50P', 'SACHET DE CONGELATION LOT 1000P', 'SACHET CONGELATION 01 KG LOT 100P'],
+    names: [
+      'SAC DE CONGELATION 5KG LOT 50P',
+      'SACHET DE CONGELATION LOT 1000P',
+      'SACHET CONGELATION 01 KG LOT 100P',
+    ],
   },
 
   // — Produits revendus (marques tierces) —

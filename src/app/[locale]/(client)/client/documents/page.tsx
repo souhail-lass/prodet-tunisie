@@ -55,17 +55,11 @@ export default async function ClientDocumentsPage({
     storageReady = false;
   }
 
-  const documents = storageReady
-    ? await listCustomerDocuments(access.customer.id)
-    : [];
+  const documents = storageReady ? await listCustomerDocuments(access.customer.id) : [];
 
   return (
     <div className="flex flex-col gap-6 lg:gap-8">
-      <PageHeader
-        eyebrow="Documents"
-        title="Mes documents"
-        description={t('documents.lead')}
-      />
+      <PageHeader eyebrow="Documents" title="Mes documents" description={t('documents.lead')} />
 
       {statusHint ? <StatusBanner hint={statusHint} /> : null}
 
@@ -92,28 +86,26 @@ export default async function ClientDocumentsPage({
             padding="flush"
           >
             {documents.length > 0 ? (
-              <ul className="divide-y divide-border">
+              <ul className="divide-border divide-y">
                 {documents.map((document) => (
                   <li key={document.id} className="px-5 py-3.5 md:px-6">
                     <article className="grid items-start gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <p className="truncate text-[14px] font-medium text-prodet-text">
+                          <p className="text-prodet-text truncate text-[14px] font-medium">
                             {document.label || document.fileName}
                           </p>
-                          <span className="inline-flex items-center rounded-sm border border-border bg-prodet-wash px-2 py-0.5 text-[11px] font-medium text-prodet-text">
+                          <span className="border-border bg-prodet-wash text-prodet-text inline-flex items-center rounded-sm border px-2 py-0.5 text-[11px] font-medium">
                             {DOCUMENT_KIND_LABELS[document.kind as DocumentKind]}
                           </span>
                         </div>
-                        <p className="mt-1 truncate text-[12px] text-muted-foreground">
+                        <p className="text-muted-foreground mt-1 truncate text-[12px]">
                           {document.fileName} · {formatBytes(document.byteSize)} ·{' '}
                           {formatDate(document.createdAt)}
-                          {document.uploadedByName
-                            ? ` · par ${document.uploadedByName}`
-                            : null}
+                          {document.uploadedByName ? ` · par ${document.uploadedByName}` : null}
                         </p>
                         {document.notes ? (
-                          <p className="mt-1 line-clamp-2 text-[12px] leading-5 text-muted-foreground">
+                          <p className="text-muted-foreground mt-1 line-clamp-2 text-[12px] leading-5">
                             {document.notes}
                           </p>
                         ) : null}
@@ -138,9 +130,7 @@ export default async function ClientDocumentsPage({
         </>
       )}
 
-      <p className="text-[12px] leading-5 text-muted-foreground">
-        {t('documents.privacyNote')}
-      </p>
+      <p className="text-muted-foreground text-[12px] leading-5">{t('documents.privacyNote')}</p>
     </div>
   );
 }

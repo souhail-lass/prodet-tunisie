@@ -14,15 +14,55 @@ function card(partial: Card): Card {
 
 const catalogue: Card[] = [
   card({ id: 'v5', name: 'PROVITRE BID 5KG', slug: 'provitre-bid-5kg', category: 'manufactured' }),
-  card({ id: 'v750', name: 'PROVITRE PULVERISATEUR 750ML', slug: 'provitre-pulverisateur-750ml', category: 'manufactured' }),
+  card({
+    id: 'v750',
+    name: 'PROVITRE PULVERISATEUR 750ML',
+    slug: 'provitre-pulverisateur-750ml',
+    category: 'manufactured',
+  }),
   card({ id: 'df', name: 'DEOFRESH 750ML', slug: 'deofresh-750ml', category: 'manufactured' }),
-  card({ id: 'dfl', name: 'DEOFRESH LINGE BID 05 KG', slug: 'deofresh-linge-bid-05-kg', category: 'manufactured' }),
-  card({ id: 'pn', name: 'PRONET DEGRAISSANT SOLS BID6KG', slug: 'pronet-degraissant-sols-bid6kg', category: 'manufactured' }),
-  card({ id: 'pb', name: 'PROLAX BLANC SAC 25 KG', slug: 'prolax-blanc-sac-25-kg', category: 'manufactured' }),
-  card({ id: 'pl', name: 'PROLAX LIQUIDE BID 20KG', slug: 'prolax-liquide-bid-20kg', category: 'manufactured' }),
-  card({ id: 'si', name: 'SIRAFAN DESINFECTANT SANS RINÇAGE BID 05KG', slug: 'sirafan-desinfectant-sans-rincage-bid-05kg', category: 'manufactured' }),
-  card({ id: 'jv', name: 'JAVEL PRODET BID 5KG', slug: 'javel-prodet-bid-5kg', category: 'manufactured' }),
-  card({ id: 'unrelated', name: 'CACHEMIRE BLANC LOT 25P', slug: 'cachemire-blanc-lot-25p', category: 'commercialized' }),
+  card({
+    id: 'dfl',
+    name: 'DEOFRESH LINGE BID 05 KG',
+    slug: 'deofresh-linge-bid-05-kg',
+    category: 'manufactured',
+  }),
+  card({
+    id: 'pn',
+    name: 'PRONET DEGRAISSANT SOLS BID6KG',
+    slug: 'pronet-degraissant-sols-bid6kg',
+    category: 'manufactured',
+  }),
+  card({
+    id: 'pb',
+    name: 'PROLAX BLANC SAC 25 KG',
+    slug: 'prolax-blanc-sac-25-kg',
+    category: 'manufactured',
+  }),
+  card({
+    id: 'pl',
+    name: 'PROLAX LIQUIDE BID 20KG',
+    slug: 'prolax-liquide-bid-20kg',
+    category: 'manufactured',
+  }),
+  card({
+    id: 'si',
+    name: 'SIRAFAN DESINFECTANT SANS RINÇAGE BID 05KG',
+    slug: 'sirafan-desinfectant-sans-rincage-bid-05kg',
+    category: 'manufactured',
+  }),
+  card({
+    id: 'jv',
+    name: 'JAVEL PRODET BID 5KG',
+    slug: 'javel-prodet-bid-5kg',
+    category: 'manufactured',
+  }),
+  card({
+    id: 'unrelated',
+    name: 'CACHEMIRE BLANC LOT 25P',
+    slug: 'cachemire-blanc-lot-25p',
+    category: 'commercialized',
+  }),
 ];
 
 describe('productMatchesBrandKey', () => {
@@ -41,7 +81,10 @@ describe('productMatchesBrandKey', () => {
 
 describe('matchCatalogueByBrandKey', () => {
   it('returns every live SKU for that brand, not the old fixture singleton', () => {
-    expect(matchCatalogueByBrandKey(catalogue, 'provitre').map((p) => p.id)).toEqual(['v5', 'v750']);
+    expect(matchCatalogueByBrandKey(catalogue, 'provitre').map((p) => p.id)).toEqual([
+      'v5',
+      'v750',
+    ]);
   });
 
   it('aliases retired fixture keys onto the current brand', () => {
@@ -51,7 +94,9 @@ describe('matchCatalogueByBrandKey', () => {
   });
 
   it('matches hyphenated fixture keys like sirafan-desinfectant', () => {
-    expect(matchCatalogueByBrandKey(catalogue, 'sirafan-desinfectant').map((p) => p.id)).toEqual(['si']);
+    expect(matchCatalogueByBrandKey(catalogue, 'sirafan-desinfectant').map((p) => p.id)).toEqual([
+      'si',
+    ]);
     expect(matchCatalogueByBrandKey(catalogue, 'javel-prodet').map((p) => p.id)).toEqual(['jv']);
   });
 });

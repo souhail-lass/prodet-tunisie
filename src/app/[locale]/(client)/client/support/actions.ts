@@ -23,10 +23,15 @@ export async function replyTicketAction(
 
 export type UploadAttachmentResult =
   | { ok: true; attachment: TicketAttachment }
-  | { ok: false; error: 'auth' | 'rate-limited' | 'invalid' | 'too-large' | 'mime' | 'failed' | 'unavailable' };
+  | {
+      ok: false;
+      error: 'auth' | 'rate-limited' | 'invalid' | 'too-large' | 'mime' | 'failed' | 'unavailable';
+    };
 
 /** Upload one file/photo for a support message (multipart). */
-export async function uploadTicketAttachmentAction(formData: FormData): Promise<UploadAttachmentResult> {
+export async function uploadTicketAttachmentAction(
+  formData: FormData,
+): Promise<UploadAttachmentResult> {
   let access;
   try {
     access = await requireClientPortalAccess();

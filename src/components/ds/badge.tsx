@@ -58,7 +58,13 @@ export type StatusBadgeProps = HTMLAttributes<HTMLSpanElement> & {
 };
 
 /** Mirrors the design-system StatusBadge (.pds-status). */
-export function StatusBadge({ status = 'progress', label, dot = true, className = '', ...rest }: StatusBadgeProps) {
+export function StatusBadge({
+  status = 'progress',
+  label,
+  dot = true,
+  className = '',
+  ...rest
+}: StatusBadgeProps) {
   const preset = STATUS_PRESETS[status] ?? STATUS_PRESETS.progress;
   const cls = ['pds-status', `pds-status--${preset.cls}`, className].filter(Boolean).join(' ');
   return (

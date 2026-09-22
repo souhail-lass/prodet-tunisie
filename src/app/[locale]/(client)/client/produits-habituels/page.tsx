@@ -91,45 +91,45 @@ async function UsualProductCard({ item }: { item: CustomerUsualProductItem }) {
   const format = [item.conditionnement, item.unitOfSale].filter(Boolean).join(' · ');
 
   return (
-    <article className="group flex flex-col rounded-md border border-border bg-card p-4 transition-colors hover:border-prodet-blue/40">
+    <article className="group border-border bg-card hover:border-prodet-blue/40 flex flex-col rounded-md border p-4 transition-colors">
       <div className="flex items-start justify-between gap-3">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-prodet-mist text-prodet-blue">
+        <span className="bg-prodet-mist text-prodet-blue flex h-8 w-8 shrink-0 items-center justify-center rounded-md">
           <PackageCheck className="h-4 w-4" aria-hidden />
         </span>
-        <span className="inline-flex items-baseline gap-1 rounded-sm border border-border bg-card px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
-          <span className="text-[10px] uppercase tracking-[0.06em]">{t('usual.qty')}</span>
-          <span className="text-[13px] font-semibold tabular-nums text-prodet-text">
+        <span className="border-border bg-card text-muted-foreground inline-flex items-baseline gap-1 rounded-sm border px-2 py-0.5 text-[11px] font-medium">
+          <span className="text-[10px] tracking-[0.06em] uppercase">{t('usual.qty')}</span>
+          <span className="text-prodet-text text-[13px] font-semibold tabular-nums">
             {item.defaultQuantity}
           </span>
         </span>
       </div>
 
-      <h2 className="mt-3 text-[15px] font-semibold leading-snug text-prodet-text">
+      <h2 className="text-prodet-text mt-3 text-[15px] leading-snug font-semibold">
         <Link
           href={`/catalogue/${item.slug}`}
-          className="underline-offset-4 hover:text-prodet-blue hover:underline"
+          className="hover:text-prodet-blue underline-offset-4 hover:underline"
         >
           {item.productName}
         </Link>
       </h2>
 
-      <div className="mt-1 flex flex-wrap gap-x-2 gap-y-0.5 text-[12px] text-muted-foreground">
+      <div className="text-muted-foreground mt-1 flex flex-wrap gap-x-2 gap-y-0.5 text-[12px]">
         {item.categoryName ? <span>{item.categoryName}</span> : null}
         {item.categoryName && format ? <span aria-hidden>·</span> : null}
         {format ? <span>{format}</span> : null}
       </div>
 
       {item.note ? (
-        <p className="mt-3 rounded-sm border border-border bg-prodet-wash px-3 py-2 text-[12px] leading-5 text-prodet-text">
-          <span className="font-semibold text-muted-foreground">Note Prodet · </span>
+        <p className="border-border bg-prodet-wash text-prodet-text mt-3 rounded-sm border px-3 py-2 text-[12px] leading-5">
+          <span className="text-muted-foreground font-semibold">Note Prodet · </span>
           {item.note}
         </p>
       ) : null}
 
-      <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3">
+      <div className="border-border mt-4 flex items-center justify-between gap-3 border-t pt-3">
         <Link
           href={`/catalogue/${item.slug}`}
-          className="text-[12px] text-muted-foreground transition-colors hover:text-prodet-blue"
+          className="text-muted-foreground hover:text-prodet-blue text-[12px] transition-colors"
         >
           Voir produit
         </Link>

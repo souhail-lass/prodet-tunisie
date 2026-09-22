@@ -1,13 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import {
-  FileText,
-  FolderArchive,
-  History,
-  LayoutDashboard,
-  PackageCheck,
-} from 'lucide-react';
+import { FileText, FolderArchive, History, LayoutDashboard, PackageCheck } from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
 

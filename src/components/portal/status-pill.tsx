@@ -42,7 +42,11 @@ export function StatusPill({ tone = 'neutral', label, size = 'sm', className }: 
       )}
     >
       <span
-        className={cn('inline-block rounded-full', dotClasses[tone], size === 'sm' ? 'h-1.5 w-1.5' : 'h-2 w-2')}
+        className={cn(
+          'inline-block rounded-full',
+          dotClasses[tone],
+          size === 'sm' ? 'h-1.5 w-1.5' : 'h-2 w-2',
+        )}
         aria-hidden
       />
       {label}

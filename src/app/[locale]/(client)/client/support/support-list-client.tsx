@@ -3,7 +3,16 @@
 import { useTranslations } from 'next-intl';
 
 import { useRef, useState, useTransition } from 'react';
-import { FileText, Loader2, LifeBuoy, MessageSquarePlus, Paperclip, Plus, Send, X } from 'lucide-react';
+import {
+  FileText,
+  Loader2,
+  LifeBuoy,
+  MessageSquarePlus,
+  Paperclip,
+  Plus,
+  Send,
+  X,
+} from 'lucide-react';
 import { Link, useRouter } from '@/i18n/routing';
 import { createTicketAction, uploadTicketAttachmentAction } from './actions';
 
@@ -52,7 +61,13 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
       const isImage = file.type.startsWith('image/');
       setFiles((p) => [
         ...p,
-        { localId, name: file.name, isImage, previewUrl: isImage ? URL.createObjectURL(file) : '', status: 'uploading' },
+        {
+          localId,
+          name: file.name,
+          isImage,
+          previewUrl: isImage ? URL.createObjectURL(file) : '',
+          status: 'uploading',
+        },
       ]);
       const fd = new FormData();
       fd.set('file', file);
@@ -89,7 +104,10 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
     <div className="dash">
       <div className="panel__head" style={{ background: 'none', padding: 0 }}>
         <div>
-          <h2 className="panel__title" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <h2
+            className="panel__title"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+          >
             <LifeBuoy size={18} /> Support
           </h2>
           <p className="panel__sub">{tr('lead')}</p>
@@ -102,7 +120,10 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
       {open ? (
         <section className="panel">
           <div className="panel__head">
-            <h2 className="panel__title" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <h2
+              className="panel__title"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+            >
               <MessageSquarePlus size={17} /> Nouveau ticket
             </h2>
           </div>
@@ -122,12 +143,17 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
           {files.length > 0 ? (
             <div className="ticket-tray">
               {files.map((f) => (
-                <div key={f.localId} className={`ticket-chip${f.status === 'error' ? ' is-error' : ''}`}>
+                <div
+                  key={f.localId}
+                  className={`ticket-chip${f.status === 'error' ? 'is-error' : ''}`}
+                >
                   {f.isImage && f.previewUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={f.previewUrl} alt="" className="ticket-chip__thumb" />
                   ) : (
-                    <span className="ticket-chip__thumb ticket-chip__thumb--file"><FileText size={16} /></span>
+                    <span className="ticket-chip__thumb ticket-chip__thumb--file">
+                      <FileText size={16} />
+                    </span>
                   )}
                   <span className="ticket-chip__name">{f.name}</span>
                   {f.status === 'uploading' ? <Loader2 size={14} className="ticket-spin" /> : null}
@@ -143,8 +169,23 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
               ))}
             </div>
           ) : null}
-          <input ref={fileRef} type="file" accept={ACCEPT} multiple hidden onChange={(e) => pickFiles(e.target.files)} />
-          <div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+          <input
+            ref={fileRef}
+            type="file"
+            accept={ACCEPT}
+            multiple
+            hidden
+            onChange={(e) => pickFiles(e.target.files)}
+          />
+          <div
+            style={{
+              marginTop: 12,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: 12,
+            }}
+          >
             <button
               type="button"
               className="pds-btn pds-btn--ghost pds-btn--md"
@@ -155,11 +196,21 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
             </button>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               {createError ? (
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-danger)', fontWeight: 'var(--fw-medium)' }}>
+                <span
+                  style={{
+                    fontSize: 'var(--text-sm)',
+                    color: 'var(--color-danger)',
+                    fontWeight: 'var(--fw-medium)',
+                  }}
+                >
                   {tr('uploadFailed')}
                 </span>
               ) : null}
-              <button className="pds-btn pds-btn--primary pds-btn--md" onClick={create} disabled={pending || uploading}>
+              <button
+                className="pds-btn pds-btn--primary pds-btn--md"
+                onClick={create}
+                disabled={pending || uploading}
+              >
                 <Send size={15} /> <span>{pending ? 'Envoi…' : 'Envoyer'}</span>
               </button>
             </div>
@@ -169,7 +220,12 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
 
       <div className="orders__list">
         {tickets.map((t) => (
-          <Link key={t.id} href={`/client/support/${t.id}`} className="order-row" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link
+            key={t.id}
+            href={`/client/support/${t.id}`}
+            className="order-row"
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
             <div className="order-row__main">
               <div className="order-row__id-block">
                 <span className="order-row__id">{t.subject}</span>
@@ -185,7 +241,11 @@ export function SupportListClient({ tickets }: { tickets: SupportRow[] }) {
                       : { background: 'var(--prodet-blue-tint)', color: 'var(--prodet-blue)' }
                 }
               >
-                {t.status === 'closed' ? tr('closed') : t.lastAuthorRole === 'admin' ? tr('prodetReply') : tr('pending')}
+                {t.status === 'closed'
+                  ? tr('closed')
+                  : t.lastAuthorRole === 'admin'
+                    ? tr('prodetReply')
+                    : tr('pending')}
               </span>
             </div>
           </Link>

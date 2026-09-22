@@ -10,9 +10,16 @@ const dateFmt = new Intl.DateTimeFormat('fr-FR', {
   timeStyle: 'short',
   timeZone: 'Africa/Tunis',
 });
-const moneyFmt = new Intl.NumberFormat('fr-TN', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+const moneyFmt = new Intl.NumberFormat('fr-TN', {
+  minimumFractionDigits: 3,
+  maximumFractionDigits: 3,
+});
 
-const FALLBACK_TONE = { bg: 'var(--surface-sunken)', fg: 'var(--text-secondary)', label: 'Brouillon' };
+const FALLBACK_TONE = {
+  bg: 'var(--surface-sunken)',
+  fg: 'var(--text-secondary)',
+  label: 'Brouillon',
+};
 
 const STATUS_TONE: Record<string, { bg: string; fg: string; label: string }> = {
   parsing: FALLBACK_TONE,
@@ -76,21 +83,28 @@ export default async function OrderDetailPage({
                 <CheckCircle2 size={13} /> {t('orders.transmitted')}
               </span>
             ) : null}
-            <span className="pds-badge pds-badge--md" style={{ background: tone.bg, color: tone.fg }}>
+            <span
+              className="pds-badge pds-badge--md"
+              style={{ background: tone.bg, color: tone.fg }}
+            >
               {tone.label}
             </span>
           </div>
         </div>
         <div className="order-row__meta">
           <span>
-            <PackageCheck size={15} /> {t('orders.meta', { items: order.lineCount, units: totalUnits })}
+            <PackageCheck size={15} />{' '}
+            {t('orders.meta', { items: order.lineCount, units: totalUnits })}
           </span>
           {order.totalTtc != null ? (
             <span className="order-row__total">{moneyFmt.format(order.totalTtc)} TND</span>
           ) : null}
         </div>
         <div className="order-row__actions">
-          <Link href={`/client/commander?from=${order.id}`} className="pds-btn pds-btn--primary pds-btn--sm">
+          <Link
+            href={`/client/commander?from=${order.id}`}
+            className="pds-btn pds-btn--primary pds-btn--sm"
+          >
             <Repeat size={15} />
             <span>{t('orders.reorderList')}</span>
           </Link>

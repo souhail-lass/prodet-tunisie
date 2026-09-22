@@ -50,7 +50,6 @@ const initialFormState: AccessRequestFormState = {
   message: '',
 };
 
-
 export function AccessRequestForm() {
   const [formState, setFormState] = useState<AccessRequestFormState>(initialFormState);
   const [status, setStatus] = useState<FormStatus>({ type: 'idle' });
@@ -114,20 +113,20 @@ export function AccessRequestForm() {
   // à faire, juste attendre le rappel de l'équipe.
   if (status.type === 'saved') {
     return (
-      <div className="rounded-sm border border-border bg-white px-6 py-14 shadow-[0_18px_50px_-44px_rgba(8,41,78,0.45)] md:px-10 md:py-16">
+      <div className="border-border rounded-sm border bg-white px-6 py-14 shadow-[0_18px_50px_-44px_rgba(8,41,78,0.45)] md:px-10 md:py-16">
         <div className="mx-auto flex max-w-sm flex-col items-center text-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-support/10 text-support">
+          <span className="bg-support/10 text-support flex h-12 w-12 items-center justify-center rounded-full">
             <Check className="h-6 w-6" aria-hidden strokeWidth={2.5} />
           </span>
-          <h2 className="mt-6 font-display text-2xl font-bold leading-tight text-prodet-text">
+          <h2 className="font-display text-prodet-text mt-6 text-2xl leading-tight font-bold">
             Demande envoyée
           </h2>
-          <p className="mt-3 text-sm leading-6 text-muted-foreground">
+          <p className="text-muted-foreground mt-3 text-sm leading-6">
             Notre équipe vérifie vos informations et vous recontacte sous 24&nbsp;heures ouvrées.
           </p>
           <a
             href={companyInfo.emailHref}
-            className="mt-8 border-t border-border pt-6 text-sm font-semibold text-primary"
+            className="border-border text-primary mt-8 border-t pt-6 text-sm font-semibold"
           >
             {companyInfo.email}
           </a>
@@ -139,14 +138,14 @@ export function AccessRequestForm() {
   return (
     <form
       onSubmit={submitAccessRequest}
-      className="rounded-sm border border-border bg-white p-5 shadow-[0_18px_50px_-44px_rgba(8,41,78,0.45)] md:p-6"
+      className="border-border rounded-sm border bg-white p-5 shadow-[0_18px_50px_-44px_rgba(8,41,78,0.45)] md:p-6"
     >
-      <div className="border-b border-border pb-4">
+      <div className="border-border border-b pb-4">
         <p className="eyebrow-label">Demande d&apos;accès</p>
-        <h2 className="mt-2 font-display text-2xl font-bold leading-tight text-prodet-text">
+        <h2 className="font-display text-prodet-text mt-2 text-2xl leading-tight font-bold">
           Informations professionnelles
         </h2>
-        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+        <p className="text-muted-foreground mt-1 text-sm leading-6">
           Prodet vérifie la demande avant ouverture.
         </p>
       </div>
@@ -174,7 +173,10 @@ export function AccessRequestForm() {
           />
         </FormField>
         <FormField label="Secteur d'activité" required>
-          <Select value={formState.sectorId} onValueChange={(value) => updateField('sectorId', value)}>
+          <Select
+            value={formState.sectorId}
+            onValueChange={(value) => updateField('sectorId', value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Choisir un secteur" />
             </SelectTrigger>
@@ -239,9 +241,7 @@ export function AccessRequestForm() {
           <p
             className={cn(
               'mt-4 flex items-start gap-2 rounded-sm px-3 py-2 text-sm leading-6',
-              status.type === 'error'
-                ? 'bg-red-50 text-red-700'
-                : 'bg-support/10 text-support',
+              status.type === 'error' ? 'bg-red-50 text-red-700' : 'bg-support/10 text-support',
             )}
           >
             {status.type === 'error' ? (

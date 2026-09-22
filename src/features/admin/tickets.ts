@@ -129,7 +129,10 @@ export async function adminReply(input: {
         ].join('\n'),
         html: brandedHtml(
           'Prodet a répondu à votre demande',
-          [`Votre demande : « ${ticket.subject} ».`, body ? `« ${body.slice(0, 160)} »` : 'Une pièce jointe vous a été envoyée.'],
+          [
+            `Votre demande : « ${ticket.subject} ».`,
+            body ? `« ${body.slice(0, 160)} »` : 'Une pièce jointe vous a été envoyée.',
+          ],
           { label: 'Voir la réponse', url: link },
         ),
       });

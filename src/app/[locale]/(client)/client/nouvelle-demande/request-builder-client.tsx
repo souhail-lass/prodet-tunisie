@@ -39,10 +39,7 @@ import type {
 } from '@/features/client-portal/request-builder.types';
 import type { CustomerUsualProductItem } from '@/features/client-portal/usual-products';
 import type { Locale } from '@/i18n/routing';
-import {
-  portalProductMatchesQuery,
-  portalProductSearchRank,
-} from '@/lib/portal-product-search';
+import { portalProductMatchesQuery, portalProductSearchRank } from '@/lib/portal-product-search';
 import { cn } from '@/lib/utils';
 
 type BuilderProduct = {
@@ -136,10 +133,7 @@ export function RequestBuilderClient({
     usualBuilderProducts.length > 0 ? 'usual' : 'all',
   );
 
-  const selectedProductIds = useMemo(
-    () => new Set(lines.map((line) => line.productId)),
-    [lines],
-  );
+  const selectedProductIds = useMemo(() => new Set(lines.map((line) => line.productId)), [lines]);
 
   const searchHits = useMemo(() => {
     const raw = query.trim();
@@ -182,10 +176,7 @@ export function RequestBuilderClient({
             : line,
         );
       }
-      return [
-        ...current,
-        { ...product, quantity: clampQuantity(quantity), lineNote: '' },
-      ];
+      return [...current, { ...product, quantity: clampQuantity(quantity), lineNote: '' }];
     });
   }
 
@@ -353,7 +344,7 @@ export function RequestBuilderClient({
             padding="flush"
           >
             {lines.length > 0 ? (
-              <ul className="divide-y divide-border">
+              <ul className="divide-border divide-y">
                 {lines.map((line) => (
                   <li key={line.productId}>
                     <BasketLineRow
@@ -370,14 +361,17 @@ export function RequestBuilderClient({
               </ul>
             ) : (
               <div className="px-5 py-10 text-center">
-                <p className="text-[13px] text-muted-foreground">
+                <p className="text-muted-foreground text-[13px]">
                   Ajoutez des références depuis la liste à gauche pour démarrer.
                 </p>
               </div>
             )}
           </Panel>
 
-          <Panel title="Détails de livraison" description="Optionnel, mais facilite la préparation.">
+          <Panel
+            title="Détails de livraison"
+            description="Optionnel, mais facilite la préparation."
+          >
             <div className="flex flex-col gap-4">
               <FormField label="Cadence">
                 <select
@@ -385,7 +379,7 @@ export function RequestBuilderClient({
                   onChange={(event) =>
                     setRecurrenceMode(event.target.value as PortalRecurrenceMode)
                   }
-                  className="h-10 w-full rounded-md border border-border bg-card px-3 text-[13px] text-prodet-text outline-none transition-colors focus:border-prodet-blue focus:ring-2 focus:ring-prodet-blue/15"
+                  className="border-border bg-card text-prodet-text focus:border-prodet-blue focus:ring-prodet-blue/15 h-10 w-full rounded-md border px-3 text-[13px] transition-colors outline-none focus:ring-2"
                 >
                   {recurrenceSelectOptionsFr.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -399,7 +393,7 @@ export function RequestBuilderClient({
                     onChange={(event) => setRecurrenceDetail(event.target.value)}
                     maxLength={180}
                     placeholder="Ex. tous les mercredis"
-                    className="mt-2 h-10 w-full rounded-md border border-border bg-card px-3 text-[13px] text-prodet-text outline-none transition-colors focus:border-prodet-blue focus:ring-2 focus:ring-prodet-blue/15"
+                    className="border-border bg-card text-prodet-text focus:border-prodet-blue focus:ring-prodet-blue/15 mt-2 h-10 w-full rounded-md border px-3 text-[13px] transition-colors outline-none focus:ring-2"
                   />
                 ) : null}
               </FormField>
@@ -413,7 +407,7 @@ export function RequestBuilderClient({
                   onChange={(event) => setDeliveryText(event.target.value)}
                   maxLength={700}
                   placeholder="Adresse, point de contact"
-                  className="h-10 w-full rounded-md border border-border bg-card px-3 text-[13px] text-prodet-text outline-none transition-colors focus:border-prodet-blue focus:ring-2 focus:ring-prodet-blue/15"
+                  className="border-border bg-card text-prodet-text focus:border-prodet-blue focus:ring-prodet-blue/15 h-10 w-full rounded-md border px-3 text-[13px] transition-colors outline-none focus:ring-2"
                 />
               </FormField>
 
@@ -423,7 +417,7 @@ export function RequestBuilderClient({
                   onChange={(event) => setPreferredTiming(event.target.value)}
                   maxLength={160}
                   placeholder="Ex. cette semaine, avant vendredi"
-                  className="h-10 w-full rounded-md border border-border bg-card px-3 text-[13px] text-prodet-text outline-none transition-colors focus:border-prodet-blue focus:ring-2 focus:ring-prodet-blue/15"
+                  className="border-border bg-card text-prodet-text focus:border-prodet-blue focus:ring-prodet-blue/15 h-10 w-full rounded-md border px-3 text-[13px] transition-colors outline-none focus:ring-2"
                 />
               </FormField>
 
@@ -437,7 +431,7 @@ export function RequestBuilderClient({
                   maxLength={2000}
                   rows={3}
                   placeholder="Précisions à transmettre à Prodet"
-                  className="block w-full resize-none rounded-md border border-border bg-card px-3 py-2 text-[13px] leading-6 text-prodet-text outline-none transition-colors focus:border-prodet-blue focus:ring-2 focus:ring-prodet-blue/15"
+                  className="border-border bg-card text-prodet-text focus:border-prodet-blue focus:ring-prodet-blue/15 block w-full resize-none rounded-md border px-3 py-2 text-[13px] leading-6 transition-colors outline-none focus:ring-2"
                 />
               </FormField>
 
@@ -461,7 +455,9 @@ export function RequestBuilderClient({
       {/* Mobile/tablet sticky action bar — only visible when there are lines.
        *  Sits above the BottomNav (which is 64px tall) using safe-area-aware
        *  bottom offset. Disappears on desktop where the sticky sidebar takes over. */}
-      {lineCount > 0 ? <MobileActionBar lineCount={lineCount} totalQuantity={totalQuantity} /> : null}
+      {lineCount > 0 ? (
+        <MobileActionBar lineCount={lineCount} totalQuantity={totalQuantity} />
+      ) : null}
     </>
   );
 }
@@ -488,9 +484,13 @@ function PickerPanel({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-md border border-border bg-card">
-      <div className="flex flex-col gap-3 border-b border-border px-5 py-3.5 md:flex-row md:items-center md:justify-between md:px-6">
-        <div role="tablist" aria-label="Sélecteur de produits" className="inline-flex rounded-md bg-prodet-wash p-0.5">
+    <section className="border-border bg-card rounded-md border">
+      <div className="border-border flex flex-col gap-3 border-b px-5 py-3.5 md:flex-row md:items-center md:justify-between md:px-6">
+        <div
+          role="tablist"
+          aria-label="Sélecteur de produits"
+          className="bg-prodet-wash inline-flex rounded-md p-0.5"
+        >
           <TabButton
             active={activeTab === 'usual'}
             onClick={() => onTabChange('usual')}
@@ -507,7 +507,10 @@ function PickerPanel({
           </TabButton>
         </div>
         <Button asChild variant="ghost" size="xs">
-          <Link href={CATALOGUE_PATH} className="inline-flex items-center gap-1.5 text-muted-foreground">
+          <Link
+            href={CATALOGUE_PATH}
+            className="text-muted-foreground inline-flex items-center gap-1.5"
+          >
             Catalogue web
             <ExternalLink className="h-3.5 w-3.5" aria-hidden />
           </Link>
@@ -515,21 +518,21 @@ function PickerPanel({
       </div>
 
       {showSearch ? (
-        <div className="border-b border-border px-5 py-3 md:px-6">
-          <label className="flex h-11 items-center gap-2.5 rounded-md border border-border bg-card px-3 transition-colors focus-within:border-prodet-blue focus-within:ring-2 focus-within:ring-prodet-blue/15">
-            <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden />
+        <div className="border-border border-b px-5 py-3 md:px-6">
+          <label className="border-border bg-card focus-within:border-prodet-blue focus-within:ring-prodet-blue/15 flex h-11 items-center gap-2.5 rounded-md border px-3 transition-colors focus-within:ring-2">
+            <Search className="text-muted-foreground h-4 w-4 shrink-0" aria-hidden />
             <input
               value={query}
               onChange={(event) => onQueryChange(event.target.value)}
               placeholder="Rechercher une référence, un format, un usage…"
-              className="min-w-0 flex-1 border-0 bg-transparent text-[14px] text-prodet-text outline-none placeholder:text-muted-foreground"
+              className="text-prodet-text placeholder:text-muted-foreground min-w-0 flex-1 border-0 bg-transparent text-[14px] outline-none"
             />
             {query ? (
               <button
                 type="button"
                 onClick={() => onQueryChange('')}
                 aria-label="Effacer la recherche"
-                className="inline-flex h-6 w-6 items-center justify-center rounded-sm text-muted-foreground hover:bg-prodet-wash hover:text-prodet-text"
+                className="text-muted-foreground hover:bg-prodet-wash hover:text-prodet-text inline-flex h-6 w-6 items-center justify-center rounded-sm"
               >
                 <X className="h-3.5 w-3.5" aria-hidden />
               </button>
@@ -600,13 +603,11 @@ function UsualTab({
   if (products.length === 0) {
     return (
       <div className="px-5 py-10 text-center md:px-6">
-        <PackageCheck className="mx-auto h-5 w-5 text-muted-foreground" aria-hidden />
-        <p className="mt-3 text-[14px] font-medium text-prodet-text">
-          Aucun produit habituel
-        </p>
-        <p className="mx-auto mt-1 max-w-md text-[12px] leading-5 text-muted-foreground">
-          Demandez à Prodet de configurer vos références récurrentes, ou utilisez l&apos;onglet
-          « Tous les produits ».
+        <PackageCheck className="text-muted-foreground mx-auto h-5 w-5" aria-hidden />
+        <p className="text-prodet-text mt-3 text-[14px] font-medium">Aucun produit habituel</p>
+        <p className="text-muted-foreground mx-auto mt-1 max-w-md text-[12px] leading-5">
+          Demandez à Prodet de configurer vos références récurrentes, ou utilisez l&apos;onglet «
+          Tous les produits ».
         </p>
       </div>
     );
@@ -614,8 +615,8 @@ function UsualTab({
 
   return (
     <>
-      <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-2.5 md:px-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+      <div className="border-border flex items-center justify-between gap-3 border-b px-5 py-2.5 md:px-6">
+        <p className="text-muted-foreground text-[11px] font-semibold tracking-[0.06em] uppercase">
           {products.length} référence{products.length > 1 ? 's' : ''} pré-enregistrée
           {products.length > 1 ? 's' : ''}
         </p>
@@ -625,7 +626,7 @@ function UsualTab({
         </Button>
       </div>
 
-      <ul className="divide-y divide-border">
+      <ul className="divide-border divide-y">
         {products.map((product) => {
           const quantity = usualQuantities[product.productId] ?? product.defaultQuantity;
           const inBasket = selectedProductIds.has(product.productId);
@@ -670,22 +671,26 @@ function UsualProductRow({
       <div className="min-w-0">
         <Link
           href={`/catalogue/${product.slug}`}
-          className="text-[14px] font-medium text-prodet-text hover:text-prodet-blue"
+          className="text-prodet-text hover:text-prodet-blue text-[14px] font-medium"
         >
           {product.productName}
         </Link>
-        <p className="mt-0.5 truncate text-[12px] text-muted-foreground">
+        <p className="text-muted-foreground mt-0.5 truncate text-[12px]">
           {[product.categoryName, format].filter(Boolean).join(' · ') || '\u00A0'}
         </p>
         {product.note ? (
-          <p className="mt-1 text-[11px] leading-5 text-muted-foreground">
-            <span className="font-semibold text-muted-foreground">Note · </span>
+          <p className="text-muted-foreground mt-1 text-[11px] leading-5">
+            <span className="text-muted-foreground font-semibold">Note · </span>
             {product.note}
           </p>
         ) : null}
       </div>
 
-      <QuantityStepper value={quantity} onChange={onQuantityChange} ariaLabel={`Quantité ${product.productName}`} />
+      <QuantityStepper
+        value={quantity}
+        onChange={onQuantityChange}
+        ariaLabel={`Quantité ${product.productName}`}
+      />
 
       <Button
         type="button"
@@ -725,7 +730,7 @@ function AllProductsTab({
   if (productOptionsCount === 0) {
     return (
       <div className="px-5 py-10 text-center md:px-6">
-        <p className="text-[13px] text-muted-foreground">
+        <p className="text-muted-foreground text-[13px]">
           Aucun produit dans la base. Contactez Prodet pour configurer le catalogue.
         </p>
       </div>
@@ -735,11 +740,11 @@ function AllProductsTab({
   if (gridProducts.length === 0) {
     return (
       <div className="px-5 py-10 text-center md:px-6">
-        <Search className="mx-auto h-5 w-5 text-muted-foreground" aria-hidden />
-        <p className="mt-3 text-[14px] font-medium text-prodet-text">
+        <Search className="text-muted-foreground mx-auto h-5 w-5" aria-hidden />
+        <p className="text-prodet-text mt-3 text-[14px] font-medium">
           Aucun résultat pour « {query.trim()} »
         </p>
-        <p className="mx-auto mt-1 max-w-md text-[12px] leading-5 text-muted-foreground">
+        <p className="text-muted-foreground mx-auto mt-1 max-w-md text-[12px] leading-5">
           Essayez un autre mot-clé, un format (5L, 20L), ou ouvrez le catalogue.
         </p>
       </div>
@@ -748,7 +753,7 @@ function AllProductsTab({
 
   return (
     <>
-      <ul className="divide-y divide-border">
+      <ul className="divide-border divide-y">
         {gridProducts.map((option) => {
           const builder =
             productById.get(option.productId) ??
@@ -770,7 +775,7 @@ function AllProductsTab({
         })}
       </ul>
       {!query.trim() && productOptionsCount > 48 ? (
-        <p className="border-t border-border px-5 py-3 text-[11px] text-muted-foreground md:px-6">
+        <p className="border-border text-muted-foreground border-t px-5 py-3 text-[11px] md:px-6">
           48 références par ordre alphabétique. Utilisez la recherche pour voir le reste.
         </p>
       ) : null}
@@ -804,14 +809,12 @@ function CatalogProductRow({
       <div className="min-w-0">
         <Link
           href={`/catalogue/${option.slug}`}
-          className="text-[14px] font-medium text-prodet-text hover:text-prodet-blue"
+          className="text-prodet-text hover:text-prodet-blue text-[14px] font-medium"
         >
           {option.productName}
         </Link>
-        <p className="mt-0.5 truncate text-[12px] text-muted-foreground">
-          {[option.categoryName, format].filter(Boolean).join(' · ') ||
-            tagline ||
-            '\u00A0'}
+        <p className="text-muted-foreground mt-0.5 truncate text-[12px]">
+          {[option.categoryName, format].filter(Boolean).join(' · ') || tagline || '\u00A0'}
         </p>
       </div>
 
@@ -879,18 +882,18 @@ function BasketLineRow({
         <div className="min-w-0 flex-1">
           <Link
             href={`/catalogue/${line.slug}`}
-            className="text-[14px] font-medium text-prodet-text hover:text-prodet-blue"
+            className="text-prodet-text hover:text-prodet-blue text-[14px] font-medium"
           >
             {line.productName}
           </Link>
-          <p className="mt-0.5 truncate text-[12px] text-muted-foreground">
+          <p className="text-muted-foreground mt-0.5 truncate text-[12px]">
             {[line.categoryName, format].filter(Boolean).join(' · ') || '\u00A0'}
           </p>
         </div>
         <button
           type="button"
           onClick={onRemove}
-          className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-prodet-wash hover:text-destructive"
+          className="text-muted-foreground hover:bg-prodet-wash hover:text-destructive inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-sm transition-colors"
           aria-label={`Retirer ${line.productName}`}
         >
           <X className="h-3.5 w-3.5" aria-hidden />
@@ -906,7 +909,7 @@ function BasketLineRow({
         <button
           type="button"
           onClick={() => setShowAdvanced((current) => !current)}
-          className="text-[11px] font-medium text-muted-foreground underline-offset-2 hover:text-prodet-blue hover:underline"
+          className="text-muted-foreground hover:text-prodet-blue text-[11px] font-medium underline-offset-2 hover:underline"
         >
           {showAdvanced ? 'Masquer' : 'Note / remplacer'}
         </button>
@@ -915,7 +918,7 @@ function BasketLineRow({
       {showAdvanced ? (
         <div className="mt-2.5 space-y-2">
           <label className="block">
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+            <span className="text-muted-foreground block text-[10px] font-semibold tracking-[0.06em] uppercase">
               Remplacer par
             </span>
             <select
@@ -931,7 +934,7 @@ function BasketLineRow({
                   }
                 }
               }}
-              className="mt-1 h-9 w-full rounded-md border border-border bg-card px-2 text-[12px] text-prodet-text outline-none transition-colors focus:border-prodet-blue focus:ring-2 focus:ring-prodet-blue/15"
+              className="border-border bg-card text-prodet-text focus:border-prodet-blue focus:ring-prodet-blue/15 mt-1 h-9 w-full rounded-md border px-2 text-[12px] transition-colors outline-none focus:ring-2"
             >
               {catalogueGroups.map(({ categoryLabel, products }) => {
                 const selectable = products.filter(
@@ -953,7 +956,7 @@ function BasketLineRow({
             </select>
           </label>
           <label className="block">
-            <span className="block text-[10px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+            <span className="text-muted-foreground block text-[10px] font-semibold tracking-[0.06em] uppercase">
               Note ligne
             </span>
             <input
@@ -961,7 +964,7 @@ function BasketLineRow({
               onChange={(event) => onNoteChange(event.target.value)}
               maxLength={1000}
               placeholder="Précision, alternative…"
-              className="mt-1 h-9 w-full rounded-md border border-border bg-card px-2.5 text-[12px] text-prodet-text outline-none transition-colors focus:border-prodet-blue focus:ring-2 focus:ring-prodet-blue/15"
+              className="border-border bg-card text-prodet-text focus:border-prodet-blue focus:ring-prodet-blue/15 mt-1 h-9 w-full rounded-md border px-2.5 text-[12px] transition-colors outline-none focus:ring-2"
             />
           </label>
         </div>
@@ -983,7 +986,7 @@ function FormField({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+      <span className="text-muted-foreground mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.06em] uppercase">
         {icon ? <span aria-hidden>{icon}</span> : null}
         {label}
       </span>
@@ -1002,11 +1005,11 @@ function QuantityStepper({
   ariaLabel?: string;
 }) {
   return (
-    <div className="inline-flex h-9 items-stretch overflow-hidden rounded-md border border-border bg-card">
+    <div className="border-border bg-card inline-flex h-9 items-stretch overflow-hidden rounded-md border">
       <button
         type="button"
         onClick={() => onChange(value - 1)}
-        className="flex h-full w-9 items-center justify-center text-muted-foreground transition-colors hover:bg-prodet-wash hover:text-prodet-text"
+        className="text-muted-foreground hover:bg-prodet-wash hover:text-prodet-text flex h-full w-9 items-center justify-center transition-colors"
         aria-label="Diminuer la quantité"
       >
         <Minus className="h-3.5 w-3.5" aria-hidden />
@@ -1015,13 +1018,13 @@ function QuantityStepper({
         value={value}
         onChange={(event) => onChange(Number(event.target.value))}
         inputMode="numeric"
-        className="h-full w-12 border-x border-border text-center text-[14px] font-semibold tabular-nums text-prodet-text outline-none"
+        className="border-border text-prodet-text h-full w-12 border-x text-center text-[14px] font-semibold tabular-nums outline-none"
         aria-label={ariaLabel ?? 'Quantité'}
       />
       <button
         type="button"
         onClick={() => onChange(value + 1)}
-        className="flex h-full w-9 items-center justify-center text-muted-foreground transition-colors hover:bg-prodet-wash hover:text-prodet-text"
+        className="text-muted-foreground hover:bg-prodet-wash hover:text-prodet-text flex h-full w-9 items-center justify-center transition-colors"
         aria-label="Augmenter la quantité"
       >
         <Plus className="h-3.5 w-3.5" aria-hidden />
@@ -1035,7 +1038,7 @@ function QuantityStepper({
 function SubmissionState({ result }: { result: SubmitPortalRequestResult }) {
   if (result.ok) {
     return (
-      <div className="flex items-start gap-2 rounded-md border border-prodet-green/20 bg-prodet-green/10 px-3 py-2.5 text-[13px] text-prodet-green">
+      <div className="border-prodet-green/20 bg-prodet-green/10 text-prodet-green flex items-start gap-2 rounded-md border px-3 py-2.5 text-[13px]">
         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
         <div className="min-w-0">
           <p className="font-medium">
@@ -1059,7 +1062,7 @@ function SubmissionState({ result }: { result: SubmitPortalRequestResult }) {
   }
 
   return (
-    <div className="flex items-start gap-2 rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-[13px] text-destructive">
+    <div className="border-destructive/20 bg-destructive/10 text-destructive flex items-start gap-2 rounded-md border px-3 py-2.5 text-[13px]">
       <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
       <p>{result.formError || 'L\u2019envoi a échoué. Vérifiez votre saisie et réessayez.'}</p>
     </div>
@@ -1080,7 +1083,7 @@ function MobileActionBar({
     >
       <a
         href="#order-summary"
-        className="pointer-events-auto mx-auto flex h-12 max-w-[640px] items-center justify-between gap-3 rounded-full bg-prodet-ink px-4 text-white shadow-[0_10px_30px_-12px_rgba(8,41,78,0.6)]"
+        className="bg-prodet-ink pointer-events-auto mx-auto flex h-12 max-w-[640px] items-center justify-between gap-3 rounded-full px-4 text-white shadow-[0_10px_30px_-12px_rgba(8,41,78,0.6)]"
       >
         <span className="inline-flex items-center gap-2 text-[13px] font-medium">
           <StatusPill tone="info" label={String(lineCount)} />

@@ -126,9 +126,7 @@ export function productSchema(input: ProductSchemaInput) {
     category: input.category || undefined,
     url: absoluteUrl(`/fr/catalogue/${input.slug}`),
     brand: { '@type': 'Brand', name: companyInfo.name },
-    ...(input.manufactured
-      ? { manufacturer: { '@id': `${base}/${ORGANIZATION_ID}` } }
-      : {}),
+    ...(input.manufactured ? { manufacturer: { '@id': `${base}/${ORGANIZATION_ID}` } } : {}),
   };
 }
 

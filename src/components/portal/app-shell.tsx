@@ -32,18 +32,18 @@ export function AppShell({ customer, children }: AppShellProps) {
   const customerInitial = customer.name.trim().charAt(0).toUpperCase() || 'P';
 
   return (
-    <div className="min-h-dvh bg-prodet-wash text-prodet-text">
+    <div className="bg-prodet-wash text-prodet-text min-h-dvh">
       <MobileTopBar customerName={customer.name} customerInitial={customerInitial} />
 
       <div className="lg:flex lg:min-h-dvh">
         <aside
           aria-label="Espace client"
-          className="hidden w-[240px] shrink-0 flex-col border-e border-border bg-card lg:sticky lg:top-0 lg:flex lg:h-dvh"
+          className="border-border bg-card hidden w-[240px] shrink-0 flex-col border-e lg:sticky lg:top-0 lg:flex lg:h-dvh"
         >
-          <div className="flex h-14 items-center border-b border-border px-4">
+          <div className="border-border flex h-14 items-center border-b px-4">
             <Link href="/client" className="inline-flex items-center gap-2">
               <Logo size="sm" />
-              <span className="text-[12px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+              <span className="text-muted-foreground text-[12px] font-semibold tracking-[0.06em] uppercase">
                 Espace client
               </span>
             </Link>
@@ -62,7 +62,7 @@ export function AppShell({ customer, children }: AppShellProps) {
             <SidebarNav />
           </div>
 
-          <div className="mt-auto border-t border-border p-3">
+          <div className="border-border mt-auto border-t p-3">
             <AccountCard customer={customer} />
           </div>
         </aside>
@@ -87,21 +87,21 @@ function MobileTopBar({
   customerInitial: string;
 }) {
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-white/96 px-4 backdrop-blur lg:hidden">
+    <header className="border-border sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-white/96 px-4 backdrop-blur lg:hidden">
       <Link href="/client" className="inline-flex items-center gap-2">
         <Logo size="sm" />
         <span className="sr-only">Espace client Prodet</span>
       </Link>
       <div className="inline-flex items-center gap-2">
         <span
-          className="hidden max-w-[160px] truncate text-[12px] font-medium text-muted-foreground sm:inline"
+          className="text-muted-foreground hidden max-w-[160px] truncate text-[12px] font-medium sm:inline"
           title={customerName}
         >
           {customerName}
         </span>
         <span
           aria-label={`Compte ${customerName}`}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-prodet-mist text-[12px] font-semibold text-prodet-blue"
+          className="border-border bg-prodet-mist text-prodet-blue inline-flex h-8 w-8 items-center justify-center rounded-full border text-[12px] font-semibold"
         >
           {customerInitial}
         </span>
@@ -110,24 +110,20 @@ function MobileTopBar({
   );
 }
 
-function AccountCard({
-  customer,
-}: {
-  customer: AppShellProps['customer'];
-}) {
+function AccountCard({ customer }: { customer: AppShellProps['customer'] }) {
   const context = [customer.sector, customer.city].filter(Boolean).join(' · ');
 
   return (
     <div className="space-y-3 text-[12px]">
       <div>
         <div className="flex items-center justify-between gap-2">
-          <p className="truncate text-[13px] font-semibold text-prodet-text" title={customer.name}>
+          <p className="text-prodet-text truncate text-[13px] font-semibold" title={customer.name}>
             {customer.name}
           </p>
           <StatusPill tone="success" label="Activé" />
         </div>
         {context ? (
-          <p className="mt-1 truncate text-muted-foreground" title={context}>
+          <p className="text-muted-foreground mt-1 truncate" title={context}>
             {context}
           </p>
         ) : null}
@@ -136,14 +132,14 @@ function AccountCard({
       <div className="flex flex-col gap-1.5 text-[12px]">
         <a
           href={companyInfo.phoneHref}
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-prodet-blue"
+          className="text-muted-foreground hover:text-prodet-blue inline-flex items-center gap-2"
         >
           <Phone className="h-3.5 w-3.5" aria-hidden />
           <span className="truncate">{companyInfo.phoneDisplay}</span>
         </a>
         <a
           href={companyInfo.emailHref}
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-prodet-blue"
+          className="text-muted-foreground hover:text-prodet-blue inline-flex items-center gap-2"
         >
           <Mail className="h-3.5 w-3.5" aria-hidden />
           <span className="truncate">{companyInfo.email}</span>

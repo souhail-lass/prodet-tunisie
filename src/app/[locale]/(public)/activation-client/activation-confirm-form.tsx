@@ -44,14 +44,14 @@ export function ActivationConfirmForm({
 
   if (state.accepted) {
     return (
-      <div className="mt-6 rounded-sm border border-border bg-white p-8 text-center">
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-support/10 text-support">
+      <div className="border-border mt-6 rounded-sm border bg-white p-8 text-center">
+        <span className="bg-support/10 text-support mx-auto flex h-12 w-12 items-center justify-center rounded-full">
           <CheckCircle2 className="h-6 w-6" aria-hidden />
         </span>
-        <h2 className="mt-5 font-display text-2xl font-bold leading-tight text-prodet-text">
+        <h2 className="font-display text-prodet-text mt-5 text-2xl leading-tight font-bold">
           Votre compte est activé
         </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">
+        <p className="text-muted-foreground mx-auto mt-3 max-w-md text-sm leading-6">
           Vous pouvez maintenant accéder à votre espace client Prodet : votre catalogue, vos
           produits habituels, vos demandes de devis, vos livraisons et vos documents.
         </p>
@@ -61,7 +61,7 @@ export function ActivationConfirmForm({
             <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
         </Button>
-        <p className="mt-4 text-xs leading-5 text-muted-foreground">
+        <p className="text-muted-foreground mt-4 text-xs leading-5">
           Vous recevrez un lien de connexion par email — aucun mot de passe à retenir.
         </p>
       </div>
@@ -76,7 +76,7 @@ export function ActivationConfirmForm({
         <input type="hidden" name="locale" value={locale} />
 
         {state.formError ? null : (
-          <p className="flex items-center gap-2 text-sm leading-6 text-muted-foreground">
+          <p className="text-muted-foreground flex items-center gap-2 text-sm leading-6">
             <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
             Activation de votre accès…
           </p>
@@ -91,7 +91,7 @@ export function ActivationConfirmForm({
         {state.formError ? (
           <p
             role="alert"
-            className="flex items-start gap-2 rounded-sm bg-red-50 px-3 py-2 text-sm leading-6 text-destructive"
+            className="text-destructive flex items-start gap-2 rounded-sm bg-red-50 px-3 py-2 text-sm leading-6"
           >
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
             {state.formError}

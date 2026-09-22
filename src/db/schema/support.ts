@@ -36,8 +36,12 @@ export const supportTicket = pgTable(
     lastMessageAt: timestamp('last_message_at', { withTimezone: true })
       .notNull()
       .default(sql`now()`),
-    createdAt: timestamp('created_at', { withTimezone: true }).notNull().default(sql`now()`),
-    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().default(sql`now()`),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .default(sql`now()`),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .notNull()
+      .default(sql`now()`),
   },
   (t) => ({
     customerIdx: index('support_ticket_customer_idx').on(t.customerId),
@@ -58,8 +62,13 @@ export const ticketMessage = pgTable(
     authorName: text('author_name'),
     body: text('body').notNull(),
     /** File/photo attachments — WhatsApp-style support chat. */
-    attachments: jsonb('attachments').$type<TicketAttachment[]>().notNull().default(sql`'[]'::jsonb`),
-    createdAt: timestamp('created_at', { withTimezone: true }).notNull().default(sql`now()`),
+    attachments: jsonb('attachments')
+      .$type<TicketAttachment[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .notNull()
+      .default(sql`now()`),
   },
   (t) => ({
     ticketIdx: index('ticket_message_ticket_idx').on(t.ticketId, t.createdAt),

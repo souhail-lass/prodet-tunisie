@@ -47,11 +47,16 @@ export function popularLineKey(name: string): string {
   const tokens = normalizeSearchText(name)
     .split(/[\s/_-]+/u)
     .filter((token) => token.length > 0)
-    .filter((token) => !PACK_TOKEN.test(token) && !SIZE_TOKEN.test(token) && !DIM_TOKEN.test(token));
+    .filter(
+      (token) => !PACK_TOKEN.test(token) && !SIZE_TOKEN.test(token) && !DIM_TOKEN.test(token),
+    );
   return tokens.slice(0, 2).join(' ');
 }
 
-export function pickHomepagePopular<T extends PopularPickRow>(rows: readonly T[], limit: number): T[] {
+export function pickHomepagePopular<T extends PopularPickRow>(
+  rows: readonly T[],
+  limit: number,
+): T[] {
   const bySku = new Map<string, T>();
   for (const row of rows) {
     if (row.hidden) continue;

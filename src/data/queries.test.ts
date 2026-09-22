@@ -32,7 +32,9 @@ describe('public read layer', () => {
 
     const restaurants = listProducts({ sectorId: 'restaurants-cafes' });
     expect(restaurants.length).toBeGreaterThan(0);
-    expect(restaurants.every((product) => product.sectors.includes('restaurants-cafes'))).toBe(true);
+    expect(restaurants.every((product) => product.sectors.includes('restaurants-cafes'))).toBe(
+      true,
+    );
 
     const manufactured = listProducts({ category: 'manufactured' });
     expect(manufactured.every((product) => product.category === 'manufactured')).toBe(true);

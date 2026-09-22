@@ -33,14 +33,18 @@ export default function ApprendreHubPage() {
     <div className="academy-mod">
       <ModuleNav active="/admin/academie/apprendre" />
       <div className="academy-intro" style={{ maxWidth: 640 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, margin: '0 0 6px' }}>Apprendre la détergence</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 700, margin: '0 0 6px' }}>
+          Apprendre la détergence
+        </h1>
         <p>La science derrière chaque produit Prodet, en 3 modules interactifs.</p>
       </div>
       <div className="learn-cards">
         {MODULES.map((m) => (
           <Link key={m.num} href={m.href} className="learn-card">
             <div className="learn-card__num">{m.num}</div>
-            <div className="learn-card__ico" aria-hidden>{m.ico}</div>
+            <div className="learn-card__ico" aria-hidden>
+              {m.ico}
+            </div>
             <h3>{m.title}</h3>
             <p>{m.desc}</p>
             <span className="academy-modcard__go" style={{ marginTop: 12 }}>

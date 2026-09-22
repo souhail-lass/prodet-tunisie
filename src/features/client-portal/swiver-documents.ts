@@ -1,5 +1,9 @@
 import 'server-only';
-import { getSwiverAdapter, type SwiverDocumentKind, type SwiverDocumentSummary } from '@/integrations/swiver';
+import {
+  getSwiverAdapter,
+  type SwiverDocumentKind,
+  type SwiverDocumentSummary,
+} from '@/integrations/swiver';
 import { resolveCurrentPortalSwiverIdentity } from './swiver-identity';
 
 export type PortalSwiverDocuments = {

@@ -129,146 +129,146 @@ export async function getClientDashboardData({
     cadenceRows,
     topProductRows,
   ] = await Promise.all([
-      db
-        .select({
-          status: schema.orderDraft.status,
-          value: count(),
-        })
-        .from(schema.orderDraft)
-        .where(scopedDraftWhere)
-        .groupBy(schema.orderDraft.status),
-      db
-        .select({ value: count() })
-        .from(schema.orderDraft)
-        .where(and(scopedDraftWhere, gte(schema.orderDraft.createdAt, startOfMonth))),
-      db
-        .select({ value: count() })
-        .from(schema.customerUsualProduct)
-        .innerJoin(schema.product, eq(schema.customerUsualProduct.productId, schema.product.id))
-        .where(
-          and(
-            eq(schema.customerUsualProduct.customerId, customerId),
-            eq(schema.customerUsualProduct.isActive, true),
-            isNull(schema.product.deletedAt),
-          ),
+    db
+      .select({
+        status: schema.orderDraft.status,
+        value: count(),
+      })
+      .from(schema.orderDraft)
+      .where(scopedDraftWhere)
+      .groupBy(schema.orderDraft.status),
+    db
+      .select({ value: count() })
+      .from(schema.orderDraft)
+      .where(and(scopedDraftWhere, gte(schema.orderDraft.createdAt, startOfMonth))),
+    db
+      .select({ value: count() })
+      .from(schema.customerUsualProduct)
+      .innerJoin(schema.product, eq(schema.customerUsualProduct.productId, schema.product.id))
+      .where(
+        and(
+          eq(schema.customerUsualProduct.customerId, customerId),
+          eq(schema.customerUsualProduct.isActive, true),
+          isNull(schema.product.deletedAt),
         ),
-      db
-        .select({
-          id: schema.customerUsualProduct.id,
-          translatedName: schema.productTranslation.name,
-          nameCanonical: schema.product.nameCanonical,
-          categoryNameFr: schema.category.nameFr,
-          categoryNameEn: schema.category.nameEn,
-          conditionnement: schema.product.conditionnement,
-          unitOfSale: schema.product.unitOfSale,
-          defaultQuantity: schema.customerUsualProduct.defaultQuantity,
-          note: schema.customerUsualProduct.note,
-        })
-        .from(schema.customerUsualProduct)
-        .innerJoin(schema.product, eq(schema.customerUsualProduct.productId, schema.product.id))
-        .leftJoin(
-          schema.productTranslation,
-          and(
-            eq(schema.productTranslation.productId, schema.product.id),
-            eq(schema.productTranslation.locale, locale),
-          ),
-        )
-        .leftJoin(schema.category, eq(schema.product.categoryId, schema.category.id))
-        .where(
-          and(
-            eq(schema.customerUsualProduct.customerId, customerId),
-            eq(schema.customerUsualProduct.isActive, true),
-            isNull(schema.product.deletedAt),
-          ),
-        )
-        .orderBy(asc(schema.category.displayOrder), asc(schema.product.nameCanonical))
-        .limit(5),
-      db
-        .select({
-          id: schema.orderDraft.id,
-          referenceCode: schema.orderDraft.referenceCode,
-          createdAt: schema.orderDraft.createdAt,
-          updatedAt: schema.orderDraft.updatedAt,
-          status: schema.orderDraft.status,
-          rawInbound: schema.orderDraft.rawInbound,
-          notesInternal: schema.orderDraft.notesInternal,
-          approvedAt: schema.orderDraft.approvedAt,
-          exportedAt: schema.orderDraft.exportedAt,
-          rejectedAt: schema.orderDraft.rejectedAt,
-        })
-        .from(schema.orderDraft)
-        .where(scopedDraftWhere)
-        .orderBy(desc(schema.orderDraft.createdAt))
-        .limit(5),
-      // Activity windows: 90 days vs the prior 90 days. Trend = last90 - previous90.
-      db
-        .select({ value: count() })
-        .from(schema.orderDraft)
-        .where(and(scopedDraftWhere, gte(schema.orderDraft.createdAt, window90Start))),
-      db
-        .select({ value: count() })
-        .from(schema.orderDraft)
-        .where(
-          and(
-            scopedDraftWhere,
-            gte(schema.orderDraft.createdAt, window180Start),
-            lt(schema.orderDraft.createdAt, window90Start),
-          ),
+      ),
+    db
+      .select({
+        id: schema.customerUsualProduct.id,
+        translatedName: schema.productTranslation.name,
+        nameCanonical: schema.product.nameCanonical,
+        categoryNameFr: schema.category.nameFr,
+        categoryNameEn: schema.category.nameEn,
+        conditionnement: schema.product.conditionnement,
+        unitOfSale: schema.product.unitOfSale,
+        defaultQuantity: schema.customerUsualProduct.defaultQuantity,
+        note: schema.customerUsualProduct.note,
+      })
+      .from(schema.customerUsualProduct)
+      .innerJoin(schema.product, eq(schema.customerUsualProduct.productId, schema.product.id))
+      .leftJoin(
+        schema.productTranslation,
+        and(
+          eq(schema.productTranslation.productId, schema.product.id),
+          eq(schema.productTranslation.locale, locale),
         ),
-      // Cadence: average gap between consecutive request creations.
-      db
-        .select({ createdAt: schema.orderDraft.createdAt })
-        .from(schema.orderDraft)
-        .where(scopedDraftWhere)
-        .orderBy(desc(schema.orderDraft.createdAt))
-        .limit(8),
-      // Top requested products in the last 90 days. Aggregated over matched
-      // product ids — lines without a matched product (unknown free text) are
-      // excluded from the leaderboard because they have no canonical identity.
-      db
-        .select({
-          productId: schema.product.id,
-          slug: schema.product.slug,
-          productNameCanonical: schema.product.nameCanonical,
-          translatedName: schema.productTranslation.name,
-          categoryNameFr: schema.category.nameFr,
-          categoryNameEn: schema.category.nameEn,
-          totalQuantity: sum(schema.orderLine.quantity).as('total_quantity'),
-          requestCount: sql<number>`count(distinct ${schema.orderLine.orderDraftId})`.as(
-            'request_count',
-          ),
-        })
-        .from(schema.orderLine)
-        .innerJoin(schema.orderDraft, eq(schema.orderLine.orderDraftId, schema.orderDraft.id))
-        .innerJoin(schema.product, eq(schema.orderLine.matchedProductId, schema.product.id))
-        .leftJoin(
-          schema.productTranslation,
-          and(
-            eq(schema.productTranslation.productId, schema.product.id),
-            eq(schema.productTranslation.locale, locale),
-          ),
-        )
-        .leftJoin(schema.category, eq(schema.product.categoryId, schema.category.id))
-        .where(
-          and(
-            eq(schema.orderDraft.customerId, customerId),
-            eq(schema.orderDraft.source, 'portal'),
-            isNull(schema.orderDraft.deletedAt),
-            isNull(schema.product.deletedAt),
-            gte(schema.orderDraft.createdAt, window90Start),
-          ),
-        )
-        .groupBy(
-          schema.product.id,
-          schema.product.slug,
-          schema.product.nameCanonical,
-          schema.productTranslation.name,
-          schema.category.nameFr,
-          schema.category.nameEn,
-        )
-        .orderBy(sql`total_quantity desc`)
-        .limit(5),
-    ]);
+      )
+      .leftJoin(schema.category, eq(schema.product.categoryId, schema.category.id))
+      .where(
+        and(
+          eq(schema.customerUsualProduct.customerId, customerId),
+          eq(schema.customerUsualProduct.isActive, true),
+          isNull(schema.product.deletedAt),
+        ),
+      )
+      .orderBy(asc(schema.category.displayOrder), asc(schema.product.nameCanonical))
+      .limit(5),
+    db
+      .select({
+        id: schema.orderDraft.id,
+        referenceCode: schema.orderDraft.referenceCode,
+        createdAt: schema.orderDraft.createdAt,
+        updatedAt: schema.orderDraft.updatedAt,
+        status: schema.orderDraft.status,
+        rawInbound: schema.orderDraft.rawInbound,
+        notesInternal: schema.orderDraft.notesInternal,
+        approvedAt: schema.orderDraft.approvedAt,
+        exportedAt: schema.orderDraft.exportedAt,
+        rejectedAt: schema.orderDraft.rejectedAt,
+      })
+      .from(schema.orderDraft)
+      .where(scopedDraftWhere)
+      .orderBy(desc(schema.orderDraft.createdAt))
+      .limit(5),
+    // Activity windows: 90 days vs the prior 90 days. Trend = last90 - previous90.
+    db
+      .select({ value: count() })
+      .from(schema.orderDraft)
+      .where(and(scopedDraftWhere, gte(schema.orderDraft.createdAt, window90Start))),
+    db
+      .select({ value: count() })
+      .from(schema.orderDraft)
+      .where(
+        and(
+          scopedDraftWhere,
+          gte(schema.orderDraft.createdAt, window180Start),
+          lt(schema.orderDraft.createdAt, window90Start),
+        ),
+      ),
+    // Cadence: average gap between consecutive request creations.
+    db
+      .select({ createdAt: schema.orderDraft.createdAt })
+      .from(schema.orderDraft)
+      .where(scopedDraftWhere)
+      .orderBy(desc(schema.orderDraft.createdAt))
+      .limit(8),
+    // Top requested products in the last 90 days. Aggregated over matched
+    // product ids — lines without a matched product (unknown free text) are
+    // excluded from the leaderboard because they have no canonical identity.
+    db
+      .select({
+        productId: schema.product.id,
+        slug: schema.product.slug,
+        productNameCanonical: schema.product.nameCanonical,
+        translatedName: schema.productTranslation.name,
+        categoryNameFr: schema.category.nameFr,
+        categoryNameEn: schema.category.nameEn,
+        totalQuantity: sum(schema.orderLine.quantity).as('total_quantity'),
+        requestCount: sql<number>`count(distinct ${schema.orderLine.orderDraftId})`.as(
+          'request_count',
+        ),
+      })
+      .from(schema.orderLine)
+      .innerJoin(schema.orderDraft, eq(schema.orderLine.orderDraftId, schema.orderDraft.id))
+      .innerJoin(schema.product, eq(schema.orderLine.matchedProductId, schema.product.id))
+      .leftJoin(
+        schema.productTranslation,
+        and(
+          eq(schema.productTranslation.productId, schema.product.id),
+          eq(schema.productTranslation.locale, locale),
+        ),
+      )
+      .leftJoin(schema.category, eq(schema.product.categoryId, schema.category.id))
+      .where(
+        and(
+          eq(schema.orderDraft.customerId, customerId),
+          eq(schema.orderDraft.source, 'portal'),
+          isNull(schema.orderDraft.deletedAt),
+          isNull(schema.product.deletedAt),
+          gte(schema.orderDraft.createdAt, window90Start),
+        ),
+      )
+      .groupBy(
+        schema.product.id,
+        schema.product.slug,
+        schema.product.nameCanonical,
+        schema.productTranslation.name,
+        schema.category.nameFr,
+        schema.category.nameEn,
+      )
+      .orderBy(sql`total_quantity desc`)
+      .limit(5),
+  ]);
 
   const statusCounts = { ...emptyStatusCounts };
   statusRows.forEach((row) => {
@@ -299,9 +299,7 @@ export async function getClientDashboardData({
     last90,
     previous90,
     delta: last90 - previous90,
-    averageDaysBetweenRequests: computeAverageDaysBetween(
-      cadenceRows.map((row) => row.createdAt),
-    ),
+    averageDaysBetweenRequests: computeAverageDaysBetween(cadenceRows.map((row) => row.createdAt)),
   };
 
   const topProducts: ClientDashboardTopProduct[] = topProductRows.map((row) => ({
@@ -541,9 +539,7 @@ function buildOperationalCues({
     currentMonthRequests > 0
       ? {
           id: 'month-activity',
-          label: `${currentMonthRequests} demande${
-            currentMonthRequests > 1 ? 's' : ''
-          } ce mois-ci`,
+          label: `${currentMonthRequests} demande${currentMonthRequests > 1 ? 's' : ''} ce mois-ci`,
           detail: 'Activité calculée depuis vos demandes portail.',
           tone: 'info',
           href: '/client/historique',

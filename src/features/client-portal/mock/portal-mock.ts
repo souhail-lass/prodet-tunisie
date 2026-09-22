@@ -144,7 +144,12 @@ export const orders: PortalOrder[] = [
     units: 24,
     ref: 'Devis #DV-0398',
     eta: 'Préparation en cours',
-    lines: [line('sirafan-desinfectant', 6), line('sanihand', 6), line('provitre', 6), line('profour', 6)],
+    lines: [
+      line('sirafan-desinfectant', 6),
+      line('sanihand', 6),
+      line('provitre', 6),
+      line('profour', 6),
+    ],
   },
   {
     id: 'CMD-2026-0377',
@@ -184,7 +189,13 @@ export const orders: PortalOrder[] = [
     units: 30,
     ref: 'Devis #DV-0340',
     eta: 'Annulée',
-    lines: [line('pronet-plus', 10), line('profour', 6), line('prolav', 6), line('prorinse', 4), line('sirafan-desinfectant', 4)],
+    lines: [
+      line('pronet-plus', 10),
+      line('profour', 6),
+      line('prolav', 6),
+      line('prorinse', 4),
+      line('sirafan-desinfectant', 4),
+    ],
   },
 ];
 

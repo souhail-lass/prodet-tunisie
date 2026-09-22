@@ -67,7 +67,10 @@ const pinSchema = z.object({
 
 export type PlacementActionResult = { ok: true } | { ok: false; error: string };
 
-export async function saveProductAction(id: string, content: ProductContent): Promise<{ ok: boolean }> {
+export async function saveProductAction(
+  id: string,
+  content: ProductContent,
+): Promise<{ ok: boolean }> {
   const session = await assertRole(['owner', 'admin', 'operator']);
   const existing = await getAdminProduct(id);
   if (!existing) return { ok: false };
@@ -76,21 +79,29 @@ export async function saveProductAction(id: string, content: ProductContent): Pr
   return { ok: true };
 }
 
-export async function createProductAction(content: ProductContent): Promise<{ ok: boolean; id?: string }> {
+export async function createProductAction(
+  content: ProductContent,
+): Promise<{ ok: boolean; id?: string }> {
   const session = await assertRole(['owner', 'admin', 'operator']);
   const id = await createCustomProduct(content, session.appUser?.id ?? null);
   revalidate();
   return { ok: true, id };
 }
 
-export async function setProductHiddenAction(input: { id: string; hidden: boolean }): Promise<{ ok: boolean }> {
+export async function setProductHiddenAction(input: {
+  id: string;
+  hidden: boolean;
+}): Promise<{ ok: boolean }> {
   const session = await assertRole(['owner', 'admin', 'operator']);
   await setProductHidden(input.id, input.hidden, session.appUser?.id ?? null);
   revalidate();
   return { ok: true };
 }
 
-export async function toggleCategoryAction(input: { categoryLabel: string; hidden: boolean }): Promise<{ ok: boolean }> {
+export async function toggleCategoryAction(input: {
+  categoryLabel: string;
+  hidden: boolean;
+}): Promise<{ ok: boolean }> {
   const session = await assertRole(['owner', 'admin']);
   await setCategoryHidden(input.categoryLabel, input.hidden, session.appUser?.id ?? null);
   revalidate();
@@ -127,7 +138,9 @@ export async function setProductPlacementAction(input: unknown): Promise<Placeme
         }));
   const changesFamille = (existing.familleSlug ?? null) !== parsed.data.familleSlug;
   try {
-    const session = await assertRole(changesFamille ? ['owner', 'admin'] : ['owner', 'admin', 'operator']);
+    const session = await assertRole(
+      changesFamille ? ['owner', 'admin'] : ['owner', 'admin', 'operator'],
+    );
     await setProductPlacement(
       parsed.data.id,
       {
@@ -212,7 +225,13 @@ export async function uploadAssetAction(
   if (file.size > 10 * 1024 * 1024) return { ok: false, error: 'too-large' };
   try {
     const bytes = new Uint8Array(await file.arrayBuffer());
-    const url = await uploadProductAsset({ productId, kind, fileName: file.name, bytes, contentType: file.type });
+    const url = await uploadProductAsset({
+      productId,
+      kind,
+      fileName: file.name,
+      bytes,
+      contentType: file.type,
+    });
     return { ok: true, url };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : 'failed' };

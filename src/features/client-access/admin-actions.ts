@@ -12,11 +12,7 @@ import {
   isUnauthenticatedAdminError,
   requireAdmin,
 } from '@/features/admin/auth';
-import {
-  generateInviteToken,
-  getInviteExpiresAt,
-  hashInviteToken,
-} from './invite-token';
+import { generateInviteToken, getInviteExpiresAt, hashInviteToken } from './invite-token';
 
 /** Une seule décision admin : accepter (= accès envoyé) ou refuser. */
 const DecisionSchema = z.object({
@@ -63,10 +59,18 @@ export async function decideAccessRequest(
     admin = await requireAdmin();
   } catch (error) {
     if (isAdminAuthUnavailableError(error)) {
-      return { ok: false, authRequired: true, formError: "L'authentification admin n'est pas configurée." };
+      return {
+        ok: false,
+        authRequired: true,
+        formError: "L'authentification admin n'est pas configurée.",
+      };
     }
     if (isUnauthenticatedAdminError(error)) {
-      return { ok: false, authRequired: true, formError: 'Connectez-vous avec un compte admin Prodet.' };
+      return {
+        ok: false,
+        authRequired: true,
+        formError: 'Connectez-vous avec un compte admin Prodet.',
+      };
     }
     if (isForbiddenAdminError(error)) {
       return { ok: false, forbidden: true, formError: "Votre compte n'a pas le rôle requis." };
@@ -198,7 +202,10 @@ export async function decideAccessRequest(
 
   await db.insert(schema.auditLog).values({
     ...actor,
-    action: emailDelivery === 'sent' ? 'portal_invite.email_sent' : 'portal_invite.manual_delivery_prepared',
+    action:
+      emailDelivery === 'sent'
+        ? 'portal_invite.email_sent'
+        : 'portal_invite.manual_delivery_prepared',
     entityType: 'portal_invite',
     entityId: invite.id,
     metadata: { accessRequestId: request.id, emailDelivery },
@@ -212,7 +219,9 @@ export async function decideAccessRequest(
     message:
       emailDelivery === 'sent'
         ? `Accès accordé — invitation envoyée à ${invite.email}.${
-            swiverCustomerId ? ' Client créé dans Swiver.' : ' Client Swiver NON créé — à créer à la main.'
+            swiverCustomerId
+              ? ' Client créé dans Swiver.'
+              : ' Client Swiver NON créé — à créer à la main.'
           }`
         : `Accès accordé, mais l'email n'est pas parti. Transmettez le lien ci-dessous.`,
     // Le lien n'est révélé que si l'email a échoué : sinon il n'a rien à faire
@@ -252,10 +261,10 @@ async function sendPortalInviteEmail(input: {
     process.env.RESEND_FROM_EMAIL?.trim() ||
     'Prodet Website <onboarding@resend.dev>';
   const subject = 'Activation de votre accès client Prodet';
-  const expiry = new Intl.DateTimeFormat(
-    input.locale === 'en' ? 'en-GB' : 'fr-TN',
-    { dateStyle: 'medium', timeStyle: 'short' },
-  ).format(input.expiresAt);
+  const expiry = new Intl.DateTimeFormat(input.locale === 'en' ? 'en-GB' : 'fr-TN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(input.expiresAt);
   const text = [
     'Bonjour,',
     '',

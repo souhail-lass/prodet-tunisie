@@ -12,13 +12,29 @@ type DeliveryLabel = (key: string) => string;
 
 function deliveryBadge(status: SwiverDocumentStatus, t: DeliveryLabel) {
   if (status === 'cancelled')
-    return <Badge tone="neutral" dot>{t('deliveries.status.cancelled')}</Badge>;
+    return (
+      <Badge tone="neutral" dot>
+        {t('deliveries.status.cancelled')}
+      </Badge>
+    );
   if (status === 'draft')
-    return <Badge tone="blue" dot>{t('deliveries.status.preparing')}</Badge>;
-  return <Badge tone="green" dot>{t('deliveries.status.delivered')}</Badge>;
+    return (
+      <Badge tone="blue" dot>
+        {t('deliveries.status.preparing')}
+      </Badge>
+    );
+  return (
+    <Badge tone="green" dot>
+      {t('deliveries.status.delivered')}
+    </Badge>
+  );
 }
 
-export default async function ClientDeliveriesPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ClientDeliveriesPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'portal' });
   const { linked, documents } = await listMySwiverDocuments(['bon_de_livraison']);
@@ -27,7 +43,9 @@ export default async function ClientDeliveriesPage({ params }: { params: Promise
     return (
       <div className="portal-list">
         <div className="panel portal-empty">
-          <span className="portal-empty__icon"><Link2Off size={22} /></span>
+          <span className="portal-empty__icon">
+            <Link2Off size={22} />
+          </span>
           <h2 className="panel__title">{t('invoices.notLinkedTitle')}</h2>
           <p className="panel__sub">{t('invoices.notLinkedBody')}</p>
         </div>
@@ -39,7 +57,9 @@ export default async function ClientDeliveriesPage({ params }: { params: Promise
     return (
       <div className="portal-list">
         <div className="panel portal-empty">
-          <span className="portal-empty__icon"><Truck size={22} /></span>
+          <span className="portal-empty__icon">
+            <Truck size={22} />
+          </span>
           <h2 className="panel__title">{t('deliveries.emptyTitle')}</h2>
           <p className="panel__sub">{t('deliveries.emptyBody')}</p>
         </div>
@@ -54,17 +74,23 @@ export default async function ClientDeliveriesPage({ params }: { params: Promise
     <div className="dash">
       <div className="dash__stats dash__stats--3">
         <div className="stat-card">
-          <span className="stat-card__icon stat-card__icon--green"><PackageCheck size={20} /></span>
+          <span className="stat-card__icon stat-card__icon--green">
+            <PackageCheck size={20} />
+          </span>
           <div className="stat-card__value">{delivered}</div>
           <div className="stat-card__label">Livraisons</div>
         </div>
         <div className="stat-card">
-          <span className="stat-card__icon stat-card__icon--blue"><Truck size={20} /></span>
+          <span className="stat-card__icon stat-card__icon--blue">
+            <Truck size={20} />
+          </span>
           <div className="stat-card__value">{documents.length}</div>
           <div className="stat-card__label">{t('deliveries.title')}</div>
         </div>
         <div className="stat-card">
-          <span className="stat-card__icon stat-card__icon--blue"><CalendarClock size={20} /></span>
+          <span className="stat-card__icon stat-card__icon--blue">
+            <CalendarClock size={20} />
+          </span>
           <div className="stat-card__value" style={{ fontSize: 'var(--text-base)' }}>
             {dateFmt.format(lastDelivery.issueDate)}
           </div>
@@ -76,7 +102,9 @@ export default async function ClientDeliveriesPage({ params }: { params: Promise
         {documents.map((doc) => (
           <div className="portal-list-row" key={doc.swiverId}>
             <div className="portal-list-row__main">
-              <span className="portal-list-row__icon"><Truck size={18} /></span>
+              <span className="portal-list-row__icon">
+                <Truck size={18} />
+              </span>
               <div>
                 <div className="portal-list-row__id">{doc.documentNumber}</div>
                 <div className="portal-list-row__meta">{dateFmt.format(doc.issueDate)}</div>

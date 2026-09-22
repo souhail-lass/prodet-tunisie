@@ -88,23 +88,25 @@ describe('rowsInSousCategorie', () => {
     const extra = row({
       id: 'guest',
       name: 'POUBELLE PM',
-      extraPlacements: [{ familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 0 }],
+      extraPlacements: [
+        { familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 0 },
+      ],
     });
-    expect(rowsInSousCategorie([...rows, extra], 'produits-nettoyage', 'sols').map((r) => r.id)).toEqual([
+    expect(
+      rowsInSousCategorie([...rows, extra], 'produits-nettoyage', 'sols').map((r) => r.id),
+    ).toEqual(['guest', 'pinned', 'moved-in', 'auto-2', 'auto-1']);
+    expect(rowsInSousCategorie([extra], 'collecte-dechets', 'poubelles').map((r) => r.id)).toEqual([
       'guest',
-      'pinned',
-      'moved-in',
-      'auto-2',
-      'auto-1',
     ]);
-    expect(rowsInSousCategorie([extra], 'collecte-dechets', 'poubelles').map((r) => r.id)).toEqual(['guest']);
   });
 
   it('ignores an extra that duplicates the primary home', () => {
     const dup = row({
       id: 'dup',
       name: 'PROFON DECAPANT BID 05KG',
-      extraPlacements: [{ familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 0 }],
+      extraPlacements: [
+        { familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 0 },
+      ],
     });
     expect(rowsInSousCategorie([dup], 'produits-nettoyage', 'sols')).toHaveLength(1);
   });
@@ -171,7 +173,11 @@ describe('catalogue rank (the "Tous les produits" axis)', () => {
     // Same two products, reordered inside their sous-catégorie: the global
     // list must not move.
     const reordered = rows.map((r) =>
-      r.id === 'pinned-2' ? { ...r, sortOrder: 0 } : r.id === 'pinned-1' ? { ...r, sortOrder: 1 } : r,
+      r.id === 'pinned-2'
+        ? { ...r, sortOrder: 0 }
+        : r.id === 'pinned-1'
+          ? { ...r, sortOrder: 1 }
+          : r,
     );
     expect([...reordered].sort(compareCatalogueRank).map((r) => r.id)).toEqual([
       'pinned-1',
@@ -259,7 +265,9 @@ describe('planPlacementChange', () => {
     const withExtra = row({
       id: 'p3',
       name: 'JAVEL PRODET BID 5KG',
-      extraPlacements: [{ familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 1 }],
+      extraPlacements: [
+        { familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 1 },
+      ],
     });
     const plan = planPlacementChange(withExtra, {
       familleSlug: 'produits-nettoyage',
@@ -273,7 +281,9 @@ describe('planPlacementChange', () => {
     const withExtra = row({
       id: 'p4',
       name: 'POUBELLE PM',
-      extraPlacements: [{ familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 3 }],
+      extraPlacements: [
+        { familleSlug: 'produits-nettoyage', sousCategorieSlug: 'sols', sortOrder: 3 },
+      ],
     });
     const plan = planPlacementChange(withExtra, {
       familleSlug: 'collecte-dechets',

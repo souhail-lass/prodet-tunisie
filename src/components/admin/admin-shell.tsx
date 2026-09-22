@@ -1,7 +1,17 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Boxes, GraduationCap, LayoutDashboard, LifeBuoy, LogOut, ShieldCheck, UserPlus, Users, type LucideIcon } from 'lucide-react';
+import {
+  Boxes,
+  GraduationCap,
+  LayoutDashboard,
+  LifeBuoy,
+  LogOut,
+  ShieldCheck,
+  UserPlus,
+  Users,
+  type LucideIcon,
+} from 'lucide-react';
 import { Link, usePathname } from '@/i18n/routing';
 
 export type AdminShellAccount = { name: string; email: string; initials: string };
@@ -12,20 +22,59 @@ const NAV: { href: string; label: string; short: string; icon: LucideIcon }[] = 
   { href: '/admin/clients', label: 'Clients', short: 'Clients', icon: Users },
   { href: '/admin/demandes-acces', label: 'Demandes d’accès', short: 'Accès', icon: UserPlus },
   { href: '/admin/support', label: 'Support', short: 'Support', icon: LifeBuoy },
-  { href: '/admin/academie', label: 'Académie / Formation', short: 'Académie', icon: GraduationCap },
+  {
+    href: '/admin/academie',
+    label: 'Académie / Formation',
+    short: 'Académie',
+    icon: GraduationCap,
+  },
 ];
 
 const TITLES: { match: (p: string) => boolean; title: string; subtitle: string }[] = [
-  { match: (p) => p.startsWith('/admin/overview'), title: 'Vue d’ensemble', subtitle: 'Ce qui demande votre attention aujourd’hui.' },
-  { match: (p) => p.startsWith('/admin/produits/rangement'), title: 'Ordre des produits', subtitle: 'Rangez chaque sous-catégorie dans l’ordre où vos clients doivent la voir.' },
-  { match: (p) => p.startsWith('/admin/catalogue-swiver'), title: 'Catalogue produits', subtitle: 'Gérez les produits synchronisés depuis Swiver — masquez ce que vous ne vendez pas.' },
-  { match: (p) => p.startsWith('/admin/clients'), title: 'Clients', subtitle: 'Vos clients du portail, leurs connexions et leurs accès.' },
-  { match: (p) => p.startsWith('/admin/demandes-acces'), title: 'Demandes d’accès', subtitle: 'Sociétés qui demandent un accès au portail client.' },
-  { match: (p) => p.startsWith('/admin/support'), title: 'Support', subtitle: 'Les tickets de vos clients — répondez en direct.' },
-  { match: (p) => p.startsWith('/admin/academie'), title: 'Académie / Formation', subtitle: 'Formation détergence et référence de la gamme — formules protégées par code.' },
+  {
+    match: (p) => p.startsWith('/admin/overview'),
+    title: 'Vue d’ensemble',
+    subtitle: 'Ce qui demande votre attention aujourd’hui.',
+  },
+  {
+    match: (p) => p.startsWith('/admin/produits/rangement'),
+    title: 'Ordre des produits',
+    subtitle: 'Rangez chaque sous-catégorie dans l’ordre où vos clients doivent la voir.',
+  },
+  {
+    match: (p) => p.startsWith('/admin/catalogue-swiver'),
+    title: 'Catalogue produits',
+    subtitle: 'Gérez les produits synchronisés depuis Swiver — masquez ce que vous ne vendez pas.',
+  },
+  {
+    match: (p) => p.startsWith('/admin/clients'),
+    title: 'Clients',
+    subtitle: 'Vos clients du portail, leurs connexions et leurs accès.',
+  },
+  {
+    match: (p) => p.startsWith('/admin/demandes-acces'),
+    title: 'Demandes d’accès',
+    subtitle: 'Sociétés qui demandent un accès au portail client.',
+  },
+  {
+    match: (p) => p.startsWith('/admin/support'),
+    title: 'Support',
+    subtitle: 'Les tickets de vos clients — répondez en direct.',
+  },
+  {
+    match: (p) => p.startsWith('/admin/academie'),
+    title: 'Académie / Formation',
+    subtitle: 'Formation détergence et référence de la gamme — formules protégées par code.',
+  },
 ];
 
-export function AdminShell({ account, children }: { account: AdminShellAccount; children: ReactNode }) {
+export function AdminShell({
+  account,
+  children,
+}: {
+  account: AdminShellAccount;
+  children: ReactNode;
+}) {
   const pathname = usePathname();
   const meta = TITLES.find((t) => t.match(pathname));
 
@@ -51,7 +100,7 @@ export function AdminShell({ account, children }: { account: AdminShellAccount; 
               <Link
                 key={item.href}
                 href={item.href}
-                className={`portal__nav-item${isActive(item.href) ? ' is-active' : ''}`}
+                className={`portal__nav-item${isActive(item.href) ? 'is-active' : ''}`}
               >
                 <Icon size={18} />
                 <span>{item.label}</span>
@@ -86,7 +135,12 @@ export function AdminShell({ account, children }: { account: AdminShellAccount; 
           <div className="portal__topbar-actions">
             {/* /auth/signout is a route handler, not a page — plain anchor is correct. */}
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/auth/signout" className="portal__icon-btn" aria-label="Se déconnecter" title="Se déconnecter">
+            <a
+              href="/auth/signout"
+              className="portal__icon-btn"
+              aria-label="Se déconnecter"
+              title="Se déconnecter"
+            >
               <LogOut size={18} />
             </a>
           </div>
@@ -103,7 +157,7 @@ export function AdminShell({ account, children }: { account: AdminShellAccount; 
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`portal-bottomnav__item${active ? ' is-active' : ''}`}
+              className={`portal-bottomnav__item${active ? 'is-active' : ''}`}
             >
               <Icon size={19} />
               <span>{item.short}</span>

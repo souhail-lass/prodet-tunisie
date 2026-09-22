@@ -12,7 +12,11 @@ import {
   TOUS_LES_PRODUITS,
 } from '@/data/familles';
 import { Link, isLocale } from '@/i18n/routing';
-import { getCatalogueByFamille, getCatalogueSearchCards, getSousCategorieCounts } from '@/features/catalogue/queries';
+import {
+  getCatalogueByFamille,
+  getCatalogueSearchCards,
+  getSousCategorieCounts,
+} from '@/features/catalogue/queries';
 import { CategorySidebar } from '@/components/catalogue/category-sidebar';
 import { ProductQuickSearch } from '@/components/catalogue/product-quick-search';
 import { ProductGrid } from '@/components/catalogue/product-grid';
@@ -65,9 +69,7 @@ export default async function FamillePage({
     isAllProducts ? getCatalogueByFamille(fam.id) : Promise.resolve([]),
     getCatalogueSearchCards(),
   ]);
-  const total = isAllProducts
-    ? allProducts.length
-    : sousCats.reduce((sum, s) => sum + s.count, 0);
+  const total = isAllProducts ? allProducts.length : sousCats.reduce((sum, s) => sum + s.count, 0);
   const allProductCards: CatalogueCardProduct[] = allProducts.map((p) => ({
     id: p.id,
     slug: p.slug,
@@ -119,16 +121,22 @@ export default async function FamillePage({
             <h1 className="famille-hero__title">{tf(`items.${fam.id}.label`)}</h1>
             <p className="famille-hero__desc">{tf(`items.${fam.id}.description`)}</p>
             {total > 0 ? (
-              <span className="famille-hero__count">{tf('page.productsCount', { count: total })}</span>
+              <span className="famille-hero__count">
+                {tf('page.productsCount', { count: total })}
+              </span>
             ) : null}
             <div className="famille-hero__search">
-              <ProductQuickSearch
-                products={searchCards}
-              />
+              <ProductQuickSearch products={searchCards} />
             </div>
           </div>
           <div className="famille-hero__media">
-            <Image src={fam.image} alt="" fill sizes="(max-width: 860px) 100vw, 240px" style={{ objectFit: 'cover' }} />
+            <Image
+              src={fam.image}
+              alt=""
+              fill
+              sizes="(max-width: 860px) 100vw, 240px"
+              style={{ objectFit: 'cover' }}
+            />
           </div>
         </div>
       </header>
@@ -160,7 +168,7 @@ export default async function FamillePage({
                       className="souscat-card souscat-card--product"
                     >
                       <span
-                        className={`souscat-card__media${sub?.tileFit === 'cover' ? ' souscat-card__media--photo' : ''}`}
+                        className={`souscat-card__media${sub?.tileFit === 'cover' ? 'souscat-card__media--photo' : ''}`}
                       >
                         {sub?.packshot ? (
                           <Image
@@ -178,7 +186,9 @@ export default async function FamillePage({
                         )}
                       </span>
                       <span className="souscat-card__body">
-                        <span className="souscat-card__label">{tf(`souscats.${sousCatLabelKey(slug)}`)}</span>
+                        <span className="souscat-card__label">
+                          {tf(`souscats.${sousCatLabelKey(slug)}`)}
+                        </span>
                         <span className="souscat-card__count">
                           {tf('page.productsCount', { count })}
                         </span>

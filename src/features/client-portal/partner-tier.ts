@@ -50,7 +50,8 @@ export function computePartnerTier(ytdSpend: number): PartnerTier {
 
   const floor = current?.min ?? 0;
   const span = next.min - floor;
-  const progressPct = span > 0 ? Math.min(100, Math.max(0, Math.round(((ytdSpend - floor) / span) * 100))) : 0;
+  const progressPct =
+    span > 0 ? Math.min(100, Math.max(0, Math.round(((ytdSpend - floor) / span) * 100))) : 0;
 
   return {
     id: current?.id ?? null,

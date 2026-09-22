@@ -1,6 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from 'react';
 import { Search } from 'lucide-react';
 import type { AcademyFamily, AcademyFamilyKey, AcademyProduct } from '../types';
 
@@ -28,12 +34,13 @@ export function CommandPalette({
     const needle = q.trim().toLowerCase();
     return products
       .map((p, i) => ({ p, i }))
-      .filter(({ p }) =>
-        needle === '' ||
-        [p.n, p.d_fr, p.d_en, p.lo_fr, p.lo_en, families[p.f].fr, families[p.f].en]
-          .join(' ')
-          .toLowerCase()
-          .includes(needle),
+      .filter(
+        ({ p }) =>
+          needle === '' ||
+          [p.n, p.d_fr, p.d_en, p.lo_fr, p.lo_en, families[p.f].fr, families[p.f].en]
+            .join(' ')
+            .toLowerCase()
+            .includes(needle),
       );
   }, [products, families, q]);
 
@@ -72,7 +79,14 @@ export function CommandPalette({
 
   return (
     <div className="cmdk-bg" onClick={onClose}>
-      <div className="cmdk" role="dialog" aria-modal="true" aria-label="Recherche produits" onClick={(e) => e.stopPropagation()} onKeyDown={onKey}>
+      <div
+        className="cmdk"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Recherche produits"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={onKey}
+      >
         <div className="cmdk__input">
           <Search size={18} aria-hidden />
           <input
@@ -92,11 +106,13 @@ export function CommandPalette({
               return (
                 <div
                   key={p.n}
-                  className={`cmdk__item${idx === active ? ' on' : ''}`}
+                  className={`cmdk__item${idx === active ? 'on' : ''}`}
                   onMouseEnter={() => setActive(idx)}
                   onClick={() => onSelect(i)}
                 >
-                  <span className="cmdk__item-emoji" style={{ background: fam.col }} aria-hidden>{fam.emoji}</span>
+                  <span className="cmdk__item-emoji" style={{ background: fam.col }} aria-hidden>
+                    {fam.emoji}
+                  </span>
                   <span className="cmdk__item-name">{p.n}</span>
                   <span className="cmdk__item-fam">{lang === 'en' ? fam.en : fam.fr}</span>
                 </div>

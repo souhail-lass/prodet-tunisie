@@ -48,10 +48,19 @@ export function HomePage({
             <h1 className="hero__title">{t('hero.title')}</h1>
             <p className="hero__sub">{t('hero.sub')}</p>
             <div className="hero__cta">
-              <Button variant="primary" size="xl" onClick={openQuote} iconRight={<ArrowRight size={18} />}>
+              <Button
+                variant="primary"
+                size="xl"
+                onClick={openQuote}
+                iconRight={<ArrowRight size={18} />}
+              >
                 {t('hero.ctaQuote')}
               </Button>
-              <Button variant="dark" size="xl" onClick={() => router.push('/produits/produits-nettoyage')}>
+              <Button
+                variant="dark"
+                size="xl"
+                onClick={() => router.push('/produits/produits-nettoyage')}
+              >
                 {t('hero.ctaCatalogue')}
               </Button>
             </div>
@@ -183,7 +192,11 @@ export function HomePage({
             <span className="eyebrow">{t('featured.eyebrow')}</span>
             <h2 className="section-title">{t('featured.title')}</h2>
           </div>
-          <Button variant="outline" onClick={() => router.push('/produits/produits-nettoyage')} iconRight={<ArrowRight size={16} />}>
+          <Button
+            variant="outline"
+            onClick={() => router.push('/produits/produits-nettoyage')}
+            iconRight={<ArrowRight size={16} />}
+          >
             {t('featured.cta')}
           </Button>
         </div>

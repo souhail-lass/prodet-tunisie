@@ -33,14 +33,8 @@ export const clientAccessRequest = pgTable(
     swiverCustomerId: text('swiver_customer_id'),
   },
   (t) => ({
-    statusCreatedIdx: index('client_access_request_status_created_idx').on(
-      t.status,
-      t.createdAt,
-    ),
-    emailCreatedIdx: index('client_access_request_email_created_idx').on(
-      t.email,
-      t.createdAt,
-    ),
+    statusCreatedIdx: index('client_access_request_status_created_idx').on(t.status, t.createdAt),
+    emailCreatedIdx: index('client_access_request_email_created_idx').on(t.email, t.createdAt),
   }),
 );
 
@@ -64,9 +58,7 @@ export const portalInvite = pgTable(
       .default(sql`now()`),
   },
   (t) => ({
-    accessRequestIdx: uniqueIndex('portal_invite_access_request_idx').on(
-      t.accessRequestId,
-    ),
+    accessRequestIdx: uniqueIndex('portal_invite_access_request_idx').on(t.accessRequestId),
     emailStatusIdx: index('portal_invite_email_status_idx').on(t.email, t.status),
   }),
 );

@@ -80,16 +80,14 @@ export default async function CatalogueSearchPage({
             <span className="eyebrow">{t('page.searchEyebrow')}</span>
             <h1 className="famille-hero__title">{heading}</h1>
             {query ? (
-              <span className="famille-hero__count">{t('page.resultsCount', { count: results.length })}</span>
+              <span className="famille-hero__count">
+                {t('page.resultsCount', { count: results.length })}
+              </span>
             ) : (
               <p className="famille-hero__desc">{t('page.searchPromptBody')}</p>
             )}
             <div className="famille-hero__search">
-              <ProductQuickSearch
-                key={query}
-                products={searchCards}
-                initialQuery={query}
-              />
+              <ProductQuickSearch key={query} products={searchCards} initialQuery={query} />
             </div>
           </div>
         </div>

@@ -36,18 +36,18 @@ export function EmptyState({
         'text-center',
         inline
           ? 'py-10'
-          : 'rounded-md border border-dashed border-border bg-prodet-wash/60 px-6 py-10',
+          : 'border-border bg-prodet-wash/60 rounded-md border border-dashed px-6 py-10',
         className,
       )}
     >
       {icon ? (
-        <div className="mx-auto mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-prodet-mist text-prodet-blue">
+        <div className="bg-prodet-mist text-prodet-blue mx-auto mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full">
           {icon}
         </div>
       ) : null}
-      <h3 className="text-[15px] font-semibold text-prodet-text">{title}</h3>
+      <h3 className="text-prodet-text text-[15px] font-semibold">{title}</h3>
       {description ? (
-        <p className="mx-auto mt-2 max-w-md text-[13px] leading-6 text-muted-foreground">
+        <p className="text-muted-foreground mx-auto mt-2 max-w-md text-[13px] leading-6">
           {description}
         </p>
       ) : null}

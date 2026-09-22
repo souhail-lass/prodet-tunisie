@@ -15,11 +15,7 @@ export function ProductDetailToolbar({
     <div className="product-toolbar">
       <div className="product-toolbar__inner">
         <ProductBackLink href={backHref} label={backLabel} />
-        <ProductQuickSearch
-          products={products}
-          align="end"
-          className="product-toolbar__search"
-        />
+        <ProductQuickSearch products={products} align="end" className="product-toolbar__search" />
       </div>
     </div>
   );

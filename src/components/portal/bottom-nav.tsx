@@ -21,7 +21,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Navigation espace client (mobile)"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white/96 backdrop-blur lg:hidden"
+      className="border-border fixed inset-x-0 bottom-0 z-40 border-t bg-white/96 backdrop-blur lg:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <ul className="mx-auto flex h-16 max-w-[640px] items-stretch">

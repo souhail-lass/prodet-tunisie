@@ -36,6 +36,8 @@ describe('pageAlternates', () => {
 
 describe('robots disallow list', () => {
   it('keeps admin, portal and API out of the public crawl', () => {
-    expect(PUBLIC_ROBOTS_DISALLOW).toEqual(expect.arrayContaining(['/*/admin', '/*/client', '/api/']));
+    expect(PUBLIC_ROBOTS_DISALLOW).toEqual(
+      expect.arrayContaining(['/*/admin', '/*/client', '/api/']),
+    );
   });
 });

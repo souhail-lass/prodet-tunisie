@@ -1,13 +1,5 @@
 import { sql } from 'drizzle-orm';
-import {
-  bigint,
-  index,
-  pgTable,
-  primaryKey,
-  text,
-  timestamp,
-  uuid,
-} from 'drizzle-orm/pg-core';
+import { bigint, index, pgTable, primaryKey, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { customerDocumentKindEnum } from './enums';
 import { customer } from './customers';
 import { orderDraft } from './orders';

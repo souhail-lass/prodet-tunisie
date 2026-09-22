@@ -5,7 +5,11 @@ import { resolveCurrentPortalSwiverIdentity } from '@/features/client-portal/swi
 
 export const dynamic = 'force-dynamic';
 
-export default async function ClientAccountPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ClientAccountPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'portal' });
   const identity = await resolveCurrentPortalSwiverIdentity();
@@ -23,32 +27,64 @@ export default async function ClientAccountPage({ params }: { params: Promise<{ 
         { label: t('swiver.ref'), value: sw.externalCode },
         { label: t('swiver.vat'), value: sw.vatNumber },
         { label: t('swiver.phone'), value: sw.phone },
-        { label: t('swiver.address'), value: [sw.addressLine1, sw.postalCode, sw.city].filter(Boolean).join(', ') || null },
+        {
+          label: t('swiver.address'),
+          value: [sw.addressLine1, sw.postalCode, sw.city].filter(Boolean).join(', ') || null,
+        },
       ].filter((f) => f.value)
     : [];
 
   return (
     <div className="dash">
       {sw ? (
-        <section className="panel" style={{ borderColor: 'var(--prodet-blue-tint-strong)', background: 'var(--prodet-blue-tint)' }}>
+        <section
+          className="panel"
+          style={{
+            borderColor: 'var(--prodet-blue-tint-strong)',
+            background: 'var(--prodet-blue-tint)',
+          }}
+        >
           <div className="panel__head" style={{ alignItems: 'center' }}>
-            <h2 className="panel__title" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <h2
+              className="panel__title"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+            >
               <Building2 size={18} /> {sw.legalName}
             </h2>
             <span
               className="pds-badge"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: identity.matched ? 'var(--prodet-green)' : 'var(--text-secondary)' }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                color: identity.matched ? 'var(--prodet-green)' : 'var(--text-secondary)',
+              }}
             >
-              <CheckCircle2 size={15} /> {identity.matched ? t('swiver.linked') : t('swiver.demoNote')}
+              <CheckCircle2 size={15} />{' '}
+              {identity.matched ? t('swiver.linked') : t('swiver.demoNote')}
             </span>
           </div>
           <div className="portal-fields">
             {swiverFields.map((field) => (
               <div key={field.label}>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 'var(--fw-semibold)' }}>
+                <div
+                  style={{
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--text-tertiary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.06em',
+                    fontWeight: 'var(--fw-semibold)',
+                  }}
+                >
                   {field.label}
                 </div>
-                <div style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--fw-medium)', marginTop: 4 }}>
+                <div
+                  style={{
+                    fontSize: 'var(--text-base)',
+                    fontWeight: 'var(--fw-medium)',
+                    marginTop: 4,
+                  }}
+                >
                   {field.value}
                 </div>
               </div>
@@ -64,10 +100,24 @@ export default async function ClientAccountPage({ params }: { params: Promise<{ 
         <div className="portal-fields">
           {fields.map((field) => (
             <div key={field.label}>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 'var(--fw-semibold)' }}>
+              <div
+                style={{
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--text-tertiary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.06em',
+                  fontWeight: 'var(--fw-semibold)',
+                }}
+              >
                 {field.label}
               </div>
-              <div style={{ fontSize: 'var(--text-base)', fontWeight: 'var(--fw-medium)', marginTop: 4 }}>
+              <div
+                style={{
+                  fontSize: 'var(--text-base)',
+                  fontWeight: 'var(--fw-medium)',
+                  marginTop: 4,
+                }}
+              >
                 {field.value}
               </div>
             </div>

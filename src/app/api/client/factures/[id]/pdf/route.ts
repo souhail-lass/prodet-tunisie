@@ -10,10 +10,7 @@ export const dynamic = 'force-dynamic';
  * Ownership-checked: the document's contact must be the logged-in client's
  * Swiver contact — anything else (or an unknown id) is a plain 404.
  */
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!/^\d+$/.test(id)) return new NextResponse('Not found', { status: 404 });
 

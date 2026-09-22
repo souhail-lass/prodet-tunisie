@@ -28,10 +28,19 @@ import { getMySpending } from '@/features/client-portal/spending';
 export const dynamic = 'force-dynamic';
 
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeZone: 'Africa/Tunis' });
-const dueDateFmt = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Africa/Tunis' });
+const dueDateFmt = new Intl.DateTimeFormat('fr-FR', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'Africa/Tunis',
+});
 const moneyFmt = new Intl.NumberFormat('fr-TN', { maximumFractionDigits: 0 });
 
-const FALLBACK_TONE = { bg: 'var(--surface-sunken)', fg: 'var(--text-secondary)', label: 'Brouillon' };
+const FALLBACK_TONE = {
+  bg: 'var(--surface-sunken)',
+  fg: 'var(--text-secondary)',
+  label: 'Brouillon',
+};
 
 const STATUS_TONE: Record<string, { bg: string; fg: string; label: string }> = {
   parsing: FALLBACK_TONE,
@@ -51,7 +60,11 @@ function heroDateFmt(locale: string): Intl.DateTimeFormat {
   });
 }
 
-export default async function ClientDashboardPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ClientDashboardPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'portal' });
 
@@ -75,7 +88,9 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
 
   const deltaChip =
     spending.momDeltaPct != null ? (
-      <span className={`fin-delta ${spending.momDeltaPct >= 0 ? 'fin-delta--up' : 'fin-delta--down'}`}>
+      <span
+        className={`fin-delta ${spending.momDeltaPct >= 0 ? 'fin-delta--up' : 'fin-delta--down'}`}
+      >
         {spending.momDeltaPct >= 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
         {spending.momDeltaPct >= 0 ? '+' : ''}
         {spending.momDeltaPct}% {t('spending.vsLastMonth')}
@@ -102,16 +117,21 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
                 </span>
               ) : null}
               {deltaChip}
-              <span className="fin-hero__count">{t('spending.invoiceCount', { count: spending.invoiceCount })}</span>
+              <span className="fin-hero__count">
+                {t('spending.invoiceCount', { count: spending.invoiceCount })}
+              </span>
             </div>
             {spending.tier?.nextLabel && spending.tier.remainingToNext > 0 ? (
-              <div className="fin-tier-progress" title={`Progression vers ${spending.tier.nextLabel}`}>
+              <div
+                className="fin-tier-progress"
+                title={`Progression vers ${spending.tier.nextLabel}`}
+              >
                 <div className="fin-tier-progress__bar">
                   <span style={{ width: `${spending.tier.progressPct}%` }} />
                 </div>
                 <span className="fin-tier-progress__label">
-                  Plus que {moneyFmt.format(spending.tier.remainingToNext)} {spending.currency} avant le statut{' '}
-                  {spending.tier.nextLabel}
+                  Plus que {moneyFmt.format(spending.tier.remainingToNext)} {spending.currency}{' '}
+                  avant le statut {spending.tier.nextLabel}
                 </span>
               </div>
             ) : null}
@@ -141,7 +161,9 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
             </strong>
             <span>
               {t('spending.unpaid', { count: spending.unpaidCount })}
-              {spending.nextDueISO ? ` · échéance ${dueDateFmt.format(new Date(spending.nextDueISO))}` : ''}
+              {spending.nextDueISO
+                ? ` · échéance ${dueDateFmt.format(new Date(spending.nextDueISO))}`
+                : ''}
             </span>
           </div>
           <ArrowRight size={18} className="fin-reminder__arrow" />
@@ -156,16 +178,20 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
                 <Wallet size={20} />
               </span>
               <div className="stat-card__value">
-                <CountUp value={spending.thisMonth} /> <small className="stat-card__unit">{spending.currency}</small>
+                <CountUp value={spending.thisMonth} />{' '}
+                <small className="stat-card__unit">{spending.currency}</small>
               </div>
               <div className="stat-card__label">{t('spending.thisMonth')}</div>
             </div>
             <div className="stat-card">
-              <span className={`stat-card__icon ${spending.outstanding > 0 ? 'stat-card__icon--amber' : 'stat-card__icon--green'}`}>
+              <span
+                className={`stat-card__icon ${spending.outstanding > 0 ? 'stat-card__icon--amber' : 'stat-card__icon--green'}`}
+              >
                 <ReceiptText size={20} />
               </span>
               <div className="stat-card__value">
-                <CountUp value={spending.outstanding} /> <small className="stat-card__unit">{spending.currency}</small>
+                <CountUp value={spending.outstanding} />{' '}
+                <small className="stat-card__unit">{spending.currency}</small>
               </div>
               <div className="stat-card__label">
                 {spending.outstanding > 0
@@ -184,16 +210,36 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
               <span className="stat-card__icon stat-card__icon--blue">
                 <Truck size={20} />
               </span>
-              <div className="stat-card__value">{lastOrder ? dateFmt.format(lastOrder.createdAt) : '—'}</div>
+              <div className="stat-card__value">
+                {lastOrder ? dateFmt.format(lastOrder.createdAt) : '—'}
+              </div>
               <div className="stat-card__label">{t('stats.lastOrder')}</div>
             </div>
           </>
         ) : (
           (
             [
-              { id: 'total', value: orders.length, label: t('stats.total'), icon: PackageCheck, tone: 'blue' },
-              { id: 'active', value: active.length, label: t('stats.active'), icon: Clock, tone: 'amber' },
-              { id: 'confirmed', value: confirmed.length, label: t('stats.confirmed'), icon: CheckCircle2, tone: 'green' },
+              {
+                id: 'total',
+                value: orders.length,
+                label: t('stats.total'),
+                icon: PackageCheck,
+                tone: 'blue',
+              },
+              {
+                id: 'active',
+                value: active.length,
+                label: t('stats.active'),
+                icon: Clock,
+                tone: 'amber',
+              },
+              {
+                id: 'confirmed',
+                value: confirmed.length,
+                label: t('stats.confirmed'),
+                icon: CheckCircle2,
+                tone: 'green',
+              },
               {
                 id: 'last',
                 value: lastOrder ? dateFmt.format(lastOrder.createdAt) : '—',
@@ -249,7 +295,10 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
                       {order.totalTtc != null ? ` · ${moneyFmt.format(order.totalTtc)} TND` : ''}
                     </span>
                     <span>
-                      <span className="pds-badge pds-badge--sm" style={{ background: tone.bg, color: tone.fg }}>
+                      <span
+                        className="pds-badge pds-badge--sm"
+                        style={{ background: tone.bg, color: tone.fg }}
+                      >
                         {tone.label}
                       </span>
                     </span>
@@ -353,7 +402,9 @@ export default async function ClientDashboardPage({ params }: { params: Promise<
                     <strong>{product.name}</strong>
                     <span>
                       {product.sku ?? ''}
-                      {product.orderCount > 1 ? ` · ${t('dashboard.orderedTimes', { count: product.orderCount })}` : ''}
+                      {product.orderCount > 1
+                        ? ` · ${t('dashboard.orderedTimes', { count: product.orderCount })}`
+                        : ''}
                     </span>
                   </div>
                   <Link

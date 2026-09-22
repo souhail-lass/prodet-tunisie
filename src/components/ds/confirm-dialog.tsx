@@ -55,13 +55,18 @@ export function ConfirmDialog({
         aria-label={title ?? message}
         onClick={(e) => e.stopPropagation()}
       >
-        <span className={`pds-confirm__icon${danger ? ' pds-confirm__icon--danger' : ''}`}>
+        <span className={`pds-confirm__icon${danger ? 'pds-confirm__icon--danger' : ''}`}>
           <AlertTriangle size={20} />
         </span>
         {title ? <h3 className="pds-confirm__title">{title}</h3> : null}
         <p className="pds-confirm__message">{message}</p>
         <div className="pds-confirm__actions">
-          <button ref={cancelRef} type="button" className="pds-btn pds-btn--ghost pds-btn--md" onClick={onClose}>
+          <button
+            ref={cancelRef}
+            type="button"
+            className="pds-btn pds-btn--ghost pds-btn--md"
+            onClick={onClose}
+          >
             <span>{cancelLabel}</span>
           </button>
           <button

@@ -15,7 +15,8 @@ export const companyInfo = {
   phoneHref: 'tel:+21671758468',
   email: 'contact@prodet.com.tn',
   emailHref: 'mailto:contact@prodet.com.tn',
-  footerTagline: "Fabricant et distributeur de produits d'entretien professionnels · Tunis, Tunisie",
+  footerTagline:
+    "Fabricant et distributeur de produits d'entretien professionnels · Tunis, Tunisie",
   deliveryZoneLabel: null,
   hoursLabel: null,
   whatsappNumber: null,

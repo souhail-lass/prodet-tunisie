@@ -44,7 +44,12 @@ function customerPhones(customer: SwiverCustomer): Set<string> {
   };
   push(customer.phone);
   const raw = customer.rawShape as
-    | { phone1?: string | null; phone2?: string | null; phone3?: string | null; contact_phones?: Array<{ value?: string | null }> | null }
+    | {
+        phone1?: string | null;
+        phone2?: string | null;
+        phone3?: string | null;
+        contact_phones?: Array<{ value?: string | null }> | null;
+      }
     | undefined;
   if (raw) {
     push(raw.phone1);
@@ -159,8 +164,7 @@ export async function getPortalSwiverIdentity(input: {
  * Never throws (Swiver/auth failures degrade to "not linked").
  */
 export async function resolveCurrentPortalSwiverIdentity(): Promise<PortalSwiverIdentity> {
-  const demoMode =
-    process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
+  const demoMode = process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
   try {
     const { requireClientPortalAccess } = await import('./auth');
     const access = await requireClientPortalAccess();

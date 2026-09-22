@@ -30,7 +30,7 @@ export async function CategorySidebar({
             <div className="cat-sidebar__group" key={famille.id}>
               <Link
                 href={`/produits/${famille.id}`}
-                className={`cat-sidebar__fam${isActive ? ' is-active' : ''}`}
+                className={`cat-sidebar__fam${isActive ? 'is-active' : ''}`}
               >
                 {tf(`items.${famille.id}.label`)}
               </Link>
@@ -40,7 +40,7 @@ export async function CategorySidebar({
                     <li key={sub.slug}>
                       <Link
                         href={`/produits/${famille.id}/${sub.slug}`}
-                        className={`cat-sidebar__sub${sub.slug === activeSousCat ? ' is-active' : ''}`}
+                        className={`cat-sidebar__sub${sub.slug === activeSousCat ? 'is-active' : ''}`}
                       >
                         {tf(`souscats.${sub.slug}`)}
                       </Link>

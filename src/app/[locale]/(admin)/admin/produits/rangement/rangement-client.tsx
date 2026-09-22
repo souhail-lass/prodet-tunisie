@@ -3,15 +3,30 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { ArrowLeft, ChevronDown, ChevronUp, EyeOff, GripVertical, RotateCcw, Save, Star, StarOff } from 'lucide-react';
+import {
+  ArrowLeft,
+  ChevronDown,
+  ChevronUp,
+  EyeOff,
+  GripVertical,
+  RotateCcw,
+  Save,
+  Star,
+  StarOff,
+} from 'lucide-react';
 import { familleLabel, sousCategorieLabel } from '@/data/famille-labels';
 import { TOUS_LES_PRODUITS, type FamilleId } from '@/data/familles';
 import type { CurationFamille, CurationProduct } from '@/features/catalogue/queries';
 import { localePrefixedPath } from '@/lib/admin-catalogue-query';
-import { reorderCatalogueRankAction, reorderSousCategorieAction, setCataloguePinAction } from '../actions';
+import {
+  reorderCatalogueRankAction,
+  reorderSousCategorieAction,
+  setCataloguePinAction,
+} from '../actions';
 
 function move<T>(list: readonly T[], from: number, to: number): T[] {
-  if (from === to || from < 0 || to < 0 || from >= list.length || to >= list.length) return [...list];
+  if (from === to || from < 0 || to < 0 || from >= list.length || to >= list.length)
+    return [...list];
   const next = [...list];
   const [moved] = next.splice(from, 1);
   if (moved !== undefined) next.splice(to, 0, moved);
@@ -32,9 +47,13 @@ export function RangementClient({
   const locale = useLocale();
   const populated = groups.filter((g) => g.sousCategories.length > 0);
   const firstFamille = populated[0];
-  const [familleId, setFamilleId] = useState<FamilleId>(firstFamille?.familleId ?? 'produits-nettoyage');
+  const [familleId, setFamilleId] = useState<FamilleId>(
+    firstFamille?.familleId ?? 'produits-nettoyage',
+  );
   const [slug, setSlug] = useState<string>(firstFamille?.sousCategories[0]?.slug ?? '');
-  const [items, setItems] = useState<CurationProduct[]>(firstFamille?.sousCategories[0]?.products ?? []);
+  const [items, setItems] = useState<CurationProduct[]>(
+    firstFamille?.sousCategories[0]?.products ?? [],
+  );
   const [baseline, setBaseline] = useState<string[]>(
     (firstFamille?.sousCategories[0]?.products ?? []).map((p) => p.id),
   );
@@ -66,7 +85,13 @@ export function RangementClient({
   }
 
   function moveItem(id: string, targetIndex: number) {
-    setItems((current) => move(current, current.findIndex((p) => p.id === id), targetIndex));
+    setItems((current) =>
+      move(
+        current,
+        current.findIndex((p) => p.id === id),
+        targetIndex,
+      ),
+    );
   }
 
   function nudge(index: number, delta: number) {
@@ -116,7 +141,11 @@ export function RangementClient({
 
   return (
     <div className="dash">
-      <a href={localePrefixedPath(locale, backHref)} className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <a
+        href={localePrefixedPath(locale, backHref)}
+        className="ghost-link"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
+      >
         <ArrowLeft size={15} /> Retour au catalogue
       </a>
 
@@ -130,9 +159,18 @@ export function RangementClient({
             : 'Glissez une ligne pour la déplacer, ou utilisez les flèches. Les produits rangés ici passent en tête de la sous-catégorie ; les autres suivent par ordre alphabétique.'}
         </p>
         <div className="admin-toolbar" style={{ marginTop: 14, marginBottom: 0 }}>
-          <select className="admin-select" value={familleId} onChange={(e) => pickFamille(e.target.value)} aria-label="Famille">
+          <select
+            className="admin-select"
+            value={familleId}
+            onChange={(e) => pickFamille(e.target.value)}
+            aria-label="Famille"
+          >
             {groups.map((g) => (
-              <option key={g.familleId} value={g.familleId} disabled={g.sousCategories.length === 0}>
+              <option
+                key={g.familleId}
+                value={g.familleId}
+                disabled={g.sousCategories.length === 0}
+              >
                 {familleLabel(g.familleId)}
               </option>
             ))}
@@ -153,15 +191,31 @@ export function RangementClient({
           )}
           <span style={{ flex: 1 }} />
           {dirty ? (
-            <button className="pds-btn pds-btn--ghost pds-btn--sm" onClick={() => load(familleId, slug)} disabled={pending}>
+            <button
+              className="pds-btn pds-btn--ghost pds-btn--sm"
+              onClick={() => load(familleId, slug)}
+              disabled={pending}
+            >
               <RotateCcw size={14} /> <span>Annuler</span>
             </button>
           ) : null}
-          <button className="pds-btn pds-btn--primary pds-btn--sm" onClick={save} disabled={!dirty || pending}>
+          <button
+            className="pds-btn pds-btn--primary pds-btn--sm"
+            onClick={save}
+            disabled={!dirty || pending}
+          >
             <Save size={14} /> <span>{pending ? 'Enregistrement…' : 'Enregistrer l’ordre'}</span>
           </button>
         </div>
-        <p aria-live="polite" style={{ marginTop: 10, fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', minHeight: 20 }}>
+        <p
+          aria-live="polite"
+          style={{
+            marginTop: 10,
+            fontSize: 'var(--text-sm)',
+            color: 'var(--text-secondary)',
+            minHeight: 20,
+          }}
+        >
           {status ?? (dirty ? 'Ordre modifié — pensez à enregistrer.' : '')}
         </p>
       </section>
@@ -176,7 +230,7 @@ export function RangementClient({
         {items.map((item, index) => (
           <div
             key={item.id}
-            className={`admin-row admin-order-row${draggingId === item.id ? ' is-dragging' : ''}${item.hidden ? ' is-dim' : ''}`}
+            className={`admin-row admin-order-row${draggingId === item.id ? 'is-dragging' : ''}${item.hidden ? 'is-dim' : ''}`}
             style={{ gridTemplateColumns: HEAD_COLS }}
             draggable
             onDragStart={(e) => {

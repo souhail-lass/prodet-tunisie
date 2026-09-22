@@ -113,14 +113,15 @@ function QuoteDrawer({
   const [isPending, startTransition] = useTransition();
 
   const sectorOptions = useMemo(
-    () => localizeSectors(listSectors(), locale).map((sector) => ({ value: sector.id, label: sector.label })),
+    () =>
+      localizeSectors(listSectors(), locale).map((sector) => ({
+        value: sector.id,
+        label: sector.label,
+      })),
     [locale],
   );
 
-  const lines = useMemo(
-    () => [...items.values()].filter((item) => item.quantity > 0),
-    [items],
-  );
+  const lines = useMemo(() => [...items.values()].filter((item) => item.quantity > 0), [items]);
   const total = lines.reduce((sum, line) => sum + line.quantity, 0);
 
   // Reset to the list step + clear any prior result each time the drawer opens.
@@ -183,7 +184,11 @@ function QuoteDrawer({
           <div>
             <span className="eyebrow">{t('eyebrow')}</span>
             <h2 className="qm__title">
-              {reference ? t('sentTitle') : step === 'list' ? t('selectionTitle') : t('contactTitle')}
+              {reference
+                ? t('sentTitle')
+                : step === 'list'
+                  ? t('selectionTitle')
+                  : t('contactTitle')}
             </h2>
           </div>
           <button className="qm__close" onClick={onClose} aria-label={t('close')}>
@@ -194,7 +199,10 @@ function QuoteDrawer({
         {reference ? (
           <div className="qm__body">
             <div className="qm__empty">
-              <span className="qm__empty-icon" style={{ background: 'var(--prodet-green-tint)', color: 'var(--prodet-green)' }}>
+              <span
+                className="qm__empty-icon"
+                style={{ background: 'var(--prodet-green-tint)', color: 'var(--prodet-green)' }}
+              >
                 <Check size={26} />
               </span>
               <p>{t('successBody', { ref: reference ?? '' })}</p>
@@ -211,85 +219,92 @@ function QuoteDrawer({
               </div>
             ) : null}
             <div className="qm__body">
-            {lines.length === 0 ? (
-              <div className="qm__empty">
-                <span className="qm__empty-icon">
-                  <FileText size={26} />
-                </span>
-                <p>{t('empty')}</p>
-                {products.length > 0 ? <p className="qm__empty-hint">{t('emptyHint')}</p> : null}
-                <Link
-                  href="/produits/produits-nettoyage"
-                  className="pds-btn pds-btn--outline pds-btn--md"
-                  onClick={onClose}
-                >
-                  {t('browseCatalogue')}
-                </Link>
-              </div>
-            ) : (
-              <>
-                <div className="qm__actions-top">
-                  <button type="button" className="qm__clear" onClick={clearSelection}>
-                    <Trash2 size={14} /> {t('clearList')}
-                  </button>
+              {lines.length === 0 ? (
+                <div className="qm__empty">
+                  <span className="qm__empty-icon">
+                    <FileText size={26} />
+                  </span>
+                  <p>{t('empty')}</p>
+                  {products.length > 0 ? <p className="qm__empty-hint">{t('emptyHint')}</p> : null}
+                  <Link
+                    href="/produits/produits-nettoyage"
+                    className="pds-btn pds-btn--outline pds-btn--md"
+                    onClick={onClose}
+                  >
+                    {t('browseCatalogue')}
+                  </Link>
                 </div>
-                <div className="qm__lines">
-                  {lines.map((line) => (
-                  <div className="qm__line" key={line.productId}>
-                    <div className="qm__line-thumb">
-                      {line.imageUrl ? (
-                        /\.(png|jpe?g|webp|avif)$/i.test(line.imageUrl) ? (
-                          <Image
-                            src={line.imageUrl}
-                            alt=""
-                            width={48}
-                            height={48}
-                            sizes="48px"
-                            style={{ width: 'auto', height: 'auto', maxWidth: '80%', maxHeight: '80%', objectFit: 'contain' }}
+              ) : (
+                <>
+                  <div className="qm__actions-top">
+                    <button type="button" className="qm__clear" onClick={clearSelection}>
+                      <Trash2 size={14} /> {t('clearList')}
+                    </button>
+                  </div>
+                  <div className="qm__lines">
+                    {lines.map((line) => (
+                      <div className="qm__line" key={line.productId}>
+                        <div className="qm__line-thumb">
+                          {line.imageUrl ? (
+                            /\.(png|jpe?g|webp|avif)$/i.test(line.imageUrl) ? (
+                              <Image
+                                src={line.imageUrl}
+                                alt=""
+                                width={48}
+                                height={48}
+                                sizes="48px"
+                                style={{
+                                  width: 'auto',
+                                  height: 'auto',
+                                  maxWidth: '80%',
+                                  maxHeight: '80%',
+                                  objectFit: 'contain',
+                                }}
+                              />
+                            ) : (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={line.imageUrl} alt="" />
+                            )
+                          ) : (
+                            <span>{line.productName.slice(0, 2).toUpperCase()}</span>
+                          )}
+                        </div>
+                        <div className="qm__line-info">
+                          <strong>{line.productName}</strong>
+                          <span>{line.format ?? '—'}</span>
+                        </div>
+                        <div className="qm__line-qty">
+                          <QuantityControl
+                            className="pds-qty--compact"
+                            value={line.quantity}
+                            onChange={(n) =>
+                              setProductQuantity(
+                                { productId: line.productId, productName: line.productName },
+                                n,
+                              )
+                            }
                           />
-                        ) : (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={line.imageUrl} alt="" />
-                        )
-                      ) : (
-                        <span>{line.productName.slice(0, 2).toUpperCase()}</span>
-                      )}
-                    </div>
-                    <div className="qm__line-info">
-                      <strong>{line.productName}</strong>
-                      <span>
-                        {line.format ?? '—'}
-                      </span>
-                    </div>
-                    <div className="qm__line-qty">
-                      <QuantityControl
-                        className="pds-qty--compact"
-                        value={line.quantity}
-                        onChange={(n) =>
-                          setProductQuantity({ productId: line.productId, productName: line.productName }, n)
-                        }
-                      />
-                    </div>
-                    {/* Always rendered, not only above qty 1: the stepper's
+                        </div>
+                        {/* Always rendered, not only above qty 1: the stepper's
                         trash only appears at qty 1, so removing a line with a
                         large quantity otherwise meant clicking − that many
                         times. Keeping it permanent also stops the row from
                         reflowing while the quantity is being stepped down. */}
-                    <button
-                      type="button"
-                      className="qm__line-remove"
-                      onClick={() => removeProduct(line.productId)}
-                      aria-label={t('removeLine', { product: line.productName })}
-                      title={t('removeLine', { product: line.productName })}
-                    >
-                      <X size={16} aria-hidden />
-                    </button>
+                        <button
+                          type="button"
+                          className="qm__line-remove"
+                          onClick={() => removeProduct(line.productId)}
+                          aria-label={t('removeLine', { product: line.productName })}
+                          title={t('removeLine', { product: line.productName })}
+                        >
+                          <X size={16} aria-hidden />
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
+                </>
+              )}
+            </div>
           </>
         ) : (
           <div className="qm__body">
@@ -357,7 +372,11 @@ function QuoteDrawer({
               </Button>
             ) : (
               <div className="qm__foot-actions">
-                <Button variant="ghost" onClick={() => setStep('list')} iconLeft={<ChevronLeft size={16} />}>
+                <Button
+                  variant="ghost"
+                  onClick={() => setStep('list')}
+                  iconLeft={<ChevronLeft size={16} />}
+                >
                   {t('back')}
                 </Button>
                 <Button

@@ -58,7 +58,10 @@ export const catalogueProduct = pgTable(
      * Additional browse listings besides the primary placement above.
      * `[{ familleSlug, sousCategorieSlug, sortOrder }]`. Empty = one home.
      */
-    extraPlacements: jsonb('extra_placements').$type<ExtraPlacement[]>().notNull().default(sql`'[]'::jsonb`),
+    extraPlacements: jsonb('extra_placements')
+      .$type<ExtraPlacement[]>()
+      .notNull()
+      .default(sql`'[]'::jsonb`),
     // position in the flat "Tous les produits" listing, which is a different
     // axis from sort_order: that one is a rank inside one sous-catégorie.
     catalogueRank: integer('catalogue_rank'),

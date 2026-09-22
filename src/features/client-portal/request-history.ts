@@ -61,14 +61,16 @@ export const portalStatusLabels: Record<PortalOrderStatus, string> = {
   rejected: 'Annulée/refusée',
 };
 
-export const portalStatusTones: Record<PortalOrderStatus, 'neutral' | 'info' | 'success' | 'danger'> =
-  {
-    parsing: 'neutral',
-    review: 'info',
-    approved: 'success',
-    exported: 'success',
-    rejected: 'danger',
-  };
+export const portalStatusTones: Record<
+  PortalOrderStatus,
+  'neutral' | 'info' | 'success' | 'danger'
+> = {
+  parsing: 'neutral',
+  review: 'info',
+  approved: 'success',
+  exported: 'success',
+  rejected: 'danger',
+};
 
 export async function getPortalRequestOverview(customerId: string): Promise<PortalRequestOverview> {
   const summaries = await listPortalRequestSummaries(customerId);
@@ -188,10 +190,7 @@ export async function getPortalRequestDetail({
     })
     .from(schema.auditLog)
     .where(
-      and(
-        eq(schema.auditLog.entityType, 'order_draft'),
-        eq(schema.auditLog.entityId, draft.id),
-      ),
+      and(eq(schema.auditLog.entityType, 'order_draft'), eq(schema.auditLog.entityId, draft.id)),
     )
     .orderBy(asc(schema.auditLog.createdAt));
 
@@ -247,21 +246,20 @@ export function extractPortalRequestMetadata(
   const inboundRecurrenceSummary = readString(inbound.recurrenceSummary);
   const recurrenceFromFields =
     inboundRecurrenceSummary ||
-    formatRecurrenceLabel(readString(inbound.recurrenceMode) ?? 'once', readString(inbound.recurrenceDetail));
+    formatRecurrenceLabel(
+      readString(inbound.recurrenceMode) ?? 'once',
+      readString(inbound.recurrenceDetail),
+    );
 
   return {
     deliveryText:
       readString(inbound.deliveryText) ||
       extractPrefixedLine(notesInternal, 'Zone ou adresse souhaitée:'),
     preferredTiming:
-      readString(inbound.preferredTiming) ||
-      extractPrefixedLine(notesInternal, 'Délai souhaité:'),
-    message:
-      readString(inbound.message) ||
-      extractPrefixedLine(notesInternal, 'Message client:'),
+      readString(inbound.preferredTiming) || extractPrefixedLine(notesInternal, 'Délai souhaité:'),
+    message: readString(inbound.message) || extractPrefixedLine(notesInternal, 'Message client:'),
     recurrenceSummary:
-      recurrenceFromFields ||
-      extractPrefixedLine(notesInternal, 'Cadence livraisons:'),
+      recurrenceFromFields || extractPrefixedLine(notesInternal, 'Cadence livraisons:'),
     duplicatedFromOrderDraftId: readString(inbound.duplicatedFromOrderDraftId),
   };
 }

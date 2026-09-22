@@ -29,9 +29,13 @@ const CUSTOMER_EMAIL = 'clearsurr@gmail.com';
 
 // 1) Admin mints a magiclink → SDK returns email_otp + hashed_token. This is
 //    exactly what's encoded into the email body in real life.
-const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
-  auth: { autoRefreshToken: false, persistSession: false },
-});
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY,
+  {
+    auth: { autoRefreshToken: false, persistSession: false },
+  },
+);
 const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
   type: 'magiclink',
   email: CUSTOMER_EMAIL,
@@ -71,16 +75,26 @@ function chunk(value, size = 3180) {
   return out;
 }
 const chunks = chunk(cookieValue);
-const cookies = chunks.length === 1
-  ? [{ name: cookieName, value: chunks[0], url: SITE_URL, sameSite: 'Lax', httpOnly: false, secure: false }]
-  : chunks.map((value, index) => ({
-      name: `${cookieName}.${index}`,
-      value,
-      url: SITE_URL,
-      sameSite: 'Lax',
-      httpOnly: false,
-      secure: false,
-    }));
+const cookies =
+  chunks.length === 1
+    ? [
+        {
+          name: cookieName,
+          value: chunks[0],
+          url: SITE_URL,
+          sameSite: 'Lax',
+          httpOnly: false,
+          secure: false,
+        },
+      ]
+    : chunks.map((value, index) => ({
+        name: `${cookieName}.${index}`,
+        value,
+        url: SITE_URL,
+        sameSite: 'Lax',
+        httpOnly: false,
+        secure: false,
+      }));
 
 const browser = await chromium.launch();
 const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
@@ -145,7 +159,10 @@ for (const [path, name] of mobileShots) {
 if (detailHref) {
   await mobile.goto(`${SITE_URL}${detailHref}`, { waitUntil: 'networkidle' });
   await mobile.waitForTimeout(500);
-  await mobile.screenshot({ path: join(outDir, '10-historique-detail-mobile.png'), fullPage: true });
+  await mobile.screenshot({
+    path: join(outDir, '10-historique-detail-mobile.png'),
+    fullPage: true,
+  });
   console.log(' captured 10-historique-detail-mobile');
 }
 
@@ -161,7 +178,10 @@ try {
     await mobile.waitForTimeout(200);
   }
   await mobile.waitForTimeout(500);
-  await mobile.screenshot({ path: join(outDir, '11-builder-with-basket-mobile.png'), fullPage: true });
+  await mobile.screenshot({
+    path: join(outDir, '11-builder-with-basket-mobile.png'),
+    fullPage: true,
+  });
   console.log(' captured 11-builder-with-basket-mobile');
 } catch (error) {
   console.warn(' could not capture builder-with-basket-mobile:', error.message);

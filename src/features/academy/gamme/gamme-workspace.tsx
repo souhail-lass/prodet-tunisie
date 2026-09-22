@@ -36,9 +36,13 @@ export function GammeWorkspace({
     const q = query.trim().toLowerCase();
     return products
       .map((p, i) => ({ p, i }))
-      .filter(({ p }) =>
-        q === '' ||
-        [p.n, p.d_fr, p.d_en, p.cl_fr, p.cl_en, p.lo_fr, p.lo_en].join(' ').toLowerCase().includes(q),
+      .filter(
+        ({ p }) =>
+          q === '' ||
+          [p.n, p.d_fr, p.d_en, p.cl_fr, p.cl_en, p.lo_fr, p.lo_en]
+            .join(' ')
+            .toLowerCase()
+            .includes(q),
       );
   }, [products, query]);
 
@@ -83,7 +87,7 @@ export function GammeWorkspace({
   const current = selected !== null ? products[selected] : null;
 
   return (
-    <div className={`gamme${selected !== null ? ' has-selection' : ''}`}>
+    <div className={`gamme${selected !== null ? 'has-selection' : ''}`}>
       <aside className="gamme__rail">
         <div className="gamme__railhead">
           <div className="gamme-search">
@@ -95,38 +99,62 @@ export function GammeWorkspace({
               placeholder={t(lang, 'Rechercher…', 'Search…')}
               aria-label={t(lang, 'Rechercher un produit', 'Search a product')}
             />
-            <button type="button" className="academy-lang" onClick={() => setCmdk(true)} aria-label="Recherche rapide" style={{ padding: 0, background: 'none' }}>
+            <button
+              type="button"
+              className="academy-lang"
+              onClick={() => setCmdk(true)}
+              aria-label="Recherche rapide"
+              style={{ padding: 0, background: 'none' }}
+            >
               <kbd>⌘K</kbd>
             </button>
           </div>
           <div className="gamme__railmeta">
-            <span className="gamme__count">{filtered.length} {t(lang, 'produits', 'products')}</span>
-            <span className="gamme__count" style={{ color: '#d9941f' }}>● {reformCount} {t(lang, 'reformulés', 'reformulated')}</span>
+            <span className="gamme__count">
+              {filtered.length} {t(lang, 'produits', 'products')}
+            </span>
+            <span className="gamme__count" style={{ color: '#d9941f' }}>
+              ● {reformCount} {t(lang, 'reformulés', 'reformulated')}
+            </span>
           </div>
         </div>
 
         <div className="gamme__list">
           {groups.length === 0 ? (
-            <div className="gamme-empty">{t(lang, 'Aucun produit ne correspond.', 'No product matches.')}</div>
+            <div className="gamme-empty">
+              {t(lang, 'Aucun produit ne correspond.', 'No product matches.')}
+            </div>
           ) : (
             groups.map((g) => (
               <div className="gamme-group" key={g.family.key}>
                 <div className="gamme-group__label">
-                  <span aria-hidden>{g.family.emoji}</span> {lang === 'en' ? g.family.en : g.family.fr}
+                  <span aria-hidden>{g.family.emoji}</span>{' '}
+                  {lang === 'en' ? g.family.en : g.family.fr}
                 </div>
                 {g.items.map(({ p, i }) => (
                   <button
                     key={p.n}
                     type="button"
-                    className={`gamme-item${selected === i ? ' on' : ''}`}
+                    className={`gamme-item${selected === i ? 'on' : ''}`}
                     onClick={() => setSelected(i)}
                     aria-pressed={selected === i}
                   >
-                    <span className="gamme-item__emoji" style={{ background: g.family.col }} aria-hidden>{g.family.emoji}</span>
+                    <span
+                      className="gamme-item__emoji"
+                      style={{ background: g.family.col }}
+                      aria-hidden
+                    >
+                      {g.family.emoji}
+                    </span>
                     <span className="gamme-item__body">
                       <span className="gamme-item__name">
                         {p.n}
-                        {p.note_fr ? <span className="gamme-item__dot" title={t(lang, 'Reformulation', 'Reformulation')} /> : null}
+                        {p.note_fr ? (
+                          <span
+                            className="gamme-item__dot"
+                            title={t(lang, 'Reformulation', 'Reformulation')}
+                          />
+                        ) : null}
                       </span>
                       <span className="gamme-item__sub">{lang === 'en' ? p.d_en : p.d_fr}</span>
                     </span>
@@ -145,8 +173,22 @@ export function GammeWorkspace({
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginBottom: 8 }}>
           <div className="academy-lang" role="group" aria-label="Langue">
-            <button className={lang === 'fr' ? 'on' : ''} onClick={() => setLang('fr')} type="button" aria-pressed={lang === 'fr'}>FR</button>
-            <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')} type="button" aria-pressed={lang === 'en'}>EN</button>
+            <button
+              className={lang === 'fr' ? 'on' : ''}
+              onClick={() => setLang('fr')}
+              type="button"
+              aria-pressed={lang === 'fr'}
+            >
+              FR
+            </button>
+            <button
+              className={lang === 'en' ? 'on' : ''}
+              onClick={() => setLang('en')}
+              type="button"
+              aria-pressed={lang === 'en'}
+            >
+              EN
+            </button>
           </div>
           <button type="button" className="academy-lock-btn" onClick={lock}>
             <Lock size={14} aria-hidden /> {t(lang, 'Verrouiller', 'Lock')}

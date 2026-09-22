@@ -48,7 +48,11 @@ class DisabledDocumentPort implements SwiverDocumentPort {
   async getDocumentPdf(): Promise<Uint8Array | null> {
     return null;
   }
-  async createDraftDocument(): Promise<{ swiverId: string; version: number; warehouseId: number | null } | null> {
+  async createDraftDocument(): Promise<{
+    swiverId: string;
+    version: number;
+    warehouseId: number | null;
+  } | null> {
     return null;
   }
   async updateDocument(): Promise<boolean> {

@@ -81,7 +81,13 @@ export async function submitPortalQuoteRequest(input: {
           submittedByAppUserId: access.appUser.id,
           submittedByEmail: access.appUser.email,
           lineCount: lines.length,
-          lines: lines.map((l) => ({ swiverId: l.swiverId, sku: l.sku, name: l.name, qty: l.quantity, unitPrice: l.unitPrice })),
+          lines: lines.map((l) => ({
+            swiverId: l.swiverId,
+            sku: l.sku,
+            name: l.name,
+            qty: l.quantity,
+            unitPrice: l.unitPrice,
+          })),
         },
         createdBy: access.appUser.id,
         updatedAt: now,
@@ -177,15 +183,16 @@ export async function submitPortalQuoteRequest(input: {
           `Client : ${company}`,
           `Référence : ${referenceCode}`,
           `${lines.length} référence(s) · ${units} unité(s)`,
-          swiverPushed ? `Transmise à Swiver (brouillon de ${swiverDocWord}).` : `Non transmise à Swiver — à traiter manuellement.`,
+          swiverPushed
+            ? `Transmise à Swiver (brouillon de ${swiverDocWord}).`
+            : `Non transmise à Swiver — à traiter manuellement.`,
         ].join('\n'),
-        html: brandedHtml(
-          `${docWordCap} — ${company}`,
-          [
-            `Référence ${referenceCode} · ${lines.length} référence(s), ${units} unité(s).`,
-            swiverPushed ? `Transmise à Swiver en brouillon de ${swiverDocWord}.` : 'Non transmise à Swiver — à traiter manuellement.',
-          ],
-        ),
+        html: brandedHtml(`${docWordCap} — ${company}`, [
+          `Référence ${referenceCode} · ${lines.length} référence(s), ${units} unité(s).`,
+          swiverPushed
+            ? `Transmise à Swiver en brouillon de ${swiverDocWord}.`
+            : 'Non transmise à Swiver — à traiter manuellement.',
+        ]),
       });
     });
   }

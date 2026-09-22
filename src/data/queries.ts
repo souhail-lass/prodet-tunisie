@@ -1,7 +1,15 @@
 import type { Locale } from '@/i18n/routing';
 import { products } from './products';
 import { sectors } from './sectors';
-import type { Product, ProductCategory, ProductCategoryKey, Sector, SectorId, UseCase, UseCaseId } from './types';
+import type {
+  Product,
+  ProductCategory,
+  ProductCategoryKey,
+  Sector,
+  SectorId,
+  UseCase,
+  UseCaseId,
+} from './types';
 import { useCases } from './use-cases';
 
 export interface ListProductsOptions {
@@ -130,9 +138,7 @@ export function getProductsForSector(sectorId: SectorId): readonly Product[] {
 }
 
 export function getRecommendedProductsForSector(sector: Sector, limit = 4): readonly Product[] {
-  return [...listProducts({ sectorId: sector.id })]
-    .sort(sortFeaturedFirst)
-    .slice(0, limit);
+  return [...listProducts({ sectorId: sector.id })].sort(sortFeaturedFirst).slice(0, limit);
 }
 
 export function getRelatedProducts(product: Product, limit = 4): readonly Product[] {
@@ -210,9 +216,7 @@ function productMatchesQuery(product: Product, query: string): boolean {
 }
 
 function buildProductSearchDocument(product: Product): ProductSearchDocument {
-  const useCaseTerms = product.useCases
-    .map((id) => USE_CASE_BY_ID.get(id)?.label ?? '')
-    .join(' ');
+  const useCaseTerms = product.useCases.map((id) => USE_CASE_BY_ID.get(id)?.label ?? '').join(' ');
   const sectorTerms = product.sectors.map((id) => SECTOR_BY_ID.get(id)?.label ?? '').join(' ');
   const nameText = normalizeSearchText(product.name);
   const taglineText = normalizeSearchText(product.tagline);
@@ -361,7 +365,9 @@ function getProductSearchScore(product: Product, query: string | undefined): num
   return score;
 }
 
-function buildSearchTokenIndex(documents: readonly ProductSearchDocument[]): Map<string, Set<string>> {
+function buildSearchTokenIndex(
+  documents: readonly ProductSearchDocument[],
+): Map<string, Set<string>> {
   const index = new Map<string, Set<string>>();
 
   documents.forEach((document) => {
@@ -375,7 +381,9 @@ function buildSearchTokenIndex(documents: readonly ProductSearchDocument[]): Map
   return index;
 }
 
-function buildSearchPrefixIndex(documents: readonly ProductSearchDocument[]): Map<string, Set<string>> {
+function buildSearchPrefixIndex(
+  documents: readonly ProductSearchDocument[],
+): Map<string, Set<string>> {
   const index = new Map<string, Set<string>>();
 
   documents.forEach((document) => {

@@ -71,7 +71,7 @@ export default async function ClientHistoryPage({
         >
           {/* Sticky column headers (desktop only). On mobile the row layout
            *  stacks so headers would only add noise. */}
-          <div className="hidden grid-cols-[160px_140px_1fr_120px_100px] items-center gap-4 border-b border-border bg-prodet-wash/60 px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground lg:grid">
+          <div className="border-border bg-prodet-wash/60 text-muted-foreground hidden grid-cols-[160px_140px_1fr_120px_100px] items-center gap-4 border-b px-6 py-2 text-[11px] font-semibold tracking-[0.06em] uppercase lg:grid">
             <span>{t('history.reference')}</span>
             <span>Statut</span>
             <span>Produits</span>
@@ -79,7 +79,7 @@ export default async function ClientHistoryPage({
             <span className="text-right">Date</span>
           </div>
 
-          <ul className="divide-y divide-border">
+          <ul className="divide-border divide-y">
             {requests.map((request) => (
               <li key={request.id}>
                 <HistoryRow request={request} />
@@ -113,12 +113,12 @@ async function HistoryRow({ request }: { request: PortalRequestSummary }) {
   return (
     <Link
       href={`/client/historique/${request.id}`}
-      className="group block px-5 py-3.5 transition-colors hover:bg-prodet-wash md:px-6"
+      className="group hover:bg-prodet-wash block px-5 py-3.5 transition-colors md:px-6"
     >
       {/* Desktop: dense table row. Mobile: vertical stack with status under reference. */}
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[160px_140px_1fr_120px_100px] lg:items-center lg:gap-4">
         <div className="flex items-center gap-3 lg:block">
-          <span className="text-[14px] font-semibold tabular-nums text-prodet-text group-hover:text-prodet-blue">
+          <span className="text-prodet-text group-hover:text-prodet-blue text-[14px] font-semibold tabular-nums">
             {request.referenceCode}
           </span>
           <span className="lg:hidden">
@@ -130,32 +130,34 @@ async function HistoryRow({ request }: { request: PortalRequestSummary }) {
           <StatusPill tone={tone} label={portalStatusLabels[request.status]} />
         </div>
 
-        <div className="min-w-0 text-[13px] leading-5 text-muted-foreground">
-          <p className="line-clamp-1 text-prodet-text">{request.productSummary || t('history.noProduct')}</p>
-          {meta ? <p className="line-clamp-1 text-muted-foreground">{meta}</p> : null}
+        <div className="text-muted-foreground min-w-0 text-[13px] leading-5">
+          <p className="text-prodet-text line-clamp-1">
+            {request.productSummary || t('history.noProduct')}
+          </p>
+          {meta ? <p className="text-muted-foreground line-clamp-1">{meta}</p> : null}
         </div>
 
         <div className="flex items-center justify-between gap-3 lg:justify-end">
-          <span className="text-[11px] font-semibold uppercase text-muted-foreground lg:hidden">
+          <span className="text-muted-foreground text-[11px] font-semibold uppercase lg:hidden">
             Lignes
           </span>
-          <span className="text-[13px] font-medium tabular-nums text-prodet-text">
+          <span className="text-prodet-text text-[13px] font-medium tabular-nums">
             {request.lineCount}
           </span>
         </div>
 
         <div className="flex items-center justify-between gap-3 lg:justify-end">
-          <span className="text-[11px] font-semibold uppercase text-muted-foreground lg:hidden">
+          <span className="text-muted-foreground text-[11px] font-semibold uppercase lg:hidden">
             Date
           </span>
-          <span className="text-[13px] tabular-nums text-muted-foreground">
+          <span className="text-muted-foreground text-[13px] tabular-nums">
             {formatDateShort(request.createdAt)}
           </span>
         </div>
       </div>
 
       {/* Mobile-only "Voir détail" affordance — the whole row is the link. */}
-      <div className="mt-2 inline-flex items-center gap-1 text-[12px] font-medium text-prodet-blue lg:hidden">
+      <div className="text-prodet-blue mt-2 inline-flex items-center gap-1 text-[12px] font-medium lg:hidden">
         {t('history.viewDetail')}
         <ArrowRight className="h-3.5 w-3.5" aria-hidden />
       </div>

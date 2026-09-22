@@ -67,7 +67,9 @@ export async function listMyOrders(opts?: {
   let totals: Record<string, number> = {};
   if (wantSwiver) {
     try {
-      cdcs = await fetchSwiverDocuments(access.customer.swiverId!, ['bon_de_commande'], { includeDrafts: true });
+      cdcs = await fetchSwiverDocuments(access.customer.swiverId!, ['bon_de_commande'], {
+        includeDrafts: true,
+      });
       for (const d of cdcs) if (d.swiverId && d.totalTtc != null) totals[d.swiverId] = d.totalTtc;
     } catch {
       cdcs = [];
@@ -108,7 +110,9 @@ export async function listMyOrders(opts?: {
       }));
   }
 
-  return [...portalRows, ...swiverRows].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  return [...portalRows, ...swiverRows].sort(
+    (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+  );
 }
 
 export type PortalOrderLineDetail = {
@@ -271,9 +275,7 @@ export async function listMyFrequentProducts(limit = 8): Promise<FrequentProduct
   }
   if (counts.size === 0) return [];
 
-  const ranked = [...counts.entries()]
-    .sort((a, b) => b[1].count - a[1].count)
-    .slice(0, limit);
+  const ranked = [...counts.entries()].sort((a, b) => b[1].count - a[1].count).slice(0, limit);
 
   const rows = await db
     .select({
@@ -288,12 +290,14 @@ export async function listMyFrequentProducts(limit = 8): Promise<FrequentProduct
     })
     .from(schema.catalogueProduct)
     .where(eq(schema.catalogueProduct.hidden, false));
-  const byKey = new Map(rows.flatMap((r) => {
-    const entries: Array<[string, typeof r]> = [];
-    if (r.swiverId) entries.push([r.swiverId, r]);
-    if (r.sku) entries.push([r.sku, r]);
-    return entries;
-  }));
+  const byKey = new Map(
+    rows.flatMap((r) => {
+      const entries: Array<[string, typeof r]> = [];
+      if (r.swiverId) entries.push([r.swiverId, r]);
+      if (r.sku) entries.push([r.sku, r]);
+      return entries;
+    }),
+  );
 
   const result: FrequentProduct[] = [];
   for (const [key, info] of ranked) {
@@ -315,7 +319,9 @@ export async function listMyFrequentProducts(limit = 8): Promise<FrequentProduct
  * Cancel one of the client's own orders. If it was pushed to Swiver, the
  * Swiver draft is set to `to_canceled` too. Ownership-checked; audit-logged.
  */
-export async function cancelMyOrder(orderDraftId: string): Promise<{ ok: boolean; swiverCanceled?: boolean }> {
+export async function cancelMyOrder(
+  orderDraftId: string,
+): Promise<{ ok: boolean; swiverCanceled?: boolean }> {
   const access = await requireClientPortalAccess();
   const { db, schema } = await import('@/db/client');
   const [order] = await db
@@ -340,14 +346,20 @@ export async function cancelMyOrder(orderDraftId: string): Promise<{ ok: boolean
   let swiverCanceled = false;
   if (order.swiverDocumentRef) {
     try {
-      swiverCanceled = await getSwiverAdapter().documents.setDocumentState(order.swiverDocumentRef, 'to_canceled');
+      swiverCanceled = await getSwiverAdapter().documents.setDocumentState(
+        order.swiverDocumentRef,
+        'to_canceled',
+      );
     } catch {
       // Still cancel on our side; admin can reconcile Swiver.
     }
   }
 
   const now = new Date();
-  await db.update(schema.orderDraft).set({ status: 'rejected', updatedAt: now }).where(eq(schema.orderDraft.id, order.id));
+  await db
+    .update(schema.orderDraft)
+    .set({ status: 'rejected', updatedAt: now })
+    .where(eq(schema.orderDraft.id, order.id));
   await db.insert(schema.auditLog).values({
     actorUserId: access.appUser.id,
     actorRole: access.appUser.role,

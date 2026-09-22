@@ -3,7 +3,11 @@ import { SupportListClient, type SupportRow } from './support-list-client';
 
 export const dynamic = 'force-dynamic';
 
-const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Africa/Tunis' });
+const fmt = new Intl.DateTimeFormat('fr-FR', {
+  dateStyle: 'short',
+  timeStyle: 'short',
+  timeZone: 'Africa/Tunis',
+});
 
 export default async function SupportPage() {
   let rows: SupportRow[] = [];

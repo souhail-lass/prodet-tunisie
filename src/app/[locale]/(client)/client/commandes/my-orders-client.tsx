@@ -77,7 +77,9 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
           <div className="stat-card__label">Commandes</div>
         </div>
         <div className="stat-card">
-          <div className="stat-card__value" style={{ color: 'var(--prodet-green)' }}>{pushed}</div>
+          <div className="stat-card__value" style={{ color: 'var(--prodet-green)' }}>
+            {pushed}
+          </div>
           <div className="stat-card__label">{tr('tabs.sent')}</div>
         </div>
       </div>
@@ -87,7 +89,7 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
           {TABS.map((t) => (
             <button
               key={t.id}
-              className={`otable-tab${tab === t.id ? ' is-active' : ''}`}
+              className={`otable-tab${tab === t.id ? 'is-active' : ''}`}
               onClick={() => setTab(t.id)}
             >
               {tr(`tabs.${t.key}`)}
@@ -129,7 +131,11 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
             const refInner = (
               <>
                 {transmitted ? (
-                  <CheckCircle2 size={14} className="otable__ref-check" aria-label={tr('savedShort')} />
+                  <CheckCircle2
+                    size={14}
+                    className="otable__ref-check"
+                    aria-label={tr('savedShort')}
+                  />
                 ) : null}
                 <span>{o.reference}</span>
               </>
@@ -156,11 +162,15 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
                 </span>
                 <span className="otable__amount">{o.totalLabel ?? '—'}</span>
                 <span>
-                  <span className={`otable-pill otable-pill--${s?.tone ?? 'neutral'}`}>{s ? tr(`status.${s.key}`) : status}</span>
+                  <span className={`otable-pill otable-pill--${s?.tone ?? 'neutral'}`}>
+                    {s ? tr(`status.${s.key}`) : status}
+                  </span>
                 </span>
                 <span className="otable__actions">
                   {fromSwiver ? (
-                    <span className="otable__origin" title={tr('savedLong')}>Prodet</span>
+                    <span className="otable__origin" title={tr('savedLong')}>
+                      Prodet
+                    </span>
                   ) : (
                     <>
                       <Link
@@ -191,9 +201,7 @@ export function MyOrdersClient({ orders }: { orders: MyOrderRow[] }) {
         </div>
       ) : (
         <div className="otable-empty">
-          {tab === 'all' && !query
-            ? tr('emptyAll')
-            : tr('emptyCategory')}
+          {tab === 'all' && !query ? tr('emptyAll') : tr('emptyCategory')}
         </div>
       )}
 

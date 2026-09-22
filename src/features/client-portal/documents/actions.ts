@@ -69,14 +69,25 @@ const DownloadSchema = z.object({
 
 export type UploadDocumentResult =
   | { ok: true; documentId: string }
-  | { ok: false; error: 'invalid' | 'too-large' | 'mime-not-allowed' | 'rate-limited' | 'unavailable' | 'failed' };
+  | {
+      ok: false;
+      error:
+        | 'invalid'
+        | 'too-large'
+        | 'mime-not-allowed'
+        | 'rate-limited'
+        | 'unavailable'
+        | 'failed';
+    };
 
 /**
  * Upload a customer document. The bytes never touch the browser bundle —
  * they arrive as multipart/form-data, go to the service-role Storage client,
  * and the resulting metadata row is owned by the calling customer.
  */
-export async function uploadCustomerDocumentAction(formData: FormData): Promise<UploadDocumentResult> {
+export async function uploadCustomerDocumentAction(
+  formData: FormData,
+): Promise<UploadDocumentResult> {
   let access;
   try {
     access = await requireClientPortalAccess();

@@ -8,23 +8,46 @@ import type { SwiverDocumentStatus } from '@/integrations/swiver';
 export const dynamic = 'force-dynamic';
 
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeZone: 'Africa/Tunis' });
-const moneyFmt = new Intl.NumberFormat('fr-TN', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+const moneyFmt = new Intl.NumberFormat('fr-TN', {
+  minimumFractionDigits: 3,
+  maximumFractionDigits: 3,
+});
 
 function statusBadge(status: SwiverDocumentStatus, t: (k: string) => string) {
   switch (status) {
     case 'paid':
     case 'sent':
-      return <Badge tone="blue" dot>{t('quotes.issued')}</Badge>;
+      return (
+        <Badge tone="blue" dot>
+          {t('quotes.issued')}
+        </Badge>
+      );
     case 'cancelled':
-      return <Badge tone="red" dot>{t('quotes.cancelled')}</Badge>;
+      return (
+        <Badge tone="red" dot>
+          {t('quotes.cancelled')}
+        </Badge>
+      );
     case 'draft':
-      return <Badge tone="neutral" dot>{t('quotes.draft')}</Badge>;
+      return (
+        <Badge tone="neutral" dot>
+          {t('quotes.draft')}
+        </Badge>
+      );
     default:
-      return <Badge tone="neutral" dot>{t('quotes.issued')}</Badge>;
+      return (
+        <Badge tone="neutral" dot>
+          {t('quotes.issued')}
+        </Badge>
+      );
   }
 }
 
-export default async function ClientQuotesPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ClientQuotesPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'portal' });
   const { linked, documents } = await listMySwiverDocuments(['devis']);
@@ -39,9 +62,7 @@ export default async function ClientQuotesPage({ params }: { params: Promise<{ l
           <h2 className="panel__title">
             {linked ? t('quotes.emptyTitle') : t('quotes.notLinkedTitle')}
           </h2>
-          <p className="panel__sub">
-            {linked ? t('quotes.emptyBody') : t('quotes.notLinkedBody')}
-          </p>
+          <p className="panel__sub">{linked ? t('quotes.emptyBody') : t('quotes.notLinkedBody')}</p>
           <Link
             href="/client/commander"
             className="pds-btn pds-btn--primary pds-btn--sm"

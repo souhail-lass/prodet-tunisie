@@ -121,7 +121,9 @@ try {
     }
   }
 
-  console.log(`\n${updated} produit(s) ${dry ? 'à mettre à jour' : 'mis à jour'} sur ${rows.length}.`);
+  console.log(
+    `\n${updated} produit(s) ${dry ? 'à mettre à jour' : 'mis à jour'} sur ${rows.length}.`,
+  );
   if (unmatched.length) {
     console.log(`\nSans document (${unmatched.length}) :`);
     for (const name of unmatched.sort()) console.log(`  - ${name}`);

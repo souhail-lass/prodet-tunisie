@@ -17,12 +17,17 @@ export default async function AdminClientsPage() {
     return (
       <section className="panel" style={{ maxWidth: 560 }}>
         <div className="panel__head">
-          <h2 className="panel__title" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <h2
+            className="panel__title"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+          >
             <CloudOff size={18} /> Données indisponibles
           </h2>
         </div>
         <p className="panel__sub">Impossible de charger les clients (base de données ou Swiver).</p>
-        <p style={{ marginTop: 10, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>{error}</p>
+        <p style={{ marginTop: 10, fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+          {error}
+        </p>
       </section>
     );
   }

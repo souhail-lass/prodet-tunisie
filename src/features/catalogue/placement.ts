@@ -50,9 +50,15 @@ export function parseExtraPlacements(raw: unknown): ExtraPlacement[] {
     if (!item || typeof item !== 'object') continue;
     const rec = item as Record<string, unknown>;
     const familleSlug = typeof rec.familleSlug === 'string' ? rec.familleSlug : '';
-    const sousCategorieSlug = typeof rec.sousCategorieSlug === 'string' ? rec.sousCategorieSlug : '';
-    if (!isCurationFamilleId(familleSlug) || !isSousCategorieOfFamille(familleSlug, sousCategorieSlug)) continue;
-    const sortOrder = typeof rec.sortOrder === 'number' && Number.isFinite(rec.sortOrder) ? rec.sortOrder : null;
+    const sousCategorieSlug =
+      typeof rec.sousCategorieSlug === 'string' ? rec.sousCategorieSlug : '';
+    if (
+      !isCurationFamilleId(familleSlug) ||
+      !isSousCategorieOfFamille(familleSlug, sousCategorieSlug)
+    )
+      continue;
+    const sortOrder =
+      typeof rec.sortOrder === 'number' && Number.isFinite(rec.sortOrder) ? rec.sortOrder : null;
     out.push({ familleSlug, sousCategorieSlug, sortOrder });
   }
   return out;
@@ -72,7 +78,10 @@ export function sanitizeExtraPlacements(
   for (const extra of extras ?? []) {
     if (!isCurationFamilleId(extra.familleSlug)) continue;
     if (!isSousCategorieOfFamille(extra.familleSlug, extra.sousCategorieSlug)) continue;
-    if (extra.familleSlug === primary.familleId && extra.sousCategorieSlug === primary.sousCategorieSlug) {
+    if (
+      extra.familleSlug === primary.familleId &&
+      extra.sousCategorieSlug === primary.sousCategorieSlug
+    ) {
       continue;
     }
     const key = `${extra.familleSlug}/${extra.sousCategorieSlug}`;
@@ -295,7 +304,8 @@ export function planPlacementChange(
 ): PlacementChangePlan {
   const from = resolveRowPlacement(row);
   const familleSlug = isCurationFamilleId(input.familleSlug) ? input.familleSlug : null;
-  const effectiveFamille = familleSlug ?? resolveRowPlacement({ ...row, familleSlug: null }).familleId;
+  const effectiveFamille =
+    familleSlug ?? resolveRowPlacement({ ...row, familleSlug: null }).familleId;
   const sousCategorieSlug = isSousCategorieOfFamille(effectiveFamille, input.sousCategorieSlug)
     ? input.sousCategorieSlug
     : null;

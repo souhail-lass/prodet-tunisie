@@ -23,7 +23,13 @@ export function Button({
   className = '',
   ...rest
 }: ButtonProps) {
-  const cls = ['pds-btn', `pds-btn--${variant}`, `pds-btn--${size}`, block ? 'pds-btn--block' : '', className]
+  const cls = [
+    'pds-btn',
+    `pds-btn--${variant}`,
+    `pds-btn--${size}`,
+    block ? 'pds-btn--block' : '',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
   return (

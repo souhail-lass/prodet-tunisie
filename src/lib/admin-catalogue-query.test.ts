@@ -8,7 +8,9 @@ import {
 
 describe('parseAdminCatalogueQuery', () => {
   it('reads q, cat and visibility from search params', () => {
-    expect(parseAdminCatalogueQuery(new URLSearchParams('q=javel&cat=PRODUITS+FINIS&v=hidden'))).toEqual({
+    expect(
+      parseAdminCatalogueQuery(new URLSearchParams('q=javel&cat=PRODUITS+FINIS&v=hidden')),
+    ).toEqual({
       q: 'javel',
       cat: 'PRODUITS FINIS',
       v: 'hidden',

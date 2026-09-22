@@ -88,10 +88,18 @@ export async function saveProductContent(
         : {}),
     })
     .where(eq(schema.catalogueProduct.id, id));
-  await audit('catalogue_product.updated', id, { hidden: content.hidden, featured: content.featured }, actorUserId);
+  await audit(
+    'catalogue_product.updated',
+    id,
+    { hidden: content.hidden, featured: content.featured },
+    actorUserId,
+  );
 }
 
-export async function createCustomProduct(content: ProductContent, actorUserId?: string | null): Promise<string> {
+export async function createCustomProduct(
+  content: ProductContent,
+  actorUserId?: string | null,
+): Promise<string> {
   const { db, schema } = await import('@/db/client');
   const now = new Date();
   const [row] = await db
@@ -122,23 +130,38 @@ export async function createCustomProduct(content: ProductContent, actorUserId?:
   return row.id;
 }
 
-export async function setProductHidden(id: string, hidden: boolean, actorUserId?: string | null): Promise<void> {
+export async function setProductHidden(
+  id: string,
+  hidden: boolean,
+  actorUserId?: string | null,
+): Promise<void> {
   const { db, schema } = await import('@/db/client');
   await db
     .update(schema.catalogueProduct)
     .set({ hidden, updatedByUserId: actorUserId ?? null, updatedAt: new Date() })
     .where(eq(schema.catalogueProduct.id, id));
-  await audit(hidden ? 'catalogue_product.hidden' : 'catalogue_product.shown', id, { hidden }, actorUserId);
+  await audit(
+    hidden ? 'catalogue_product.hidden' : 'catalogue_product.shown',
+    id,
+    { hidden },
+    actorUserId,
+  );
 }
 
 /** Hide everything in a Swiver category (bulk curation). */
-export async function setCategoryHidden(categoryLabel: string, hidden: boolean, actorUserId?: string | null): Promise<void> {
+export async function setCategoryHidden(
+  categoryLabel: string,
+  hidden: boolean,
+  actorUserId?: string | null,
+): Promise<void> {
   const { db, schema } = await import('@/db/client');
   await db
     .update(schema.catalogueProduct)
     .set({ hidden, updatedAt: new Date() })
     .where(eq(schema.catalogueProduct.baseCategory, categoryLabel));
-  await audit('catalogue_product.category_visibility', null, { hidden }, actorUserId, { categoryLabel });
+  await audit('catalogue_product.category_visibility', null, { hidden }, actorUserId, {
+    categoryLabel,
+  });
 }
 
 async function selectCurationRows(): Promise<CurationRow[]> {
@@ -255,7 +278,11 @@ export async function setProductPlacement(
     id,
     { from: plan.from, to: plan.to },
     actorUserId,
-    { familleSlug: plan.familleSlug, sousCategorieSlug: plan.sousCategorieSlug, extras: plan.extraPlacements.length },
+    {
+      familleSlug: plan.familleSlug,
+      sousCategorieSlug: plan.sousCategorieSlug,
+      extras: plan.extraPlacements.length,
+    },
   );
   return true;
 }
@@ -287,7 +314,12 @@ export async function reorderSousCategorie(
         await tx
           .update(schema.catalogueProduct)
           .set({
-            ...listingSortValues(row, input.familleId, input.sousCategorieSlug, assignment.sortOrder),
+            ...listingSortValues(
+              row,
+              input.familleId,
+              input.sousCategorieSlug,
+              assignment.sortOrder,
+            ),
             updatedByUserId: actorUserId ?? null,
             updatedAt: new Date(),
           })
@@ -390,7 +422,10 @@ export async function setCataloguePin(
 }
 
 /** Delete a custom product (Swiver products are hidden, never deleted). */
-export async function deleteCustomProduct(id: string, actorUserId?: string | null): Promise<boolean> {
+export async function deleteCustomProduct(
+  id: string,
+  actorUserId?: string | null,
+): Promise<boolean> {
   const { db, schema } = await import('@/db/client');
   const [row] = await db
     .select({ source: schema.catalogueProduct.source })

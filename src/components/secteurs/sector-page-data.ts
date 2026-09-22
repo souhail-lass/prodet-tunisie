@@ -30,8 +30,7 @@ export const sectorPageCards: readonly SectorPageCard[] = [
     alt: "Couloir d'hôtel professionnel",
     icon: 'Hotel',
     summary: 'Linge, chambres, sanitaires, parfum textile.',
-    description:
-      'Produits pour lingerie, chambres, sanitaires clients et espaces visibles.',
+    description: 'Produits pour lingerie, chambres, sanitaires clients et espaces visibles.',
     supplies: ['Prolax linge', 'Deofresh Linge', 'Sanitaires & vitres'],
     tags: ['Linge & textiles', 'Surfaces & vitres', 'Sanitaires & désinfection'],
     useCases: ['linge-textiles', 'surfaces-vitres', 'sanitaires-desinfection'],
@@ -43,8 +42,7 @@ export const sectorPageCards: readonly SectorPageCard[] = [
     alt: 'Cuisine de restaurant professionnelle',
     icon: 'UtensilsCrossed',
     summary: 'Cuisine, plonge, fours, vaisselle machine.',
-    description:
-      'Produits de dégraissage, plonge, fours, hottes, vaisselle et hygiène de service.',
+    description: 'Produits de dégraissage, plonge, fours, hottes, vaisselle et hygiène de service.',
     supplies: ['Profour', 'Prolav / Prorinse', 'Solitaire Vaisselle'],
     tags: ['Cuisine & dégraissage', 'Vaisselle', 'Hygiène des mains'],
     useCases: ['cuisine-degraissage', 'hygiene-mains', 'sols'],

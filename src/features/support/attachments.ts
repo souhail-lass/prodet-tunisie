@@ -48,7 +48,11 @@ function bucket(): string {
 function extFromName(name: string): string {
   const dot = name.lastIndexOf('.');
   if (dot <= 0 || dot === name.length - 1) return '';
-  return name.slice(dot + 1).toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 8);
+  return name
+    .slice(dot + 1)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '')
+    .slice(0, 8);
 }
 
 export type UploadResult =
@@ -84,7 +88,12 @@ export async function uploadSupportAttachment(file: {
 
   return {
     ok: true,
-    attachment: { path, name: file.name.slice(0, 200) || 'fichier', type: file.type, size: file.size },
+    attachment: {
+      path,
+      name: file.name.slice(0, 200) || 'fichier',
+      type: file.type,
+      size: file.size,
+    },
   };
 }
 
@@ -95,7 +104,10 @@ export async function downloadSupportAttachment(
   const admin = createSupabaseAdminClient();
   const { data, error } = await admin.storage.from(bucket()).download(path);
   if (error || !data) return null;
-  return { bytes: new Uint8Array(await data.arrayBuffer()), type: data.type || 'application/octet-stream' };
+  return {
+    bytes: new Uint8Array(await data.arrayBuffer()),
+    type: data.type || 'application/octet-stream',
+  };
 }
 
 /** Best-effort cleanup (e.g. when a ticket/message insert fails after upload). */
@@ -125,8 +137,19 @@ export function sanitizeIncomingAttachments(raw: unknown): TicketAttachment[] {
     const { path, name, type, size } = item as Record<string, unknown>;
     if (typeof path !== 'string' || !SUPPORT_PATH_RE.test(path)) continue;
     if (typeof type !== 'string' || !isAllowedAttachmentMime(type)) continue;
-    if (typeof size !== 'number' || !Number.isFinite(size) || size <= 0 || size > MAX_ATTACHMENT_BYTES) continue;
-    out.push({ path, name: typeof name === 'string' && name.trim() ? name.slice(0, 200) : 'fichier', type, size });
+    if (
+      typeof size !== 'number' ||
+      !Number.isFinite(size) ||
+      size <= 0 ||
+      size > MAX_ATTACHMENT_BYTES
+    )
+      continue;
+    out.push({
+      path,
+      name: typeof name === 'string' && name.trim() ? name.slice(0, 200) : 'fichier',
+      type,
+      size,
+    });
   }
   return out;
 }

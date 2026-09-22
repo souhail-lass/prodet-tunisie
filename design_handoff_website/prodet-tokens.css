@@ -6,7 +6,6 @@
    Do not approximate — reference everything via var(--…).
    ============================================================ */
 
-
 /* ===== tokens/fonts.css ===== */
 /* DM Sans — Prodet's single typeface. Weights 400 / 500 / 600 / 700. */
 
@@ -86,59 +85,59 @@
 
 :root {
   /* --- Brand primitives (from the Prodet logo) --- */
-  --prodet-blue: #095296;   /* wordmark — primary action, links, active nav */
-  --prodet-navy: #063561;   /* deep brand — hero, footer, sidebar, portal rail */
-  --prodet-sky: #41AAE2;    /* logo sparkle — highlights only, used sparingly */
-  --prodet-green: #24883E;  /* "Fabriqué par Prodet", success, local manufacturing */
+  --prodet-blue: #095296; /* wordmark — primary action, links, active nav */
+  --prodet-navy: #063561; /* deep brand — hero, footer, sidebar, portal rail */
+  --prodet-sky: #41aae2; /* logo sparkle — highlights only, used sparingly */
+  --prodet-green: #24883e; /* "Fabriqué par Prodet", success, local manufacturing */
 
   /* Interaction shades (harmonious, oklch-tuned darken/lighten) */
-  --prodet-blue-hover: #074173;   /* primary button :hover */
-  --prodet-blue-press: #05335c;   /* primary button :active */
-  --prodet-blue-tint: #E7F0F8;    /* selected rows, soft fills, focus halo */
-  --prodet-blue-tint-strong: #D2E3F2;
-  --prodet-green-hover: #1C6E31;
-  --prodet-green-tint: #E5F1E8;
+  --prodet-blue-hover: #074173; /* primary button :hover */
+  --prodet-blue-press: #05335c; /* primary button :active */
+  --prodet-blue-tint: #e7f0f8; /* selected rows, soft fills, focus halo */
+  --prodet-blue-tint-strong: #d2e3f2;
+  --prodet-green-hover: #1c6e31;
+  --prodet-green-tint: #e5f1e8;
 
   /* --- Surfaces --- */
-  --surface-page: #F7F6F3;     /* warm off-white — the canvas, NEVER #FFFFFF */
-  --surface-card: #FFFFFF;     /* cards, panels, inputs */
-  --surface-sunken: #F0EEEA;   /* product image stage, wells, inset areas */
-  --surface-navy: #063561;     /* dark sections */
-  --surface-navy-soft: #0A4173;/* raised elements on navy */
+  --surface-page: #f7f6f3; /* warm off-white — the canvas, NEVER #FFFFFF */
+  --surface-card: #ffffff; /* cards, panels, inputs */
+  --surface-sunken: #f0eeea; /* product image stage, wells, inset areas */
+  --surface-navy: #063561; /* dark sections */
+  --surface-navy-soft: #0a4173; /* raised elements on navy */
 
   /* --- Text --- */
-  --text-primary: #1A1A18;     /* headings, body */
-  --text-secondary: #6B6B67;   /* supporting copy, taglines */
-  --text-tertiary: #A8A7A3;    /* meta, counts, captions */
-  --text-on-dark: #FFFFFF;     /* text on navy/blue */
-  --text-on-dark-soft: #B9CBDD;/* secondary text on navy */
+  --text-primary: #1a1a18; /* headings, body */
+  --text-secondary: #6b6b67; /* supporting copy, taglines */
+  --text-tertiary: #a8a7a3; /* meta, counts, captions */
+  --text-on-dark: #ffffff; /* text on navy/blue */
+  --text-on-dark-soft: #b9cbdd; /* secondary text on navy */
   --text-link: #095296;
 
   /* --- Borders --- */
-  --border-default: #D8D7D3;   /* default hairline */
-  --border-strong: #BFBEB9;    /* emphasized dividers */
+  --border-default: #d8d7d3; /* default hairline */
+  --border-strong: #bfbeb9; /* emphasized dividers */
   --border-on-dark: rgba(255, 255, 255, 0.14);
   --border-focus: #095296;
 
   /* --- Status (portal orders + system feedback) --- */
-  --status-progress-fg: #095296;  /* En cours */
-  --status-progress-bg: #E7F0F8;
-  --status-delivered-fg: #24883E; /* Livré */
-  --status-delivered-bg: #E5F1E8;
-  --status-prep-fg: #B26B04;      /* En préparation */
-  --status-prep-bg: #FBF0DC;
-  --status-cancelled-fg: #B23B3B; /* Annulé */
-  --status-cancelled-bg: #F7E7E5;
+  --status-progress-fg: #095296; /* En cours */
+  --status-progress-bg: #e7f0f8;
+  --status-delivered-fg: #24883e; /* Livré */
+  --status-delivered-bg: #e5f1e8;
+  --status-prep-fg: #b26b04; /* En préparation */
+  --status-prep-bg: #fbf0dc;
+  --status-cancelled-fg: #b23b3b; /* Annulé */
+  --status-cancelled-bg: #f7e7e5;
 
   /* --- Semantic feedback --- */
-  --color-success: #24883E;
-  --color-success-bg: #E5F1E8;
-  --color-warning: #B26B04;
-  --color-warning-bg: #FBF0DC;
-  --color-danger: #B23B3B;
-  --color-danger-bg: #F7E7E5;
+  --color-success: #24883e;
+  --color-success-bg: #e5f1e8;
+  --color-warning: #b26b04;
+  --color-warning-bg: #fbf0dc;
+  --color-danger: #b23b3b;
+  --color-danger-bg: #f7e7e5;
   --color-info: #095296;
-  --color-info-bg: #E7F0F8;
+  --color-info-bg: #e7f0f8;
 }
 
 /* ===== tokens/typography.css ===== */
@@ -161,28 +160,28 @@
   --fw-bold: 700; /* @kind other */
 
   /* Type scale (px → rem @16). Tight tracking on large display sizes. */
-  --text-display: 3rem;     /* 48 — homepage hero */
-  --text-h1: 2.25rem;       /* 36 — page titles */
-  --text-h2: 1.75rem;       /* 28 — section headers */
-  --text-h3: 1.375rem;      /* 22 — card / block titles */
-  --text-h4: 1.125rem;      /* 18 — sub-headers */
-  --text-lg: 1.0625rem;     /* 17 — lead paragraph */
-  --text-base: 0.9375rem;   /* 15 — body default */
-  --text-sm: 0.8125rem;     /* 13 — secondary / product name in grid */
-  --text-xs: 0.75rem;       /* 12 — captions, taglines */
-  --text-2xs: 0.6875rem;    /* 11 — eyebrow labels, badge text */
+  --text-display: 3rem; /* 48 — homepage hero */
+  --text-h1: 2.25rem; /* 36 — page titles */
+  --text-h2: 1.75rem; /* 28 — section headers */
+  --text-h3: 1.375rem; /* 22 — card / block titles */
+  --text-h4: 1.125rem; /* 18 — sub-headers */
+  --text-lg: 1.0625rem; /* 17 — lead paragraph */
+  --text-base: 0.9375rem; /* 15 — body default */
+  --text-sm: 0.8125rem; /* 13 — secondary / product name in grid */
+  --text-xs: 0.75rem; /* 12 — captions, taglines */
+  --text-2xs: 0.6875rem; /* 11 — eyebrow labels, badge text */
 
   /* Line heights */
-  --leading-tight: 1.1;     /* display + headings */
+  --leading-tight: 1.1; /* display + headings */
   --leading-snug: 1.3;
-  --leading-normal: 1.5;    /* body */
+  --leading-normal: 1.5; /* body */
   --leading-relaxed: 1.65;
 
   /* Letter spacing */
-  --tracking-display: -0.02em;  /* big display only */
-  --tracking-tight: -0.01em;    /* h1–h3 */
+  --tracking-display: -0.02em; /* big display only */
+  --tracking-tight: -0.01em; /* h1–h3 */
   --tracking-normal: 0;
-  --tracking-label: 0.14em;     /* eyebrow / overline caps */
+  --tracking-label: 0.14em; /* eyebrow / overline caps */
 }
 
 /* ===== tokens/spacing.css ===== */
@@ -221,7 +220,7 @@
   --shadow-sm: 0 1px 3px rgba(6, 53, 97, 0.08), 0 1px 2px rgba(6, 53, 97, 0.04);
   --shadow-card: 0 2px 8px rgba(6, 53, 97, 0.06);
   --shadow-card-hover: 0 6px 20px rgba(9, 82, 150, 0.12);
-  --shadow-panel: 0 8px 32px rgba(6, 53, 97, 0.10);
+  --shadow-panel: 0 8px 32px rgba(6, 53, 97, 0.1);
   --shadow-focus: 0 0 0 3px rgba(9, 82, 150, 0.18);
 
   /* Layout */
@@ -268,7 +267,12 @@ body {
   font-feature-settings: 'ss01';
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
   font-weight: var(--fw-semibold);
   color: var(--text-primary);

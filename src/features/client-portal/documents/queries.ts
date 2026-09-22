@@ -19,9 +19,7 @@ export type CustomerDocumentRecord = {
   updatedAt: Date;
 };
 
-export async function listCustomerDocuments(
-  customerId: string,
-): Promise<CustomerDocumentRecord[]> {
+export async function listCustomerDocuments(customerId: string): Promise<CustomerDocumentRecord[]> {
   const { db, schema } = await import('@/db/client');
 
   const rows = await db

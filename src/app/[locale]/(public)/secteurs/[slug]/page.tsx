@@ -98,9 +98,7 @@ export default async function SectorPage({
         <div className="section-head">
           <span className="eyebrow">{t('needsEyebrow')}</span>
           <h2 className="section-title">{t('needsTitle')}</h2>
-          <p className="section-lead">
-            {t('needsLead')}
-          </p>
+          <p className="section-lead">{t('needsLead')}</p>
         </div>
 
         <div className="sector-zones__list">

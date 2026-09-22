@@ -76,11 +76,7 @@ export async function consumeRateLimit(options: RateLimitOptions): Promise<RateL
     }
     return { ok: true, retryAfterMs: 0 };
   } catch (error) {
-    console.error(
-      '[rate-limit:unavailable]',
-      key,
-      error instanceof Error ? error.message : error,
-    );
+    console.error('[rate-limit:unavailable]', key, error instanceof Error ? error.message : error);
     return { ok: true, retryAfterMs: 0 };
   }
 }
@@ -98,7 +94,11 @@ function retryAfterFrom(value: string | Date, windowMs: number): number {
   const date =
     value instanceof Date
       ? value
-      : new Date(String(value).replace(' ', 'T').replace(/([+-]\d{2})$/, '$1:00'));
+      : new Date(
+          String(value)
+            .replace(' ', 'T')
+            .replace(/([+-]\d{2})$/, '$1:00'),
+        );
   const ms = date.getTime();
   if (!Number.isFinite(ms)) return windowMs;
   return Math.max(0, ms - Date.now());
@@ -108,7 +108,9 @@ function retryAfterFrom(value: string | Date, windowMs: number): number {
 async function sweepExpired(): Promise<void> {
   try {
     const { db } = await import('@/db/client');
-    await db.execute(sql`delete from rate_limit_bucket where reset_at <= now() - interval '1 hour'`);
+    await db.execute(
+      sql`delete from rate_limit_bucket where reset_at <= now() - interval '1 hour'`,
+    );
   } catch {
     // Nothing to do — the next sweep will retry.
   }

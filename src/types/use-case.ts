@@ -6,13 +6,7 @@ export type UseCaseId =
   | 'hygiene-mains'
   | 'surfaces-vitres';
 
-export type UseCaseIconName =
-  | 'Mop'
-  | 'ChefHat'
-  | 'ShieldPlus'
-  | 'Shirt'
-  | 'HandSoap'
-  | 'Sparkles';
+export type UseCaseIconName = 'Mop' | 'ChefHat' | 'ShieldPlus' | 'Shirt' | 'HandSoap' | 'Sparkles';
 
 export interface UseCase {
   id: UseCaseId;

@@ -27,7 +27,12 @@ export function AboutPage() {
           <p>{t('body.p2')}</p>
           <p>{t('body.p3')}</p>
           <div style={{ marginTop: '24px' }}>
-            <Button variant="primary" size="lg" onClick={openQuote} iconRight={<ArrowRight size={18} />}>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={openQuote}
+              iconRight={<ArrowRight size={18} />}
+            >
               {t('cta')}
             </Button>
           </div>

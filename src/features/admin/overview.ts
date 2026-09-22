@@ -7,14 +7,24 @@ export type AdminOverview = {
   pendingAccessRequests: number;
   visibleProducts: number;
   /** Open support tickets to action, newest first. */
-  tickets: { id: string; subject: string; customerName: string | null; dateLabel: string; awaitingProdet: boolean }[];
+  tickets: {
+    id: string;
+    subject: string;
+    customerName: string | null;
+    dateLabel: string;
+    awaitingProdet: boolean;
+  }[];
   /** Portal access requests awaiting a decision. */
   accessRequests: { id: string; company: string; name: string; dateLabel: string }[];
   /** Recently active (logged-in) clients. */
   activeNow: { name: string; email: string | null; lastSeenLabel: string }[];
 };
 
-const dt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Africa/Tunis' });
+const dt = new Intl.DateTimeFormat('fr-FR', {
+  dateStyle: 'short',
+  timeStyle: 'short',
+  timeZone: 'Africa/Tunis',
+});
 const dtDay = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeZone: 'Africa/Tunis' });
 
 export async function getAdminOverview(): Promise<AdminOverview> {

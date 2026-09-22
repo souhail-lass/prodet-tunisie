@@ -14,10 +14,8 @@ const buttonVariants = cva(
           'border border-prodet-blue bg-prodet-blue text-white shadow-[0_2px_8px_rgba(9,82,150,0.18)] hover:bg-prodet-blue-hover hover:border-prodet-blue-hover active:bg-prodet-blue-press',
         success:
           'border border-prodet-green bg-prodet-green text-white hover:bg-prodet-green-hover hover:border-prodet-green-hover',
-        navy:
-          'border border-[var(--color-surface-navy)] bg-[var(--color-surface-navy)] text-white hover:bg-[var(--color-surface-navy-soft)]',
-        dark:
-          'border border-[var(--color-surface-navy)] bg-[var(--color-surface-navy)] text-white hover:bg-[var(--color-surface-navy-soft)]',
+        navy: 'border border-[var(--color-surface-navy)] bg-[var(--color-surface-navy)] text-white hover:bg-[var(--color-surface-navy-soft)]',
+        dark: 'border border-[var(--color-surface-navy)] bg-[var(--color-surface-navy)] text-white hover:bg-[var(--color-surface-navy-soft)]',
         secondary:
           'border border-prodet-line bg-prodet-blue-tint text-prodet-blue hover:bg-prodet-blue-tint-strong',
         outline:
@@ -27,8 +25,7 @@ const buttonVariants = cva(
         ghost: 'text-prodet-text hover:bg-prodet-blue-tint hover:text-prodet-blue',
         destructive:
           'border border-[var(--color-danger)] bg-[var(--color-danger)] text-white hover:opacity-90',
-        inverse:
-          'border border-white/80 bg-white text-prodet-blue hover:bg-white/90',
+        inverse: 'border border-white/80 bg-white text-prodet-blue hover:bg-white/90',
         link: 'h-auto rounded-none px-0 text-prodet-blue underline-offset-4 hover:text-prodet-blue-hover hover:underline',
       },
       size: {

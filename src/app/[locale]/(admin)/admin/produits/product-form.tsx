@@ -3,7 +3,17 @@
 import { useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
-import { ArrowLeft, ArrowUpDown, FileText, Plus, Save, Star, Trash2, Upload, X } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowUpDown,
+  FileText,
+  Plus,
+  Save,
+  Star,
+  Trash2,
+  Upload,
+  X,
+} from 'lucide-react';
 import { Button, ConfirmDialog, Input, Textarea } from '@/components/ds';
 import {
   assignableSousCategorieSlugs,
@@ -59,7 +69,10 @@ export function ProductForm({
 }) {
   const router = useRouter();
   const locale = useLocale();
-  const [f, setF] = useState<ProductFormInitial>({ ...initial, specs: initial.specs.length ? initial.specs : [] });
+  const [f, setF] = useState<ProductFormInitial>({
+    ...initial,
+    specs: initial.specs.length ? initial.specs : [],
+  });
   const [pending, startTransition] = useTransition();
   const [uploading, setUploading] = useState<'sheet' | 'safety' | 'image' | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -69,7 +82,8 @@ export function ProductForm({
   const safetyInput = useRef<HTMLInputElement>(null);
   const imageInput = useRef<HTMLInputElement>(null);
 
-  const set = <K extends keyof ProductFormInitial>(k: K, v: ProductFormInitial[K]) => setF((p) => ({ ...p, [k]: v }));
+  const set = <K extends keyof ProductFormInitial>(k: K, v: ProductFormInitial[K]) =>
+    setF((p) => ({ ...p, [k]: v }));
 
   const classifiedName = f.displayName.trim() || f.name.trim();
   const auto = useMemo(
@@ -97,7 +111,11 @@ export function ProductForm({
         nextFamille != null &&
         p.sousCategorieSlug !== '' &&
         assignableSousCategorieSlugs(nextFamille).includes(p.sousCategorieSlug);
-      const next = { ...p, familleSlug: value, sousCategorieSlug: stillValid ? p.sousCategorieSlug : '' };
+      const next = {
+        ...p,
+        familleSlug: value,
+        sousCategorieSlug: stillValid ? p.sousCategorieSlug : '',
+      };
       const home = resolvePlacement({
         name: next.displayName.trim() || next.name.trim(),
         baseCategory: next.baseCategory || null,
@@ -113,7 +131,8 @@ export function ProductForm({
       const extraPlacements = checked
         ? [...p.extraPlacements, { familleSlug, sousCategorieSlug, sortOrder: null }]
         : p.extraPlacements.filter(
-            (extra) => extra.familleSlug !== familleSlug || extra.sousCategorieSlug !== sousCategorieSlug,
+            (extra) =>
+              extra.familleSlug !== familleSlug || extra.sousCategorieSlug !== sousCategorieSlug,
           );
       return { ...p, extraPlacements: sanitizeExtraPlacements(extraPlacements, placement) };
     });
@@ -122,7 +141,8 @@ export function ProductForm({
   function extrasChanged() {
     const a = sanitizeExtraPlacements(f.extraPlacements, placement);
     const b = sanitizeExtraPlacements(initial.extraPlacements, placement);
-    const key = (extra: ExtraPlacement) => `${extra.familleSlug}/${extra.sousCategorieSlug}:${extra.sortOrder ?? ''}`;
+    const key = (extra: ExtraPlacement) =>
+      `${extra.familleSlug}/${extra.sousCategorieSlug}:${extra.sortOrder ?? ''}`;
     return a.map(key).sort().join('|') !== b.map(key).sort().join('|');
   }
 
@@ -155,7 +175,9 @@ export function ProductForm({
     const MAX = 10 * 1024 * 1024;
     setUploadError(null);
     if (file.size > MAX) {
-      setUploadError(`Fichier trop volumineux (${(file.size / 1048576).toFixed(1)} Mo). Maximum 10 Mo.`);
+      setUploadError(
+        `Fichier trop volumineux (${(file.size / 1048576).toFixed(1)} Mo). Maximum 10 Mo.`,
+      );
       return;
     }
     setUploading(kind);
@@ -167,12 +189,22 @@ export function ProductForm({
       const r = await uploadAssetAction(fd);
       if (r.ok)
         set(
-          kind === 'sheet' ? 'technicalSheetUrl' : kind === 'safety' ? 'safetySheetUrl' : 'imageUrl',
+          kind === 'sheet'
+            ? 'technicalSheetUrl'
+            : kind === 'safety'
+              ? 'safetySheetUrl'
+              : 'imageUrl',
           r.url,
         );
-      else setUploadError('Échec du téléversement : ' + (r.error === 'too-large' ? 'fichier trop volumineux (max 10 Mo)' : r.error));
+      else
+        setUploadError(
+          'Échec du téléversement : ' +
+            (r.error === 'too-large' ? 'fichier trop volumineux (max 10 Mo)' : r.error),
+        );
     } catch {
-      setUploadError('Échec du téléversement. Vérifiez la taille du fichier (max 10 Mo) et réessayez.');
+      setUploadError(
+        'Échec du téléversement. Vérifiez la taille du fichier (max 10 Mo) et réessayez.',
+      );
     } finally {
       setUploading(null);
     }
@@ -191,7 +223,13 @@ export function ProductForm({
       imageUrl: f.imageUrl || null,
       hidden: f.hidden,
       featured: f.featured,
-      ...(f.isCustom ? { name: f.name.trim() || 'Produit', sku: f.sku.trim() || null, baseCategory: f.baseCategory.trim() || null } : {}),
+      ...(f.isCustom
+        ? {
+            name: f.name.trim() || 'Produit',
+            sku: f.sku.trim() || null,
+            baseCategory: f.baseCategory.trim() || null,
+          }
+        : {}),
     };
     setPlacementError(null);
     startTransition(async () => {
@@ -218,7 +256,11 @@ export function ProductForm({
 
   return (
     <div className="dash" style={{ maxWidth: 820 }}>
-      <a href={localePrefixedPath(locale, listHref)} className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <a
+        href={localePrefixedPath(locale, listHref)}
+        className="ghost-link"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
+      >
         <ArrowLeft size={15} /> Retour au catalogue
       </a>
 
@@ -226,31 +268,67 @@ export function ProductForm({
       <section className="panel">
         <div className="panel__head">
           <h2 className="panel__title">Identité</h2>
-          {f.isCustom ? <span className="pds-badge">Produit personnalisé</span> : <span className="pds-badge">Swiver · {f.sku}</span>}
+          {f.isCustom ? (
+            <span className="pds-badge">Produit personnalisé</span>
+          ) : (
+            <span className="pds-badge">Swiver · {f.sku}</span>
+          )}
         </div>
         {f.isCustom ? (
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 14 }}>
-            <Input label="Nom du produit" value={f.name} onChange={(e) => set('name', e.target.value)} />
-            <Input label="Référence (SKU)" value={f.sku} onChange={(e) => set('sku', e.target.value)} />
-            <Input label="Catégorie" value={f.baseCategory} onChange={(e) => set('baseCategory', e.target.value)} />
+            <Input
+              label="Nom du produit"
+              value={f.name}
+              onChange={(e) => set('name', e.target.value)}
+            />
+            <Input
+              label="Référence (SKU)"
+              value={f.sku}
+              onChange={(e) => set('sku', e.target.value)}
+            />
+            <Input
+              label="Catégorie"
+              value={f.baseCategory}
+              onChange={(e) => set('baseCategory', e.target.value)}
+            />
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 14 }}>
-            <Input label="Nom affiché (laisser vide = nom Swiver)" placeholder={f.name} value={f.displayName} onChange={(e) => set('displayName', e.target.value)} />
+            <Input
+              label="Nom affiché (laisser vide = nom Swiver)"
+              placeholder={f.name}
+              value={f.displayName}
+              onChange={(e) => set('displayName', e.target.value)}
+            />
             <div>
               <div style={labelStyle}>Nom Swiver</div>
-              <div style={{ marginTop: 8, fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>{f.name}</div>
+              <div
+                style={{ marginTop: 8, fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}
+              >
+                {f.name}
+              </div>
             </div>
           </div>
         )}
         <div style={{ marginTop: 14 }}>
-          <Input label="Accroche (tagline)" placeholder="Courte phrase descriptive" value={f.tagline} onChange={(e) => set('tagline', e.target.value)} />
+          <Input
+            label="Accroche (tagline)"
+            placeholder="Courte phrase descriptive"
+            value={f.tagline}
+            onChange={(e) => set('tagline', e.target.value)}
+          />
         </div>
         <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-          <button className={`admin-toggle ${f.hidden ? 'admin-toggle--off' : 'admin-toggle--on'}`} onClick={() => set('hidden', !f.hidden)}>
+          <button
+            className={`admin-toggle ${f.hidden ? 'admin-toggle--off' : 'admin-toggle--on'}`}
+            onClick={() => set('hidden', !f.hidden)}
+          >
             {f.hidden ? 'Masqué du site' : 'Visible sur le site'}
           </button>
-          <button className={`admin-toggle ${f.featured ? 'admin-toggle--on' : 'admin-toggle--off'}`} onClick={() => set('featured', !f.featured)}>
+          <button
+            className={`admin-toggle ${f.featured ? 'admin-toggle--on' : 'admin-toggle--off'}`}
+            onClick={() => set('featured', !f.featured)}
+          >
             <Star size={13} /> {f.featured ? 'En vedette' : 'Mettre en vedette'}
           </button>
         </div>
@@ -265,11 +343,18 @@ export function ProductForm({
           </a>
         </div>
         <p className="panel__sub">
-          « Automatique » laisse le nom du produit décider — c’est ce qui place tout seul les nouveautés
-          synchronisées depuis Swiver. Choisissez une valeur pour figer le classement.
+          « Automatique » laisse le nom du produit décider — c’est ce qui place tout seul les
+          nouveautés synchronisées depuis Swiver. Choisissez une valeur pour figer le classement.
         </p>
         {placementError ? (
-          <p style={{ marginTop: 10, fontSize: 'var(--text-sm)', color: 'var(--color-danger)', fontWeight: 'var(--fw-medium)' }}>
+          <p
+            style={{
+              marginTop: 10,
+              fontSize: 'var(--text-sm)',
+              color: 'var(--color-danger)',
+              fontWeight: 'var(--fw-medium)',
+            }}
+          >
             {placementError}
           </p>
         ) : null}
@@ -306,12 +391,22 @@ export function ProductForm({
                     familleSlug: next.familleSlug || null,
                     sousCategorieSlug: next.sousCategorieSlug || null,
                   });
-                  return { ...next, extraPlacements: sanitizeExtraPlacements(next.extraPlacements, home) };
+                  return {
+                    ...next,
+                    extraPlacements: sanitizeExtraPlacements(next.extraPlacements, home),
+                  };
                 });
               }}
             >
               <option value="">
-                Automatique — {sousCategorieLabel(resolvePlacement({ name: classifiedName, baseCategory: f.baseCategory || null, familleSlug: f.familleSlug || null }).sousCategorieSlug)}
+                Automatique —{' '}
+                {sousCategorieLabel(
+                  resolvePlacement({
+                    name: classifiedName,
+                    baseCategory: f.baseCategory || null,
+                    familleSlug: f.familleSlug || null,
+                  }).sousCategorieSlug,
+                )}
               </option>
               {sousCategorieOptions.map((slug) => (
                 <option key={slug} value={slug}>
@@ -322,13 +417,14 @@ export function ProductForm({
           </div>
         </div>
         <p style={{ marginTop: 12, fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-          Sur le site : {familleLabel(placement.familleId)} › {sousCategorieLabel(placement.sousCategorieSlug)}
+          Sur le site : {familleLabel(placement.familleId)} ›{' '}
+          {sousCategorieLabel(placement.sousCategorieSlug)}
         </p>
         <div style={{ marginTop: 18 }}>
           <div style={labelStyle}>Aussi visible dans</div>
           <p className="panel__sub" style={{ marginTop: 6 }}>
-            Un produit a un emplacement principal ci-dessus. Cochez d’autres sous-catégories pour qu’il
-            apparaisse aussi là — y compris dans une autre famille.
+            Un produit a un emplacement principal ci-dessus. Cochez d’autres sous-catégories pour
+            qu’il apparaisse aussi là — y compris dans une autre famille.
           </p>
           <div
             style={{
@@ -359,7 +455,8 @@ export function ProductForm({
                     const checked =
                       isHome ||
                       f.extraPlacements.some(
-                        (extra) => extra.familleSlug === familleId && extra.sousCategorieSlug === slug,
+                        (extra) =>
+                          extra.familleSlug === familleId && extra.sousCategorieSlug === slug,
                       );
                     return (
                       <label
@@ -398,9 +495,19 @@ export function ProductForm({
         <div className="panel__head">
           <h2 className="panel__title">Contenu</h2>
         </div>
-        <Textarea label="Description" rows={4} value={f.description} onChange={(e) => set('description', e.target.value)} />
+        <Textarea
+          label="Description"
+          rows={4}
+          value={f.description}
+          onChange={(e) => set('description', e.target.value)}
+        />
         <div style={{ marginTop: 14 }}>
-          <Textarea label="Mode d’emploi" rows={3} value={f.howToUse} onChange={(e) => set('howToUse', e.target.value)} />
+          <Textarea
+            label="Mode d’emploi"
+            rows={3}
+            value={f.howToUse}
+            onChange={(e) => set('howToUse', e.target.value)}
+          />
         </div>
         <div style={{ marginTop: 14 }}>
           <Input label="Dosage" value={f.dosage} onChange={(e) => set('dosage', e.target.value)} />
@@ -411,19 +518,58 @@ export function ProductForm({
       <section className="panel">
         <div className="panel__head">
           <h2 className="panel__title">Spécifications</h2>
-          <button className="panel__link" onClick={() => set('specs', [...f.specs, { label: '', value: '' }])}>
+          <button
+            className="panel__link"
+            onClick={() => set('specs', [...f.specs, { label: '', value: '' }])}
+          >
             <Plus size={15} /> Ajouter
           </button>
         </div>
         {f.specs.length === 0 ? (
-          <p className="panel__sub">Aucune spécification. Ajoutez des paires (ex. « Usage » → « Dégraissage »).</p>
+          <p className="panel__sub">
+            Aucune spécification. Ajoutez des paires (ex. « Usage » → « Dégraissage »).
+          </p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {f.specs.map((spec, i) => (
-              <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 2fr auto', gap: 10, alignItems: 'center' }}>
-                <Input placeholder="Libellé" value={spec.label} onChange={(e) => set('specs', f.specs.map((s, j) => (j === i ? { ...s, label: e.target.value } : s)))} />
-                <Input placeholder="Valeur" value={spec.value} onChange={(e) => set('specs', f.specs.map((s, j) => (j === i ? { ...s, value: e.target.value } : s)))} />
-                <button className="admin-toggle admin-toggle--off" onClick={() => set('specs', f.specs.filter((_, j) => j !== i))}>
+              <div
+                key={i}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 2fr auto',
+                  gap: 10,
+                  alignItems: 'center',
+                }}
+              >
+                <Input
+                  placeholder="Libellé"
+                  value={spec.label}
+                  onChange={(e) =>
+                    set(
+                      'specs',
+                      f.specs.map((s, j) => (j === i ? { ...s, label: e.target.value } : s)),
+                    )
+                  }
+                />
+                <Input
+                  placeholder="Valeur"
+                  value={spec.value}
+                  onChange={(e) =>
+                    set(
+                      'specs',
+                      f.specs.map((s, j) => (j === i ? { ...s, value: e.target.value } : s)),
+                    )
+                  }
+                />
+                <button
+                  className="admin-toggle admin-toggle--off"
+                  onClick={() =>
+                    set(
+                      'specs',
+                      f.specs.filter((_, j) => j !== i),
+                    )
+                  }
+                >
                   <X size={13} />
                 </button>
               </div>
@@ -438,7 +584,14 @@ export function ProductForm({
           <h2 className="panel__title">Image &amp; fiche technique</h2>
         </div>
         {uploadError ? (
-          <p style={{ marginBottom: 12, fontSize: 'var(--text-sm)', color: 'var(--color-danger)', fontWeight: 'var(--fw-medium)' }}>
+          <p
+            style={{
+              marginBottom: 12,
+              fontSize: 'var(--text-sm)',
+              color: 'var(--color-danger)',
+              fontWeight: 'var(--fw-medium)',
+            }}
+          >
             {uploadError}
           </p>
         ) : null}
@@ -454,8 +607,19 @@ export function ProductForm({
                   <span>—</span>
                 )}
               </span>
-              <input ref={imageInput} type="file" accept="image/*" hidden onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], 'image')} />
-              <Button variant="outline" size="sm" onClick={() => imageInput.current?.click()} disabled={uploading === 'image'}>
+              <input
+                ref={imageInput}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], 'image')}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => imageInput.current?.click()}
+                disabled={uploading === 'image'}
+              >
                 <Upload size={14} /> {uploading === 'image' ? 'Envoi…' : 'Remplacer'}
               </Button>
               {f.imageUrl ? (
@@ -469,14 +633,33 @@ export function ProductForm({
             <div style={labelStyle}>Fiche technique (PDF)</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
               {f.technicalSheetUrl ? (
-                <a href={f.technicalSheetUrl} target="_blank" rel="noreferrer" className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                <a
+                  href={f.technicalSheetUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ghost-link"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                >
                   <FileText size={15} /> Voir le fichier
                 </a>
               ) : (
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)' }}>Aucune</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)' }}>
+                  Aucune
+                </span>
               )}
-              <input ref={sheetInput} type="file" accept=".pdf,.doc,.docx,application/pdf" hidden onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], 'sheet')} />
-              <Button variant="outline" size="sm" onClick={() => sheetInput.current?.click()} disabled={uploading === 'sheet'}>
+              <input
+                ref={sheetInput}
+                type="file"
+                accept=".pdf,.doc,.docx,application/pdf"
+                hidden
+                onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], 'sheet')}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => sheetInput.current?.click()}
+                disabled={uploading === 'sheet'}
+              >
                 <Upload size={14} /> {uploading === 'sheet' ? 'Envoi…' : 'Téléverser'}
               </Button>
               {f.technicalSheetUrl ? (
@@ -490,14 +673,33 @@ export function ProductForm({
             <div style={labelStyle}>Fiche de données de sécurité (FDS)</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 8 }}>
               {f.safetySheetUrl ? (
-                <a href={f.safetySheetUrl} target="_blank" rel="noreferrer" className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                <a
+                  href={f.safetySheetUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="ghost-link"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                >
                   <FileText size={15} /> Voir le fichier
                 </a>
               ) : (
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)' }}>Aucune</span>
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)' }}>
+                  Aucune
+                </span>
               )}
-              <input ref={safetyInput} type="file" accept=".pdf,.doc,.docx,application/pdf" hidden onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], 'safety')} />
-              <Button variant="outline" size="sm" onClick={() => safetyInput.current?.click()} disabled={uploading === 'safety'}>
+              <input
+                ref={safetyInput}
+                type="file"
+                accept=".pdf,.doc,.docx,application/pdf"
+                hidden
+                onChange={(e) => e.target.files?.[0] && upload(e.target.files[0], 'safety')}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => safetyInput.current?.click()}
+                disabled={uploading === 'safety'}
+              >
                 <Upload size={14} /> {uploading === 'safety' ? 'Envoi…' : 'Téléverser'}
               </Button>
               {f.safetySheetUrl ? (
@@ -510,7 +712,15 @@ export function ProductForm({
         </div>
       </section>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', bottom: 0 }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          position: 'sticky',
+          bottom: 0,
+        }}
+      >
         {f.isCustom && f.id ? (
           <Button variant="outline" onClick={() => setConfirmingDelete(true)} disabled={pending}>
             <Trash2 size={15} /> Supprimer

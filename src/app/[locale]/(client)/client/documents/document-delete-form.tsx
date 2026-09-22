@@ -7,13 +7,7 @@ import { ConfirmDialog } from '@/components/ds';
 import { deleteCustomerDocumentAction } from '@/features/client-portal/documents/actions';
 import type { Locale } from '@/i18n/routing';
 
-export function DocumentDeleteForm({
-  documentId,
-  locale,
-}: {
-  documentId: string;
-  locale: Locale;
-}) {
+export function DocumentDeleteForm({ documentId, locale }: { documentId: string; locale: Locale }) {
   const [isPending, startTransition] = useTransition();
   const [confirming, setConfirming] = useState(false);
   const confirmedRef = useRef(false);

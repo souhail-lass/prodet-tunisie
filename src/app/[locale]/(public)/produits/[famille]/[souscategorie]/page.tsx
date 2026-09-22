@@ -92,16 +92,22 @@ export default async function SousCategoriePage({
             </nav>
             <span className="eyebrow">{tf('page.subEyebrow')}</span>
             <h1 className="famille-hero__title">{label}</h1>
-            <span className="famille-hero__count">{tf('page.productsCount', { count: cards.length })}</span>
+            <span className="famille-hero__count">
+              {tf('page.productsCount', { count: cards.length })}
+            </span>
             <div className="famille-hero__search">
-              <ProductQuickSearch
-                products={searchCards}
-              />
+              <ProductQuickSearch products={searchCards} />
             </div>
           </div>
           {sub ? (
             <div className="famille-hero__media">
-              <Image src={sub.image} alt="" fill sizes="(max-width: 860px) 100vw, 360px" style={{ objectFit: 'cover' }} />
+              <Image
+                src={sub.image}
+                alt=""
+                fill
+                sizes="(max-width: 860px) 100vw, 360px"
+                style={{ objectFit: 'cover' }}
+              />
             </div>
           ) : null}
         </div>

@@ -17,12 +17,7 @@ import { useTranslations } from 'next-intl';
 import { Button, Input, ProductTile, QuantityControl } from '@/components/ds';
 import { Link } from '@/i18n/routing';
 import { submitPortalQuoteAction } from '@/features/client-portal/quote-actions';
-import {
-  clearPortalCart,
-  setPortalCart,
-  usePortalCart,
-  type PortalCart,
-} from '@/lib/portal-cart';
+import { clearPortalCart, setPortalCart, usePortalCart, type PortalCart } from '@/lib/portal-cart';
 import type { PortalProductRef } from '@/features/client-portal/mock/portal-mock';
 
 /** Cap the grid so a large catalogue never floods the DOM — search narrows it. */
@@ -60,8 +55,7 @@ export function ReorderBuilder({
     ? storedCart.picked
     : Object.keys(initialQty).filter((slug) => (initialQty[slug] ?? 0) > 0);
 
-  const writeCart = (next: Partial<PortalCart>) =>
-    setPortalCart({ qty, extra, picked, ...next });
+  const writeCart = (next: Partial<PortalCart>) => setPortalCart({ qty, extra, picked, ...next });
   const [query, setQuery] = useState(initialQuery ?? '');
   const [filter, setFilter] = useState<string>(frequent.length ? FREQUENT : ALL);
   const [submitted, setSubmitted] = useState(false);
@@ -114,7 +108,11 @@ export function ReorderBuilder({
   function setProductQty(slug: string, n: number, product?: PortalProductRef) {
     const next = Math.max(0, n);
     const nextPicked =
-      next <= 0 ? picked.filter((s) => s !== slug) : picked.includes(slug) ? picked : [slug, ...picked];
+      next <= 0
+        ? picked.filter((s) => s !== slug)
+        : picked.includes(slug)
+          ? picked
+          : [slug, ...picked];
     const nextExtra =
       product && !extra.some((p) => p.slug === product.slug) ? [...extra, product] : extra;
     setPortalCart({ qty: { ...qty, [slug]: next }, extra: nextExtra, picked: nextPicked });
@@ -170,7 +168,9 @@ export function ReorderBuilder({
             <Check size={26} />
           </span>
           <h2 className="panel__title" style={{ marginTop: 16 }}>
-            {submittedKind === 'devis' ? t('reorder.successTitleDevis') : t('reorder.successTitleOrder')}
+            {submittedKind === 'devis'
+              ? t('reorder.successTitleDevis')
+              : t('reorder.successTitleOrder')}
           </h2>
           <p className="panel__sub" style={{ marginTop: 6 }}>
             {t('reorder.successBody')}
@@ -194,7 +194,9 @@ export function ReorderBuilder({
               href={submittedKind === 'devis' ? '/client/devis' : '/client/commandes'}
               className="pds-btn pds-btn--primary pds-btn--md"
             >
-              <span>{submittedKind === 'devis' ? t('reorder.viewDevis') : t('reorder.viewOrders')}</span>
+              <span>
+                {submittedKind === 'devis' ? t('reorder.viewDevis') : t('reorder.viewOrders')}
+              </span>
             </Link>
             <Link href="/client" className="pds-btn pds-btn--ghost pds-btn--md">
               <span>{t('reorder.backToDashboard')}</span>
@@ -330,7 +332,7 @@ export function ReorderBuilder({
                   type="button"
                   role="tab"
                   aria-selected={!searching && filter === FREQUENT}
-                  className={`desk-chip${!searching && filter === FREQUENT ? ' is-active' : ''}`}
+                  className={`desk-chip${!searching && filter === FREQUENT ? 'is-active' : ''}`}
                   onClick={() => pickChip(FREQUENT)}
                 >
                   <Sparkles size={14} />
@@ -341,7 +343,7 @@ export function ReorderBuilder({
                 type="button"
                 role="tab"
                 aria-selected={!searching && filter === ALL}
-                className={`desk-chip${!searching && filter === ALL ? ' is-active' : ''}`}
+                className={`desk-chip${!searching && filter === ALL ? 'is-active' : ''}`}
                 onClick={() => pickChip(ALL)}
               >
                 {t('reorder.filterAll')}
@@ -352,7 +354,7 @@ export function ReorderBuilder({
                   type="button"
                   role="tab"
                   aria-selected={!searching && filter === c}
-                  className={`desk-chip${!searching && filter === c ? ' is-active' : ''}`}
+                  className={`desk-chip${!searching && filter === c ? 'is-active' : ''}`}
                   onClick={() => pickChip(c)}
                 >
                   {c}
@@ -400,11 +402,13 @@ export function ReorderBuilder({
       </div>
 
       {/* ---- Mobile sticky action bar ---- */}
-      <div className={`desk-bar${lines.length ? ' is-visible' : ''}`}>
+      <div className={`desk-bar${lines.length ? 'is-visible' : ''}`}>
         <a href="#cart" className="desk-bar__info">
           <ShoppingBasket size={20} />
           <span key={countKey} className="desk-bar__count">
-            {lines.length ? t('reorder.barRefs', { count: refsCount, units: totalUnits }) : t('reorder.barEmpty')}
+            {lines.length
+              ? t('reorder.barRefs', { count: refsCount, units: totalUnits })
+              : t('reorder.barEmpty')}
           </span>
         </a>
         <div className="desk-bar__actions">

@@ -33,89 +33,87 @@ const surfaceSectors: SectorId[] = [
   'revendeurs-grossistes',
 ];
 
-const visualsByUseCase: Record<
-  UseCaseId,
-  { image: string; contextImages: ProductContextImage[] }
-> = {
-  'linge-textiles': {
-    image: '/images/products/prolax-liquide.svg',
-    contextImages: [
-      {
-        src: '/images/contexts/laundry-hotel-01.jpg',
-        alt: "Blanchisserie professionnelle d'hôtel",
-      },
-      {
-        src: '/images/contexts/laundry-hotel-02.jpg',
-        alt: 'Machines de lavage industrielles',
-      },
-    ],
-  },
-  'cuisine-degraissage': {
-    image: '/images/products/liquide-vaisselle.svg',
-    contextImages: [
-      {
-        src: '/images/contexts/kitchen-dishwashing-01.jpg',
-        alt: 'Plonge en cuisine professionnelle',
-      },
-      {
-        src: '/images/contexts/kitchen-dishwashing-02.jpg',
-        alt: 'Cuisine professionnelle en service',
-      },
-    ],
-  },
-  'hygiene-mains': {
-    image: '/images/products/savon-liquide.svg',
-    contextImages: [
-      {
-        src: '/images/contexts/hand-hygiene-01.jpg',
-        alt: 'Distributeur de savon en espace professionnel',
-      },
-      {
-        src: '/images/contexts/hand-hygiene-02.jpg',
-        alt: 'Hygiène des mains en environnement professionnel',
-      },
-    ],
-  },
-  'sanitaires-desinfection': {
-    image: '/images/products/eau-de-javel.svg',
-    contextImages: [
-      {
-        src: '/images/contexts/disinfection-01.jpg',
-        alt: 'Nettoyage de sanitaires professionnels',
-      },
-      {
-        src: '/images/contexts/disinfection-02.jpg',
-        alt: 'Désinfection de cuisine professionnelle',
-      },
-    ],
-  },
-  sols: {
-    image: '/images/products/degraissant.svg',
-    contextImages: [
-      {
-        src: '/images/contexts/disinfection-01.jpg',
-        alt: 'Entretien professionnel des sols',
-      },
-      {
-        src: '/images/contexts/disinfection-02.jpg',
-        alt: 'Nettoyage de surfaces professionnelles',
-      },
-    ],
-  },
-  'surfaces-vitres': {
-    image: '/images/products/lave-vitre.svg',
-    contextImages: [
-      {
-        src: '/images/contexts/glass-cleaning-01.jpg',
-        alt: 'Nettoyage de vitres en espace professionnel',
-      },
-      {
-        src: '/images/contexts/glass-cleaning-02.jpg',
-        alt: "Surfaces vitrées d'un espace d'accueil",
-      },
-    ],
-  },
-};
+const visualsByUseCase: Record<UseCaseId, { image: string; contextImages: ProductContextImage[] }> =
+  {
+    'linge-textiles': {
+      image: '/images/products/prolax-liquide.svg',
+      contextImages: [
+        {
+          src: '/images/contexts/laundry-hotel-01.jpg',
+          alt: "Blanchisserie professionnelle d'hôtel",
+        },
+        {
+          src: '/images/contexts/laundry-hotel-02.jpg',
+          alt: 'Machines de lavage industrielles',
+        },
+      ],
+    },
+    'cuisine-degraissage': {
+      image: '/images/products/liquide-vaisselle.svg',
+      contextImages: [
+        {
+          src: '/images/contexts/kitchen-dishwashing-01.jpg',
+          alt: 'Plonge en cuisine professionnelle',
+        },
+        {
+          src: '/images/contexts/kitchen-dishwashing-02.jpg',
+          alt: 'Cuisine professionnelle en service',
+        },
+      ],
+    },
+    'hygiene-mains': {
+      image: '/images/products/savon-liquide.svg',
+      contextImages: [
+        {
+          src: '/images/contexts/hand-hygiene-01.jpg',
+          alt: 'Distributeur de savon en espace professionnel',
+        },
+        {
+          src: '/images/contexts/hand-hygiene-02.jpg',
+          alt: 'Hygiène des mains en environnement professionnel',
+        },
+      ],
+    },
+    'sanitaires-desinfection': {
+      image: '/images/products/eau-de-javel.svg',
+      contextImages: [
+        {
+          src: '/images/contexts/disinfection-01.jpg',
+          alt: 'Nettoyage de sanitaires professionnels',
+        },
+        {
+          src: '/images/contexts/disinfection-02.jpg',
+          alt: 'Désinfection de cuisine professionnelle',
+        },
+      ],
+    },
+    sols: {
+      image: '/images/products/degraissant.svg',
+      contextImages: [
+        {
+          src: '/images/contexts/disinfection-01.jpg',
+          alt: 'Entretien professionnel des sols',
+        },
+        {
+          src: '/images/contexts/disinfection-02.jpg',
+          alt: 'Nettoyage de surfaces professionnelles',
+        },
+      ],
+    },
+    'surfaces-vitres': {
+      image: '/images/products/lave-vitre.svg',
+      contextImages: [
+        {
+          src: '/images/contexts/glass-cleaning-01.jpg',
+          alt: 'Nettoyage de vitres en espace professionnel',
+        },
+        {
+          src: '/images/contexts/glass-cleaning-02.jpg',
+          alt: "Surfaces vitrées d'un espace d'accueil",
+        },
+      ],
+    },
+  };
 
 type ProductDraft = Omit<Product, 'image' | 'contextImages' | 'featured'> &
   Partial<Pick<Product, 'image' | 'contextImages' | 'featured'>>;
@@ -142,10 +140,10 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: laundrySectors,
     description:
-      "Lessive liquide pour le lavage principal du linge professionnel. Elle couvre les rotations courantes en blanchisserie, avec un positionnement adapté aux textiles couleur et aux usages hôteliers intensifs.",
+      'Lessive liquide pour le lavage principal du linge professionnel. Elle couvre les rotations courantes en blanchisserie, avec un positionnement adapté aux textiles couleur et aux usages hôteliers intensifs.',
     formats: [{ label: 'Bidon 20 KG' }],
     howToUse:
-      "Utiliser dans le cycle principal de lavage selon le degré de salissure et le type de linge traité.",
+      'Utiliser dans le cycle principal de lavage selon le degré de salissure et le type de linge traité.',
     dosage: '10 à 15 ml par kg de linge.',
     specs: [
       { label: 'Usage', value: 'Lavage principal du linge professionnel' },
@@ -169,7 +167,7 @@ export const products: readonly Product[] = [
     howToUse: "S'utiliser pur sur mains mouillées, puis rincer à l'eau claire.",
     dosage: 'Pur.',
     specs: [
-      { label: 'Usage', value: "Hygiène des mains en milieu professionnel" },
+      { label: 'Usage', value: 'Hygiène des mains en milieu professionnel' },
       { label: 'Conditionnement', value: 'Bidon 05 KG' },
     ],
     technicalSheetUrl: '/downloads/technical-sheets/sanihand.doc',
@@ -209,7 +207,7 @@ export const products: readonly Product[] = [
     useCases: ['sanitaires-desinfection', 'linge-textiles'],
     sectors: surfaceSectors,
     description:
-      "Désinfectant chloré pour les opérations de nettoyage courant sur surfaces et zones techniques. Il répond aux besoins de désinfection en environnement collectif, de service et de restauration.",
+      'Désinfectant chloré pour les opérations de nettoyage courant sur surfaces et zones techniques. Il répond aux besoins de désinfection en environnement collectif, de service et de restauration.',
     formats: [{ label: 'Bidon 05 L' }],
     howToUse:
       "Préparer la dilution recommandée selon la surface à traiter, puis rincer si l'usage l'exige.",
@@ -262,7 +260,7 @@ export const products: readonly Product[] = [
     description:
       "Nettoyant prêt à l'emploi pour surfaces vitrées, miroirs et zones d'accueil. Il vise les sites où la moindre trace se voit immédiatement.",
     formats: [{ label: 'Bidon 05 L' }, { label: 'Pulvérisateur 500 ML' }],
-    howToUse: "Pulvériser pur sur la surface puis essuyer avec un support propre et non pelucheux.",
+    howToUse: 'Pulvériser pur sur la surface puis essuyer avec un support propre et non pelucheux.',
     dosage: 'Pur.',
     specs: [
       { label: 'Usage', value: 'Vitres, miroirs et surfaces lisses' },
@@ -304,9 +302,10 @@ export const products: readonly Product[] = [
     useCases: ['cuisine-degraissage'],
     sectors: kitchenSectors,
     description:
-      "Additif de rinçage pour les cycles automatiques de vaisselle. Il accompagne le séchage et aide à limiter les traces résiduelles en sortie de machine.",
+      'Additif de rinçage pour les cycles automatiques de vaisselle. Il accompagne le séchage et aide à limiter les traces résiduelles en sortie de machine.',
     formats: [{ label: 'Bidon 10 KG' }],
-    howToUse: "Employer avec une pompe de rinçage réglée selon la qualité de l'eau et le cycle utilisé.",
+    howToUse:
+      "Employer avec une pompe de rinçage réglée selon la qualité de l'eau et le cycle utilisé.",
     dosage: "0,2 à 0,3 ml par litre d'eau.",
     specs: [
       { label: 'Usage', value: 'Rinçage vaisselle en machine' },
@@ -346,7 +345,7 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: laundrySectors,
     description:
-      "Renfort textile formulé pour les taches grasses et les salissures tenaces. Il complète la lessive principale sur linge professionnel très chargé.",
+      'Renfort textile formulé pour les taches grasses et les salissures tenaces. Il complète la lessive principale sur linge professionnel très chargé.',
     formats: [{ label: 'Bidon 20 KG' }],
     howToUse: 'Introduire au cycle de lavage selon le niveau de salissure du linge traité.',
     dosage: '5 à 10 ml par kg de linge.',
@@ -366,9 +365,9 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: laundrySectors,
     description:
-      "Poudre chlorée destinée au blanchiment et à la désinfection du linge blanc en blanchisserie professionnelle.",
+      'Poudre chlorée destinée au blanchiment et à la désinfection du linge blanc en blanchisserie professionnelle.',
     formats: [{ label: 'Seau 10 KG' }],
-    howToUse: "Employer sur les références textiles compatibles avec le blanchiment chloré.",
+    howToUse: 'Employer sur les références textiles compatibles avec le blanchiment chloré.',
     dosage: '3 à 5 grammes par kg de linge.',
     specs: [
       { label: 'Usage', value: 'Blanchiment et désinfection textile' },
@@ -386,7 +385,7 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: laundrySectors,
     description:
-      "Assouplissant destiné aux cycles de finition du linge professionnel pour améliorer le toucher et le confort textile.",
+      'Assouplissant destiné aux cycles de finition du linge professionnel pour améliorer le toucher et le confort textile.',
     formats: [{ label: 'Bidon 20 KG' }],
     howToUse: 'Ajouter au dernier rinçage ou à la phase dédiée de finition textile.',
     dosage: '10 à 15 ml par kg de linge.',
@@ -406,7 +405,7 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: laundrySectors,
     description:
-      "Poudre de lavage principal destinée au linge couleur en usage professionnel, avec un format sac adapté aux consommations régulières.",
+      'Poudre de lavage principal destinée au linge couleur en usage professionnel, avec un format sac adapté aux consommations régulières.',
     formats: [{ label: 'Sac 25 KG' }],
     howToUse: "Utiliser au lavage principal sur linge couleur selon la charge et l'encrassement.",
     dosage: '10 à 20 grammes par kg de linge.',
@@ -426,7 +425,7 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: laundrySectors,
     description:
-      "Poudre de lavage principal pour les articles blancs en blanchisserie professionnelle et en collectivité.",
+      'Poudre de lavage principal pour les articles blancs en blanchisserie professionnelle et en collectivité.',
     formats: [{ label: 'Sac 25 KG' }],
     howToUse: 'Employer au cycle principal sur linge blanc compatible avec ce mode de lavage.',
     dosage: '10 à 20 grammes par kg de linge.',
@@ -446,9 +445,10 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: ['hotels', 'societes-nettoyage', 'revendeurs-grossistes'],
     description:
-      "Lessive liquide pensée pour le linge client et les textiles délicats demandant un traitement plus maîtrisé.",
+      'Lessive liquide pensée pour le linge client et les textiles délicats demandant un traitement plus maîtrisé.',
     formats: [{ label: 'Bidon 20 KG' }],
-    howToUse: 'Employer sur les références délicates selon les paramètres de lavage validés par le site.',
+    howToUse:
+      'Employer sur les références délicates selon les paramètres de lavage validés par le site.',
     dosage: '10 ml par kg de linge.',
     specs: [
       { label: 'Usage', value: 'Linge délicat et linge client' },
@@ -466,7 +466,7 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: laundrySectors,
     description:
-      "Agent de blanchiment oxygéné conçu pour renforcer les cycles de lavage textile sans recourir à un traitement chloré.",
+      'Agent de blanchiment oxygéné conçu pour renforcer les cycles de lavage textile sans recourir à un traitement chloré.',
     formats: [{ label: 'Bidon 20 KG' }],
     howToUse: "S'utiliser comme agent de blanchiment complémentaire sur linge couleur ou mixte.",
     dosage: '10 à 15 ml par kg de linge.',
@@ -486,7 +486,7 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: laundrySectors,
     description:
-      "Référence de blanchiment chloré distribuée pour le traitement du linge blanc en blanchisserie professionnelle.",
+      'Référence de blanchiment chloré distribuée pour le traitement du linge blanc en blanchisserie professionnelle.',
     formats: [{ label: 'Bidon 20 KG' }],
     howToUse: 'Employer sur linge blanc compatible avec les traitements chlorés.',
     dosage: '7 à 20 ml par kg de linge.',
@@ -509,7 +509,8 @@ export const products: readonly Product[] = [
     description:
       "Poudre de renfort pour le traitement du linge très gras ou fortement taché, notamment sur les usages de restauration et d'entretien.",
     formats: [{ label: 'Sac 25 KG' }],
-    howToUse: 'Ajouter au cycle de lavage principal lorsque les charges présentent un encrassement gras élevé.',
+    howToUse:
+      'Ajouter au cycle de lavage principal lorsque les charges présentent un encrassement gras élevé.',
     dosage: '15 à 20 grammes par kg de linge.',
     specs: [
       { label: 'Usage', value: 'Dégraissage textile renforcé' },
@@ -529,7 +530,7 @@ export const products: readonly Product[] = [
     useCases: ['linge-textiles'],
     sectors: laundrySectors,
     description:
-      "Référence de finition parfumée destinée au linge après lavage, pour renforcer la sensation de fraîcheur à la remise en service.",
+      'Référence de finition parfumée destinée au linge après lavage, pour renforcer la sensation de fraîcheur à la remise en service.',
     formats: [{ label: 'Bidon 05 KG' }],
     howToUse: "S'utiliser pur selon le protocole de finition retenu par le site.",
     dosage: 'Pur.',
@@ -569,7 +570,7 @@ export const products: readonly Product[] = [
     useCases: ['hygiene-mains', 'sanitaires-desinfection'],
     sectors: hygieneSectors,
     description:
-      "Solution désinfectante multi-usage pour mains, surfaces et sols. Elle répond aux environnements qui veulent limiter les changements de référence sur les protocoles courants.",
+      'Solution désinfectante multi-usage pour mains, surfaces et sols. Elle répond aux environnements qui veulent limiter les changements de référence sur les protocoles courants.',
     formats: [{ label: 'Bidon 05 KG' }],
     howToUse: "S'utiliser pur sur la zone concernée selon le protocole d'hygiène retenu.",
     dosage: 'Pur.',
@@ -594,7 +595,8 @@ export const products: readonly Product[] = [
     description:
       "Désinfectant sans rinçage pour les surfaces et points de contact en environnement professionnel. Il cible les zones où la rapidité d'intervention compte autant que le résultat d'hygiène.",
     formats: [{ label: 'Bidon 05 L' }],
-    howToUse: 'Appliquer pur sur la surface pré-nettoyée et laisser agir selon le protocole interne.',
+    howToUse:
+      'Appliquer pur sur la surface pré-nettoyée et laisser agir selon le protocole interne.',
     dosage: 'Pur.',
     specs: [
       { label: 'Usage', value: 'Désinfection sans rinçage de surfaces' },
@@ -613,9 +615,9 @@ export const products: readonly Product[] = [
     useCases: ['sanitaires-desinfection', 'cuisine-degraissage'],
     sectors: surfaceSectors,
     description:
-      "Nettoyant désinfectant multi-surfaces pour matériel, zones de préparation et points de contact. Il couvre les besoins de nettoyage et de désinfection courants sur site.",
+      'Nettoyant désinfectant multi-surfaces pour matériel, zones de préparation et points de contact. Il couvre les besoins de nettoyage et de désinfection courants sur site.',
     formats: [{ label: 'Bidon 05 KG' }],
-    howToUse: "Diluer selon le niveau de salissure puis appliquer sur les surfaces à traiter.",
+    howToUse: 'Diluer selon le niveau de salissure puis appliquer sur les surfaces à traiter.',
     dosage: "200 à 300 ml par 10 litres d'eau.",
     specs: [
       { label: 'Usage', value: 'Nettoyage désinfectant multi-surfaces' },
@@ -633,9 +635,15 @@ export const products: readonly Product[] = [
     tagline: 'Détartrant pour machines lave-vaisselle et équipements',
     category: 'manufactured',
     useCases: ['cuisine-degraissage', 'linge-textiles'],
-    sectors: ['hotels', 'restaurants-cafes', 'institutions', 'societes-nettoyage', 'revendeurs-grossistes'],
+    sectors: [
+      'hotels',
+      'restaurants-cafes',
+      'institutions',
+      'societes-nettoyage',
+      'revendeurs-grossistes',
+    ],
     description:
-      "Détartrant destiné aux machines lave-vaisselle, bains-marie et équipements soumis aux dépôts calcaires. Il est aussi utilisé sur les tambours de machines en blanchisserie.",
+      'Détartrant destiné aux machines lave-vaisselle, bains-marie et équipements soumis aux dépôts calcaires. Il est aussi utilisé sur les tambours de machines en blanchisserie.',
     formats: [{ label: 'Bidon 06 KG' }, { label: 'Bidon 20 KG' }],
     howToUse: "Diluer selon l'intensité du tartre et la nature de l'équipement traité.",
     dosage: "1 à 2 litres par 10 litres d'eau (5 à 10 %).",
@@ -657,7 +665,7 @@ export const products: readonly Product[] = [
     useCases: ['cuisine-degraissage'],
     sectors: kitchenSectors,
     description:
-      "Détergent polyvalent pour plonge vaisselle, surfaces de travail et nettoyage courant en cuisine.",
+      'Détergent polyvalent pour plonge vaisselle, surfaces de travail et nettoyage courant en cuisine.',
     formats: [{ label: 'Bidon 05 L' }],
     howToUse: 'Diluer dans une eau tiède puis appliquer sur la zone ou le bain de plonge.',
     dosage: "50 ml par 10 litres d'eau.",
@@ -679,9 +687,10 @@ export const products: readonly Product[] = [
     useCases: ['sanitaires-desinfection', 'sols'],
     sectors: surfaceSectors,
     description:
-      "Nettoyant acide fort pour fonds de WC, urinoirs, piscines et zones dures très entartrées. Il cible les sites confrontés à un dépôt minéral marqué.",
+      'Nettoyant acide fort pour fonds de WC, urinoirs, piscines et zones dures très entartrées. Il cible les sites confrontés à un dépôt minéral marqué.',
     formats: [{ label: 'Bidon 05 KG' }, { label: 'Bidon 20 KG' }],
-    howToUse: "Diluer selon le niveau d'entartrage ou employer plus concentré sur les zones critiques.",
+    howToUse:
+      "Diluer selon le niveau d'entartrage ou employer plus concentré sur les zones critiques.",
     dosage: "1 à 2 litres par 10 litres d'eau.",
     specs: [
       { label: 'Usage', value: 'Détartrage fort des sanitaires et surfaces dures' },
@@ -699,7 +708,13 @@ export const products: readonly Product[] = [
     tagline: 'Détartrant puissant pour fonds de WC',
     category: 'manufactured',
     useCases: ['sanitaires-desinfection'],
-    sectors: ['hotels', 'entreprises', 'societes-nettoyage', 'institutions', 'revendeurs-grossistes'],
+    sectors: [
+      'hotels',
+      'entreprises',
+      'societes-nettoyage',
+      'institutions',
+      'revendeurs-grossistes',
+    ],
     description:
       "Détartrant prêt à l'emploi pour le traitement ciblé des cuvettes WC très marquées par le tartre.",
     formats: [{ label: 'Flacon 750 ML' }],
@@ -720,9 +735,15 @@ export const products: readonly Product[] = [
     tagline: 'Nettoyant désinfectant pour salles de bains',
     category: 'manufactured',
     useCases: ['sanitaires-desinfection'],
-    sectors: ['hotels', 'entreprises', 'societes-nettoyage', 'institutions', 'revendeurs-grossistes'],
+    sectors: [
+      'hotels',
+      'entreprises',
+      'societes-nettoyage',
+      'institutions',
+      'revendeurs-grossistes',
+    ],
     description:
-      "Nettoyant désinfectant pour salles de bains, douches, robinetteries et zones sanitaires exposées à un usage fréquent.",
+      'Nettoyant désinfectant pour salles de bains, douches, robinetteries et zones sanitaires exposées à un usage fréquent.',
     formats: [{ label: 'Bidon 05 KG' }, { label: 'Flacon 750 ML' }],
     howToUse: 'Employer pur sur les zones de contact et surfaces sanitaires usuelles.',
     dosage: 'Pur.',
@@ -742,9 +763,9 @@ export const products: readonly Product[] = [
     useCases: ['sols', 'sanitaires-desinfection'],
     sectors: surfaceSectors,
     description:
-      "Nettoyant désodorisant pour entretien courant des sols, sanitaires et surfaces générales en environnement professionnel.",
+      'Nettoyant désodorisant pour entretien courant des sols, sanitaires et surfaces générales en environnement professionnel.',
     formats: [{ label: 'Bidon 05 KG' }],
-    howToUse: "Diluer pour le lavage courant des sols et surfaces lavables.",
+    howToUse: 'Diluer pour le lavage courant des sols et surfaces lavables.',
     dosage: "200 ml par 10 litres d'eau.",
     specs: [
       { label: 'Usage', value: 'Nettoyage désodorisant multi-surfaces' },
@@ -766,7 +787,7 @@ export const products: readonly Product[] = [
     useCases: ['surfaces-vitres', 'sanitaires-desinfection'],
     sectors: surfaceSectors,
     description:
-      "Désodorisant destiné aux espaces professionnels, sanitaires, halls et zones communes où la perception olfactive compte immédiatement.",
+      'Désodorisant destiné aux espaces professionnels, sanitaires, halls et zones communes où la perception olfactive compte immédiatement.',
     formats: [{ label: 'Bidon 05 KG' }, { label: 'Flacon 750 ML' }],
     howToUse: 'Employer pur en pulvérisation ou selon le protocole retenu sur site.',
     dosage: 'Pur.',
@@ -816,7 +837,7 @@ export const products: readonly Product[] = [
     description:
       "Désodorisant de surfaces destiné aux usages d'entretien courant sur zones lavables et espaces collectifs.",
     formats: [{ label: 'Bidon 05 L' }],
-    howToUse: "Diluer avant application sur les surfaces ou sols à entretenir.",
+    howToUse: 'Diluer avant application sur les surfaces ou sols à entretenir.',
     dosage: "200 ml par 10 litres d'eau.",
     specs: [
       { label: 'Usage', value: 'Désodorisation des surfaces et sols' },
@@ -832,11 +853,17 @@ export const products: readonly Product[] = [
     tagline: 'Déboucheur pour canalisations',
     category: 'manufactured',
     useCases: ['sanitaires-desinfection'],
-    sectors: ['hotels', 'restaurants-cafes', 'societes-nettoyage', 'institutions', 'revendeurs-grossistes'],
+    sectors: [
+      'hotels',
+      'restaurants-cafes',
+      'societes-nettoyage',
+      'institutions',
+      'revendeurs-grossistes',
+    ],
     description:
       "Déboucheur destiné aux canalisations et points d'évacuation nécessitant une action forte sur les obstructions.",
     formats: [{ label: 'Seau 05 KG' }],
-    howToUse: "Employer selon le protocole de sécurité adapté au type de canalisation traité.",
+    howToUse: 'Employer selon le protocole de sécurité adapté au type de canalisation traité.',
     dosage: "1 kg pour 10 litres d'eau.",
     specs: [
       { label: 'Usage', value: 'Débouchage de canalisations' },
@@ -876,7 +903,7 @@ export const products: readonly Product[] = [
     useCases: ['sols'],
     sectors: surfaceSectors,
     description:
-      "Version renforcée pour le nettoyage à fond des sols très sales et des zones de service fortement exposées aux dépôts gras.",
+      'Version renforcée pour le nettoyage à fond des sols très sales et des zones de service fortement exposées aux dépôts gras.',
     formats: [{ label: 'Bidon 20 KG' }],
     howToUse: "Diluer selon l'intensité du nettoyage à effectuer et la nature du support.",
     dosage: "0,5 à 1 litre par 10 litres d'eau.",
@@ -918,7 +945,7 @@ export const products: readonly Product[] = [
     useCases: ['sols'],
     sectors: ['hotels', 'entreprises', 'societes-nettoyage', 'revendeurs-grossistes'],
     description:
-      "Référence distribuée pour le nettoyage des moquettes et tapis en environnement hôtelier, tertiaire et prestations de nettoyage.",
+      'Référence distribuée pour le nettoyage des moquettes et tapis en environnement hôtelier, tertiaire et prestations de nettoyage.',
     formats: [{ label: 'Bidon 05 KG' }],
     howToUse: "Diluer avant application avec la méthode retenue sur textile d'ameublement.",
     dosage: "200 ml par 10 litres d'eau.",

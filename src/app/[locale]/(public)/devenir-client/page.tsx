@@ -14,8 +14,7 @@ import { AccessRequestForm } from '@/components/client-space/access-request-form
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Demander un accès client Prodet',
-    description:
-      "Demande d'activation d'accès client Prodet pour professionnels validés.",
+    description: "Demande d'activation d'accès client Prodet pour professionnels validés.",
   };
 }
 
@@ -27,7 +26,11 @@ const STEPS = [
   { icon: LayoutDashboard, key: 'portal' },
 ] as const;
 
-export default async function DevenirClientPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function DevenirClientPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
   if (!isLocale(locale)) return null;
   setRequestLocale(locale);
@@ -38,7 +41,7 @@ export default async function DevenirClientPage({ params }: { params: Promise<{ 
       <section className="section-shell py-10 lg:py-14">
         <Link
           href="/espace-client"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-strong"
+          className="text-primary hover:text-primary-strong inline-flex items-center gap-2 text-sm font-semibold"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           Retour espace client
@@ -49,12 +52,10 @@ export default async function DevenirClientPage({ params }: { params: Promise<{ 
               the form (right) scrolls. Vertical timeline = the enhanced schema. */}
           <aside className="lg:sticky lg:top-24">
             <p className="eyebrow-label">{t('controlled.title')}</p>
-            <h1 className="mt-2 font-display text-[28px] font-bold leading-tight text-prodet-text">
+            <h1 className="font-display text-prodet-text mt-2 text-[28px] leading-tight font-bold">
               {t('title')}
             </h1>
-            <p className="mt-2.5 text-sm leading-6 text-muted-foreground">
-              {t('controlled.body')}
-            </p>
+            <p className="text-muted-foreground mt-2.5 text-sm leading-6">{t('controlled.body')}</p>
 
             <ol className="relative mt-8 space-y-6">
               {STEPS.map((step, index) => {
@@ -65,19 +66,23 @@ export default async function DevenirClientPage({ params }: { params: Promise<{ 
                     {/* Connector rail between nodes */}
                     {!isLast ? (
                       <span
-                        className="absolute left-[21px] top-[44px] h-[calc(100%+4px)] w-px bg-border"
+                        className="bg-border absolute top-[44px] left-[21px] h-[calc(100%+4px)] w-px"
                         aria-hidden
                       />
                     ) : null}
-                    <span className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-prodet-blue/15 bg-prodet-blue-tint text-prodet-blue">
+                    <span className="border-prodet-blue/15 bg-prodet-blue-tint text-prodet-blue relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border">
                       <Icon className="h-[18px] w-[18px]" aria-hidden />
                     </span>
                     <div className="pt-1">
-                      <span className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-prodet-blue">
+                      <span className="text-prodet-blue text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
                         {t('step', { n: index + 1 })}
                       </span>
-                      <h3 className="mt-0.5 text-sm font-semibold text-prodet-text">{t(`steps.${step.key}.title`)}</h3>
-                      <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{t(`steps.${step.key}.body`)}</p>
+                      <h3 className="text-prodet-text mt-0.5 text-sm font-semibold">
+                        {t(`steps.${step.key}.title`)}
+                      </h3>
+                      <p className="text-muted-foreground mt-0.5 text-xs leading-5">
+                        {t(`steps.${step.key}.body`)}
+                      </p>
                     </div>
                   </li>
                 );

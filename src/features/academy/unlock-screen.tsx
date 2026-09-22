@@ -56,7 +56,8 @@ export function UnlockScreen() {
         </span>
         <h1 className="academy-gate__title">Accès protégé</h1>
         <p className="academy-gate__sub">
-          Les formules de la gamme Prodet sont confidentielles. Saisissez le code d’accès pour les afficher.
+          Les formules de la gamme Prodet sont confidentielles. Saisissez le code d’accès pour les
+          afficher.
         </p>
         <Input
           label="Code d’accès"

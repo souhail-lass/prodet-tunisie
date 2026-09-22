@@ -1,6 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getAdminProduct } from '@/features/catalogue/queries';
-import { adminCatalogueListPath, parseAdminCatalogueQuery, withAdminCatalogueQuery } from '@/lib/admin-catalogue-query';
+import {
+  adminCatalogueListPath,
+  parseAdminCatalogueQuery,
+  withAdminCatalogueQuery,
+} from '@/lib/admin-catalogue-query';
 import { ProductForm } from '../product-form';
 
 export const dynamic = 'force-dynamic';

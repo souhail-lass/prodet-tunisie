@@ -11,7 +11,10 @@ import type {
   PortalRequestPrefill,
   SubmitPortalRequestResult,
 } from './request-builder.types';
-import { SubmitPortalRequestSchema, type SubmitPortalRequestInput } from './request-builder.validation';
+import {
+  SubmitPortalRequestSchema,
+  type SubmitPortalRequestInput,
+} from './request-builder.validation';
 import type { Locale } from '@/i18n/routing';
 
 export async function listPortalProductOptions(locale: Locale): Promise<PortalProductOption[]> {
@@ -102,9 +105,7 @@ export async function getPortalRequestPrefill({
       ),
     )
     .leftJoin(schema.category, eq(schema.product.categoryId, schema.category.id))
-    .where(
-      and(eq(schema.orderLine.orderDraftId, draft.id), isNull(schema.product.deletedAt)),
-    )
+    .where(and(eq(schema.orderLine.orderDraftId, draft.id), isNull(schema.product.deletedAt)))
     .orderBy(asc(schema.orderLine.lineNumber));
 
   return {
@@ -223,8 +224,7 @@ export async function submitPortalRequest(
   if (productsById.size !== productIds.length) {
     return {
       ok: false,
-      formError:
-        "Un produit sélectionné n'est plus disponible. Retirez-le puis réessayez.",
+      formError: "Un produit sélectionné n'est plus disponible. Retirez-le puis réessayez.",
     };
   }
 

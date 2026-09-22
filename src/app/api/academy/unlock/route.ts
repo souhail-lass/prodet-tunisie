@@ -60,7 +60,11 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   if (!isAcademyConfigured()) {
     return NextResponse.json(
-      { ok: false, error: 'not_configured', message: 'Code Académie non configuré (PRODET_ACADEMY_CODE).' },
+      {
+        ok: false,
+        error: 'not_configured',
+        message: 'Code Académie non configuré (PRODET_ACADEMY_CODE).',
+      },
       { status: 503 },
     );
   }

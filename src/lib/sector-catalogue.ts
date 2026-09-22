@@ -50,7 +50,10 @@ export function productMatchesBrandKey(product: BrandMatchProduct, key: string):
   return true;
 }
 
-export function matchCatalogueByBrandKey<T extends BrandMatchProduct>(products: T[], key: string): T[] {
+export function matchCatalogueByBrandKey<T extends BrandMatchProduct>(
+  products: T[],
+  key: string,
+): T[] {
   return products
     .filter((product) => productMatchesBrandKey(product, key))
     .sort(

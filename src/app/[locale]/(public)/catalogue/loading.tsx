@@ -8,14 +8,18 @@ export default function CatalogueLoading() {
       <span className="sr-only">Chargement…</span>
       <div className="mx-auto w-full max-w-[1200px] px-6">
         <span className="pds-skeleton pds-skeleton--text" style={{ width: 180 }} />
-        <div
-          className="mt-6 grid gap-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)]"
-        >
+        <div className="mt-6 grid gap-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)]">
           <span className="pds-skeleton pds-skeleton--card" style={{ minHeight: 420 }} />
           <div>
             <span className="pds-skeleton pds-skeleton--title" style={{ width: '70%' }} />
-            <span className="pds-skeleton pds-skeleton--text" style={{ width: '90%', marginTop: 16 }} />
-            <span className="pds-skeleton pds-skeleton--text" style={{ width: '80%', marginTop: 10 }} />
+            <span
+              className="pds-skeleton pds-skeleton--text"
+              style={{ width: '90%', marginTop: 16 }}
+            />
+            <span
+              className="pds-skeleton pds-skeleton--text"
+              style={{ width: '80%', marginTop: 10 }}
+            />
           </div>
         </div>
       </div>

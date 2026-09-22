@@ -17,14 +17,13 @@ export function PortalRequestProductThumb({
   const p = getProductBySlug(slug);
   const src = p?.image;
 
-  const fixed =
-    size === 'lg' ? '' : size === 'sm' ? 'h-11 w-11' : 'h-14 w-14';
+  const fixed = size === 'lg' ? '' : size === 'sm' ? 'h-11 w-11' : 'h-14 w-14';
 
   if (src) {
     return (
       <div
         className={cn(
-          'relative shrink-0 overflow-hidden rounded-md border border-border bg-white',
+          'border-border relative shrink-0 overflow-hidden rounded-md border bg-white',
           size === 'lg' ? 'h-[140px] w-full' : fixed,
         )}
       >
@@ -49,7 +48,7 @@ export function PortalRequestProductThumb({
   return (
     <div
       className={cn(
-        'flex shrink-0 flex-col items-center justify-center rounded-md border border-dashed border-border bg-prodet-wash text-muted-foreground',
+        'border-border bg-prodet-wash text-muted-foreground flex shrink-0 flex-col items-center justify-center rounded-md border border-dashed',
         size === 'lg' ? 'h-[140px] w-full' : fixed,
       )}
     >

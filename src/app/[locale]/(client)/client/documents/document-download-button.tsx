@@ -25,13 +25,7 @@ export function DocumentDownloadButton({ documentId }: { documentId: string }) {
 
   return (
     <div className="flex items-center gap-2">
-      <Button
-        type="button"
-        variant="outline"
-        size="xs"
-        onClick={handleClick}
-        disabled={isPending}
-      >
+      <Button type="button" variant="outline" size="xs" onClick={handleClick} disabled={isPending}>
         {isPending ? (
           <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
         ) : (
@@ -39,7 +33,7 @@ export function DocumentDownloadButton({ documentId }: { documentId: string }) {
         )}
         Télécharger
       </Button>
-      {error ? <span className="text-[11px] text-destructive">{error}</span> : null}
+      {error ? <span className="text-destructive text-[11px]">{error}</span> : null}
     </div>
   );
 }

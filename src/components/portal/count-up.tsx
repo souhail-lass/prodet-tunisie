@@ -48,5 +48,7 @@ export function CountUp({
     return () => cancelAnimationFrame(frame.current);
   }, [value, durationMs]);
 
-  return <span style={{ fontVariantNumeric: 'tabular-nums' }}>{fmt(decimals).format(display)}</span>;
+  return (
+    <span style={{ fontVariantNumeric: 'tabular-nums' }}>{fmt(decimals).format(display)}</span>
+  );
 }

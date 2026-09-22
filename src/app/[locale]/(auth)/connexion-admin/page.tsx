@@ -47,40 +47,37 @@ export default async function AdminLoginPage({
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-prodet-wash px-5 py-10">
-      <section className="w-full max-w-md rounded-lg border border-border bg-white p-6 shadow-[0_24px_70px_-60px_rgba(8,41,78,0.55)]">
-        <div className="flex h-12 w-12 items-center justify-center rounded-sm bg-prodet-ink text-white">
+    <main className="bg-prodet-wash flex min-h-dvh items-center justify-center px-5 py-10">
+      <section className="border-border w-full max-w-md rounded-lg border bg-white p-6 shadow-[0_24px_70px_-60px_rgba(8,41,78,0.55)]">
+        <div className="bg-prodet-ink flex h-12 w-12 items-center justify-center rounded-sm text-white">
           <ShieldCheck className="h-5 w-5" aria-hidden />
         </div>
         <p className="eyebrow-label mt-5">Admin Prodet</p>
-        <h1 className="mt-2 font-display text-3xl font-bold text-prodet-text">
+        <h1 className="font-display text-prodet-text mt-2 text-3xl font-bold">
           Connexion sécurisée
         </h1>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Entrez l&apos;email d&apos;un compte admin déjà créé par Prodet. Aucun compte n&apos;est créé depuis cette page.
+        <p className="text-muted-foreground mt-2 text-sm leading-6">
+          Entrez l&apos;email d&apos;un compte admin déjà créé par Prodet. Aucun compte n&apos;est
+          créé depuis cette page.
         </p>
 
         <form action={requestAdminMagicLink} className="mt-6 space-y-4">
           <input type="hidden" name="locale" value={safeLocale} />
-          <input
-            type="hidden"
-            name="next"
-            value={next || `/${safeLocale}/admin/overview`}
-          />
-          <label className="block text-sm font-semibold text-prodet-text">
+          <input type="hidden" name="next" value={next || `/${safeLocale}/admin/overview`} />
+          <label className="text-prodet-text block text-sm font-semibold">
             Email admin
             <input
               name="email"
               type="email"
               required
               autoComplete="email"
-              className="mt-2 h-11 w-full rounded-sm border border-border bg-white px-3 text-sm outline-none transition-colors focus:border-primary"
+              className="border-border focus:border-primary mt-2 h-11 w-full rounded-sm border bg-white px-3 text-sm transition-colors outline-none"
               placeholder="admin@prodet.tn"
             />
           </label>
           <button
             type="submit"
-            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm border border-primary bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-strong"
+            className="border-primary bg-primary hover:bg-primary-strong inline-flex h-11 w-full items-center justify-center gap-2 rounded-sm border px-5 text-sm font-semibold text-white transition-colors"
           >
             <Mail className="h-4 w-4" aria-hidden />
             Recevoir le lien magique
@@ -88,7 +85,7 @@ export default async function AdminLoginPage({
         </form>
 
         {sent === '1' ? (
-          <p className="mt-4 rounded-sm bg-support/10 px-3 py-2 text-sm leading-6 text-support">
+          <p className="bg-support/10 text-support mt-4 rounded-sm px-3 py-2 text-sm leading-6">
             Si cet email correspond à un compte admin existant, un lien magique a été envoyé.
           </p>
         ) : null}

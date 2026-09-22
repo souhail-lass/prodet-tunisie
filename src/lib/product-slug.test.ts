@@ -14,9 +14,7 @@ describe('slugifyProductName', () => {
   });
 
   it('strips accents and punctuation', () => {
-    expect(slugifyProductName("Dégraissant d'entretien — 5L")).toBe(
-      'degraissant-d-entretien-5l',
-    );
+    expect(slugifyProductName("Dégraissant d'entretien — 5L")).toBe('degraissant-d-entretien-5l');
   });
 
   it('returns empty when nothing URL-safe remains', () => {

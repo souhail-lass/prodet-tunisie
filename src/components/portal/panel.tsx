@@ -39,17 +39,14 @@ export function Panel({
 
   return (
     <section
-      className={cn(
-        'rounded-md border border-border bg-card text-card-foreground',
-        className,
-      )}
+      className={cn('border-border bg-card text-card-foreground rounded-md border', className)}
     >
       {hasHeader ? (
-        <header className="flex items-start justify-between gap-4 border-b border-border px-5 py-3.5 md:px-6">
+        <header className="border-border flex items-start justify-between gap-4 border-b px-5 py-3.5 md:px-6">
           <div className="min-w-0">
-            {title ? <h2 className="text-[15px] font-semibold text-prodet-text">{title}</h2> : null}
+            {title ? <h2 className="text-prodet-text text-[15px] font-semibold">{title}</h2> : null}
             {description ? (
-              <p className="mt-1 text-[13px] leading-5 text-muted-foreground">{description}</p>
+              <p className="text-muted-foreground mt-1 text-[13px] leading-5">{description}</p>
             ) : null}
           </div>
           {action ? <div className="shrink-0">{action}</div> : null}

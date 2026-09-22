@@ -74,7 +74,13 @@ export async function getAdminSwiverClients(): Promise<AdminSwiverClient[]> {
     .sort((a, b) => a.name.localeCompare(b.name, 'fr'));
 }
 
-async function audit(action: string, entityId: string | null, diff: object, actorUserId?: string | null, metadata: object = {}) {
+async function audit(
+  action: string,
+  entityId: string | null,
+  diff: object,
+  actorUserId?: string | null,
+  metadata: object = {},
+) {
   const { db, schema } = await import('@/db/client');
   await db.insert(schema.auditLog).values({
     actorUserId: actorUserId ?? null,
@@ -113,7 +119,14 @@ export async function grantClientAccess(input: {
     })
     .onConflictDoUpdate({
       target: schema.customer.swiverId,
-      set: { name: input.name || email, email, phone: input.phone ?? null, city: input.city ?? null, status: 'active', updatedAt: now },
+      set: {
+        name: input.name || email,
+        email,
+        phone: input.phone ?? null,
+        city: input.city ?? null,
+        status: 'active',
+        updatedAt: now,
+      },
     })
     .returning({ id: schema.customer.id });
 
@@ -138,7 +151,10 @@ export async function grantClientAccess(input: {
   // future login gets a clean magic link. Idempotent: ignore "already exists".
   await ensureConfirmedAuthUser(email, input.name);
 
-  await audit('client_access.granted', appUser.id, { active: true }, input.actorUserId, { email, swiverId: input.swiverId });
+  await audit('client_access.granted', appUser.id, { active: true }, input.actorUserId, {
+    email,
+    swiverId: input.swiverId,
+  });
   return { ok: true };
 }
 
@@ -153,7 +169,10 @@ export async function ensureConfirmedAuthUser(email: string, name?: string | nul
       user_metadata: name ? { full_name: name } : undefined,
     });
     if (error && !/already.*registered|already.*exists|been registered/i.test(error.message)) {
-      console.error('[grant:auth-user-create]', { email: email.replace(/^(.{2}).*(@.*)$/, '$1…$2'), message: error.message });
+      console.error('[grant:auth-user-create]', {
+        email: email.replace(/^(.{2}).*(@.*)$/, '$1…$2'),
+        message: error.message,
+      });
     }
   } catch (err) {
     // Never block the grant on auth provisioning — login can still self-create.
@@ -161,9 +180,15 @@ export async function ensureConfirmedAuthUser(email: string, name?: string | nul
   }
 }
 
-export async function revokeClientAccess(userId: string, actorUserId?: string | null): Promise<void> {
+export async function revokeClientAccess(
+  userId: string,
+  actorUserId?: string | null,
+): Promise<void> {
   const { db, schema } = await import('@/db/client');
-  await db.update(schema.user).set({ isActive: false, updatedAt: new Date() }).where(eq(schema.user.id, userId));
+  await db
+    .update(schema.user)
+    .set({ isActive: false, updatedAt: new Date() })
+    .where(eq(schema.user.id, userId));
   await audit('client_access.revoked', userId, { active: false }, actorUserId);
 }
 

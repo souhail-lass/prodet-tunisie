@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getSwiverAdapter } from '@/integrations/swiver';
-import { findSwiverCustomerByContact, getPortalSwiverIdentity } from '@/features/client-portal/swiver-identity';
+import {
+  findSwiverCustomerByContact,
+  getPortalSwiverIdentity,
+} from '@/features/client-portal/swiver-identity';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -21,7 +24,12 @@ export async function GET(): Promise<NextResponse> {
 
     if (!ping) {
       return NextResponse.json(
-        { ok: false, mode: swiver.mode, ping, hint: 'Adapter could not reach/authenticate Swiver. Check SWIVER_MODE, SWIVER_API_BASE_URL, SWIVER_API_KEY.' },
+        {
+          ok: false,
+          mode: swiver.mode,
+          ping,
+          hint: 'Adapter could not reach/authenticate Swiver. Check SWIVER_MODE, SWIVER_API_BASE_URL, SWIVER_API_KEY.',
+        },
         { status: 200 },
       );
     }
@@ -47,7 +55,11 @@ export async function GET(): Promise<NextResponse> {
           resolvedTo: matched ? { swiverId: matched.swiverId, legalName: matched.legalName } : null,
           roundTripOk: Boolean(sample && matched && matched.swiverId === sample.swiverId),
           demoIdentity: demoIdentity.customer
-            ? { swiverId: demoIdentity.customer.swiverId, legalName: demoIdentity.customer.legalName, demoFallback: demoIdentity.demoFallback }
+            ? {
+                swiverId: demoIdentity.customer.swiverId,
+                legalName: demoIdentity.customer.legalName,
+                demoFallback: demoIdentity.demoFallback,
+              }
             : null,
         },
         products: {
@@ -62,7 +74,9 @@ export async function GET(): Promise<NextResponse> {
             hasImage: Boolean(p.imageUrl),
             active: p.active,
           })),
-          categories: Array.from(new Set(products.map((p) => p.categoryLabel).filter(Boolean))).slice(0, 15),
+          categories: Array.from(
+            new Set(products.map((p) => p.categoryLabel).filter(Boolean)),
+          ).slice(0, 15),
         },
         customers: {
           total: customers.length,

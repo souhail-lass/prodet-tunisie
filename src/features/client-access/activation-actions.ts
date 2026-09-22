@@ -369,7 +369,7 @@ export async function acceptPortalInvite(
     return { ok: false, formError: "Ce lien d'activation a expiré." };
   }
   if (result.status === 'revoked') {
-    return { ok: false, formError: "Cette invitation a été révoquée par Prodet." };
+    return { ok: false, formError: 'Cette invitation a été révoquée par Prodet.' };
   }
   if (result.status === 'accepted') {
     return { ok: false, formError: 'Cette invitation a déjà été acceptée.' };

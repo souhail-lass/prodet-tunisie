@@ -160,10 +160,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // revalidation is best-effort; never fail the webhook ack on it
   }
 
-  return NextResponse.json(
-    { ok: true, id: insertion.id, signatureVerified },
-    { status: 200 },
-  );
+  return NextResponse.json({ ok: true, id: insertion.id, signatureVerified }, { status: 200 });
 }
 
 export async function GET(): Promise<NextResponse> {

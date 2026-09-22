@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Trash2 } from 'lucide-react';
-import {
-  toQuoteSelectionProduct,
-  useQuoteSelection,
-} from '@/lib/quote-cart-context';
+import { toQuoteSelectionProduct, useQuoteSelection } from '@/lib/quote-cart-context';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types/product';
 
@@ -31,7 +28,7 @@ export function QuoteQuantityControl({
         <button
           type="button"
           onClick={() => setProductQuantity(quoteProduct, 1)}
-          className="flex h-8 w-full items-center justify-center gap-1 whitespace-nowrap rounded-sm border border-prodet-blue bg-transparent px-2 text-center text-[11px] font-medium leading-none text-prodet-blue transition-colors duration-150 hover:bg-prodet-blue hover:text-white"
+          className="border-prodet-blue text-prodet-blue hover:bg-prodet-blue flex h-8 w-full items-center justify-center gap-1 rounded-sm border bg-transparent px-2 text-center text-[11px] leading-none font-medium whitespace-nowrap transition-colors duration-150 hover:text-white"
         >
           + Ajouter au devis
         </button>
@@ -61,14 +58,16 @@ export function QuoteQuantityControl({
           'flex h-8 w-7 shrink-0 items-center justify-center transition-colors duration-150',
           showTrash
             ? 'rounded-l-sm border border-[var(--color-danger-bg)] bg-[var(--color-danger-bg)] text-[var(--color-danger)] hover:opacity-80'
-            : 'rounded-l-sm bg-prodet-blue text-white hover:bg-prodet-blue-hover',
+            : 'bg-prodet-blue hover:bg-prodet-blue-hover rounded-l-sm text-white',
         )}
-        aria-label={showTrash ? `Supprimer ${product.name} du devis` : `Retirer ${product.name} du devis`}
+        aria-label={
+          showTrash ? `Supprimer ${product.name} du devis` : `Retirer ${product.name} du devis`
+        }
       >
         {showTrash ? (
           <Trash2 className="h-[13px] w-[13px]" aria-hidden />
         ) : (
-          <span className="text-[16px] font-normal leading-none">−</span>
+          <span className="text-[16px] leading-none font-normal">−</span>
         )}
       </button>
       <input
@@ -93,12 +92,12 @@ export function QuoteQuantityControl({
           }
         }}
         aria-label={`Quantité de ${product.name}`}
-        className="h-8 min-w-0 flex-1 border-y border-prodet-blue border-x-0 bg-white px-2 text-center text-[var(--type-small)] font-semibold outline-none"
+        className="border-prodet-blue h-8 min-w-0 flex-1 border-x-0 border-y bg-white px-2 text-center font-semibold text-[var(--type-small)] outline-none"
       />
       <button
         type="button"
         onClick={() => setProductQuantity(quoteProduct, quantity + 1)}
-        className="flex h-8 w-7 shrink-0 items-center justify-center rounded-r-sm bg-prodet-blue text-[16px] font-normal leading-none text-white transition-colors duration-150 hover:bg-prodet-blue-hover"
+        className="bg-prodet-blue hover:bg-prodet-blue-hover flex h-8 w-7 shrink-0 items-center justify-center rounded-r-sm text-[16px] leading-none font-normal text-white transition-colors duration-150"
         aria-label={`Ajouter ${product.name} au devis`}
       >
         +

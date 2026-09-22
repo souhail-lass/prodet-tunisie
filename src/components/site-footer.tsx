@@ -15,7 +15,12 @@ export async function SiteFooter() {
         <div className="site-footer__brand">
           <div className="site-footer__logo-chip">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo/prodet-logo-white.svg" alt="Prodet Tunisie" width={2117} height={1148} />
+            <img
+              src="/images/logo/prodet-logo-white.svg"
+              alt="Prodet Tunisie"
+              width={2117}
+              height={1148}
+            />
           </div>
           <p className="site-footer__tag">{companyInfo.footerTagline}</p>
           <span className="site-footer__made">
@@ -27,7 +32,9 @@ export async function SiteFooter() {
           <h4>{t('catalog')}</h4>
           <Link href={`${CATALOGUE_PATH}/cuisine-degraissage`}>{t('catalogLinks.food')}</Link>
           <Link href={`${CATALOGUE_PATH}/linge-textiles`}>{t('catalogLinks.laundry')}</Link>
-          <Link href={`${CATALOGUE_PATH}/sanitaires-desinfection`}>{t('catalogLinks.housekeeping')}</Link>
+          <Link href={`${CATALOGUE_PATH}/sanitaires-desinfection`}>
+            {t('catalogLinks.housekeeping')}
+          </Link>
           <Link href="/produits/materiel-hygiene">{t('catalogLinks.household')}</Link>
         </div>
 

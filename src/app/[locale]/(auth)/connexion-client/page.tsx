@@ -52,27 +52,27 @@ export default async function ClientLoginPage({
   if (alreadySignedIn) redirect(next);
 
   return (
-    <main className="flex min-h-[100dvh] items-center justify-center bg-prodet-wash px-5 py-16">
+    <main className="bg-prodet-wash flex min-h-[100dvh] items-center justify-center px-5 py-16">
       <div className="w-full max-w-[440px]">
         {/* Heading — mirrors /espace-client for a consistent entry point. */}
         <header className="mb-8 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-prodet-blue">
+          <p className="text-prodet-blue text-[11px] font-semibold tracking-[0.14em] uppercase">
             {t('eyebrow')}
           </p>
-          <h1 className="mt-2.5 text-[28px] font-semibold leading-[1.15] text-prodet-text">
+          <h1 className="text-prodet-text mt-2.5 text-[28px] leading-[1.15] font-semibold">
             {t('titleLogin')}
           </h1>
-          <p className="mx-auto mt-3 max-w-[320px] text-[14px] leading-6 text-muted-foreground">
+          <p className="text-muted-foreground mx-auto mt-3 max-w-[320px] text-[14px] leading-6">
             {t('lead')}
           </p>
         </header>
 
-        <div className="rounded-xl border border-border bg-card p-7 shadow-[0_1px_2px_rgba(6,53,97,0.04),0_20px_40px_-24px_rgba(6,53,97,0.22)]">
+        <div className="border-border bg-card rounded-xl border p-7 shadow-[0_1px_2px_rgba(6,53,97,0.04),0_20px_40px_-24px_rgba(6,53,97,0.22)]">
           <form action={requestClientMagicLink} className="space-y-3.5">
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="next" value={next} />
             <label className="block">
-              <span className="mb-1.5 block text-[12px] font-medium text-prodet-text">
+              <span className="text-prodet-text mb-1.5 block text-[12px] font-medium">
                 Email professionnel
               </span>
               <Input
@@ -92,7 +92,7 @@ export default async function ClientLoginPage({
           {sent === '1' ? (
             <p
               role="status"
-              className="mt-4 flex items-start gap-2 rounded-md border border-prodet-green/20 bg-prodet-green/10 px-3 py-2.5 text-[12px] leading-5 text-prodet-green"
+              className="border-prodet-green/20 bg-prodet-green/10 text-prodet-green mt-4 flex items-start gap-2 rounded-md border px-3 py-2.5 text-[12px] leading-5"
             >
               <MailCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
               <span>{t('sentLogin')}</span>
@@ -102,7 +102,7 @@ export default async function ClientLoginPage({
           {error ? (
             <p
               role="alert"
-              className="mt-4 flex items-start gap-2 rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2.5 text-[12px] leading-5 text-destructive"
+              className="border-destructive/20 bg-destructive/10 text-destructive mt-4 flex items-start gap-2 rounded-md border px-3 py-2.5 text-[12px] leading-5"
             >
               <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
               <span>{t(clientLoginErrorKey(error))}</span>
@@ -111,24 +111,24 @@ export default async function ClientLoginPage({
 
           {/* Divider */}
           <div className="my-6 flex items-center gap-3" aria-hidden>
-            <span className="h-px flex-1 bg-border" />
-            <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+            <span className="bg-border h-px flex-1" />
+            <span className="text-muted-foreground text-[11px] font-medium tracking-wide uppercase">
               {t('or')}
             </span>
-            <span className="h-px flex-1 bg-border" />
+            <span className="bg-border h-px flex-1" />
           </div>
 
           {/* Secondary path — request access */}
           <div className="text-center">
-            <p className="text-[13px] text-muted-foreground">{t('notYetClient')}</p>
+            <p className="text-muted-foreground text-[13px]">{t('notYetClient')}</p>
             <Button asChild variant="neutral" size="lg" className="mt-2.5 w-full">
               <Link href="/devenir-client">{t('requestAccess')}</Link>
             </Button>
           </div>
         </div>
 
-        <p className="mt-5 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
-          <ShieldCheck className="h-3.5 w-3.5 text-prodet-blue" aria-hidden />
+        <p className="text-muted-foreground mt-5 flex items-center justify-center gap-1.5 text-[11px]">
+          <ShieldCheck className="text-prodet-blue h-3.5 w-3.5" aria-hidden />
           {t('reassure')}
         </p>
       </div>

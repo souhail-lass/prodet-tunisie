@@ -11,88 +11,89 @@
   /* --- Brand primitives --- */
   --color-prodet-blue: #095296;
   --color-prodet-navy: #063561;
-  --color-prodet-sky: #41AAE2;
-  --color-prodet-green: #24883E;
+  --color-prodet-sky: #41aae2;
+  --color-prodet-green: #24883e;
 
   /* Interaction shades */
   --color-prodet-blue-hover: #074173;
   --color-prodet-blue-press: #05335c;
-  --color-prodet-blue-tint: #E7F0F8;
-  --color-prodet-blue-tint-strong: #D2E3F2;
-  --color-prodet-green-hover: #1C6E31;
-  --color-prodet-green-tint: #E5F1E8;
+  --color-prodet-blue-tint: #e7f0f8;
+  --color-prodet-blue-tint-strong: #d2e3f2;
+  --color-prodet-green-hover: #1c6e31;
+  --color-prodet-green-tint: #e5f1e8;
 
   /* Brand surface/text aliases used across the app (Tailwind utilities).
      Defined here because Tailwind v4 reads the CSS @theme, not tailwind.config.ts. */
-  --color-prodet-ink: #063561;    /* dark navy surfaces, icon tiles, inverse heroes */
-  --color-prodet-text: #1A1A18;   /* primary text */
-  --color-prodet-wash: #F7F6F3;   /* warm page canvas / soft chips */
-  --color-prodet-mist: #F0EEEA;   /* subtle hover / sunken wells */
-  --color-prodet-line: #D8D7D3;   /* hairline borders */
-  --color-prodet-line-strong: #BFBEB9;
+  --color-prodet-ink: #063561; /* dark navy surfaces, icon tiles, inverse heroes */
+  --color-prodet-text: #1a1a18; /* primary text */
+  --color-prodet-wash: #f7f6f3; /* warm page canvas / soft chips */
+  --color-prodet-mist: #f0eeea; /* subtle hover / sunken wells */
+  --color-prodet-line: #d8d7d3; /* hairline borders */
+  --color-prodet-line-strong: #bfbeb9;
 
   /* --- Semantic surfaces --- */
-  --color-background: #F7F6F3;
-  --color-foreground: #1A1A18;
-  --color-muted: #F0EEEA;
-  --color-muted-foreground: #6B6B67;
-  --color-card: #FFFFFF;
-  --color-card-foreground: #1A1A18;
-  --color-border: #D8D7D3;
-  --color-border-strong: #BFBEB9;
-  --color-input: #D8D7D3;
+  --color-background: #f7f6f3;
+  --color-foreground: #1a1a18;
+  --color-muted: #f0eeea;
+  --color-muted-foreground: #6b6b67;
+  --color-card: #ffffff;
+  --color-card-foreground: #1a1a18;
+  --color-border: #d8d7d3;
+  --color-border-strong: #bfbeb9;
+  --color-input: #d8d7d3;
   --color-ring: #095296;
 
   --color-primary: #095296;
-  --color-primary-foreground: #FFFFFF;
-  --color-secondary: #E7F0F8;
-  --color-secondary-foreground: #1A1A18;
-  --color-accent: #41AAE2;
-  --color-accent-foreground: #FFFFFF;
-  --color-support: #24883E;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #e7f0f8;
+  --color-secondary-foreground: #1a1a18;
+  --color-accent: #41aae2;
+  --color-accent-foreground: #ffffff;
+  --color-support: #24883e;
 
-  --color-destructive: #B23B3B;
-  --color-destructive-foreground: #FFFFFF;
-  --color-success: #24883E;
-  --color-success-bg: #E5F1E8;
-  --color-warning: #B26B04;
-  --color-warning-bg: #FBF0DC;
-  --color-danger: #B23B3B;
-  --color-danger-bg: #F7E7E5;
+  --color-destructive: #b23b3b;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #24883e;
+  --color-success-bg: #e5f1e8;
+  --color-warning: #b26b04;
+  --color-warning-bg: #fbf0dc;
+  --color-danger: #b23b3b;
+  --color-danger-bg: #f7e7e5;
   --color-info: #095296;
-  --color-info-bg: #E7F0F8;
+  --color-info-bg: #e7f0f8;
 
   /* Text shades */
-  --color-text-primary: #1A1A18;
-  --color-text-secondary: #6B6B67;
-  --color-text-tertiary: #A8A7A3;
-  --color-text-on-dark: #FFFFFF;
-  --color-text-on-dark-soft: #B9CBDD;
+  --color-text-primary: #1a1a18;
+  --color-text-secondary: #6b6b67;
+  --color-text-tertiary: #a8a7a3;
+  --color-text-on-dark: #ffffff;
+  --color-text-on-dark-soft: #b9cbdd;
   --color-text-link: #095296;
 
   /* Surfaces */
-  --color-surface-page: #F7F6F3;
-  --color-surface-card: #FFFFFF;
-  --color-surface-sunken: #F0EEEA;
+  --color-surface-page: #f7f6f3;
+  --color-surface-card: #ffffff;
+  --color-surface-sunken: #f0eeea;
   --color-surface-navy: #063561;
-  --color-surface-navy-soft: #0A4173;
+  --color-surface-navy-soft: #0a4173;
 
   /* Status colors */
   --color-status-progress-fg: #095296;
-  --color-status-progress-bg: #E7F0F8;
-  --color-status-delivered-fg: #24883E;
-  --color-status-delivered-bg: #E5F1E8;
-  --color-status-prep-fg: #B26B04;
-  --color-status-prep-bg: #FBF0DC;
-  --color-status-cancelled-fg: #B23B3B;
-  --color-status-cancelled-bg: #F7E7E5;
+  --color-status-progress-bg: #e7f0f8;
+  --color-status-delivered-fg: #24883e;
+  --color-status-delivered-bg: #e5f1e8;
+  --color-status-prep-fg: #b26b04;
+  --color-status-prep-bg: #fbf0dc;
+  --color-status-cancelled-fg: #b23b3b;
+  --color-status-cancelled-bg: #f7e7e5;
 
   /* Border on dark */
   --color-border-on-dark: rgba(255, 255, 255, 0.14);
 
   /* --- Typography --- */
   --font-sans: var(--font-sans, 'DM Sans'), 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
-  --font-arabic: var(--font-arabic, 'Cairo'), 'Noto Naskh Arabic', 'Geeza Pro', 'Arial Unicode MS', sans-serif;
+  --font-arabic:
+    var(--font-arabic, 'Cairo'), 'Noto Naskh Arabic', 'Geeza Pro', 'Arial Unicode MS', sans-serif;
   --font-mono:
     ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 
@@ -132,7 +133,7 @@
   --shadow-sm: 0 1px 3px rgba(6, 53, 97, 0.08), 0 1px 2px rgba(6, 53, 97, 0.04);
   --shadow-card: 0 2px 8px rgba(6, 53, 97, 0.06);
   --shadow-card-hover: 0 6px 20px rgba(9, 82, 150, 0.12);
-  --shadow-panel: 0 8px 32px rgba(6, 53, 97, 0.10);
+  --shadow-panel: 0 8px 32px rgba(6, 53, 97, 0.1);
   --shadow-focus: 0 0 0 3px rgba(9, 82, 150, 0.18);
 }
 
@@ -181,7 +182,12 @@
     font-family: var(--font-arabic);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     margin: 0;
     font-weight: 600;
     color: var(--color-text-primary);
@@ -195,7 +201,8 @@
     text-wrap: pretty;
   }
 
-  button, [role='button'] {
+  button,
+  [role='button'] {
     font-family: inherit;
     cursor: pointer;
   }
@@ -313,7 +320,7 @@
 
   /* --- Surface utilities (flat, no gradients) --- */
   .surface-panel {
-    @apply border bg-card;
+    @apply bg-card border;
     border-radius: var(--radius-lg);
     border-color: var(--color-border);
     box-shadow: var(--shadow-card);

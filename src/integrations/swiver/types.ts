@@ -109,7 +109,9 @@ export interface SwiverCustomerPort {
    * Renvoie null en cas d'échec — la création ne doit jamais bloquer
    * l'ouverture d'un accès portail.
    */
-  createCustomer(input: SwiverCustomerInput): Promise<{ swiverId: string; reference: string | null } | null>;
+  createCustomer(
+    input: SwiverCustomerInput,
+  ): Promise<{ swiverId: string; reference: string | null } | null>;
 }
 
 /**
@@ -189,7 +191,9 @@ export interface SwiverAdapter {
 }
 
 export class SwiverNotConfiguredError extends Error {
-  constructor(message = 'Swiver adapter is not configured (missing SWIVER_API_BASE_URL or SWIVER_API_KEY).') {
+  constructor(
+    message = 'Swiver adapter is not configured (missing SWIVER_API_BASE_URL or SWIVER_API_KEY).',
+  ) {
     super(message);
     this.name = 'SwiverNotConfiguredError';
   }

@@ -193,11 +193,7 @@ export function ProductQuickSearch({
                 ))}
               </ul>
               {embedded ? null : (
-                <a
-                  href={searchHref}
-                  className="pq-search__more"
-                  onClick={() => setOpen(false)}
-                >
+                <a href={searchHref} className="pq-search__more" onClick={() => setOpen(false)}>
                   {t('page.searchAll', { count: matches.length })}
                 </a>
               )}

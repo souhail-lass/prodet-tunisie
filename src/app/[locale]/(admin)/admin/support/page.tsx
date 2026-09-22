@@ -4,7 +4,11 @@ import { AdminSupportClient, type AdminTicketRow } from './support-client';
 
 export const dynamic = 'force-dynamic';
 
-const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Africa/Tunis' });
+const fmt = new Intl.DateTimeFormat('fr-FR', {
+  dateStyle: 'short',
+  timeStyle: 'short',
+  timeZone: 'Africa/Tunis',
+});
 
 export default async function AdminSupportPage() {
   let rows: AdminTicketRow[] = [];
@@ -27,7 +31,10 @@ export default async function AdminSupportPage() {
     return (
       <section className="panel" style={{ maxWidth: 560 }}>
         <div className="panel__head">
-          <h2 className="panel__title" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <h2
+            className="panel__title"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}
+          >
             <CloudOff size={18} /> Données indisponibles
           </h2>
         </div>

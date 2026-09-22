@@ -24,9 +24,9 @@ export const FICHES = [
         type: 'list',
         items: [
           'ALCOGEL est bactéricide, levuricide et virucide.',
-          "ALCOGEL est utilisé principalement dans le secteur agroalimentaire et en collectivités.",
+          'ALCOGEL est utilisé principalement dans le secteur agroalimentaire et en collectivités.',
           'ALCOGEL possède une très bonne tolérance dermique grâce aux effets de la glycérine.',
-          "ALCOGEL a un haut pouvoir de désinfection grâce à sa teneur en dérivés alcooliques.",
+          'ALCOGEL a un haut pouvoir de désinfection grâce à sa teneur en dérivés alcooliques.',
         ],
       },
       {
@@ -63,7 +63,7 @@ export const FICHES = [
         heading: 'Précautions et stockage',
         type: 'text',
         paragraphs: [
-          "À chaque remplissage, un nettoyage complet du distributeur (pompe et réservoir) est indispensable pour éviter les risques de contamination. Des distributeurs sales ou contaminés peuvent rendre ce produit moins efficace.",
+          'À chaque remplissage, un nettoyage complet du distributeur (pompe et réservoir) est indispensable pour éviter les risques de contamination. Des distributeurs sales ou contaminés peuvent rendre ce produit moins efficace.',
           "Nous déconseillons fortement le mélange de ce produit, même avec des produits de nature similaire, afin d'éviter tout risque d'interaction chimique (déphasages, agglomérats).",
           "Stocker le produit dans son emballage d'origine fermé, de préférence dans un endroit sombre, à l'abri des variations de températures (entre -5 °C et 30 °C), à l'écart de toute source de chaleur et d'ignition.",
           'Produit inflammable, irritant pour les yeux.',
@@ -72,9 +72,7 @@ export const FICHES = [
       {
         heading: 'Conformité',
         type: 'text',
-        paragraphs: [
-          'Produit conforme aux exigences de la directive européenne cosmétique.',
-        ],
+        paragraphs: ['Produit conforme aux exigences de la directive européenne cosmétique.'],
       },
     ],
     conditionnement: 'Bidon 5 L / Flacon 500 ml',
@@ -84,15 +82,15 @@ export const FICHES = [
     slug: 'ALCOHAND',
     title: 'ALCOHAND',
     subtitle:
-      "Solution hydroalcoolique antiseptique pour une désinfection rapide des mains, surfaces et ambiance.",
+      'Solution hydroalcoolique antiseptique pour une désinfection rapide des mains, surfaces et ambiance.',
     sections: [
       {
         heading: 'Description',
         type: 'list',
         items: [
-          "ALCOHAND est une solution alcoolique antiseptique qui ne contient ni colorant ni parfum.",
-          "ALCOHAND est utilisé principalement dans le secteur agroalimentaire et en collectivités.",
-          "ALCOHAND possède un haut pouvoir de désinfection grâce à sa teneur en dérivés alcooliques.",
+          'ALCOHAND est une solution alcoolique antiseptique qui ne contient ni colorant ni parfum.',
+          'ALCOHAND est utilisé principalement dans le secteur agroalimentaire et en collectivités.',
+          'ALCOHAND possède un haut pouvoir de désinfection grâce à sa teneur en dérivés alcooliques.',
         ],
       },
       {
@@ -131,7 +129,7 @@ export const FICHES = [
         heading: 'Précautions et stockage',
         type: 'text',
         paragraphs: [
-          "À chaque remplissage, un nettoyage complet du distributeur (pompe et réservoir) est indispensable pour éviter les risques de contamination. Des distributeurs sales ou contaminés peuvent rendre ce produit moins efficace.",
+          'À chaque remplissage, un nettoyage complet du distributeur (pompe et réservoir) est indispensable pour éviter les risques de contamination. Des distributeurs sales ou contaminés peuvent rendre ce produit moins efficace.',
           "Nous déconseillons fortement le mélange de ce produit, même avec des produits de nature similaire, afin d'éviter tout risque d'interaction chimique (déphasages, agglomérats).",
           "Stocker le produit dans son emballage d'origine fermé, de préférence dans un endroit sombre, à l'abri des variations de températures (entre -5 °C et 30 °C), à l'écart de toute source de chaleur et d'ignition.",
           'Produit inflammable, irritant pour les yeux.',
@@ -140,9 +138,7 @@ export const FICHES = [
       {
         heading: 'Conformité',
         type: 'text',
-        paragraphs: [
-          'Produit conforme aux exigences de la directive européenne cosmétique.',
-        ],
+        paragraphs: ['Produit conforme aux exigences de la directive européenne cosmétique.'],
       },
     ],
     conditionnement: 'Bidon 5 litres',
@@ -173,7 +169,7 @@ export const FICHES = [
         items: [
           'DEOFRESH ne contient pas de gaz propulseurs.',
           'DEOFRESH laisse une odeur fraîche et agréable dans les locaux traités.',
-          "DEOFRESH neutralise très rapidement les odeurs de renfermé, de tabac… grâce à sa formulation exclusive.",
+          'DEOFRESH neutralise très rapidement les odeurs de renfermé, de tabac… grâce à sa formulation exclusive.',
           "Facilité d'utilisation, sécurité des manipulateurs et protection de l'environnement.",
         ],
       },
@@ -210,9 +206,9 @@ export const FICHES = [
         heading: 'Description',
         type: 'list',
         items: [
-          "Nettoyant détartrant des bassins lors des vidanges : élimine les dépôts tenaces de calcaire et de rouille sur les revêtements, contient un inhibiteur de corrosion.",
-          "Élimine le calcaire des WC et urinoirs, et décape les ciments pour les sols résistant aux acides (parterres et faïences).",
-          "Détartre les équipements en acier noir (par exemple les chaudières). À ne pas utiliser sur les équipements en acier inoxydable et en aluminium.",
+          'Nettoyant détartrant des bassins lors des vidanges : élimine les dépôts tenaces de calcaire et de rouille sur les revêtements, contient un inhibiteur de corrosion.',
+          'Élimine le calcaire des WC et urinoirs, et décape les ciments pour les sols résistant aux acides (parterres et faïences).',
+          'Détartre les équipements en acier noir (par exemple les chaudières). À ne pas utiliser sur les équipements en acier inoxydable et en aluminium.',
           "Formule très concentrée : acides + tensioactifs, qui redonne aux WC et urinoirs leur blancheur d'origine.",
           'PROFON dissout instantanément les dépôts de calcaire et les incrustations.',
         ],
@@ -308,7 +304,7 @@ export const FICHES = [
         heading: 'Conformité et sécurité',
         type: 'text',
         paragraphs: [
-          "PROSTAR est conforme à la législation en vigueur relative aux produits de nettoyage des appareils et récipients destinés à être au contact des denrées alimentaires.",
+          'PROSTAR est conforme à la législation en vigueur relative aux produits de nettoyage des appareils et récipients destinés à être au contact des denrées alimentaires.',
           "Ne pas mélanger PROSTAR avec les produits alcalins et les oxydants (eau de javel, poudre chlorée et produits oxygénés). Porter des gants lors de l'utilisation.",
         ],
       },
@@ -433,8 +429,8 @@ export const FICHES = [
         heading: 'Conformité',
         type: 'text',
         paragraphs: [
-          "MANOCID est conforme à la législation en vigueur relative aux produits de nettoyage des appareils et récipients destinés à être en contact des denrées alimentaires.",
-          "PRODET TUNISIE est à votre disposition pour développer la meilleure utilisation du MANOCID.",
+          'MANOCID est conforme à la législation en vigueur relative aux produits de nettoyage des appareils et récipients destinés à être en contact des denrées alimentaires.',
+          'PRODET TUNISIE est à votre disposition pour développer la meilleure utilisation du MANOCID.',
         ],
       },
     ],
@@ -450,8 +446,8 @@ export const FICHES = [
         heading: 'Description',
         type: 'text',
         paragraphs: [
-          "En utilisant MOLKABIN, la saleté et le ternissement sur les surfaces en acier inoxydable sont masqués et les surfaces retrouvent un bel éclat.",
-          "Les taches de gravure causées par des fluides agressifs tels que la vapeur, les lessives, les acides ou la pierre à eau sont évitées.",
+          'En utilisant MOLKABIN, la saleté et le ternissement sur les surfaces en acier inoxydable sont masqués et les surfaces retrouvent un bel éclat.',
+          'Les taches de gravure causées par des fluides agressifs tels que la vapeur, les lessives, les acides ou la pierre à eau sont évitées.',
         ],
       },
       {
@@ -504,7 +500,7 @@ export const FICHES = [
         heading: 'Description',
         type: 'list',
         items: [
-          "Produit liquide concentré qui dissout et enlève la rouille, les dépôts calcaires et les taches persistantes des surfaces en porcelaine des urinoirs et WC.",
+          'Produit liquide concentré qui dissout et enlève la rouille, les dépôts calcaires et les taches persistantes des surfaces en porcelaine des urinoirs et WC.',
           'Désinfecte et désodorise en même temps.',
           'Détruit efficacement les moisissures.',
           "Contient de l'acide chlorhydrique mais aussi des inhibiteurs pour protéger les tuyauteries, avec une excellente action détergente : suspend et émulsifie les salissures tenaces.",
@@ -597,7 +593,7 @@ export const FICHES = [
         heading: 'Conformité et sécurité',
         type: 'text',
         paragraphs: [
-          "PROFOUR est conforme à la législation en vigueur relative aux produits de nettoyage des appareils et récipients destinés à être au contact des denrées alimentaires.",
+          'PROFOUR est conforme à la législation en vigueur relative aux produits de nettoyage des appareils et récipients destinés à être au contact des denrées alimentaires.',
           'Avant utilisation, lire attentivement les conseils de sécurité mentionnés sur la fiche de sécurité.',
         ],
       },
@@ -613,9 +609,7 @@ export const FICHES = [
       {
         heading: 'Description',
         type: 'text',
-        paragraphs: [
-          "Produit agréablement parfumé pour le nettoyage et l'entretien des surfaces.",
-        ],
+        paragraphs: ["Produit agréablement parfumé pour le nettoyage et l'entretien des surfaces."],
       },
       {
         heading: "Domaine d'application",
@@ -648,7 +642,7 @@ export const FICHES = [
         items: [
           'Éviter le contact avec les yeux.',
           "En cas de contact avec les yeux, rincer abondamment à l'eau.",
-          "Ne pas verser le produit concentré dans les eaux usées. Tenir hors de la portée des enfants.",
+          'Ne pas verser le produit concentré dans les eaux usées. Tenir hors de la portée des enfants.',
           "Conserver le produit dans son récipient d'origine.",
         ],
       },
@@ -713,7 +707,7 @@ export const FICHES = [
         type: 'text',
         paragraphs: [
           'PROLAC contient des acides. Ne pas mélanger avec des détergents.',
-          "PROLAC est conforme à la législation relative au nettoyage du matériel pouvant se trouver en contact avec les denrées alimentaires.",
+          'PROLAC est conforme à la législation relative au nettoyage du matériel pouvant se trouver en contact avec les denrées alimentaires.',
         ],
       },
     ],
@@ -773,9 +767,9 @@ export const FICHES = [
         items: [
           "Excellente action désinfectante et désodorisante pour l'ambiance et les surfaces : espaces confinés, locaux poubelles, placards et téléphones…",
           "Bactéricide de surfaces, appareils et matériaux. Ne pas mélanger avec autre chose que de l'eau.",
-          "SIRAFAN DESINFECTANT est associé à des tensioactifs anioniques pour la fonction de nettoyage et à un ammonium quaternaire pour un large spectre de désinfection avec un effet rémanent.",
+          'SIRAFAN DESINFECTANT est associé à des tensioactifs anioniques pour la fonction de nettoyage et à un ammonium quaternaire pour un large spectre de désinfection avec un effet rémanent.',
           "SIRAFAN DESINFECTANT est un désinfectant à base d'ammonium quaternaire, efficace sur la plupart des microorganismes.",
-          "Peut être utilisé par pulvérisation ou manuellement. Il diffère des désinfectants chlorés par la sécurité du personnel et la non-corrosion du matériel.",
+          'Peut être utilisé par pulvérisation ou manuellement. Il diffère des désinfectants chlorés par la sécurité du personnel et la non-corrosion du matériel.',
           'Supprime les mauvaises odeurs, désinfecte et désodorise sols, murs et lavabos.',
         ],
       },
@@ -805,7 +799,7 @@ export const FICHES = [
         heading: 'Conformité',
         type: 'text',
         paragraphs: [
-          "SIRAFAN DESINFECTANT est conforme à la législation en vigueur relative aux produits de nettoyage et désinfection des appareils et récipients destinés à être en contact avec les denrées alimentaires.",
+          'SIRAFAN DESINFECTANT est conforme à la législation en vigueur relative aux produits de nettoyage et désinfection des appareils et récipients destinés à être en contact avec les denrées alimentaires.',
           'PRODET TUNISIE est à votre disposition pour développer la meilleure utilisation du SIRAFAN DESINFECTANT.',
         ],
       },
@@ -875,7 +869,7 @@ export const FICHES = [
         heading: 'Description',
         type: 'text',
         paragraphs: [
-          "Déboucheur pour tuyauteries avec une excellente action détergente : suspend et émulsifie les salissures tenaces.",
+          'Déboucheur pour tuyauteries avec une excellente action détergente : suspend et émulsifie les salissures tenaces.',
         ],
       },
       {

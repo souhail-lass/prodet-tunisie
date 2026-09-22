@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { normalizeSearchText, searchCatalogue } from './product-search';
 import type { CatalogueCardProduct } from '@/types/product';
 
-function card(partial: Partial<CatalogueCardProduct> & { id: string; name: string }): CatalogueCardProduct {
+function card(
+  partial: Partial<CatalogueCardProduct> & { id: string; name: string },
+): CatalogueCardProduct {
   return {
     slug: partial.id,
     tagline: '',
@@ -14,7 +16,12 @@ function card(partial: Partial<CatalogueCardProduct> & { id: string; name: strin
 }
 
 const catalogue: CatalogueCardProduct[] = [
-  card({ id: 'p1', name: 'Dégraissant PROFOUR', tagline: 'Cuisine professionnelle', category: 'manufactured' }),
+  card({
+    id: 'p1',
+    name: 'Dégraissant PROFOUR',
+    tagline: 'Cuisine professionnelle',
+    category: 'manufactured',
+  }),
   card({ id: 'p2', name: 'Eau de Javel 5L', slug: 'javel-5l' }),
   card({ id: 'p3', name: 'Savon liquide LIRA', tagline: 'Dégraissant mains' }),
   card({ id: 'p4', name: 'Sac poubelle géant', formats: [{ label: 'Rouleau de 10' }] }),

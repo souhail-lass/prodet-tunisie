@@ -31,7 +31,10 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
   const isHidden = (it: AdminProductRow) => override[it.id] ?? it.hidden;
 
   const categories = useMemo(
-    () => Array.from(new Set(items.map((i) => i.baseCategory).filter((c): c is string => Boolean(c)))).sort(),
+    () =>
+      Array.from(
+        new Set(items.map((i) => i.baseCategory).filter((c): c is string => Boolean(c))),
+      ).sort(),
     [items],
   );
 
@@ -139,12 +142,18 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
           ))}
         </select>
         {filters.cat !== 'all' ? (
-          <button className="pds-btn pds-btn--outline pds-btn--sm" onClick={() => toggleCategory(true)}>
+          <button
+            className="pds-btn pds-btn--outline pds-btn--sm"
+            onClick={() => toggleCategory(true)}
+          >
             <EyeOff size={14} /> <span>Masquer la catégorie</span>
           </button>
         ) : null}
         <a
-          href={localePrefixedPath(locale, withAdminCatalogueQuery('/admin/produits/rangement', editQuery))}
+          href={localePrefixedPath(
+            locale,
+            withAdminCatalogueQuery('/admin/produits/rangement', editQuery),
+          )}
           className="pds-btn pds-btn--outline pds-btn--sm"
         >
           <ArrowUpDown size={14} /> <span>Ranger</span>
@@ -153,7 +162,10 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
           <RefreshCw size={14} /> <span>{syncing ? 'Synchronisation…' : 'Synchroniser'}</span>
         </button>
         <a
-          href={localePrefixedPath(locale, withAdminCatalogueQuery('/admin/produits/nouveau', editQuery))}
+          href={localePrefixedPath(
+            locale,
+            withAdminCatalogueQuery('/admin/produits/nouveau', editQuery),
+          )}
           className="pds-btn pds-btn--primary pds-btn--sm"
         >
           <Plus size={15} /> <span>Ajouter</span>
@@ -171,7 +183,11 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
           const hidden = isHidden(it);
           const img = it.imageUrl || it.baseImageUrl;
           return (
-            <div key={it.id} className={`admin-row${hidden ? ' is-dim' : ''}`} style={{ gridTemplateColumns: cols }}>
+            <div
+              key={it.id}
+              className={`admin-row${hidden ? 'is-dim' : ''}`}
+              style={{ gridTemplateColumns: cols }}
+            >
               <div className="admin-namecell">
                 <span className="admin-thumb">
                   {img ? (
@@ -184,7 +200,9 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
                 <div className="admin-cell">
                   <div className="admin-cell-strong">
                     {it.displayName || it.name}
-                    {it.featured ? <Star size={12} style={{ marginLeft: 6, color: 'var(--color-warning)' }} /> : null}
+                    {it.featured ? (
+                      <Star size={12} style={{ marginLeft: 6, color: 'var(--color-warning)' }} />
+                    ) : null}
                   </div>
                   <div className="admin-cell-sub">
                     {it.source === 'custom' ? 'Personnalisé' : it.sku}
@@ -193,14 +211,20 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
               </div>
               <div className="admin-cell-muted admin-hide-sm">{it.baseCategory ?? '—'}</div>
               <div>
-                <button onClick={() => toggleProduct(it)} className={`admin-toggle ${hidden ? 'admin-toggle--off' : 'admin-toggle--on'}`}>
+                <button
+                  onClick={() => toggleProduct(it)}
+                  className={`admin-toggle ${hidden ? 'admin-toggle--off' : 'admin-toggle--on'}`}
+                >
                   {hidden ? <EyeOff size={13} /> : <Eye size={13} />}
                   {hidden ? 'Masqué' : 'Visible'}
                 </button>
               </div>
               <div style={{ textAlign: 'right' }}>
                 <a
-                  href={localePrefixedPath(locale, withAdminCatalogueQuery(`/admin/produits/${it.id}`, editQuery))}
+                  href={localePrefixedPath(
+                    locale,
+                    withAdminCatalogueQuery(`/admin/produits/${it.id}`, editQuery),
+                  )}
                   className="pds-btn pds-btn--ghost pds-btn--sm"
                 >
                   <Pencil size={14} /> <span>Modifier</span>
@@ -211,7 +235,9 @@ export function ProduitsClient({ items }: { items: AdminProductRow[] }) {
         })}
         {filtered.length === 0 ? <div className="admin-empty">Aucun produit.</div> : null}
         {filtered.length > 400 ? (
-          <div className="admin-result-note">{filtered.length} résultats — affinez la recherche (400 affichés).</div>
+          <div className="admin-result-note">
+            {filtered.length} résultats — affinez la recherche (400 affichés).
+          </div>
         ) : null}
       </div>
     </div>
@@ -231,13 +257,18 @@ function Stat({
   active?: boolean;
   onClick?: () => void;
 }) {
-  const color = tone === 'green' ? 'var(--prodet-green)' : tone === 'amber' ? 'var(--color-warning)' : 'var(--prodet-blue)';
+  const color =
+    tone === 'green'
+      ? 'var(--prodet-green)'
+      : tone === 'amber'
+        ? 'var(--color-warning)'
+        : 'var(--prodet-blue)';
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`stat-card stat-card--filter stat-card--${tone}${active ? ' is-active' : ''}`}
+      className={`stat-card stat-card--filter stat-card--${tone}${active ? 'is-active' : ''}`}
     >
       <div className="stat-card__value" style={{ color }}>
         {value}

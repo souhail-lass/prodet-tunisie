@@ -28,11 +28,11 @@ export function MagicLinkFallback({
   return (
     <form
       action={requestClientMagicLink}
-      className="mt-6 rounded-sm border border-border bg-prodet-wash p-4 md:p-5"
+      className="border-border bg-prodet-wash mt-6 rounded-sm border p-4 md:p-5"
     >
       <input type="hidden" name="locale" value={locale} />
-      <h2 className="font-display text-xl font-bold text-prodet-text">{title}</h2>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">{body}</p>
+      <h2 className="font-display text-prodet-text text-xl font-bold">{title}</h2>
+      <p className="text-muted-foreground mt-2 text-sm leading-6">{body}</p>
       <div className="mt-4 flex flex-col gap-3 sm:flex-row">
         <Input
           type="email"

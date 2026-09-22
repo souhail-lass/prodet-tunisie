@@ -1,10 +1,7 @@
 import { cache } from 'react';
 import { eq, sql } from 'drizzle-orm';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
-import {
-  SupabaseAuthConfigurationError,
-  createSupabaseServerClient,
-} from '@/lib/supabase/server';
+import { SupabaseAuthConfigurationError, createSupabaseServerClient } from '@/lib/supabase/server';
 
 export type AdminRole = 'owner' | 'admin' | 'operator' | 'reviewer';
 
@@ -126,9 +123,7 @@ export function isAdminAuthUnavailableError(error: unknown): error is AdminAuthU
   return error instanceof AdminAuthUnavailableError;
 }
 
-export function isUnauthenticatedAdminError(
-  error: unknown,
-): error is UnauthenticatedAdminError {
+export function isUnauthenticatedAdminError(error: unknown): error is UnauthenticatedAdminError {
   return error instanceof UnauthenticatedAdminError;
 }
 

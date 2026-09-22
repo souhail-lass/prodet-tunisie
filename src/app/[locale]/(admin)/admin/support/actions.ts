@@ -22,7 +22,9 @@ export async function adminReplyAction(
 }
 
 /** Upload one file/photo for an admin support reply (multipart). */
-export async function uploadAdminTicketAttachmentAction(formData: FormData): Promise<UploadAttachmentResult> {
+export async function uploadAdminTicketAttachmentAction(
+  formData: FormData,
+): Promise<UploadAttachmentResult> {
   let session;
   try {
     session = await assertRole(['owner', 'admin', 'operator']);
@@ -47,7 +49,10 @@ export async function uploadAdminTicketAttachmentAction(formData: FormData): Pro
   });
 }
 
-export async function setTicketStatusAction(input: { ticketId: string; status: 'open' | 'closed' }) {
+export async function setTicketStatusAction(input: {
+  ticketId: string;
+  status: 'open' | 'closed';
+}) {
   await assertRole(['owner', 'admin', 'operator']);
   await setTicketStatus(input.ticketId, input.status);
   return { ok: true };

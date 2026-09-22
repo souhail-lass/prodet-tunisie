@@ -164,7 +164,6 @@ export async function submitPublicDevisRequest(
   // carries everything needed to key the devis in by hand.
   after(() => pushPublicDevisToSwiver(referenceCode, parsed.data));
 
-
   if (!delivery.ok) {
     return {
       ok: false,

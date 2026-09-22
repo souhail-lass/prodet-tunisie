@@ -4,7 +4,10 @@ import { MyOrdersClient, type MyOrderRow } from './my-orders-client';
 export const dynamic = 'force-dynamic';
 
 const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeZone: 'Africa/Tunis' });
-const moneyFmt = new Intl.NumberFormat('fr-TN', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+const moneyFmt = new Intl.NumberFormat('fr-TN', {
+  minimumFractionDigits: 3,
+  maximumFractionDigits: 3,
+});
 
 export default async function ClientOrdersPage() {
   let rows: MyOrderRow[] = [];

@@ -21,7 +21,11 @@ export default async function ClientTicketPage({ params }: { params: Promise<{ i
 
   return (
     <div className="dash" style={{ maxWidth: 760 }}>
-      <Link href="/client/support" className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <Link
+        href="/client/support"
+        className="ghost-link"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
+      >
         <ArrowLeft size={15} /> Retour au support
       </Link>
       <section className="panel">

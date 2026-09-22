@@ -16,60 +16,65 @@ const ACCENT = '#c9a24b';
 
 export default function OpengraphImage() {
   return new ImageResponse(
-    (
-      <div
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          backgroundColor: NAVY,
-          padding: '72px 80px',
-          fontFamily: 'sans-serif',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div
-            style={{
-              width: 14,
-              height: 56,
-              backgroundColor: ACCENT,
-              borderRadius: 4,
-            }}
-          />
-          <div style={{ color: SAND, fontSize: 40, fontWeight: 700, letterSpacing: -1 }}>
-            Prodet
-          </div>
-        </div>
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        backgroundColor: NAVY,
+        padding: '72px 80px',
+        fontFamily: 'sans-serif',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div
+          style={{
+            width: 14,
+            height: 56,
+            backgroundColor: ACCENT,
+            borderRadius: 4,
+          }}
+        />
+        <div style={{ color: SAND, fontSize: 40, fontWeight: 700, letterSpacing: -1 }}>Prodet</div>
+      </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <div style={{ color: '#ffffff', fontSize: 68, fontWeight: 800, lineHeight: 1.05, maxWidth: 920 }}>
-            Produits d&apos;entretien &amp; d&apos;hygiène professionnels
-          </div>
-          <div style={{ color: '#9fb3c8', fontSize: 34, fontWeight: 500, maxWidth: 880 }}>
-            Fabricant et distributeur en Tunisie — hôtellerie, restauration, entreprises &amp; institutions.
-          </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <div
+          style={{
+            color: '#ffffff',
+            fontSize: 68,
+            fontWeight: 800,
+            lineHeight: 1.05,
+            maxWidth: 920,
+          }}
+        >
+          Produits d&apos;entretien &amp; d&apos;hygiène professionnels
         </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-          <div
-            style={{
-              display: 'flex',
-              color: NAVY,
-              backgroundColor: ACCENT,
-              fontSize: 28,
-              fontWeight: 700,
-              padding: '12px 28px',
-              borderRadius: 999,
-            }}
-          >
-            Devis sur demande
-          </div>
-          <div style={{ color: '#9fb3c8', fontSize: 28, fontWeight: 500 }}>prodet.com.tn</div>
+        <div style={{ color: '#9fb3c8', fontSize: 34, fontWeight: 500, maxWidth: 880 }}>
+          Fabricant et distributeur en Tunisie — hôtellerie, restauration, entreprises &amp;
+          institutions.
         </div>
       </div>
-    ),
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+        <div
+          style={{
+            display: 'flex',
+            color: NAVY,
+            backgroundColor: ACCENT,
+            fontSize: 28,
+            fontWeight: 700,
+            padding: '12px 28px',
+            borderRadius: 999,
+          }}
+        >
+          Devis sur demande
+        </div>
+        <div style={{ color: '#9fb3c8', fontSize: 28, fontWeight: 500 }}>prodet.com.tn</div>
+      </div>
+    </div>,
     size,
   );
 }

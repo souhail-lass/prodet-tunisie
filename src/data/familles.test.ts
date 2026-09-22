@@ -47,7 +47,9 @@ describe('classifyFamille', () => {
   });
 
   it('defaults chemical products to produits-nettoyage', () => {
-    expect(classifyFamille('SIRAFAN DESINFECTANT SANS RINÇAGE BID 05KG')).toBe('produits-nettoyage');
+    expect(classifyFamille('SIRAFAN DESINFECTANT SANS RINÇAGE BID 05KG')).toBe(
+      'produits-nettoyage',
+    );
     expect(classifyFamille('PROLAX LIQUIDE BID 20KG')).toBe('produits-nettoyage');
   });
 
@@ -123,7 +125,9 @@ describe('resolvePlacement', () => {
   });
 
   it('accepts the leftover bucket of a famille as an explicit target', () => {
-    expect(assignableSousCategorieSlugs('papier-epi')).toContain(leftoverSousCategorieSlug('papier-epi'));
+    expect(assignableSousCategorieSlugs('papier-epi')).toContain(
+      leftoverSousCategorieSlug('papier-epi'),
+    );
     const placement = resolvePlacement({
       name,
       familleSlug: 'papier-epi',
@@ -159,9 +163,7 @@ describe('produitPath', () => {
   it('points Retour at the sous-catégorie the product belongs to', () => {
     const famille = classifyFamille('PROLAC');
     const sousCat = classifySousCategorie(famille, 'PROLAC');
-    expect(produitPath(famille, sousCat)).toBe(
-      '/produits/produits-nettoyage/cuisine-degraissage',
-    );
+    expect(produitPath(famille, sousCat)).toBe('/produits/produits-nettoyage/cuisine-degraissage');
   });
 });
 

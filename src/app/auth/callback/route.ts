@@ -6,7 +6,9 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code');
   const next = sanitizeNext(searchParams.get('next'));
   const locale = getLocaleFromNext(next);
-  const loginPath = isClientPath(next) ? `/${locale}/connexion-client` : `/${locale}/connexion-admin`;
+  const loginPath = isClientPath(next)
+    ? `/${locale}/connexion-client`
+    : `/${locale}/connexion-admin`;
 
   if (!code) {
     return NextResponse.redirect(`${origin}${loginPath}?error=missing-code`);

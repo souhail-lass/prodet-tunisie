@@ -19,12 +19,16 @@ export function ProductDetail({
   return (
     <div>
       <div className="detail-head">
-        <span className="detail-head__emoji" style={{ background: f.col }} aria-hidden>{f.emoji}</span>
+        <span className="detail-head__emoji" style={{ background: f.col }} aria-hidden>
+          {f.emoji}
+        </span>
         <div style={{ minWidth: 0 }}>
           <h1 className="detail-head__title">
             {p.n}
             {p.reform ? (
-              <span className="reform-badge"><AlertTriangle size={12} aria-hidden /> {t(lang, 'Reformulé', 'Reformulated')}</span>
+              <span className="reform-badge">
+                <AlertTriangle size={12} aria-hidden /> {t(lang, 'Reformulé', 'Reformulated')}
+              </span>
             ) : null}
           </h1>
           <div className="detail-head__fam">{lang === 'en' ? f.en : f.fr}</div>
@@ -33,9 +37,18 @@ export function ProductDetail({
       </div>
 
       <div className="spec">
-        <div className="spec__cell"><div className="spec__k">pH</div><div className="spec__v">{p.ph}</div></div>
-        <div className="spec__cell"><div className="spec__k">{t(lang, 'Mousse', 'Foam')}</div><div className="spec__v">{lang === 'en' ? p.foam_en : p.foam}</div></div>
-        <div className="spec__cell"><div className="spec__k">{t(lang, 'Cible', 'Target')}</div><div className="spec__v">{lang === 'en' ? p.cl_en : p.cl_fr}</div></div>
+        <div className="spec__cell">
+          <div className="spec__k">pH</div>
+          <div className="spec__v">{p.ph}</div>
+        </div>
+        <div className="spec__cell">
+          <div className="spec__k">{t(lang, 'Mousse', 'Foam')}</div>
+          <div className="spec__v">{lang === 'en' ? p.foam_en : p.foam}</div>
+        </div>
+        <div className="spec__cell">
+          <div className="spec__k">{t(lang, 'Cible', 'Target')}</div>
+          <div className="spec__v">{lang === 'en' ? p.cl_en : p.cl_fr}</div>
+        </div>
       </div>
 
       <div className="detail-block">
@@ -45,7 +58,8 @@ export function ProductDetail({
 
       {p.note_fr && !p.reform ? (
         <div className="academy-note">
-          <strong>{t(lang, 'Reformulation', 'Reformulation')} :</strong> {lang === 'en' ? p.note_en : p.note_fr}
+          <strong>{t(lang, 'Reformulation', 'Reformulation')} :</strong>{' '}
+          {lang === 'en' ? p.note_en : p.note_fr}
         </div>
       ) : null}
 

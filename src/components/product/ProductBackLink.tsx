@@ -6,13 +6,7 @@ import { useLocale } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { readLastCatalogueBrowse } from '@/lib/catalogue-browse';
 
-export function ProductBackLink({
-  href,
-  label,
-}: {
-  href: string;
-  label: string;
-}) {
+export function ProductBackLink({ href, label }: { href: string; label: string }) {
   const router = useRouter();
   const locale = useLocale();
 

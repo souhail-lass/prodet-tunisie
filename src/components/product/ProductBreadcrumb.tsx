@@ -14,7 +14,10 @@ export function ProductBreadcrumb({ locale, productName }: ProductBreadcrumbProp
     <nav aria-label={ariaLabel} className="text-[13px] font-medium">
       <ol className="flex flex-wrap items-center gap-2">
         <li>
-          <Link href={CATALOGUE_PATH} className="text-[#1F9C49] transition-colors hover:text-[#1B5FA7]">
+          <Link
+            href={CATALOGUE_PATH}
+            className="text-[#1F9C49] transition-colors hover:text-[#1B5FA7]"
+          >
             {rootLabel}
           </Link>
         </li>

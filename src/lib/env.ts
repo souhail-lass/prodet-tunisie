@@ -19,10 +19,7 @@ const ServerEnvSchema = z.object({
    * Supabase Storage bucket for customer-uploaded documents (PO, invoices,
    * ERP exports, …). Must be created manually with public access disabled.
    */
-  SUPABASE_CUSTOMER_DOCUMENTS_BUCKET: z
-    .string()
-    .min(1)
-    .default('customer-documents'),
+  SUPABASE_CUSTOMER_DOCUMENTS_BUCKET: z.string().min(1).default('customer-documents'),
   /**
    * Swiver ERP integration. `disabled` (default) keeps every Swiver-backed
    * surface in no-op mode. Set to `sandbox` only when the adapter has been

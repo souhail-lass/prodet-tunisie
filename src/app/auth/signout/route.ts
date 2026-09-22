@@ -15,6 +15,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Best-effort — still redirect to login.
   }
   const next = searchParams.get('next');
-  const dest = next && next.startsWith('/') && !next.startsWith('//') ? next : '/fr/connexion-admin';
+  const dest =
+    next && next.startsWith('/') && !next.startsWith('//') ? next : '/fr/connexion-admin';
   return NextResponse.redirect(`${origin}${dest}`);
 }

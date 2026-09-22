@@ -86,11 +86,7 @@ export function DocumentUploadForm({
         setError(t(errorKeyFor(result.error), { max: formatBytes(MAX_DOCUMENT_BYTES) }));
         return;
       }
-      setSuccess(
-        attachToOrderDraftId
-          ? t('successAttached')
-          : t('success'),
-      );
+      setSuccess(attachToOrderDraftId ? t('successAttached') : t('success'));
       setFileName(null);
       formRef.current?.reset();
       router.refresh();
@@ -105,10 +101,10 @@ export function DocumentUploadForm({
   return (
     <section aria-labelledby="upload-document-title" className={sectionClass}>
       <header className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="upload-document-title" className="text-[15px] font-semibold text-prodet-text">
+        <h2 id="upload-document-title" className="text-prodet-text text-[15px] font-semibold">
           {t('title')}
         </h2>
-        <p className="text-[12px] text-muted-foreground">
+        <p className="text-muted-foreground text-[12px]">
           Max {formatBytes(MAX_DOCUMENT_BYTES)} · PDF, Excel, Word, CSV, images
         </p>
       </header>
@@ -126,14 +122,12 @@ export function DocumentUploadForm({
 
         <div className="grid gap-3 md:grid-cols-2">
           <label className="block">
-            <span className="block text-[12px] font-medium text-prodet-text">
-              {t('type')}
-            </span>
+            <span className="text-prodet-text block text-[12px] font-medium">{t('type')}</span>
             <select
               name="kind"
               defaultValue={attachToOrderDraftId ? 'purchase_order' : 'other'}
               required
-              className="mt-1.5 h-10 w-full rounded-md border border-input bg-background px-3 text-[13px] text-prodet-text focus:border-prodet-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="border-input bg-background text-prodet-text focus:border-prodet-blue focus-visible:ring-ring mt-1.5 h-10 w-full rounded-md border px-3 text-[13px] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             >
               {DOCUMENT_KIND_ORDER.map((kind) => (
                 <option key={kind} value={kind}>
@@ -144,9 +138,7 @@ export function DocumentUploadForm({
           </label>
 
           <label className="block">
-            <span className="block text-[12px] font-medium text-prodet-text">
-              {t('label')}
-            </span>
+            <span className="text-prodet-text block text-[12px] font-medium">{t('label')}</span>
             <Input
               type="text"
               name="label"
@@ -158,7 +150,7 @@ export function DocumentUploadForm({
         </div>
 
         <label className="block">
-          <span className="block text-[12px] font-medium text-prodet-text">Fichier</span>
+          <span className="text-prodet-text block text-[12px] font-medium">Fichier</span>
           <div className="mt-1.5 flex flex-wrap items-center gap-3">
             <Button
               type="button"
@@ -169,7 +161,7 @@ export function DocumentUploadForm({
               <FileUp className="h-4 w-4" aria-hidden />
               {t('chooseFile')}
             </Button>
-            <span className="text-[12px] text-muted-foreground">
+            <span className="text-muted-foreground text-[12px]">
               {fileName ? fileName : t('noFile')}
             </span>
           </div>
@@ -188,14 +180,12 @@ export function DocumentUploadForm({
         </label>
 
         <label className="block">
-          <span className="block text-[12px] font-medium text-prodet-text">
-            {t('note')}
-          </span>
+          <span className="text-prodet-text block text-[12px] font-medium">{t('note')}</span>
           <textarea
             name="notes"
             maxLength={800}
             rows={2}
-            className="mt-1.5 w-full resize-y rounded-md border border-input bg-background px-3 py-2 text-[13px] text-prodet-text focus:border-prodet-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            className="border-input bg-background text-prodet-text focus:border-prodet-blue focus-visible:ring-ring mt-1.5 w-full resize-y rounded-md border px-3 py-2 text-[13px] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             placeholder={t('notePlaceholder')}
           />
         </label>
@@ -204,14 +194,14 @@ export function DocumentUploadForm({
           {error ? (
             <p
               role="alert"
-              className="inline-flex items-center gap-1.5 text-[12px] font-medium text-destructive"
+              className="text-destructive inline-flex items-center gap-1.5 text-[12px] font-medium"
             >
               <ShieldAlert className="h-3.5 w-3.5" aria-hidden />
               {error}
             </p>
           ) : null}
           {success ? (
-            <p role="status" className="text-[12px] font-medium text-prodet-green">
+            <p role="status" className="text-prodet-green text-[12px] font-medium">
               {success}
             </p>
           ) : null}

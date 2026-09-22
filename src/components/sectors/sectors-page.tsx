@@ -37,7 +37,7 @@ export function SectorsPage({ sectors }: { sectors: SectorCard[] }) {
               <Link
                 key={sector.id}
                 href={`/secteurs/${sector.id}`}
-                className={`sector-cover${feature ? ' sector-cover--feature' : ''}`}
+                className={`sector-cover${feature ? 'sector-cover--feature' : ''}`}
               >
                 <span className="sector-cover__photo">
                   <Image

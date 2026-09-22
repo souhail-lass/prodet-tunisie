@@ -1,16 +1,7 @@
 'use client';
 
 import { useActionState, useMemo, useState } from 'react';
-import {
-  AlertCircle,
-  Check,
-  CheckCircle2,
-  Inbox,
-  Mail,
-  MapPin,
-  Phone,
-  X,
-} from 'lucide-react';
+import { AlertCircle, Check, CheckCircle2, Inbox, Mail, MapPin, Phone, X } from 'lucide-react';
 import { ConfirmDialog } from '@/components/ds';
 import {
   decideAccessRequest,
@@ -84,14 +75,14 @@ export function AccessRequestsClient({
       <div className="acc-switch">
         <button
           type="button"
-          className={`orders__tab${!showHandled ? ' is-active' : ''}`}
+          className={`orders__tab${!showHandled ? 'is-active' : ''}`}
           onClick={() => setShowHandled(false)}
         >
           En attente{pending.length ? ` (${pending.length})` : ''}
         </button>
         <button
           type="button"
-          className={`orders__tab${showHandled ? ' is-active' : ''}`}
+          className={`orders__tab${showHandled ? 'is-active' : ''}`}
           onClick={() => setShowHandled(true)}
         >
           Traitées{handled.length ? ` (${handled.length})` : ''}
@@ -112,9 +103,7 @@ export function AccessRequestsClient({
         {visible.length === 0 ? (
           <div className="admin-empty">
             <Inbox size={26} style={{ marginBottom: 8, opacity: 0.5 }} />
-            <div>
-              {showHandled ? 'Aucune demande traitée.' : 'Aucune demande en attente.'}
-            </div>
+            <div>{showHandled ? 'Aucune demande traitée.' : 'Aucune demande en attente.'}</div>
           </div>
         ) : null}
       </div>

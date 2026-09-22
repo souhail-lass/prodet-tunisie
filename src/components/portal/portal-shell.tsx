@@ -59,7 +59,13 @@ const TITLES: { match: (p: string) => boolean; key: string }[] = [
   { match: (p) => p.startsWith('/client/compte'), key: 'account' },
 ];
 
-export function PortalShell({ account, children }: { account: PortalShellAccount; children: ReactNode }) {
+export function PortalShell({
+  account,
+  children,
+}: {
+  account: PortalShellAccount;
+  children: ReactNode;
+}) {
   const t = useTranslations('portal');
   const pathname = usePathname();
   const locale = useLocale();
@@ -85,7 +91,10 @@ export function PortalShell({ account, children }: { account: PortalShellAccount
         </div>
 
         <div style={{ padding: '4px 0 6px' }}>
-          <Link href="/client/commander" className="pds-btn pds-btn--primary pds-btn--sm pds-btn--block">
+          <Link
+            href="/client/commander"
+            className="pds-btn pds-btn--primary pds-btn--sm pds-btn--block"
+          >
             <Plus size={15} />
             <span>{t('nav.newOrder')}</span>
           </Link>
@@ -98,7 +107,7 @@ export function PortalShell({ account, children }: { account: PortalShellAccount
               <Link
                 key={item.href}
                 href={item.href}
-                className={`portal__nav-item${isActive(item.href, item.exact) ? ' is-active' : ''}`}
+                className={`portal__nav-item${isActive(item.href, item.exact) ? 'is-active' : ''}`}
               >
                 <Icon size={18} />
                 <span>{t(`nav.${item.key}`)}</span>
@@ -171,7 +180,7 @@ export function PortalShell({ account, children }: { account: PortalShellAccount
               key={item.href}
               href={item.href}
               aria-current={active ? 'page' : undefined}
-              className={`portal-bottomnav__item${active ? ' is-active' : ''}`}
+              className={`portal-bottomnav__item${active ? 'is-active' : ''}`}
             >
               <Icon size={19} />
               <span>{t(`navShort.${item.key}`)}</span>

@@ -21,7 +21,9 @@ export async function requestClientMagicLink(formData: FormData): Promise<never>
   });
 
   const locale = parsed.success ? parsed.data.locale : 'fr';
-  const nextPath = parsed.success ? sanitizeClientNext(locale, parsed.data.next) : `/${locale}/client`;
+  const nextPath = parsed.success
+    ? sanitizeClientNext(locale, parsed.data.next)
+    : `/${locale}/client`;
 
   if (!parsed.success) {
     redirect(`/${locale}/connexion-client?error=invalid`);

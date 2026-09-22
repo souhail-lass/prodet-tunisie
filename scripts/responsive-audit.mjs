@@ -68,7 +68,9 @@ function probe() {
       // element extends past the right edge or starts left of 0
       if (r.right > vw + 1 || r.left < -1) {
         const cls = (typeof el.className === 'string' ? el.className : '').slice(0, 40);
-        culprits.push(`${el.tagName.toLowerCase()}.${cls.replace(/\s+/g, '.')} w=${Math.round(r.width)} right=${Math.round(r.right)}`);
+        culprits.push(
+          `${el.tagName.toLowerCase()}.${cls.replace(/\s+/g, '.')} w=${Math.round(r.width)} right=${Math.round(r.right)}`,
+        );
       }
     }
   }
@@ -76,14 +78,20 @@ function probe() {
   const uniq = [...new Set(culprits)].slice(0, 6);
   // tiny touch targets (visible interactive elements < 40px in either axis)
   const small = [];
-  for (const el of document.querySelectorAll('a, button, input, select, [role=button], [role=tab]')) {
+  for (const el of document.querySelectorAll(
+    'a, button, input, select, [role=button], [role=tab]',
+  )) {
     const r = el.getBoundingClientRect();
     if (r.width === 0 || r.height === 0) continue;
     const style = getComputedStyle(el);
     if (style.visibility === 'hidden' || style.display === 'none') continue;
     if (r.height < 40 || r.width < 24) {
-      const label = (el.getAttribute('aria-label') || el.textContent || el.tagName).trim().slice(0, 22);
-      small.push(`${el.tagName.toLowerCase()}[${label}] ${Math.round(r.width)}x${Math.round(r.height)}`);
+      const label = (el.getAttribute('aria-label') || el.textContent || el.tagName)
+        .trim()
+        .slice(0, 22);
+      small.push(
+        `${el.tagName.toLowerCase()}[${label}] ${Math.round(r.width)}x${Math.round(r.height)}`,
+      );
     }
   }
   return { overflow, docW, vw, culprits: uniq, small: [...new Set(small)].slice(0, 8) };
@@ -118,10 +126,18 @@ async function auditSet(context, label, pages, widths) {
       const r = await page.evaluate(probe);
       const tag = r.overflow > 1 ? `OVERFLOW +${r.overflow}px` : 'ok';
       if (r.overflow > 1 || r.small.length) {
-        issues.push({ page: name, width: w, overflow: r.overflow, culprits: r.culprits, small: r.small });
+        issues.push({
+          page: name,
+          width: w,
+          overflow: r.overflow,
+          culprits: r.culprits,
+          small: r.small,
+        });
       }
       const flag = r.overflow > 1 ? '❌' : '  ';
-      console.log(`${flag} [${label}] ${name} @${w} ${tag}${r.small.length ? ` · ${r.small.length} tiny-targets` : ''}`);
+      console.log(
+        `${flag} [${label}] ${name} @${w} ${tag}${r.small.length ? ` · ${r.small.length} tiny-targets` : ''}`,
+      );
       if (r.culprits.length) console.log(`       ↳ ${r.culprits.join(' | ')}`);
     }
   }
@@ -159,6 +175,8 @@ const overflows = all.filter((i) => i.overflow > 1 || i.note);
 console.log('\n================ SUMMARY ================');
 console.log(`Overflow/load issues: ${overflows.length}`);
 for (const i of overflows) {
-  console.log(`  ${i.page} @${i.width}: ${i.note || `+${i.overflow}px`} ${i.culprits ? '→ ' + i.culprits.slice(0, 3).join(' | ') : ''}`);
+  console.log(
+    `  ${i.page} @${i.width}: ${i.note || `+${i.overflow}px`} ${i.culprits ? '→ ' + i.culprits.slice(0, 3).join(' | ') : ''}`,
+  );
 }
 process.exit(0);

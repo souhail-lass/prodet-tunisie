@@ -81,7 +81,8 @@ export function FormulaDiff({ reform, lang }: { reform: Reform; lang: Lang }) {
   const oldCost = parseCost(reform.unitOld);
   const newCost = parseCost(reform.unitNew);
   const hasCost = oldCost !== null && newCost !== null;
-  const deltaPct = hasCost && oldCost! > 0 ? Math.round(((newCost! - oldCost!) / oldCost!) * 100) : null;
+  const deltaPct =
+    hasCost && oldCost! > 0 ? Math.round(((newCost! - oldCost!) / oldCost!) * 100) : null;
   const maxCost = hasCost ? Math.max(oldCost!, newCost!) : 1;
 
   const keptCount = diff.filter((d) => d.status === 'kept').length;
@@ -95,25 +96,38 @@ export function FormulaDiff({ reform, lang }: { reform: Reform; lang: Lang }) {
             <span className="cost__label">{t(lang, 'Coût matière', 'Material cost')}</span>
             {deltaPct !== null ? (
               <span className={`cost__delta ${deltaPct <= 0 ? 'down' : 'up'}`}>
-                {deltaPct > 0 ? '+' : ''}{deltaPct}%
+                {deltaPct > 0 ? '+' : ''}
+                {deltaPct}%
               </span>
             ) : null}
           </div>
           <div className="cost__values">
             <span className="cost__v old">{reform.unitOld}</span>
-            <span className="cost__arrow" aria-hidden>→</span>
+            <span className="cost__arrow" aria-hidden>
+              →
+            </span>
             <span className="cost__v">{reform.unitNew}</span>
             <span className="cost__unit">DT/kg</span>
           </div>
           <div className="cost__bars">
             <div className="cost__barrow">
               <span className="cost__bartag">{t(lang, 'Ancien', 'Old')}</span>
-              <span className="cost__bartrack"><span className="cost__barfill old" style={{ width: `${(oldCost! / maxCost) * 100}%` }} /></span>
+              <span className="cost__bartrack">
+                <span
+                  className="cost__barfill old"
+                  style={{ width: `${(oldCost! / maxCost) * 100}%` }}
+                />
+              </span>
               <span className="cost__barval">{reform.unitOld} DT</span>
             </div>
             <div className="cost__barrow">
               <span className="cost__bartag">{t(lang, 'Nouveau', 'New')}</span>
-              <span className="cost__bartrack"><span className="cost__barfill new" style={{ width: `${(newCost! / maxCost) * 100}%` }} /></span>
+              <span className="cost__bartrack">
+                <span
+                  className="cost__barfill new"
+                  style={{ width: `${(newCost! / maxCost) * 100}%` }}
+                />
+              </span>
               <span className="cost__barval">{reform.unitNew} DT</span>
             </div>
           </div>
@@ -128,17 +142,30 @@ export function FormulaDiff({ reform, lang }: { reform: Reform; lang: Lang }) {
 
       <div className="diff">
         <div className="diff__head">
-          <span className="diff__title">{t(lang, 'Ce qui a changé — ancienne → nouvelle', 'What changed — old → new')}</span>
+          <span className="diff__title">
+            {t(lang, 'Ce qui a changé — ancienne → nouvelle', 'What changed — old → new')}
+          </span>
           <span className="diff__legend">
-            <span><span className="diff__legdot" style={{ background: 'var(--ac-green)' }} />{t(lang, 'Ajouté', 'Added')}</span>
-            <span><span className="diff__legdot" style={{ background: '#d9941f' }} />{t(lang, 'Modifié', 'Changed')}</span>
-            <span><span className="diff__legdot" style={{ background: '#c0392b' }} />{t(lang, 'Retiré', 'Removed')}</span>
+            <span>
+              <span className="diff__legdot" style={{ background: 'var(--ac-green)' }} />
+              {t(lang, 'Ajouté', 'Added')}
+            </span>
+            <span>
+              <span className="diff__legdot" style={{ background: '#d9941f' }} />
+              {t(lang, 'Modifié', 'Changed')}
+            </span>
+            <span>
+              <span className="diff__legdot" style={{ background: '#c0392b' }} />
+              {t(lang, 'Retiré', 'Removed')}
+            </span>
           </span>
         </div>
 
         {visible.map((d, i) => (
           <div key={`${d.ing}-${i}`} className={`diff-row is-${d.status}`}>
-            <span className="diff-row__sign" aria-hidden>{SIGN[d.status]}</span>
+            <span className="diff-row__sign" aria-hidden>
+              {SIGN[d.status]}
+            </span>
             <span className="diff-row__ing">{d.ing}</span>
             <span className="diff-row__qty">{d.qty}</span>
             <span className="diff-row__role">{d.role}</span>
@@ -155,21 +182,38 @@ export function FormulaDiff({ reform, lang }: { reform: Reform; lang: Lang }) {
         ))}
 
         {keptCount > 0 ? (
-          <button type="button" className="diff-toggle" onClick={() => setShowKept((v) => !v)} aria-expanded={showKept}>
-            {showKept ? <ChevronDown size={15} aria-hidden /> : <ChevronRight size={15} aria-hidden />}
+          <button
+            type="button"
+            className="diff-toggle"
+            onClick={() => setShowKept((v) => !v)}
+            aria-expanded={showKept}
+          >
+            {showKept ? (
+              <ChevronDown size={15} aria-hidden />
+            ) : (
+              <ChevronRight size={15} aria-hidden />
+            )}
             {showKept
               ? t(lang, 'Masquer les inchangés', 'Hide unchanged')
-              : t(lang, `Voir ${keptCount} ingrédient${keptCount > 1 ? 's' : ''} inchangé${keptCount > 1 ? 's' : ''}`, `Show ${keptCount} unchanged`)}
+              : t(
+                  lang,
+                  `Voir ${keptCount} ingrédient${keptCount > 1 ? 's' : ''} inchangé${keptCount > 1 ? 's' : ''}`,
+                  `Show ${keptCount} unchanged`,
+                )}
           </button>
         ) : null}
       </div>
 
       <div className="diff" style={{ marginTop: 18 }}>
-        <span className="diff__title" style={{ display: 'block', marginBottom: 8 }}>{t(lang, 'Pourquoi', 'Why')}</span>
+        <span className="diff__title" style={{ display: 'block', marginBottom: 8 }}>
+          {t(lang, 'Pourquoi', 'Why')}
+        </span>
         <ul className="academy-why">
           {reform.why.map((w, i) => (
             <li key={i}>
-              <span className="academy-why__ico" aria-hidden>✓</span>
+              <span className="academy-why__ico" aria-hidden>
+                ✓
+              </span>
               <span>{lang === 'en' ? w.en : w.fr}</span>
             </li>
           ))}

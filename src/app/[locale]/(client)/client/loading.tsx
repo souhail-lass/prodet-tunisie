@@ -17,8 +17,14 @@ export default function ClientPortalLoading() {
         {Array.from({ length: 4 }, (_, i) => (
           <div className="stat-card" key={i}>
             <span className="pds-skeleton" style={{ width: 36, height: 36, borderRadius: 999 }} />
-            <span className="pds-skeleton pds-skeleton--title" style={{ width: '50%', marginTop: 10 }} />
-            <span className="pds-skeleton pds-skeleton--text" style={{ width: '70%', marginTop: 6 }} />
+            <span
+              className="pds-skeleton pds-skeleton--title"
+              style={{ width: '50%', marginTop: 10 }}
+            />
+            <span
+              className="pds-skeleton pds-skeleton--text"
+              style={{ width: '70%', marginTop: 6 }}
+            />
           </div>
         ))}
       </div>
@@ -26,7 +32,11 @@ export default function ClientPortalLoading() {
         <span className="pds-skeleton pds-skeleton--title" style={{ width: 200 }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 18 }}>
           {Array.from({ length: 5 }, (_, i) => (
-            <span className="pds-skeleton pds-skeleton--text" key={i} style={{ width: `${92 - i * 7}%` }} />
+            <span
+              className="pds-skeleton pds-skeleton--text"
+              key={i}
+              style={{ width: `${92 - i * 7}%` }}
+            />
           ))}
         </div>
       </div>

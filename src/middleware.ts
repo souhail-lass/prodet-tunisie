@@ -179,8 +179,7 @@ async function protectClientPath(request: NextRequest, locale: string) {
     // of redirecting to login. Requires an EXPLICIT opt-in (PORTAL_DEMO_MODE=1)
     // AND a non-production build, so this can never activate in production even
     // if NODE_ENV is misconfigured. Production always enforces the real gate.
-    const demoMode =
-      process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
+    const demoMode = process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
     if (demoMode) {
       response.cookies.set('NEXT_LOCALE', locale, {
         maxAge: 60 * 60 * 24 * 365,
@@ -262,7 +261,5 @@ async function protectAdminPath(request: NextRequest, locale: string) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!api|_next|_vercel|.*\\..*).*)',
-  ],
+  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
 };

@@ -2,10 +2,7 @@
 
 import { companyInfo } from '@/data/company';
 import { consumeRateLimit, formatRetryAfterFr } from '@/lib/rate-limit';
-import {
-  ClientAccessRequestSchema,
-  type ClientAccessRequestInput,
-} from './schema';
+import { ClientAccessRequestSchema, type ClientAccessRequestInput } from './schema';
 
 export interface ClientAccessSubmitResult {
   ok: boolean;
@@ -185,9 +182,7 @@ async function notifyProdet(
     `Ville / zone: ${input.cityOrZone}`,
     `Code postal: ${input.postalCode}`,
     `Type de besoin: ${input.needType}`,
-    `Référence client Prodet, facture ou BL: ${
-      input.prodetReferenceOptional || 'Non précisé'
-    }`,
+    `Référence client Prodet, facture ou BL: ${input.prodetReferenceOptional || 'Non précisé'}`,
     '',
     'Message:',
     input.message || 'Non précisé',

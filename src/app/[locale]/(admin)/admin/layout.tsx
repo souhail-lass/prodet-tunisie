@@ -119,8 +119,17 @@ function AdminBlock({ icon, title, message }: { icon: ReactNode; title: string; 
         <p className="eyebrow" style={{ marginTop: 18 }}>
           Administration
         </p>
-        <h1 style={{ marginTop: 8, fontSize: 'var(--text-h3)', fontWeight: 'var(--fw-bold)' }}>{title}</h1>
-        <p style={{ marginTop: 10, fontSize: 'var(--text-sm)', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+        <h1 style={{ marginTop: 8, fontSize: 'var(--text-h3)', fontWeight: 'var(--fw-bold)' }}>
+          {title}
+        </h1>
+        <p
+          style={{
+            marginTop: 10,
+            fontSize: 'var(--text-sm)',
+            lineHeight: 1.6,
+            color: 'var(--text-secondary)',
+          }}
+        >
           {message}
         </p>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}

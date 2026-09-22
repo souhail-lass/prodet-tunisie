@@ -1,4 +1,10 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react';
+import {
+  forwardRef,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
+} from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 
 function fieldId(id: string | undefined, prefix: string, label?: string) {
@@ -20,7 +26,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   ref,
 ) {
   const theId = fieldId(id, 'pds', label);
-  const inputCls = ['pds-input', icon ? 'pds-input--has-icon' : '', error ? 'pds-input--error' : '', className]
+  const inputCls = [
+    'pds-input',
+    icon ? 'pds-input--has-icon' : '',
+    error ? 'pds-input--error' : '',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
   return (
@@ -33,9 +44,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       ) : null}
       <div className="pds-input-wrap">
         {icon ? <span className="pds-input-wrap__icon">{icon}</span> : null}
-        <input ref={ref} id={theId} className={inputCls} aria-invalid={!!error} required={required} {...rest} />
+        <input
+          ref={ref}
+          id={theId}
+          className={inputCls}
+          aria-invalid={!!error}
+          required={required}
+          {...rest}
+        />
       </div>
-      {error ? <span className="pds-field__error">{error}</span> : hint ? <span className="pds-field__hint">{hint}</span> : null}
+      {error ? (
+        <span className="pds-field__error">{error}</span>
+      ) : hint ? (
+        <span className="pds-field__hint">{hint}</span>
+      ) : null}
     </div>
   );
 });
@@ -51,12 +73,26 @@ export type SelectProps = SelectHTMLAttributes<HTMLSelectElement> & {
 };
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
-  { label, hint, error, required = false, options = [], placeholder, value, id, className = '', children, ...rest },
+  {
+    label,
+    hint,
+    error,
+    required = false,
+    options = [],
+    placeholder,
+    value,
+    id,
+    className = '',
+    children,
+    ...rest
+  },
   ref,
 ) {
   const theId = fieldId(id, 'pds-sel', label);
   const isPlaceholder = !!placeholder && (value === '' || value == null);
-  const selCls = ['pds-select', isPlaceholder ? 'pds-select--placeholder' : '', className].filter(Boolean).join(' ');
+  const selCls = ['pds-select', isPlaceholder ? 'pds-select--placeholder' : '', className]
+    .filter(Boolean)
+    .join(' ');
   return (
     <div className="pds-field">
       {label ? (
@@ -66,7 +102,15 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
         </label>
       ) : null}
       <div className="pds-select-wrap">
-        <select ref={ref} id={theId} className={selCls} value={value} aria-invalid={!!error} required={required} {...rest}>
+        <select
+          ref={ref}
+          id={theId}
+          className={selCls}
+          value={value}
+          aria-invalid={!!error}
+          required={required}
+          {...rest}
+        >
           {placeholder ? (
             <option value="" disabled>
               {placeholder}
@@ -83,7 +127,11 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
           <ChevronDown />
         </span>
       </div>
-      {error ? <span className="pds-field__error">{error}</span> : hint ? <span className="pds-field__hint">{hint}</span> : null}
+      {error ? (
+        <span className="pds-field__error">{error}</span>
+      ) : hint ? (
+        <span className="pds-field__hint">{hint}</span>
+      ) : null}
     </div>
   );
 });
@@ -100,7 +148,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
   ref,
 ) {
   const theId = fieldId(id, 'pds-ta', label);
-  const cls = ['pds-textarea', error ? 'pds-textarea--error' : '', className].filter(Boolean).join(' ');
+  const cls = ['pds-textarea', error ? 'pds-textarea--error' : '', className]
+    .filter(Boolean)
+    .join(' ');
   return (
     <div className="pds-field">
       {label ? (
@@ -109,8 +159,19 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
           {required ? <span className="pds-field__req">*</span> : null}
         </label>
       ) : null}
-      <textarea ref={ref} id={theId} className={cls} aria-invalid={!!error} required={required} {...rest} />
-      {error ? <span className="pds-field__error">{error}</span> : hint ? <span className="pds-field__hint">{hint}</span> : null}
+      <textarea
+        ref={ref}
+        id={theId}
+        className={cls}
+        aria-invalid={!!error}
+        required={required}
+        {...rest}
+      />
+      {error ? (
+        <span className="pds-field__error">{error}</span>
+      ) : hint ? (
+        <span className="pds-field__hint">{hint}</span>
+      ) : null}
     </div>
   );
 });
@@ -130,7 +191,9 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
   return (
     <label className={cls}>
       <input ref={ref} type={radio ? 'radio' : 'checkbox'} {...rest} />
-      <span className="pds-check__box">{radio ? <span className="pds-check__dot" /> : <Check strokeWidth={3.2} />}</span>
+      <span className="pds-check__box">
+        {radio ? <span className="pds-check__dot" /> : <Check strokeWidth={3.2} />}
+      </span>
       {label ? <span>{label}</span> : null}
       {count != null ? <span className="pds-check__count">({count})</span> : null}
     </label>

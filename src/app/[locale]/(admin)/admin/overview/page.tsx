@@ -1,4 +1,12 @@
-import { ArrowRight, Boxes, CheckCircle2, GraduationCap, LifeBuoy, UserPlus, Users } from 'lucide-react';
+import {
+  ArrowRight,
+  Boxes,
+  CheckCircle2,
+  GraduationCap,
+  LifeBuoy,
+  UserPlus,
+  Users,
+} from 'lucide-react';
 import { getAdminOverview } from '@/features/admin/overview';
 import { Link } from '@/i18n/routing';
 
@@ -11,23 +19,56 @@ export default async function AdminOverviewPage() {
   return (
     <div className="dash">
       <div className="dash__stats">
-        <Stat icon={<Users size={20} />} tone="blue" value={o.activeClients} label="Clients actifs" />
-        <Stat icon={<UserPlus size={20} />} tone={o.pendingAccessRequests > 0 ? 'amber' : 'blue'} value={o.pendingAccessRequests} label="Demandes d’accès" href="/admin/demandes-acces" />
-        <Stat icon={<LifeBuoy size={20} />} tone={o.openTickets > 0 ? 'amber' : 'blue'} value={o.openTickets} label="Tickets ouverts" href="/admin/support" />
-        <Stat icon={<Boxes size={20} />} tone="green" value={o.visibleProducts} label="Produits en ligne" href="/admin/produits" />
+        <Stat
+          icon={<Users size={20} />}
+          tone="blue"
+          value={o.activeClients}
+          label="Clients actifs"
+        />
+        <Stat
+          icon={<UserPlus size={20} />}
+          tone={o.pendingAccessRequests > 0 ? 'amber' : 'blue'}
+          value={o.pendingAccessRequests}
+          label="Demandes d’accès"
+          href="/admin/demandes-acces"
+        />
+        <Stat
+          icon={<LifeBuoy size={20} />}
+          tone={o.openTickets > 0 ? 'amber' : 'blue'}
+          value={o.openTickets}
+          label="Tickets ouverts"
+          href="/admin/support"
+        />
+        <Stat
+          icon={<Boxes size={20} />}
+          tone="green"
+          value={o.visibleProducts}
+          label="Produits en ligne"
+          href="/admin/produits"
+        />
       </div>
 
       <Link
         href="/admin/academie"
         className="panel"
-        style={{ display: 'flex', alignItems: 'center', gap: 16, textDecoration: 'none', color: 'inherit' }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 16,
+          textDecoration: 'none',
+          color: 'inherit',
+        }}
       >
         <span className="stat-card__icon stat-card__icon--blue" aria-hidden>
           <GraduationCap size={20} />
         </span>
         <span style={{ flex: 1, minWidth: 0 }}>
-          <strong style={{ display: 'block', fontSize: 'var(--text-base)' }}>Académie / Formation</strong>
-          <span className="panel__sub">Formation détergence et référence de la gamme — formules protégées par code.</span>
+          <strong style={{ display: 'block', fontSize: 'var(--text-base)' }}>
+            Académie / Formation
+          </strong>
+          <span className="panel__sub">
+            Formation détergence et référence de la gamme — formules protégées par code.
+          </span>
         </span>
         <ArrowRight size={18} aria-hidden />
       </Link>
@@ -36,7 +77,10 @@ export default async function AdminOverviewPage() {
         <section className="panel">
           <div className="panel__head">
             <h2 className="panel__title">À traiter</h2>
-            <span className="pds-badge" style={{ background: 'var(--surface-sunken)', color: 'var(--text-secondary)' }}>
+            <span
+              className="pds-badge"
+              style={{ background: 'var(--surface-sunken)', color: 'var(--text-secondary)' }}
+            >
               {toAction}
             </span>
           </div>
@@ -52,19 +96,25 @@ export default async function AdminOverviewPage() {
                   <span className="ov-row__tag ov-row__tag--order">Accès</span>
                   <span className="ov-row__main">
                     <strong>{r.company}</strong>
-                    <span>{r.name} · {r.dateLabel}</span>
+                    <span>
+                      {r.name} · {r.dateLabel}
+                    </span>
                   </span>
                   <ArrowRight size={16} className="ov-row__arrow" />
                 </Link>
               ))}
               {o.tickets.map((t) => (
                 <Link href={`/admin/support/${t.id}`} key={t.id} className="ov-row">
-                  <span className={`ov-row__tag ${t.awaitingProdet ? 'ov-row__tag--ticket' : 'ov-row__tag--muted'}`}>
+                  <span
+                    className={`ov-row__tag ${t.awaitingProdet ? 'ov-row__tag--ticket' : 'ov-row__tag--muted'}`}
+                  >
                     {t.awaitingProdet ? 'À répondre' : 'Ticket'}
                   </span>
                   <span className="ov-row__main">
                     <strong>{t.subject}</strong>
-                    <span>{t.customerName ?? 'Client'} · {t.dateLabel}</span>
+                    <span>
+                      {t.customerName ?? 'Client'} · {t.dateLabel}
+                    </span>
                   </span>
                   <ArrowRight size={16} className="ov-row__arrow" />
                 </Link>
@@ -76,7 +126,9 @@ export default async function AdminOverviewPage() {
         <section className="panel panel--next">
           <div className="panel__head">
             <h2 className="panel__title">Clients actifs</h2>
-            <Link href="/admin/clients" className="panel__link">Tous <ArrowRight size={14} /></Link>
+            <Link href="/admin/clients" className="panel__link">
+              Tous <ArrowRight size={14} />
+            </Link>
           </div>
           {o.activeNow.length === 0 ? (
             <p className="panel__sub">Aucune connexion récente.</p>
@@ -85,7 +137,12 @@ export default async function AdminOverviewPage() {
               {o.activeNow.map((c, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
                   <span className="admin-avatar">
-                    {c.name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]?.toUpperCase()).join('') || 'CL'}
+                    {c.name
+                      .split(/\s+/)
+                      .filter(Boolean)
+                      .slice(0, 2)
+                      .map((w) => w[0]?.toUpperCase())
+                      .join('') || 'CL'}
                   </span>
                   <div style={{ minWidth: 0 }}>
                     <div className="admin-cell-strong">{c.name}</div>
@@ -122,7 +179,9 @@ function Stat({
     </>
   );
   return href ? (
-    <Link href={href} className="stat-card stat-card--filter">{inner}</Link>
+    <Link href={href} className="stat-card stat-card--filter">
+      {inner}
+    </Link>
   ) : (
     <div className="stat-card">{inner}</div>
   );

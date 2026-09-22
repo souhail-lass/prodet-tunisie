@@ -30,7 +30,7 @@ export function ProductHeroV2({ product, locale, useCaseLabel }: ProductHeroV2Pr
   return (
     <section className="grid gap-7 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1fr)]">
       <div>
-        <div className="relative flex min-h-[340px] items-center justify-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-white shadow-card sm:min-h-[420px] md:min-h-[560px] lg:min-h-[600px]">
+        <div className="shadow-card relative flex min-h-[340px] items-center justify-center overflow-hidden rounded-lg border border-[var(--color-border)] bg-white sm:min-h-[420px] md:min-h-[560px] lg:min-h-[600px]">
           {activeImage ? (
             <Image
               src={activeImage.src}
@@ -61,28 +61,28 @@ export function ProductHeroV2({ product, locale, useCaseLabel }: ProductHeroV2Pr
               const isActive = image.src === activeImage?.src;
 
               return (
-              <button
-                type="button"
-                key={image.src}
-                aria-label={image.alt}
-                onClick={() => setActiveImage(image)}
-                className={cn(
-                  'relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white transition-colors md:h-20 md:w-20',
-                  isActive
-                    ? 'border-prodet-green ring-2 ring-prodet-green/10'
-                    : 'border-[var(--color-border)] hover:border-prodet-blue',
-                )}
-              >
-                <Image
-                  src={image.src}
-                  alt=""
-                  fill
-                  sizes="80px"
+                <button
+                  type="button"
+                  key={image.src}
+                  aria-label={image.alt}
+                  onClick={() => setActiveImage(image)}
                   className={cn(
-                    'h-full w-full',
-                    image.kind === 'packshot' ? 'object-contain p-1.5' : 'object-cover',
+                    'relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border bg-white transition-colors md:h-20 md:w-20',
+                    isActive
+                      ? 'border-prodet-green ring-prodet-green/10 ring-2'
+                      : 'hover:border-prodet-blue border-[var(--color-border)]',
                   )}
-                />
+                >
+                  <Image
+                    src={image.src}
+                    alt=""
+                    fill
+                    sizes="80px"
+                    className={cn(
+                      'h-full w-full',
+                      image.kind === 'packshot' ? 'object-contain p-1.5' : 'object-cover',
+                    )}
+                  />
                 </button>
               );
             })}
@@ -94,19 +94,23 @@ export function ProductHeroV2({ product, locale, useCaseLabel }: ProductHeroV2Pr
         <ProductBreadcrumb locale={locale} productName={product.name} />
 
         <div className="mt-9">
-          <h1 className="text-[30px] font-semibold leading-tight tracking-[-0.02em] text-[var(--color-text-primary)] md:text-[34px]">
+          <h1 className="text-[30px] leading-tight font-semibold tracking-[-0.02em] text-[var(--color-text-primary)] md:text-[34px]">
             {product.name}
           </h1>
-          <p className="mt-2 text-[var(--type-small)] font-medium leading-5 text-[var(--color-text-tertiary)]">{product.tagline}</p>
+          <p className="mt-2 leading-5 font-medium text-[var(--color-text-tertiary)] text-[var(--type-small)]">
+            {product.tagline}
+          </p>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
           {product.category === 'manufactured' ? null : (
-            <span className="text-[var(--type-small)] font-semibold text-[var(--color-text-secondary)]">
+            <span className="font-semibold text-[var(--color-text-secondary)] text-[var(--type-small)]">
               {isEnglish ? 'Selected commercial product.' : 'Article commercialisé.'}
             </span>
           )}
-          <span className="text-[var(--type-small)] font-semibold text-prodet-green">{useCaseLabel}</span>
+          <span className="text-prodet-green font-semibold text-[var(--type-small)]">
+            {useCaseLabel}
+          </span>
         </div>
 
         <div className="mt-5 space-y-4 text-[13px] leading-[1.55] text-[var(--color-text-secondary)]">
@@ -183,7 +187,7 @@ export function ProductHeroV2({ product, locale, useCaseLabel }: ProductHeroV2Pr
                 <a
                   href={product.technicalSheetUrl}
                   download
-                  className="text-[13px] font-semibold text-prodet-green underline-offset-4 hover:underline"
+                  className="text-prodet-green text-[13px] font-semibold underline-offset-4 hover:underline"
                 >
                   {isEnglish ? 'Download technical sheet' : 'Télécharger la fiche technique'}
                 </a>
@@ -198,7 +202,7 @@ export function ProductHeroV2({ product, locale, useCaseLabel }: ProductHeroV2Pr
                 <a
                   href={product.safetySheetUrl}
                   download
-                  className="text-[13px] font-semibold text-prodet-green underline-offset-4 hover:underline"
+                  className="text-prodet-green text-[13px] font-semibold underline-offset-4 hover:underline"
                 >
                   {isEnglish
                     ? 'Download safety data sheet (SDS)'
@@ -218,7 +222,6 @@ export function ProductHeroV2({ product, locale, useCaseLabel }: ProductHeroV2Pr
         <div className="mt-6">
           <ProductQuoteBox product={product} locale={locale} />
         </div>
-
       </div>
     </section>
   );

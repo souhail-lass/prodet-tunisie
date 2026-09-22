@@ -319,13 +319,17 @@ function mapSwiverDocumentKind(rawType: string | null | undefined): SwiverDocume
   const t = (rawType ?? '').toLowerCase().trim();
   if (t.includes('estimate') || t.includes('devis') || t.includes('quote')) return 'devis';
   if (t.includes('invoice') || t.includes('facture')) return 'facture';
-  if (t.includes('delivery') || t.includes('livraison') || t.includes('bl')) return 'bon_de_livraison';
+  if (t.includes('delivery') || t.includes('livraison') || t.includes('bl'))
+    return 'bon_de_livraison';
   if (t.includes('credit') || t.includes('avoir')) return 'avoir';
-  if (t.includes('order') || t.includes('commande') || t.includes('purchase')) return 'bon_de_commande';
+  if (t.includes('order') || t.includes('commande') || t.includes('purchase'))
+    return 'bon_de_commande';
   return 'devis';
 }
 
-function mapSwiverDocumentStatus(rawState: string | null | undefined): SwiverDocumentSummary['status'] {
+function mapSwiverDocumentStatus(
+  rawState: string | null | undefined,
+): SwiverDocumentSummary['status'] {
   const s = (rawState ?? '').toLowerCase().trim();
   if (!s) return 'unknown';
   if (s.includes('draft') || s.includes('brouillon')) return 'draft';
@@ -357,8 +361,7 @@ function mapDocument(raw: SwiverDocumentRaw): SwiverDocumentSummary {
   // Live documents use numeric type codes ('1' facture, '4' bon de commande,
   // '6' devis); fall back to the keyword mapper for any verbose shapes.
   const typeCode = (raw.type ?? '').toString().trim();
-  const kind =
-    SWIVER_TYPE_TO_KIND[typeCode] ?? mapSwiverDocumentKind(raw.type ?? null);
+  const kind = SWIVER_TYPE_TO_KIND[typeCode] ?? mapSwiverDocumentKind(raw.type ?? null);
 
   return {
     swiverId: raw.id != null ? String(raw.id) : '',
@@ -568,13 +571,17 @@ class HttpDocumentPort implements SwiverDocumentPort {
   }): Promise<SwiverDocumentSummary[]> {
     void params.updatedSince; // No confirmed date filter on this endpoint.
 
-    const kinds = params.kinds?.length ? params.kinds : (['devis', 'facture'] as SwiverDocumentKind[]);
+    const kinds = params.kinds?.length
+      ? params.kinds
+      : (['devis', 'facture'] as SwiverDocumentKind[]);
     const typeCodes = kinds
       .map((k) => SWIVER_KIND_TO_TYPE[k])
       .filter((t): t is number => t != null);
     // The endpoint only returns validated docs unless state=draft is passed —
     // portal-pushed orders live as drafts, so callers may ask for both passes.
-    const states: Array<string | undefined> = params.includeDrafts ? [undefined, 'draft'] : [undefined];
+    const states: Array<string | undefined> = params.includeDrafts
+      ? [undefined, 'draft']
+      : [undefined];
 
     const limit = 100;
     const maxPerKind = 500;
@@ -587,7 +594,13 @@ class HttpDocumentPort implements SwiverDocumentPort {
           const response = await this.transport.fetchJson<SwiverDocumentListResponse>(
             '/open_api/document/list',
             {
-              query: { type, contact: params.customerSwiverId, offset, limit, ...(state ? { state } : {}) },
+              query: {
+                type,
+                contact: params.customerSwiverId,
+                offset,
+                limit,
+                ...(state ? { state } : {}),
+              },
               // Document lists are heavier than other reads; the default 10s was
               // timing out on cold loads and poisoning the spending cache.
               timeoutMs: 20_000,
@@ -640,7 +653,10 @@ class HttpDocumentPort implements SwiverDocumentPort {
         warehouseId: res.warehouse?.id != null ? Number(res.warehouse.id) : null,
       };
     } catch (error) {
-      console.error('[swiver] createDraftDocument failed', error instanceof Error ? error.message : error);
+      console.error(
+        '[swiver] createDraftDocument failed',
+        error instanceof Error ? error.message : error,
+      );
       return null;
     }
   }
@@ -670,7 +686,8 @@ class HttpDocumentPort implements SwiverDocumentPort {
           warehouse?: { id?: number | string } | null;
         }>(`/open_api/document/${encodeURIComponent(swiverId)}/`);
         version = doc?.version ?? 1;
-        if (warehouseId == null && doc?.warehouse?.id != null) warehouseId = Number(doc.warehouse.id);
+        if (warehouseId == null && doc?.warehouse?.id != null)
+          warehouseId = Number(doc.warehouse.id);
       }
 
       // Resolve each line's vat% + unit from the Swiver product.
@@ -719,9 +736,7 @@ class HttpDocumentPort implements SwiverDocumentPort {
         warehouse: warehouseId ?? undefined,
         // Omitted entirely when absent — the draft keeps the empty client it
         // was created with, rather than being sent contact: NaN.
-        ...(input.contactSwiverId != null
-          ? { contact: Number(input.contactSwiverId) }
-          : {}),
+        ...(input.contactSwiverId != null ? { contact: Number(input.contactSwiverId) } : {}),
         document_lines: lines,
       };
 
@@ -738,13 +753,19 @@ class HttpDocumentPort implements SwiverDocumentPort {
             await new Promise((r) => setTimeout(r, 600));
             continue;
           }
-          console.error('[swiver] updateDocument PUT failed', error instanceof Error ? error.message : error);
+          console.error(
+            '[swiver] updateDocument PUT failed',
+            error instanceof Error ? error.message : error,
+          );
           return false;
         }
       }
       return false;
     } catch (error) {
-      console.error('[swiver] updateDocument failed', error instanceof Error ? error.message : error);
+      console.error(
+        '[swiver] updateDocument failed',
+        error instanceof Error ? error.message : error,
+      );
       return false;
     }
   }
@@ -758,7 +779,10 @@ class HttpDocumentPort implements SwiverDocumentPort {
       });
       return true;
     } catch (error) {
-      console.error('[swiver] setDocumentState failed', error instanceof Error ? error.message : error);
+      console.error(
+        '[swiver] setDocumentState failed',
+        error instanceof Error ? error.message : error,
+      );
       return false;
     }
   }
@@ -787,9 +811,7 @@ class HttpHealthPort implements SwiverHealthPort {
 // Factory
 // ---------------------------------------------------------------------------
 
-export function createHttpSwiverAdapter(params: {
-  mode: 'sandbox' | 'production';
-}): SwiverAdapter {
+export function createHttpSwiverAdapter(params: { mode: 'sandbox' | 'production' }): SwiverAdapter {
   const env = getServerEnv();
   if (!env.SWIVER_API_BASE_URL || !env.SWIVER_API_KEY) {
     throw new SwiverNotConfiguredError(

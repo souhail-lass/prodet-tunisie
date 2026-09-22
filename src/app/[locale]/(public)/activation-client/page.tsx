@@ -48,9 +48,9 @@ export default async function ClientActivationPage({
   return (
     <div className="bg-prodet-wash">
       <section className="section-shell flex min-h-[72vh] items-center py-10 lg:py-14">
-        <div className="mx-auto w-full max-w-2xl rounded-lg border border-border bg-white p-6 shadow-[0_24px_70px_-60px_rgba(8,41,78,0.55)] md:p-8">
+        <div className="border-border mx-auto w-full max-w-2xl rounded-lg border bg-white p-6 shadow-[0_24px_70px_-60px_rgba(8,41,78,0.55)] md:p-8">
           <div className="flex items-start gap-4">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-prodet-ink text-white">
+            <span className="bg-prodet-ink flex h-12 w-12 shrink-0 items-center justify-center rounded-sm text-white">
               {state.status === 'valid' ? (
                 <ShieldCheck className="h-5 w-5" aria-hidden />
               ) : state.status === 'accepted' ? (
@@ -61,10 +61,10 @@ export default async function ClientActivationPage({
             </span>
             <div>
               <p className="eyebrow-label">Invitation client</p>
-              <h1 className="mt-2 font-display text-3xl font-bold leading-tight text-prodet-text">
+              <h1 className="font-display text-prodet-text mt-2 text-3xl leading-tight font-bold">
                 {activationTitle(state)}
               </h1>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+              <p className="text-muted-foreground mt-3 text-sm leading-6">
                 {activationMessage(state, locale)}
               </p>
             </div>

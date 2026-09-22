@@ -4,12 +4,8 @@ export const siteContent = {
       label: 'FABRICATION TUNISIENNE POUR PROFESSIONNELS',
       title: "Produits d'entretien professionnels fabriqués en Tunisie.",
       subtitle:
-        "Une gamme pensée pour les hôtels, restaurants, entreprises et sociétés de nettoyage qui veulent aller vite vers des références claires, des formats professionnels et un devis direct.",
-      trustPoints: [
-        "Fabriqué à L'Aouina, Tunis",
-        'Formats professionnels',
-        'Devis sur demande',
-      ],
+        'Une gamme pensée pour les hôtels, restaurants, entreprises et sociétés de nettoyage qui veulent aller vite vers des références claires, des formats professionnels et un devis direct.',
+      trustPoints: ["Fabriqué à L'Aouina, Tunis", 'Formats professionnels', 'Devis sur demande'],
       imageCaption: 'Gamme illustrative · Produits fabriqués en Tunisie',
     },
     trustStrip: {
@@ -32,7 +28,7 @@ export const siteContent = {
       label: 'PRODUITS PHARES',
       title: 'Références claires pour vos achats récurrents',
       subtitle:
-        "Une sélection resserrée pour lire rapidement les produits les plus utiles dans les environnements professionnels les plus fréquents.",
+        'Une sélection resserrée pour lire rapidement les produits les plus utiles dans les environnements professionnels les plus fréquents.',
       cta: 'Voir tout le catalogue',
     },
     sectors: {
@@ -45,8 +41,7 @@ export const siteContent = {
     manufacturing: {
       label: 'PRODUCTION LOCALE',
       title: 'Une fabrication locale conçue pour les achats professionnels',
-      body:
-        "Prodet fabrique et distribue depuis L'Aouina, Tunis. Nous structurons l'offre pour qu'un acheteur professionnel comprenne vite les usages, les conditionnements et le bon point de contact sans passer par une boutique grand public.",
+      body: "Prodet fabrique et distribue depuis L'Aouina, Tunis. Nous structurons l'offre pour qu'un acheteur professionnel comprenne vite les usages, les conditionnements et le bon point de contact sans passer par une boutique grand public.",
       cta: 'Découvrir notre catalogue',
       caption: "Illustration — nos installations à L'Aouina sont en cours de documentation",
     },
@@ -60,7 +55,7 @@ export const siteContent = {
         },
         {
           title: 'Recevez une proposition ciblée',
-          body: "Nous construisons une réponse adaptée à votre activité, avec les références et conditionnements pertinents.",
+          body: 'Nous construisons une réponse adaptée à votre activité, avec les références et conditionnements pertinents.',
         },
         {
           title: 'Validez avec Prodet',
@@ -71,14 +66,15 @@ export const siteContent = {
     finalCta: {
       title: 'Passez du besoin au devis en quelques minutes',
       subtitle:
-        "Que vous gériez un hôtel, un restaurant, des bureaux ou plusieurs sites, nous vous aidons à cadrer rapidement les bons produits et les bons formats.",
-      responseLine: 'Contact direct par téléphone ou email, sans passage par un catalogue grand public.',
+        'Que vous gériez un hôtel, un restaurant, des bureaux ou plusieurs sites, nous vous aidons à cadrer rapidement les bons produits et les bons formats.',
+      responseLine:
+        'Contact direct par téléphone ou email, sans passage par un catalogue grand public.',
     },
   },
   catalogue: {
     title: 'Offres professionnelles Prodet',
     subtitle:
-      "Cette presentation publique reprend les offres actuelles par service metier: restauration et cuisine, buanderie, housekeeping, puis articles menagers et hygiene. L objectif est de guider rapidement un acheteur B2B vers un devis, sans prix public ni stock public.",
+      'Cette presentation publique reprend les offres actuelles par service metier: restauration et cuisine, buanderie, housekeeping, puis articles menagers et hygiene. L objectif est de guider rapidement un acheteur B2B vers un devis, sans prix public ni stock public.',
     productCountLabel: 'produits trouves',
     searchLabel: 'Recherche produit',
     searchPlaceholder: 'Nom du produit, usage, secteur, conditionnement…',
@@ -179,8 +175,7 @@ export const siteContent = {
     quoteTitle: 'Demande de devis',
     quoteBody:
       'Préparez votre demande avec les produits souhaités, les volumes estimés et votre secteur d’activité. Nous revenons vers vous avec une offre adaptée.',
-    note:
-      "Les horaires et le WhatsApp ne sont pas affichés ici tant qu'ils ne sont pas confirmés.",
+    note: "Les horaires et le WhatsApp ne sont pas affichés ici tant qu'ils ne sont pas confirmés.",
   },
   quoteModal: {
     title: 'Devis',

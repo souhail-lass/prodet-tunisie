@@ -86,7 +86,9 @@ export default async function CommanderPage({
   {
     const freq = await frequentPromise;
     frequent = freq.map((f) => {
-      const p = (f.sku ? bySlug.get(f.sku) : undefined) ?? (f.swiverId ? catalogue.find((c) => c.swiverId === f.swiverId) : undefined);
+      const p =
+        (f.sku ? bySlug.get(f.sku) : undefined) ??
+        (f.swiverId ? catalogue.find((c) => c.swiverId === f.swiverId) : undefined);
       return {
         slug: p?.slug ?? f.slug,
         name: f.name,

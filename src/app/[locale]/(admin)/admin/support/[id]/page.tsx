@@ -17,14 +17,21 @@ export default async function AdminTicketPage({ params }: { params: Promise<{ id
 
   return (
     <div className="dash" style={{ maxWidth: 780 }}>
-      <Link href="/admin/support" className="ghost-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <Link
+        href="/admin/support"
+        className="ghost-link"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
+      >
         <ArrowLeft size={15} /> Retour aux tickets
       </Link>
       <section className="panel">
         <div className="panel__head">
           <div>
             <h2 className="panel__title">{ticket.subject}</h2>
-            <p className="panel__sub" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <p
+              className="panel__sub"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+            >
               <Building2 size={14} /> {ticket.customerName ?? 'Client'}
             </p>
           </div>

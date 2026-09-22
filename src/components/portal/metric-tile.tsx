@@ -35,15 +35,15 @@ export function MetricTile({
   const body = (
     <>
       <div className="flex items-start justify-between gap-2">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
+        <p className="text-muted-foreground text-[11px] font-semibold tracking-[0.06em] uppercase">
           {label}
         </p>
         {tone && toneLabel ? <StatusPill tone={tone} label={toneLabel} /> : null}
       </div>
-      <p className="mt-3 text-[26px] font-semibold leading-none text-prodet-text tabular-nums">
+      <p className="text-prodet-text mt-3 text-[26px] leading-none font-semibold tabular-nums">
         {value}
       </p>
-      {hint ? <p className="mt-2 text-[12px] leading-5 text-muted-foreground">{hint}</p> : null}
+      {hint ? <p className="text-muted-foreground mt-2 text-[12px] leading-5">{hint}</p> : null}
     </>
   );
 

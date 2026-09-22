@@ -72,28 +72,25 @@ export function QuoteSelectionProvider({ children }: { children: ReactNode }) {
     }
   }, [hydrated, items]);
 
-  const setProductQuantity = useCallback(
-    (product: QuoteSelectionProduct, quantity: number) => {
-      const nextQuantity = clampQuantity(quantity);
+  const setProductQuantity = useCallback((product: QuoteSelectionProduct, quantity: number) => {
+    const nextQuantity = clampQuantity(quantity);
 
-      setItems((current) => {
-        const next = new Map(current);
+    setItems((current) => {
+      const next = new Map(current);
 
-        if (nextQuantity <= 0) {
-          next.delete(product.productId);
-        } else {
-          next.set(product.productId, {
-            ...current.get(product.productId),
-            ...product,
-            quantity: nextQuantity,
-          });
-        }
+      if (nextQuantity <= 0) {
+        next.delete(product.productId);
+      } else {
+        next.set(product.productId, {
+          ...current.get(product.productId),
+          ...product,
+          quantity: nextQuantity,
+        });
+      }
 
-        return next;
-      });
-    },
-    [],
-  );
+      return next;
+    });
+  }, []);
 
   const addProduct = useCallback((product: QuoteSelectionProduct, quantity = 1) => {
     const quantityToAdd = clampQuantity(quantity);
@@ -220,7 +217,9 @@ export function useQuoteSelection() {
   return value;
 }
 
-export function toQuoteSelectionProduct(product: Pick<Product, 'id' | 'slug' | 'name' | 'image' | 'category' | 'formats'>): QuoteSelectionProduct {
+export function toQuoteSelectionProduct(
+  product: Pick<Product, 'id' | 'slug' | 'name' | 'image' | 'category' | 'formats'>,
+): QuoteSelectionProduct {
   return {
     productId: product.id,
     slug: product.slug,

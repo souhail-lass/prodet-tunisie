@@ -63,11 +63,7 @@ export const sectors: readonly Sector[] = [
     slug: 'revendeurs-grossistes',
     label: 'Revendeurs & grossistes',
     shortDescription: 'Approvisionnement professionnel avec références simples à relire.',
-    supplyHighlights: [
-      'Références lisibles',
-      'Formats 5L à 20L',
-      'Approvisionnement multi-usage',
-    ],
+    supplyHighlights: ['Références lisibles', 'Formats 5L à 20L', 'Approvisionnement multi-usage'],
     icon: 'Boxes',
     relevantUseCases: ['linge-textiles', 'cuisine-degraissage', 'sanitaires-desinfection'],
     displayOrder: 50,

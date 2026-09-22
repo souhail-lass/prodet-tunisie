@@ -11,9 +11,7 @@ export class DocumentsStorageError extends Error {
 }
 
 export class DocumentsStorageUnavailableError extends DocumentsStorageError {
-  constructor(
-    message = 'Supabase Storage bucket for customer documents is not configured.',
-  ) {
+  constructor(message = 'Supabase Storage bucket for customer documents is not configured.') {
     super(message);
     this.name = 'DocumentsStorageUnavailableError';
   }

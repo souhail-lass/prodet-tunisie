@@ -32,27 +32,29 @@ export function PageHeader({
   className,
 }: PageHeaderProps) {
   return (
-    <header className={cn('flex flex-col gap-4 md:flex-row md:items-end md:justify-between', className)}>
+    <header
+      className={cn('flex flex-col gap-4 md:flex-row md:items-end md:justify-between', className)}
+    >
       <div className="min-w-0">
         {eyebrow ? (
-          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-prodet-blue">
+          <p className="text-prodet-blue text-[11px] font-semibold tracking-[0.08em] uppercase">
             {eyebrow}
           </p>
         ) : null}
         <div className="mt-1 flex flex-wrap items-center gap-3">
-          <h1 className="text-[24px] font-semibold leading-tight text-prodet-text md:text-[26px]">
+          <h1 className="text-prodet-text text-[24px] leading-tight font-semibold md:text-[26px]">
             {title}
           </h1>
           {meta ? <span className="shrink-0">{meta}</span> : null}
         </div>
         {description ? (
-          <p className="mt-2 max-w-2xl text-[14px] leading-6 text-muted-foreground">{description}</p>
+          <p className="text-muted-foreground mt-2 max-w-2xl text-[14px] leading-6">
+            {description}
+          </p>
         ) : null}
       </div>
 
-      {action ? (
-        <div className="flex shrink-0 flex-wrap items-center gap-2">{action}</div>
-      ) : null}
+      {action ? <div className="flex shrink-0 flex-wrap items-center gap-2">{action}</div> : null}
     </header>
   );
 }

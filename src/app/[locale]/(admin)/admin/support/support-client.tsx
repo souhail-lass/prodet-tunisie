@@ -30,7 +30,8 @@ export function AdminSupportClient({ tickets }: { tickets: AdminTicketRow[] }) {
     return tickets.filter((t) => {
       if (tab === 'todo' && !(t.status !== 'closed' && t.lastAuthorRole === 'client')) return false;
       if (tab === 'closed' && t.status !== 'closed') return false;
-      if (q) return t.subject.toLowerCase().includes(q) || (t.customer ?? '').toLowerCase().includes(q);
+      if (q)
+        return t.subject.toLowerCase().includes(q) || (t.customer ?? '').toLowerCase().includes(q);
       return true;
     });
   }, [tickets, query, tab]);
@@ -43,7 +44,9 @@ export function AdminSupportClient({ tickets }: { tickets: AdminTicketRow[] }) {
           <div className="stat-card__label">Tickets</div>
         </div>
         <div className="stat-card">
-          <div className="stat-card__value" style={{ color: 'var(--prodet-blue)' }}>{todo}</div>
+          <div className="stat-card__value" style={{ color: 'var(--prodet-blue)' }}>
+            {todo}
+          </div>
           <div className="stat-card__label">À répondre</div>
         </div>
       </div>
@@ -54,19 +57,39 @@ export function AdminSupportClient({ tickets }: { tickets: AdminTicketRow[] }) {
           { id: 'todo', label: 'À répondre' },
           { id: 'closed', label: 'Clôturés' },
         ].map((t) => (
-          <button key={t.id} className={`orders__tab${tab === t.id ? ' is-active' : ''}`} onClick={() => setTab(t.id as typeof tab)}>
+          <button
+            key={t.id}
+            className={`orders__tab${tab === t.id ? 'is-active' : ''}`}
+            onClick={() => setTab(t.id as typeof tab)}
+          >
             {t.label}
           </button>
         ))}
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginLeft: 'auto', fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
-          <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--prodet-green)' }} /> En direct
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            marginLeft: 'auto',
+            fontSize: 'var(--text-xs)',
+            color: 'var(--text-tertiary)',
+          }}
+        >
+          <span
+            style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--prodet-green)' }}
+          />{' '}
+          En direct
         </div>
       </div>
 
       <div className="admin-toolbar" style={{ marginBottom: 0 }}>
         <div className="admin-search">
           <Search size={16} />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Rechercher un sujet, un client…" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Rechercher un sujet, un client…"
+          />
         </div>
       </div>
 
@@ -79,13 +102,22 @@ export function AdminSupportClient({ tickets }: { tickets: AdminTicketRow[] }) {
                 ? { bg: 'var(--prodet-blue-tint)', fg: 'var(--prodet-blue)', label: 'À répondre' }
                 : { bg: 'var(--prodet-green-tint)', fg: 'var(--prodet-green)', label: 'Répondu' };
           return (
-            <Link key={t.id} href={`/admin/support/${t.id}`} className="order-row" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link
+              key={t.id}
+              href={`/admin/support/${t.id}`}
+              className="order-row"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
               <div className="order-row__main">
                 <div className="order-row__id-block">
                   <span className="order-row__id">{t.subject}</span>
-                  <span className="order-row__date">{t.customer ?? '—'} · {t.dateLabel}</span>
+                  <span className="order-row__date">
+                    {t.customer ?? '—'} · {t.dateLabel}
+                  </span>
                 </div>
-                <span className="pds-badge" style={{ background: badge.bg, color: badge.fg }}>{badge.label}</span>
+                <span className="pds-badge" style={{ background: badge.bg, color: badge.fg }}>
+                  {badge.label}
+                </span>
               </div>
             </Link>
           );

@@ -37,7 +37,11 @@ type Pending = {
   ref?: AttachmentRef;
 };
 
-const fmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'Africa/Tunis' });
+const fmt = new Intl.DateTimeFormat('fr-FR', {
+  dateStyle: 'short',
+  timeStyle: 'short',
+  timeZone: 'Africa/Tunis',
+});
 const MAX_BYTES = 25 * 1024 * 1024;
 const ACCEPT = 'image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt';
 
@@ -86,7 +90,12 @@ export function TicketThread({
     [messages],
   );
   const visible = useMemo(
-    () => [...messages, ...optimistic.filter((o) => !serverKeys.has(`${o.authorRole}:${o.body}:${(o.attachments ?? []).length}`))],
+    () => [
+      ...messages,
+      ...optimistic.filter(
+        (o) => !serverKeys.has(`${o.authorRole}:${o.body}:${(o.attachments ?? []).length}`),
+      ),
+    ],
     [messages, optimistic, serverKeys],
   );
 
@@ -94,7 +103,8 @@ export function TicketThread({
     const box = scrollRef.current;
     if (!box) return;
     if (lastCountRef.current === 0) box.scrollTop = box.scrollHeight;
-    else if (visible.length > lastCountRef.current) box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
+    else if (visible.length > lastCountRef.current)
+      box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
     lastCountRef.current = visible.length;
   }, [visible.length]);
 
@@ -190,8 +200,10 @@ export function TicketThread({
           const isEcho = m.id.startsWith('optimistic-');
           const atts = m.attachments ?? [];
           return (
-            <div key={m.id} className={`ticket-msg${mine ? ' ticket-msg--mine' : ''}`}>
-              <div className={`ticket-bubble${mine ? ' ticket-bubble--mine' : ''}${isEcho ? ' is-echo' : ''}`}>
+            <div key={m.id} className={`ticket-msg${mine ? 'ticket-msg--mine' : ''}`}>
+              <div
+                className={`ticket-bubble${mine ? 'ticket-bubble--mine' : ''}${isEcho ? 'is-echo' : ''}`}
+              >
                 <div className="ticket-bubble__meta">
                   {m.authorRole === 'admin' ? m.authorName || 'Prodet' : m.authorName || 'Client'} ·{' '}
                   {isEcho ? 'envoi…' : fmt.format(new Date(m.createdAt))}
@@ -213,13 +225,15 @@ export function TicketThread({
                       ) : (
                         <a
                           key={i}
-                          className={`ticket-att-file${mine ? ' ticket-att-file--mine' : ''}`}
+                          className={`ticket-att-file${mine ? 'ticket-att-file--mine' : ''}`}
                           href={a.url}
                           target="_blank"
                           rel="noopener"
                           title={a.name}
                         >
-                          <span className="ticket-att-file__icon"><FileText size={18} /></span>
+                          <span className="ticket-att-file__icon">
+                            <FileText size={18} />
+                          </span>
                           <span className="ticket-att-file__info">
                             <strong>{a.name}</strong>
                             <span>{humanSize(a.size)}</span>
@@ -241,14 +255,12 @@ export function TicketThread({
           {t('closedNote')}
         </p>
       ) : null}
-      {failed ? (
-        <p className="ticket-error">{t('sendFailed')}</p>
-      ) : null}
+      {failed ? <p className="ticket-error">{t('sendFailed')}</p> : null}
 
       {pending.length > 0 ? (
         <div className="ticket-tray">
           {pending.map((p) => (
-            <div key={p.localId} className={`ticket-chip${p.status === 'error' ? ' is-error' : ''}`}>
+            <div key={p.localId} className={`ticket-chip${p.status === 'error' ? 'is-error' : ''}`}>
               {p.isImage && p.previewUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={p.previewUrl} alt="" className="ticket-chip__thumb" />
@@ -259,7 +271,12 @@ export function TicketThread({
               )}
               <span className="ticket-chip__name">{p.name}</span>
               {p.status === 'uploading' ? <Loader2 size={14} className="ticket-spin" /> : null}
-              <button type="button" className="ticket-chip__x" onClick={() => removePending(p.localId)} aria-label="Retirer">
+              <button
+                type="button"
+                className="ticket-chip__x"
+                onClick={() => removePending(p.localId)}
+                aria-label="Retirer"
+              >
                 <X size={13} />
               </button>
             </div>
@@ -268,7 +285,14 @@ export function TicketThread({
       ) : null}
 
       <div className="ticket-composer">
-        <input ref={fileRef} type="file" accept={ACCEPT} multiple hidden onChange={(e) => pickFiles(e.target.files)} />
+        <input
+          ref={fileRef}
+          type="file"
+          accept={ACCEPT}
+          multiple
+          hidden
+          onChange={(e) => pickFiles(e.target.files)}
+        />
         <button
           type="button"
           className="ticket-composer__attach"
@@ -288,14 +312,29 @@ export function TicketThread({
           placeholder={t('messagePlaceholder')}
           className="ticket-composer__input"
         />
-        <button type="button" className="ticket-composer__send" onClick={send} disabled={!canSend} aria-label="Envoyer">
+        <button
+          type="button"
+          className="ticket-composer__send"
+          onClick={send}
+          disabled={!canSend}
+          aria-label="Envoyer"
+        >
           <Send size={18} />
         </button>
       </div>
 
       {lightbox ? (
-        <div className="ticket-lightbox" onClick={() => setLightbox(null)} role="dialog" aria-modal="true">
-          <button className="ticket-lightbox__close" onClick={() => setLightbox(null)} aria-label="Fermer">
+        <div
+          className="ticket-lightbox"
+          onClick={() => setLightbox(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            className="ticket-lightbox__close"
+            onClick={() => setLightbox(null)}
+            aria-label="Fermer"
+          >
             <X size={22} />
           </button>
           {/* eslint-disable-next-line @next/next/no-img-element */}

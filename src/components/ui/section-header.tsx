@@ -43,8 +43,7 @@ const sectionHeaderVariants = cva('flex gap-5', {
 type HeadingLevel = 1 | 2 | 3;
 
 export interface SectionHeaderProps
-  extends Omit<HTMLAttributes<HTMLElement>, 'title'>,
-    VariantProps<typeof sectionHeaderVariants> {
+  extends Omit<HTMLAttributes<HTMLElement>, 'title'>, VariantProps<typeof sectionHeaderVariants> {
   eyebrow?: ReactNode;
   title: ReactNode;
   description?: ReactNode;
@@ -72,10 +71,7 @@ export function SectionHeader({
   const isInverse = tone === 'inverse';
 
   return (
-    <header
-      className={cn(sectionHeaderVariants({ align, tone, spacing, className }))}
-      {...props}
-    >
+    <header className={cn(sectionHeaderVariants({ align, tone, spacing, className }))} {...props}>
       <div className={cn(align === 'split' && 'max-w-3xl')}>
         {eyebrow ? (
           <p className={cn('eyebrow-label', isInverse && '!text-prodet-sky')}>{eyebrow}</p>

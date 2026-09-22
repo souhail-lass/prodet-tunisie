@@ -11,7 +11,12 @@ import {
 } from '@/features/support/attachments';
 
 /** Best-effort alert to Prodet when a client opens or replies on a ticket. */
-function notifyProdetSupport(subject: string, company: string, preview: string, replyTo?: string | null) {
+function notifyProdetSupport(
+  subject: string,
+  company: string,
+  preview: string,
+  replyTo?: string | null,
+) {
   const to = prodetNotificationEmail();
   if (!to) return;
   after(async () => {
@@ -19,7 +24,9 @@ function notifyProdetSupport(subject: string, company: string, preview: string, 
       to,
       subject: `Support — ${company} : ${subject}`.slice(0, 120),
       replyTo: replyTo ?? undefined,
-      text: [`Nouveau message support de ${company}.`, ``, `Sujet : ${subject}`, ``, preview].join('\n'),
+      text: [`Nouveau message support de ${company}.`, ``, `Sujet : ${subject}`, ``, preview].join(
+        '\n',
+      ),
     });
   });
 }
@@ -70,7 +77,12 @@ export async function getMyTicket(ticketId: string): Promise<TicketDetail | null
   const [ticket] = await db
     .select()
     .from(schema.supportTicket)
-    .where(and(eq(schema.supportTicket.id, ticketId), eq(schema.supportTicket.customerId, access.customer.id)))
+    .where(
+      and(
+        eq(schema.supportTicket.id, ticketId),
+        eq(schema.supportTicket.customerId, access.customer.id),
+      ),
+    )
     .limit(1);
   if (!ticket) return null;
   const rows = await db
@@ -127,7 +139,12 @@ export async function createMyTicket(
       body: b,
       attachments: files,
     });
-    notifyProdetSupport(s, access.customer.name, b || `${files.length} pièce(s) jointe(s)`, access.appUser.email);
+    notifyProdetSupport(
+      s,
+      access.customer.name,
+      b || `${files.length} pièce(s) jointe(s)`,
+      access.appUser.email,
+    );
     return { ok: true, id: ticket.id };
   });
 }
@@ -145,7 +162,12 @@ export async function replyMyTicket(
   const [ticket] = await db
     .select({ id: schema.supportTicket.id, subject: schema.supportTicket.subject })
     .from(schema.supportTicket)
-    .where(and(eq(schema.supportTicket.id, ticketId), eq(schema.supportTicket.customerId, access.customer.id)))
+    .where(
+      and(
+        eq(schema.supportTicket.id, ticketId),
+        eq(schema.supportTicket.customerId, access.customer.id),
+      ),
+    )
     .limit(1);
   if (!ticket) return { ok: false };
   const now = new Date();
@@ -157,7 +179,12 @@ export async function replyMyTicket(
     body: b,
     attachments: files,
   });
-  notifyProdetSupport(ticket.subject, access.customer.name, b || `${files.length} pièce(s) jointe(s)`, access.appUser.email);
+  notifyProdetSupport(
+    ticket.subject,
+    access.customer.name,
+    b || `${files.length} pièce(s) jointe(s)`,
+    access.appUser.email,
+  );
   await db
     .update(schema.supportTicket)
     .set({ status: 'open', lastAuthorRole: 'client', lastMessageAt: now, updatedAt: now })

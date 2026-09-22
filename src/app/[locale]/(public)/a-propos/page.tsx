@@ -15,7 +15,7 @@ export async function generateMetadata({
     return {
       title: 'About Prodet',
       description:
-        'Prodet is a Tunisian manufacturer and distributor of professional cleaning and hygiene products, based in L\'Aouina, Tunis.',
+        "Prodet is a Tunisian manufacturer and distributor of professional cleaning and hygiene products, based in L'Aouina, Tunis.",
       alternates: pageAlternates(locale, '/a-propos'),
     };
   }

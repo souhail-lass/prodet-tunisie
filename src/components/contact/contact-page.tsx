@@ -12,16 +12,35 @@ import type { Locale } from '@/i18n/routing';
 import { submitContactMessage } from '@/features/contact/actions';
 import { HoneypotField } from '@/components/site/honeypot-field';
 
-type FormState = { company: string; name: string; email: string; phone: string; sectorId: string; message: string; website: string };
+type FormState = {
+  company: string;
+  name: string;
+  email: string;
+  phone: string;
+  sectorId: string;
+  message: string;
+  website: string;
+};
 
-const INITIAL: FormState = { company: '', name: '', email: '', phone: '', sectorId: '', message: '', website: '' };
+const INITIAL: FormState = {
+  company: '',
+  name: '',
+  email: '',
+  phone: '',
+  sectorId: '',
+  message: '',
+  website: '',
+};
 
 const WHATSAPP_HREF = `https://wa.me/${companyInfo.phoneHref.replace(/[^0-9]/g, '')}`;
 
 export function ContactPage() {
   const t = useTranslations('contact');
   const locale = useLocale() as Locale;
-  const sectorOptions = localizeSectors(listSectors(), locale).map((s) => ({ value: s.id, label: s.label }));
+  const sectorOptions = localizeSectors(listSectors(), locale).map((s) => ({
+    value: s.id,
+    label: s.label,
+  }));
 
   const [form, setForm] = useState<FormState>(INITIAL);
   const [sent, setSent] = useState(false);
@@ -146,10 +165,22 @@ export function ContactPage() {
                 onChange={(v) => update('website', v)}
               />
               <div className="contact__actions">
-                <Button type="submit" variant="primary" size="lg" disabled={isPending} iconRight={<ArrowRight size={18} />}>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  disabled={isPending}
+                  iconRight={<ArrowRight size={18} />}
+                >
                   {isPending ? t('submitting') : t('submit')}
                 </Button>
-                <Button type="button" variant="success" size="lg" onClick={() => window.open(WHATSAPP_HREF, '_blank')} iconLeft={<WhatsappIcon size={18} />}>
+                <Button
+                  type="button"
+                  variant="success"
+                  size="lg"
+                  onClick={() => window.open(WHATSAPP_HREF, '_blank')}
+                  iconLeft={<WhatsappIcon size={18} />}
+                >
                   {t('whatsapp')}
                 </Button>
               </div>

@@ -9,11 +9,7 @@ import type { CatalogueCardProduct } from '@/types/product';
  * The catalogue page has its own grid because it also owns search/pagination;
  * this is the lightweight version for pre-filtered server-rendered lists.
  */
-export function ProductGrid({
-  products,
-}: {
-  products: CatalogueCardProduct[];
-}) {
+export function ProductGrid({ products }: { products: CatalogueCardProduct[] }) {
   const { getQuantity, setProductQuantity } = useQuoteSelection();
   return (
     <div className="catalogue__grid">

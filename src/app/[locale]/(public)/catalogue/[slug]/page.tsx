@@ -1,11 +1,5 @@
 import type { ReactNode } from 'react';
-import {
-  Calculator,
-  FileDown,
-  FlaskConical,
-  MapPinned,
-  ShieldCheck,
-} from 'lucide-react';
+import { Calculator, FileDown, FlaskConical, MapPinned, ShieldCheck } from 'lucide-react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound, permanentRedirect } from 'next/navigation';
@@ -68,11 +62,11 @@ export async function generateMetadata({
   const publicOffer = getPublicOfferBySlug(slug);
   if (publicOffer) {
     const section = getPublicOfferSectionById(publicOffer.sectionId);
-  return {
-    title: publicOffer.name,
-    description: buildOfferDescription(publicOffer, section?.label),
-    alternates: pageAlternates(locale, `/catalogue/${publicOffer.slug}`),
-  };
+    return {
+      title: publicOffer.name,
+      description: buildOfferDescription(publicOffer, section?.label),
+      alternates: pageAlternates(locale, `/catalogue/${publicOffer.slug}`),
+    };
   }
 
   const product = await getCatalogueProductBySlug(slug);
@@ -187,10 +181,16 @@ async function PublicOfferDetailPage({
   const section = getPublicOfferSectionById(offer.sectionId);
   const legacyProduct = getLegacyProductForPublicOffer(offer);
   const relatedOffers = getRelatedPublicOffers(offer, 4);
-  const homologationDocument = companyInfo.documents.find((document) => document.id === 'homologation-ma');
+  const homologationDocument = companyInfo.documents.find(
+    (document) => document.id === 'homologation-ma',
+  );
   const primaryVariant = offer.variants[0];
-  const detailDescription = legacyProduct?.description ?? buildOfferDescription(offer, section?.label);
-  const dosage = legacyProduct?.dosage ?? primaryVariant?.dosage ?? 'Dosage communique selon le produit et le contexte d usage.';
+  const detailDescription =
+    legacyProduct?.description ?? buildOfferDescription(offer, section?.label);
+  const dosage =
+    legacyProduct?.dosage ??
+    primaryVariant?.dosage ??
+    'Dosage communique selon le produit et le contexte d usage.';
   const usageSteps = buildOfferUsageSteps(offer, legacyProduct);
   const whereToUse = buildOfferWhereToUse(offer.sectionId);
   const specifications = buildOfferSpecifications(offer, legacyProduct, section?.label);
@@ -200,232 +200,259 @@ async function PublicOfferDetailPage({
     <>
       {toolbar}
       <div className="section-shell py-12">
-      <JsonLd
-        data={productSchema({
-          name: offer.name,
-          description: detailDescription,
-          slug: offer.slug,
-          image: publicOfferReferenceImage,
-          category: section?.label,
-          manufactured: offer.sectionKind !== 'commercialized',
-        })}
-      />
-      <nav className="text-[var(--type-small)] text-[var(--color-text-tertiary)]">
-        <Link href={CATALOGUE_PATH} className="text-[var(--color-text-secondary)] hover:text-prodet-blue">
-          Catalogue
-        </Link>
-        <span className="mx-2">›</span>
-        <span>{section?.label ?? 'Offre Prodet'}</span>
-        <span className="mx-2">›</span>
-        <span className="text-[var(--color-text-primary)]">{offer.name}</span>
-      </nav>
+        <JsonLd
+          data={productSchema({
+            name: offer.name,
+            description: detailDescription,
+            slug: offer.slug,
+            image: publicOfferReferenceImage,
+            category: section?.label,
+            manufactured: offer.sectionKind !== 'commercialized',
+          })}
+        />
+        <nav className="text-[var(--color-text-tertiary)] text-[var(--type-small)]">
+          <Link
+            href={CATALOGUE_PATH}
+            className="hover:text-prodet-blue text-[var(--color-text-secondary)]"
+          >
+            Catalogue
+          </Link>
+          <span className="mx-2">›</span>
+          <span>{section?.label ?? 'Offre Prodet'}</span>
+          <span className="mx-2">›</span>
+          <span className="text-[var(--color-text-primary)]">{offer.name}</span>
+        </nav>
 
-      <section className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] xl:items-start">
-        <div className="overflow-hidden rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-card sm:p-6">
-          <div className="relative overflow-hidden rounded-lg bg-white">
-            <div className="relative aspect-[4/5]">
-              <Image
-                src={publicOfferReferenceImage}
-                alt={offer.name}
-                fill
-                priority
-                sizes="(min-width: 1280px) 42vw, 100vw"
-                className="object-contain p-6"
-              />
-            </div>
-          </div>
-
-          <div className="mt-5 flex flex-wrap gap-2">
-            {offer.variants.map((variant, index) => (
-              <span
-                key={`${offer.id}-format-${index}`}
-                className="rounded-full border border-[var(--color-border)] bg-white px-3 py-2 text-[var(--type-xs)] font-medium text-[var(--color-text-primary)]"
-              >
-                {variant.unit ?? 'Format pro'}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-[var(--color-border)] bg-white p-6 shadow-card sm:p-7">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-prodet-blue">
-              {section?.anchorTitle ?? 'Offre Prodet'}
-            </span>
-            <span className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-[11px] font-medium text-[var(--color-text-tertiary)]">
-              {offer.sectionKind === 'commercialized' ? 'Article commercialise' : 'Offre professionnelle'}
-            </span>
-          </div>
-
-          <h1 className="mt-4 text-3xl font-bold text-[var(--color-text-primary)] sm:text-[2.2rem]">{offer.name}</h1>
-          <p className="mt-4 max-w-3xl text-base leading-8 text-[var(--color-text-secondary)]">{detailDescription}</p>
-
-          <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
-            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-5">
-              <p className="text-[var(--type-2xs)] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-tertiary)]">
-                Description
-              </p>
-              <p className="mt-3 text-[var(--type-small)] leading-7 text-[var(--color-text-secondary)]">
-                {legacyProduct?.howToUse ?? offer.usageSummary}
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-5">
-              <p className="text-[var(--type-2xs)] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-tertiary)]">
-                Dosage
-              </p>
-              <p className="mt-3 text-[var(--type-small)] leading-7 text-[var(--color-text-primary)]">{dosage}</p>
-            </div>
-          </div>
-
-          <div className="mt-5 flex flex-wrap gap-3">
-            {homologationDocument ? (
-              <a
-                href={homologationDocument.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 rounded-lg border border-[var(--color-border)] bg-white px-4 py-3 transition-colors hover:border-prodet-blue-tint-strong hover:text-prodet-blue"
-              >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-prodet-green-tint text-prodet-green">
-                  <ShieldCheck className="h-5 w-5" aria-hidden />
-                </span>
-                <span>
-                  <span className="block text-[var(--type-2xs)] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-tertiary)]">
-                    Document disponible
-                  </span>
-                  <span className="mt-1 block text-[var(--type-small)] font-medium text-[var(--color-text-primary)]">
-                    {homologationDocument.label}
-                  </span>
-                </span>
-              </a>
-            ) : null}
-
-            {legacyProduct?.biodegradability ? (
-              <span className="inline-flex items-center rounded-full bg-prodet-green-tint px-3 py-2 text-[var(--type-xs)] font-semibold text-prodet-green">
-                Biodégradabilité {legacyProduct.biodegradability}
-              </span>
-            ) : null}
-            {(legacyProduct?.certifications ?? []).map((label) => (
-              <span
-                key={label}
-                className="inline-flex items-center rounded-full bg-prodet-green-tint px-3 py-2 text-[var(--type-xs)] font-semibold text-prodet-green"
-              >
-                {label}
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <Button asChild className="h-12 text-sm font-semibold">
-              <OpenQuoteButton>{t('detail.requestQuote')}</OpenQuoteButton>
-            </Button>
-
-            {legacyProduct?.technicalSheetUrl ? (
-              <Button asChild variant="outline" className="h-12 text-sm font-semibold">
-                <a href={legacyProduct.technicalSheetUrl} download>
-                  <FileDown className="h-4 w-4" aria-hidden />
-                  {t('detail.downloadSheet')}
-                </a>
-              </Button>
-            ) : (
-              <Button asChild variant="outline" className="h-12 text-sm font-semibold">
-                <OpenQuoteButton>{siteContent.product.technicalSheetFallback}</OpenQuoteButton>
-              </Button>
-            )}
-
-            {legacyProduct?.safetySheetUrl ? (
-              <Button asChild variant="outline" className="h-12 text-sm font-semibold">
-                <a href={legacyProduct.safetySheetUrl} download>
-                  <FileDown className="h-4 w-4" aria-hidden />
-                  {t('detail.downloadSafetySheet')}
-                </a>
-              </Button>
-            ) : null}
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-        <InfoCard
-          icon={<FlaskConical className="h-5 w-5" aria-hidden />}
-          title="Comment l utiliser"
-        >
-          <ul className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
-            {usageSteps.map((item) => (
-              <li key={item} className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </InfoCard>
-
-        <InfoCard icon={<MapPinned className="h-5 w-5" aria-hidden />} title={t('detail.whereToUse')}>
-          <ul className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
-            {whereToUse.map((item) => (
-              <li key={item} className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </InfoCard>
-
-        <InfoCard icon={<ShieldCheck className="h-5 w-5" aria-hidden />} title="Specifications">
-          <dl className="space-y-4 text-sm">
-            {specifications.map((item) => (
-              <div key={item.label} className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
-                <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
-                  {item.label}
-                </dt>
-                <dd className="mt-2 leading-6 text-[var(--color-text-primary)]">{item.value}</dd>
+        <section className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] xl:items-start">
+          <div className="shadow-card overflow-hidden rounded-lg border border-[var(--color-border)] bg-white p-5 sm:p-6">
+            <div className="relative overflow-hidden rounded-lg bg-white">
+              <div className="relative aspect-[4/5]">
+                <Image
+                  src={publicOfferReferenceImage}
+                  alt={offer.name}
+                  fill
+                  priority
+                  sizes="(min-width: 1280px) 42vw, 100vw"
+                  className="object-contain p-6"
+                />
               </div>
-            ))}
-          </dl>
-        </InfoCard>
-
-        <InfoCard icon={<Calculator className="h-5 w-5" aria-hidden />} title="Calcul d usage">
-          <div className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
-            <div className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">{usageCalculation[0]}</div>
-            <div className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">{usageCalculation[1]}</div>
-            <div className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">{usageCalculation[2]}</div>
-          </div>
-        </InfoCard>
-      </section>
-
-      {relatedOffers.length > 0 ? (
-        <section className="mt-10">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
-                Meme service
-              </p>
-              <h2 className="mt-3 text-2xl font-bold text-[var(--color-text-primary)]">{t('detail.related')}</h2>
             </div>
-            <Button asChild variant="outline" className="rounded-full px-5">
-              <Link href={CATALOGUE_PATH}>{t('detail.viewSection')}</Link>
-            </Button>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              {offer.variants.map((variant, index) => (
+                <span
+                  key={`${offer.id}-format-${index}`}
+                  className="rounded-full border border-[var(--color-border)] bg-white px-3 py-2 font-medium text-[var(--color-text-primary)] text-[var(--type-xs)]"
+                >
+                  {variant.unit ?? 'Format pro'}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <ul className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            {relatedOffers.map((relatedOffer) => (
-              <li key={relatedOffer.id}>
-                <Link
-                  href={`/catalogue/${relatedOffer.slug}`}
-                  className="block h-full rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-card transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-prodet-blue-tint-strong hover:shadow-card-hover"
+          <div className="shadow-card rounded-lg border border-[var(--color-border)] bg-white p-6 sm:p-7">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-prodet-blue rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-[11px] font-semibold tracking-[0.18em] uppercase">
+                {section?.anchorTitle ?? 'Offre Prodet'}
+              </span>
+              <span className="rounded-full border border-[var(--color-border)] bg-white px-3 py-1 text-[11px] font-medium text-[var(--color-text-tertiary)]">
+                {offer.sectionKind === 'commercialized'
+                  ? 'Article commercialise'
+                  : 'Offre professionnelle'}
+              </span>
+            </div>
+
+            <h1 className="mt-4 text-3xl font-bold text-[var(--color-text-primary)] sm:text-[2.2rem]">
+              {offer.name}
+            </h1>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-[var(--color-text-secondary)]">
+              {detailDescription}
+            </p>
+
+            <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
+              <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-5">
+                <p className="font-semibold tracking-[0.08em] text-[var(--color-text-tertiary)] text-[var(--type-2xs)] uppercase">
+                  Description
+                </p>
+                <p className="mt-3 leading-7 text-[var(--color-text-secondary)] text-[var(--type-small)]">
+                  {legacyProduct?.howToUse ?? offer.usageSummary}
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-sunken)] p-5">
+                <p className="font-semibold tracking-[0.08em] text-[var(--color-text-tertiary)] text-[var(--type-2xs)] uppercase">
+                  Dosage
+                </p>
+                <p className="mt-3 leading-7 text-[var(--color-text-primary)] text-[var(--type-small)]">
+                  {dosage}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              {homologationDocument ? (
+                <a
+                  href={homologationDocument.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:border-prodet-blue-tint-strong hover:text-prodet-blue inline-flex items-center gap-3 rounded-lg border border-[var(--color-border)] bg-white px-4 py-3 transition-colors"
                 >
-                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
-                    {section?.label}
-                  </p>
-                  <h3 className="mt-3 text-base font-semibold text-[var(--color-text-primary)]">{relatedOffer.name}</h3>
-                  <p className="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
-                    {relatedOffer.shortDescription}
-                  </p>
-                </Link>
-              </li>
-            ))}
-          </ul>
+                  <span className="bg-prodet-green-tint text-prodet-green inline-flex h-11 w-11 items-center justify-center rounded-lg">
+                    <ShieldCheck className="h-5 w-5" aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block font-semibold tracking-[0.08em] text-[var(--color-text-tertiary)] text-[var(--type-2xs)] uppercase">
+                      Document disponible
+                    </span>
+                    <span className="mt-1 block font-medium text-[var(--color-text-primary)] text-[var(--type-small)]">
+                      {homologationDocument.label}
+                    </span>
+                  </span>
+                </a>
+              ) : null}
+
+              {legacyProduct?.biodegradability ? (
+                <span className="bg-prodet-green-tint text-prodet-green inline-flex items-center rounded-full px-3 py-2 font-semibold text-[var(--type-xs)]">
+                  Biodégradabilité {legacyProduct.biodegradability}
+                </span>
+              ) : null}
+              {(legacyProduct?.certifications ?? []).map((label) => (
+                <span
+                  key={label}
+                  className="bg-prodet-green-tint text-prodet-green inline-flex items-center rounded-full px-3 py-2 font-semibold text-[var(--type-xs)]"
+                >
+                  {label}
+                </span>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <Button asChild className="h-12 text-sm font-semibold">
+                <OpenQuoteButton>{t('detail.requestQuote')}</OpenQuoteButton>
+              </Button>
+
+              {legacyProduct?.technicalSheetUrl ? (
+                <Button asChild variant="outline" className="h-12 text-sm font-semibold">
+                  <a href={legacyProduct.technicalSheetUrl} download>
+                    <FileDown className="h-4 w-4" aria-hidden />
+                    {t('detail.downloadSheet')}
+                  </a>
+                </Button>
+              ) : (
+                <Button asChild variant="outline" className="h-12 text-sm font-semibold">
+                  <OpenQuoteButton>{siteContent.product.technicalSheetFallback}</OpenQuoteButton>
+                </Button>
+              )}
+
+              {legacyProduct?.safetySheetUrl ? (
+                <Button asChild variant="outline" className="h-12 text-sm font-semibold">
+                  <a href={legacyProduct.safetySheetUrl} download>
+                    <FileDown className="h-4 w-4" aria-hidden />
+                    {t('detail.downloadSafetySheet')}
+                  </a>
+                </Button>
+              ) : null}
+            </div>
+          </div>
         </section>
-      ) : null}
-    </div>
+
+        <section className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          <InfoCard
+            icon={<FlaskConical className="h-5 w-5" aria-hidden />}
+            title="Comment l utiliser"
+          >
+            <ul className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
+              {usageSteps.map((item) => (
+                <li key={item} className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </InfoCard>
+
+          <InfoCard
+            icon={<MapPinned className="h-5 w-5" aria-hidden />}
+            title={t('detail.whereToUse')}
+          >
+            <ul className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
+              {whereToUse.map((item) => (
+                <li key={item} className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </InfoCard>
+
+          <InfoCard icon={<ShieldCheck className="h-5 w-5" aria-hidden />} title="Specifications">
+            <dl className="space-y-4 text-sm">
+              {specifications.map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3"
+                >
+                  <dt className="text-[11px] font-semibold tracking-[0.16em] text-[var(--color-text-tertiary)] uppercase">
+                    {item.label}
+                  </dt>
+                  <dd className="mt-2 leading-6 text-[var(--color-text-primary)]">{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </InfoCard>
+
+          <InfoCard icon={<Calculator className="h-5 w-5" aria-hidden />} title="Calcul d usage">
+            <div className="space-y-3 text-sm leading-7 text-[var(--color-text-secondary)]">
+              <div className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
+                {usageCalculation[0]}
+              </div>
+              <div className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
+                {usageCalculation[1]}
+              </div>
+              <div className="rounded-lg bg-[var(--color-surface-sunken)] px-4 py-3">
+                {usageCalculation[2]}
+              </div>
+            </div>
+          </InfoCard>
+        </section>
+
+        {relatedOffers.length > 0 ? (
+          <section className="mt-10">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-[0.72rem] font-semibold tracking-[0.22em] text-[var(--color-text-tertiary)] uppercase">
+                  Meme service
+                </p>
+                <h2 className="mt-3 text-2xl font-bold text-[var(--color-text-primary)]">
+                  {t('detail.related')}
+                </h2>
+              </div>
+              <Button asChild variant="outline" className="rounded-full px-5">
+                <Link href={CATALOGUE_PATH}>{t('detail.viewSection')}</Link>
+              </Button>
+            </div>
+
+            <ul className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+              {relatedOffers.map((relatedOffer) => (
+                <li key={relatedOffer.id}>
+                  <Link
+                    href={`/catalogue/${relatedOffer.slug}`}
+                    className="shadow-card hover:border-prodet-blue-tint-strong hover:shadow-card-hover block h-full rounded-lg border border-[var(--color-border)] bg-white p-5 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5"
+                  >
+                    <p className="text-[0.7rem] font-semibold tracking-[0.18em] text-[var(--color-text-tertiary)] uppercase">
+                      {section?.label}
+                    </p>
+                    <h3 className="mt-3 text-base font-semibold text-[var(--color-text-primary)]">
+                      {relatedOffer.name}
+                    </h3>
+                    <p className="mt-2 text-sm leading-6 text-[var(--color-text-secondary)]">
+                      {relatedOffer.shortDescription}
+                    </p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+      </div>
     </>
   );
 }
@@ -443,32 +470,34 @@ function LegacyProductDetailPage({
 }) {
   const primaryUseCaseId = product.useCases[0];
   const primaryUseCaseBase = primaryUseCaseId ? getUseCaseById(primaryUseCaseId) : undefined;
-  const primaryUseCase = primaryUseCaseBase ? localizeUseCase(primaryUseCaseBase, locale) : undefined;
+  const primaryUseCase = primaryUseCaseBase
+    ? localizeUseCase(primaryUseCaseBase, locale)
+    : undefined;
   return (
     <>
       {toolbar}
       <div className="py-6 md:py-8">
-      <div className="mx-auto w-full max-w-[1200px] px-6">
-        <ProductHeroV2
-          product={product}
-          locale={locale}
-          useCaseLabel={primaryUseCase?.label ?? 'Catalogue'}
-        />
+        <div className="mx-auto w-full max-w-[1200px] px-6">
+          <ProductHeroV2
+            product={product}
+            locale={locale}
+            useCaseLabel={primaryUseCase?.label ?? 'Catalogue'}
+          />
 
-        {related.length > 0 ? (
-          <section className="pt-10">
-            <div className="flex items-center gap-3">
-              <span className="h-2.5 w-2.5 rounded-full bg-prodet-blue" aria-hidden />
-              <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-[var(--color-text-primary)]">
-                {locale === 'en' ? 'Similar products' : 'Produits similaires'}
-              </h2>
-            </div>
-            <div className="mt-4">
-              <ProductGrid products={related} />
-            </div>
-          </section>
-        ) : null}
-      </div>
+          {related.length > 0 ? (
+            <section className="pt-10">
+              <div className="flex items-center gap-3">
+                <span className="bg-prodet-blue h-2.5 w-2.5 rounded-full" aria-hidden />
+                <h2 className="text-[15px] font-semibold tracking-[-0.01em] text-[var(--color-text-primary)]">
+                  {locale === 'en' ? 'Similar products' : 'Produits similaires'}
+                </h2>
+              </div>
+              <div className="mt-4">
+                <ProductGrid products={related} />
+              </div>
+            </section>
+          ) : null}
+        </div>
       </div>
     </>
   );
@@ -484,8 +513,8 @@ function InfoCard({
   children: ReactNode;
 }) {
   return (
-    <div className="h-full rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-card sm:p-6">
-      <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-prodet-blue-tint text-prodet-blue">
+    <div className="shadow-card h-full rounded-lg border border-[var(--color-border)] bg-white p-5 sm:p-6">
+      <div className="bg-prodet-blue-tint text-prodet-blue inline-flex h-11 w-11 items-center justify-center rounded-lg">
         {icon}
       </div>
       <h2 className="mt-4 text-xl font-semibold text-[var(--color-text-primary)]">{title}</h2>
@@ -561,7 +590,8 @@ function buildOfferSpecifications(
     },
     {
       label: 'Statut',
-      value: offer.sectionKind === 'commercialized' ? 'Article commercialise' : 'Offre professionnelle',
+      value:
+        offer.sectionKind === 'commercialized' ? 'Article commercialise' : 'Offre professionnelle',
     },
   ];
 }
