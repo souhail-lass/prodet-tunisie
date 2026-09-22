@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Mail, ShieldCheck } from 'lucide-react';
 import { requestAdminMagicLink } from '@/features/admin/login-actions';
 import { requireAdmin } from '@/features/admin/auth';
+import { hasSupabaseAuthCookie } from '@/lib/supabase/auth-cookie';
 
 // Per-user by nature (session check + redirect). Must never be prerendered:
 // the try/catch below would swallow the static-bailout signal cookies() throws
@@ -31,13 +33,18 @@ export default async function AdminLoginPage({
 
   // Admin with a still-valid session: skip the form and go straight to the
   // console instead of asking for a new magic link on every visit.
+  // Skip Supabase/DB when there is no auth cookie (anonymous open of login).
+  const cookieStore = await cookies();
   let alreadySignedIn = false;
-  try {
-    await requireAdmin();
-    alreadySignedIn = true;
-  } catch {
-    // No valid admin session — show the login form.
+  if (hasSupabaseAuthCookie(cookieStore.getAll())) {
+    try {
+      await requireAdmin();
+      alreadySignedIn = true;
+    } catch {
+      // No valid admin session — show the login form.
+    }
   }
+  // redirect() must stay outside try/catch — it throws NEXT_REDIRECT.
   if (alreadySignedIn) {
     const target =
       next && /^\/(fr|ar|en)\/admin\//u.test(next) && !next.startsWith('//')

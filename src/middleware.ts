@@ -2,6 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { defaultLocale, locales, LOCALE_HEADER } from '@/i18n/routing';
+import { hasFreshSupabaseSession } from '@/lib/supabase/auth-cookie';
 
 function getLocaleFromPathname(pathname: string): string | null {
   const segments = pathname.split('/');
@@ -27,17 +28,6 @@ function isLocalizedClientPath(pathname: string): boolean {
   );
 }
 
-const AUTH_COOKIE_PATTERN = /^sb-[a-zA-Z0-9]+-auth-token(?:\.\d+)?$/;
-/** Refresh via getUser() once the access token is within this window of expiry. */
-const TOKEN_FRESHNESS_MARGIN_S = 60;
-
-function decodeBase64Url(value: string): string {
-  const b64 = value.replace(/-/g, '+').replace(/_/g, '/');
-  const padded = b64 + '='.repeat((4 - (b64.length % 4)) % 4);
-  const binary = atob(padded);
-  return new TextDecoder().decode(Uint8Array.from(binary, (c) => c.charCodeAt(0)));
-}
-
 /**
  * Reads the Supabase session cookie locally (no network, no signature check)
  * and reports whether its access token is comfortably far from expiry.
@@ -50,24 +40,7 @@ function decodeBase64Url(value: string): string {
  * refreshes the session cookies.
  */
 function hasFreshSession(request: NextRequest): boolean {
-  const chunks = request.cookies
-    .getAll()
-    .filter((cookie) => AUTH_COOKIE_PATTERN.test(cookie.name) && cookie.value)
-    .sort((a, b) => a.name.localeCompare(b.name, 'en', { numeric: true }));
-  if (chunks.length === 0) return false;
-
-  try {
-    let raw = chunks.map((cookie) => cookie.value).join('');
-    if (raw.startsWith('base64-')) {
-      raw = decodeBase64Url(raw.slice('base64-'.length));
-    }
-    const session = JSON.parse(raw) as { expires_at?: number | string };
-    const expiresAt = Number(session.expires_at);
-    if (!Number.isFinite(expiresAt)) return false;
-    return expiresAt - Math.floor(Date.now() / 1000) > TOKEN_FRESHNESS_MARGIN_S;
-  } catch {
-    return false;
-  }
+  return hasFreshSupabaseSession(request.cookies.getAll());
 }
 
 /**

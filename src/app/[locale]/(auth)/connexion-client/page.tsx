@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 import { ArrowRight, MailCheck, ShieldAlert, ShieldCheck } from 'lucide-react';
@@ -8,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { requestClientMagicLink } from '@/features/client-auth/login-actions';
 import { requireClientPortalAccess } from '@/features/client-portal/auth';
+import { hasSupabaseAuthCookie } from '@/lib/supabase/auth-cookie';
 
 // Per-user by nature (session check + redirect). Must never be prerendered:
 // the try/catch below would swallow the static-bailout signal cookies() throws
@@ -43,13 +45,20 @@ export default async function ClientLoginPage({
   // Returning client with a still-valid session: skip the form entirely and
   // go straight to the portal. The magic link is only for the FIRST login on
   // a device (or after sign-out) — never a per-visit requirement.
+  //
+  // Fast path for public-site visitors (no auth cookie): skip Supabase getUser()
+  // + DB membership lookup so "Espace client" feels as snappy as Catalogue.
+  const cookieStore = await cookies();
   let alreadySignedIn = false;
-  try {
-    await requireClientPortalAccess();
-    alreadySignedIn = true;
-  } catch {
-    // No valid session (or no activated portal access) — show the form.
+  if (hasSupabaseAuthCookie(cookieStore.getAll())) {
+    try {
+      await requireClientPortalAccess();
+      alreadySignedIn = true;
+    } catch {
+      // Cookie present but session invalid / no portal access — show the form.
+    }
   }
+  // redirect() must stay outside try/catch — it throws NEXT_REDIRECT.
   if (alreadySignedIn) redirect(next);
 
   return (
