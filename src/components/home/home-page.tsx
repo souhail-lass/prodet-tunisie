@@ -7,8 +7,6 @@ import { Link, useRouter } from '@/i18n/routing';
 import { Button } from '@/components/ds';
 import { ProductMarquee } from '@/components/home/product-marquee';
 import { ClientWall } from '@/components/home/client-wall';
-import { WhatsappIcon } from '@/components/site/whatsapp-icon';
-import { companyInfo } from '@/data/company';
 import { useQuoteDrawer } from '@/components/site/quote-drawer';
 import type { Product } from '@/types/product';
 import type { SectorId } from '@/types/sector';
@@ -222,15 +220,9 @@ export function HomePage({
             <Button variant="primary" size="lg" onClick={openQuote}>
               {t('cta.quote')}
             </Button>
-            <Button
-              variant="ghost"
-              size="lg"
-              className="cta-band__ghost"
-              onClick={() => window.open(companyInfo.whatsappHref, '_blank', 'noopener,noreferrer')}
-              iconLeft={<WhatsappIcon size={18} />}
-            >
+            <Link href="/contact" className="pds-btn pds-btn--ghost pds-btn--lg cta-band__ghost">
               {t('cta.contact')}
-            </Button>
+            </Link>
           </div>
         </div>
       </section>
