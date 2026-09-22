@@ -107,42 +107,64 @@ function mapRowToProduct(row: AdminProductRow, slug: string): Product {
 }
 
 async function selectRows(where?: SQL): Promise<AdminProductRow[]> {
-  const { db, schema } = await import('@/db/client');
-  const t = schema.catalogueProduct;
-  const cols = {
-    id: t.id,
-    source: t.source,
-    swiverId: t.swiverId,
-    sku: t.sku,
-    name: t.name,
-    displayName: t.displayName,
-    baseImageUrl: t.baseImageUrl,
-    imageUrl: t.imageUrl,
-    baseCategory: t.baseCategory,
-    unitPrice: t.unitPrice,
-    tagline: t.tagline,
-    description: t.description,
-    baseDescription: t.baseDescription,
-    howToUse: t.howToUse,
-    dosage: t.dosage,
-    specs: t.specs,
-    technicalSheetUrl: t.technicalSheetUrl,
-    safetySheetUrl: t.safetySheetUrl,
-    familleSlug: t.familleSlug,
-    sousCategorieSlug: t.sousCategorieSlug,
-    sortOrder: t.sortOrder,
-    catalogueRank: t.catalogueRank,
-    extraPlacements: t.extraPlacements,
-    hidden: t.hidden,
-    featured: t.featured,
-  };
-  const rows = where
-    ? await db.select(cols).from(t).where(where).orderBy(t.name)
-    : await db.select(cols).from(t).orderBy(t.name);
-  return (rows as unknown as AdminProductRow[]).map((row) => ({
-    ...row,
-    extraPlacements: parseExtraPlacements(row.extraPlacements),
-  }));
+  try {
+    const { db, schema } = await import('@/db/client');
+    const t = schema.catalogueProduct;
+    const cols = {
+      id: t.id,
+      source: t.source,
+      swiverId: t.swiverId,
+      sku: t.sku,
+      name: t.name,
+      displayName: t.displayName,
+      baseImageUrl: t.baseImageUrl,
+      imageUrl: t.imageUrl,
+      baseCategory: t.baseCategory,
+      unitPrice: t.unitPrice,
+      tagline: t.tagline,
+      description: t.description,
+      baseDescription: t.baseDescription,
+      howToUse: t.howToUse,
+      dosage: t.dosage,
+      specs: t.specs,
+      technicalSheetUrl: t.technicalSheetUrl,
+      safetySheetUrl: t.safetySheetUrl,
+      familleSlug: t.familleSlug,
+      sousCategorieSlug: t.sousCategorieSlug,
+      sortOrder: t.sortOrder,
+      catalogueRank: t.catalogueRank,
+      extraPlacements: t.extraPlacements,
+      hidden: t.hidden,
+      featured: t.featured,
+    };
+    const rows = where
+      ? await db.select(cols).from(t).where(where).orderBy(t.name)
+      : await db.select(cols).from(t).orderBy(t.name);
+    return (rows as unknown as AdminProductRow[]).map((row) => ({
+      ...row,
+      extraPlacements: parseExtraPlacements(row.extraPlacements),
+    }));
+  } catch (error) {
+    // CI (and any build without a reachable Postgres) must not fail prerender.
+    // Vercel production has a real DATABASE_URL — empty catalogue only happens
+    // when the DB is unreachable at build time.
+    if (isDatabaseUnreachable(error)) {
+      console.warn('[catalogue] database unreachable; returning empty catalogue');
+      return [];
+    }
+    throw error;
+  }
+}
+
+function isDatabaseUnreachable(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const code = 'code' in error ? String((error as { code?: unknown }).code) : '';
+  if (code === 'ECONNREFUSED' || code === 'ENOTFOUND' || code === 'ETIMEDOUT') return true;
+  if ('cause' in error) return isDatabaseUnreachable((error as { cause?: unknown }).cause);
+  if ('errors' in error && Array.isArray((error as { errors: unknown[] }).errors)) {
+    return (error as { errors: unknown[] }).errors.some(isDatabaseUnreachable);
+  }
+  return false;
 }
 
 /**
@@ -157,9 +179,14 @@ const getCachedCatalogueRows = unstable_cache(
 );
 
 export async function getCatalogueCount(): Promise<number> {
-  const { db, schema } = await import('@/db/client');
-  const rows = await db.select({ id: schema.catalogueProduct.id }).from(schema.catalogueProduct);
-  return rows.length;
+  try {
+    const { db, schema } = await import('@/db/client');
+    const rows = await db.select({ id: schema.catalogueProduct.id }).from(schema.catalogueProduct);
+    return rows.length;
+  } catch (error) {
+    if (isDatabaseUnreachable(error)) return 0;
+    throw error;
+  }
 }
 
 function mapCatalogueRows(rows: AdminProductRow[]): Product[] {
