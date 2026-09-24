@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
-import { CountUp } from '@/components/portal/count-up';
 import {
   listMyFrequentProducts,
   listMyOrders,
@@ -82,30 +81,105 @@ export default async function ClientDashboardPage({
 
   return (
     <div className="dash">
-      {showFinances ? (
-        <section className="fin-hero fin-hero--welcome">
-          <div className="fin-hero__main">
-            <p className="fin-hero__greet">
-              {t('spending.greeting')} <span>· {heroDateFmt(locale).format(new Date())}</span>
-            </p>
-            <h2 className="fin-hero__title">{t('spending.heroTitle')}</h2>
-            <p className="fin-hero__lead">{t('spending.heroLead')}</p>
-            <div className="fin-hero__meta">
-              {spending.tier?.label ? (
-                <span className={`fin-tier fin-tier--${spending.tier.id}`}>
-                  <Crown size={13} /> Partenaire {spending.tier.label}
-                </span>
-              ) : null}
+      <section className="fin-hero fin-hero--desk">
+        <div className="fin-hero__main">
+          <p className="fin-hero__greet">
+            {t('spending.greeting')} <span>· {heroDateFmt(locale).format(new Date())}</span>
+          </p>
+          <h2 className="fin-hero__title fin-hero__title--strong">{t('spending.heroTitle')}</h2>
+          <p className="fin-hero__lead">{t('spending.heroLead')}</p>
+          <div className="fin-hero__meta">
+            {spending.tier?.label ? (
+              <span className={`fin-tier fin-tier--${spending.tier.id}`}>
+                <Crown size={13} /> Partenaire {spending.tier.label}
+              </span>
+            ) : null}
+            {showFinances ? (
               <span className="fin-hero__count">
                 {t('spending.invoiceCount', { count: spending.invoiceCount })}
               </span>
-            </div>
-            <Link href="/client/factures" className="fin-hero__link">
-              {t('spending.viewInvoices')} <ArrowRight size={15} />
-            </Link>
+            ) : null}
           </div>
-        </section>
-      ) : null}
+          <div className="fin-hero__actions">
+            <Link href="/client/commander" className="fin-hero__cta">
+              <Plus size={16} aria-hidden />
+              {t('spending.ctaOrder')}
+            </Link>
+            {showFinances ? (
+              <Link href="/client/factures" className="fin-hero__link">
+                {t('spending.ctaInvoices')} <ArrowRight size={15} />
+              </Link>
+            ) : (
+              <Link href="/client/commandes" className="fin-hero__link">
+                {t('spending.ctaOrders')} <ArrowRight size={15} />
+              </Link>
+            )}
+          </div>
+          {frequent.length > 0 ? (
+            <div className="fin-hero__habituels">
+              <p className="fin-hero__habituels-label">{t('spending.quickHabituals')}</p>
+              <div className="fin-hero__chips">
+                {frequent.slice(0, 4).map((product) => (
+                  <Link
+                    key={product.slug}
+                    href={`/client/commander?add=${product.slug}`}
+                    className="fin-chip"
+                  >
+                    <span className="fin-chip__thumb">
+                      {product.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={product.image} alt="" />
+                      ) : (
+                        product.name.slice(0, 2).toUpperCase()
+                      )}
+                    </span>
+                    <span className="fin-chip__name">{product.name}</span>
+                    <Plus size={14} aria-hidden />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </div>
+        <div className="fin-hero__rail">
+          <div className="fin-rail-card">
+            <span className="fin-rail-card__icon fin-rail-card__icon--amber">
+              <Clock size={18} />
+            </span>
+            <div>
+              <strong>{active.length}</strong>
+              <span>{t('spending.statPending')}</span>
+            </div>
+          </div>
+          <div className="fin-rail-card">
+            <span className="fin-rail-card__icon fin-rail-card__icon--green">
+              <CheckCircle2 size={18} />
+            </span>
+            <div>
+              <strong>{confirmed.length}</strong>
+              <span>{t('spending.statConfirmed')}</span>
+            </div>
+          </div>
+          <div className="fin-rail-card">
+            <span className="fin-rail-card__icon fin-rail-card__icon--blue">
+              <FileText size={18} />
+            </span>
+            <div>
+              <strong>{showFinances ? spending.invoiceCount : orders.length}</strong>
+              <span>{showFinances ? t('spending.statInvoices') : t('stats.total')}</span>
+            </div>
+          </div>
+          <div className="fin-rail-card">
+            <span className="fin-rail-card__icon fin-rail-card__icon--blue">
+              <Truck size={18} />
+            </span>
+            <div>
+              <strong>{lastOrder ? dateFmt.format(lastOrder.createdAt) : '—'}</strong>
+              <span>{t('spending.statLastOrder')}</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {showFinances && spending.outstanding > 0 ? (
         <Link href="/client/factures" className="fin-reminder">
@@ -126,102 +200,6 @@ export default async function ClientDashboardPage({
           <ArrowRight size={18} className="fin-reminder__arrow" />
         </Link>
       ) : null}
-
-      <div className="dash__stats">
-        {showFinances ? (
-          <>
-            <div className="stat-card">
-              <span
-                className={`stat-card__icon ${spending.outstanding > 0 ? 'stat-card__icon--amber' : 'stat-card__icon--green'}`}
-              >
-                <ReceiptText size={20} />
-              </span>
-              <div className="stat-card__value">
-                {spending.outstanding > 0 ? (
-                  <>
-                    <CountUp value={spending.outstanding} />{' '}
-                    <small className="stat-card__unit">{spending.currency}</small>
-                  </>
-                ) : (
-                  '—'
-                )}
-              </div>
-              <div className="stat-card__label">
-                {spending.outstanding > 0
-                  ? t('spending.unpaid', { count: spending.unpaidCount })
-                  : t('spending.allSettled')}
-              </div>
-            </div>
-            <div className="stat-card">
-              <span className="stat-card__icon stat-card__icon--amber">
-                <Clock size={20} />
-              </span>
-              <div className="stat-card__value">{active.length}</div>
-              <div className="stat-card__label">{t('stats.active')}</div>
-            </div>
-            <div className="stat-card">
-              <span className="stat-card__icon stat-card__icon--green">
-                <CheckCircle2 size={20} />
-              </span>
-              <div className="stat-card__value">{confirmed.length}</div>
-              <div className="stat-card__label">{t('stats.confirmed')}</div>
-            </div>
-            <div className="stat-card">
-              <span className="stat-card__icon stat-card__icon--blue">
-                <Truck size={20} />
-              </span>
-              <div className="stat-card__value">
-                {lastOrder ? dateFmt.format(lastOrder.createdAt) : '—'}
-              </div>
-              <div className="stat-card__label">{t('stats.lastOrder')}</div>
-            </div>
-          </>
-        ) : (
-          (
-            [
-              {
-                id: 'total',
-                value: orders.length,
-                label: t('stats.total'),
-                icon: PackageCheck,
-                tone: 'blue',
-              },
-              {
-                id: 'active',
-                value: active.length,
-                label: t('stats.active'),
-                icon: Clock,
-                tone: 'amber',
-              },
-              {
-                id: 'confirmed',
-                value: confirmed.length,
-                label: t('stats.confirmed'),
-                icon: CheckCircle2,
-                tone: 'green',
-              },
-              {
-                id: 'last',
-                value: lastOrder ? dateFmt.format(lastOrder.createdAt) : '—',
-                label: t('stats.lastOrder'),
-                icon: Truck,
-                tone: 'blue',
-              },
-            ] as const
-          ).map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <div className="stat-card" key={stat.id}>
-                <span className={`stat-card__icon stat-card__icon--${stat.tone}`}>
-                  <Icon size={20} />
-                </span>
-                <div className="stat-card__value">{stat.value}</div>
-                <div className="stat-card__label">{stat.label}</div>
-              </div>
-            );
-          })
-        )}
-      </div>
 
       <div className="dash__cols">
         <section className="panel">
