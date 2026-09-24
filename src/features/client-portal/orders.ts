@@ -29,9 +29,10 @@ function swiverOrderStatus(s: SwiverDocumentSummary['status']): string {
 /**
  * The client's orders, newest first. Always includes their portal-submitted
  * orders; with `includeSwiverSaleOrders` it ALSO merges sale orders (bons de
- * commande) created directly in Swiver — fetched LIVE and de-duplicated
- * against portal orders already pushed to Swiver. The dashboard leaves it off
- * (fast, cached totals); the Commandes page turns it on (complete + live).
+ * commande) created directly in Swiver — fetched via the short-lived document
+ * cache (same as Devis/Factures) and de-duplicated against portal orders
+ * already pushed to Swiver. The dashboard leaves it off (fast, totals-only);
+ * the Commandes page turns it on (complete list).
  */
 export async function listMyOrders(opts?: {
   includeSwiverSaleOrders?: boolean;
