@@ -242,7 +242,7 @@ export function ContactPage() {
           </div>
           <div className="contact__map">
             <iframe
-              src={`https://www.google.com/maps?q=${encodeURIComponent(companyInfo.addressFull)}&output=embed`}
+              src={companyInfo.mapEmbedSrc}
               title={t('info.mapLabel')}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"

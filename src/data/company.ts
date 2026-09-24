@@ -54,6 +54,9 @@ export const companyInfo = {
       href: '/downloads/company/homologation-ma.pdf',
     },
   ],
-  mapHref:
-    "https://www.google.com/maps/search/?api=1&query=20+Rue+de+Somalie,+Cite+El+Bassatine,+L'Aouina,+Tunis+2045,+Tunisie",
+  /** Official Google Maps place pin (Prodet, L'Aouina). */
+  mapHref: 'https://maps.app.goo.gl/tPg8ShuEjGD9C6BH8',
+  /** Embed centred on the same pin — address text alone was resolving to nearby POIs. */
+  mapEmbedSrc:
+    'https://www.google.com/maps?q=36.8573115,10.2610844&z=17&hl=fr&output=embed',
 } as const;
