@@ -1,4 +1,5 @@
 import 'server-only';
+import { unstable_cache } from 'next/cache';
 import {
   getSwiverAdapter,
   type SwiverDocumentKind,
@@ -12,26 +13,69 @@ export type PortalSwiverDocuments = {
   documents: SwiverDocumentSummary[];
 };
 
+/** JSON-safe row stored in unstable_cache (Dates → ISO, drop heavy rawShape). */
+type CachedDocRow = {
+  swiverId: string;
+  kind: SwiverDocumentSummary['kind'];
+  status: SwiverDocumentSummary['status'];
+  documentNumber: string;
+  customerSwiverId: string;
+  issueDate: string;
+  dueDate: string | null;
+  totalHt: number | null;
+  totalTtc: number | null;
+  currency: string;
+};
+
+function toCached(docs: SwiverDocumentSummary[]): CachedDocRow[] {
+  return docs.map((d) => ({
+    swiverId: d.swiverId,
+    kind: d.kind,
+    status: d.status,
+    documentNumber: d.documentNumber,
+    customerSwiverId: d.customerSwiverId,
+    issueDate: d.issueDate.toISOString(),
+    dueDate: d.dueDate ? d.dueDate.toISOString() : null,
+    totalHt: d.totalHt,
+    totalTtc: d.totalTtc,
+    currency: d.currency,
+  }));
+}
+
+function fromCached(rows: CachedDocRow[]): SwiverDocumentSummary[] {
+  return rows.map((d) => ({
+    swiverId: d.swiverId,
+    kind: d.kind,
+    status: d.status,
+    documentNumber: d.documentNumber,
+    customerSwiverId: d.customerSwiverId,
+    issueDate: new Date(d.issueDate),
+    dueDate: d.dueDate ? new Date(d.dueDate) : null,
+    totalHt: d.totalHt,
+    totalTtc: d.totalTtc,
+    currency: d.currency,
+    rawShape: null,
+  }));
+}
+
 /**
- * LIVE fetch (no cache) of the customer's Swiver documents. Devis / factures
- * created in Swiver appear in the portal immediately on the next page load —
- * no revalidation window. One retry absorbs a transient blip. Pages are
- * `force-dynamic`, so this runs once per request and never blocks rendering
- * on stale data.
+ * LIVE Swiver list with one retry. Throws on failure so unstable_cache does
+ * not store an empty result for the whole revalidate window.
  */
-export async function fetchSwiverDocuments(
+async function fetchDocumentsLive(
   contactSwiverId: string,
   kinds: SwiverDocumentKind[],
-  options?: { includeDrafts?: boolean },
-): Promise<SwiverDocumentSummary[]> {
+  includeDrafts: boolean,
+): Promise<CachedDocRow[]> {
   let lastError: unknown;
   for (let attempt = 0; attempt < 2; attempt += 1) {
     try {
-      return await getSwiverAdapter().documents.listDocumentsForCustomer({
+      const docs = await getSwiverAdapter().documents.listDocumentsForCustomer({
         customerSwiverId: contactSwiverId,
         kinds,
-        includeDrafts: options?.includeDrafts,
+        includeDrafts,
       });
+      return toCached(docs);
     } catch (error) {
       lastError = error;
     }
@@ -40,9 +84,38 @@ export async function fetchSwiverDocuments(
 }
 
 /**
+ * Short-lived cache so Devis / Factures / Commandes / Livraisons stay snappy
+ * when the client flips between rail tabs. 45s keeps lists near-live without
+ * re-hitting Swiver (often multi-second) on every navigation.
+ */
+const getCachedDocumentList = unstable_cache(
+  async (contactSwiverId: string, kindsKey: string, includeDrafts: boolean) => {
+    const kinds = kindsKey.split(',') as SwiverDocumentKind[];
+    return fetchDocumentsLive(contactSwiverId, kinds, includeDrafts);
+  },
+  ['portal-swiver-docs-v2'],
+  { revalidate: 45, tags: ['swiver-documents'] },
+);
+
+/**
+ * The customer's Swiver documents for the given kinds. Cached ~45s per
+ * (contact, kinds, drafts). Throws are not cached — next nav retries.
+ */
+export async function fetchSwiverDocuments(
+  contactSwiverId: string,
+  kinds: SwiverDocumentKind[],
+  options?: { includeDrafts?: boolean },
+): Promise<SwiverDocumentSummary[]> {
+  const kindsKey = [...kinds].sort().join(',');
+  const includeDrafts = Boolean(options?.includeDrafts);
+  const rows = await getCachedDocumentList(contactSwiverId, kindsKey, includeDrafts);
+  return fromCached(rows);
+}
+
+/**
  * The current client's real Swiver documents (devis / factures), newest
- * first, fetched live. Degrades to `{ linked: false, documents: [] }` when the
- * customer is not matched to a Swiver contact or Swiver is unreachable.
+ * first. Degrades to `{ linked: false, documents: [] }` when unmatched or
+ * Swiver is unreachable.
  */
 export async function listMySwiverDocuments(
   kinds: SwiverDocumentKind[],
