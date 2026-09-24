@@ -19,6 +19,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { usePortalCartCount } from '@/lib/portal-cart';
 
+import { companyInfo } from '@/data/company';
 import { cn } from '@/lib/utils';
 export type PortalShellAccount = {
   name: string;
@@ -117,13 +118,18 @@ export function PortalShell({
           })}
         </nav>
 
-        <div className="portal__rail-help">
+        <a
+          className="portal__rail-help"
+          href={companyInfo.whatsappHref}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <Phone size={16} />
           <div>
             <strong>{t('nav.help')}</strong>
-            <span>71 758 468</span>
+            <span>{companyInfo.whatsappDisplay}</span>
           </div>
-        </div>
+        </a>
 
         {/* Purement informatif : cliquer n'ouvrait qu'une fiche compte vide. */}
         <div className="portal__account portal__account--static">

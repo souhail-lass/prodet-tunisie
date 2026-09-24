@@ -1,4 +1,5 @@
 import 'server-only';
+import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
 import { getSwiverAdapter, type SwiverCustomer } from '@/integrations/swiver';
 
@@ -162,21 +163,24 @@ export async function getPortalSwiverIdentity(input: {
  * Resolves the Swiver identity for the CURRENT portal request — matches the
  * authenticated customer's email/phone, or falls back to the demo preview.
  * Never throws (Swiver/auth failures degrade to "not linked").
+ * Request-deduped via React cache() so layout + habituals share one resolve.
  */
-export async function resolveCurrentPortalSwiverIdentity(): Promise<PortalSwiverIdentity> {
-  const demoMode = process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
-  try {
-    const { requireClientPortalAccess } = await import('./auth');
-    const access = await requireClientPortalAccess();
-    return await getPortalSwiverIdentity({
-      swiverId: access.customer.swiverId,
-      name: access.customer.displayName || access.customer.name,
-      email: access.customer.email,
-      phone: access.customer.phone,
-      demoMode,
-    });
-  } catch {
-    if (demoMode) return getPortalSwiverIdentity({ demoMode: true });
-    return { matched: false, demoFallback: false, customer: null };
-  }
-}
+export const resolveCurrentPortalSwiverIdentity = cache(
+  async (): Promise<PortalSwiverIdentity> => {
+    const demoMode = process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
+    try {
+      const { requireClientPortalAccess } = await import('./auth');
+      const access = await requireClientPortalAccess();
+      return await getPortalSwiverIdentity({
+        swiverId: access.customer.swiverId,
+        name: access.customer.displayName || access.customer.name,
+        email: access.customer.email,
+        phone: access.customer.phone,
+        demoMode,
+      });
+    } catch {
+      if (demoMode) return getPortalSwiverIdentity({ demoMode: true });
+      return { matched: false, demoFallback: false, customer: null };
+    }
+  },
+);

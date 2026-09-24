@@ -1,6 +1,7 @@
 import 'server-only';
 import { unstable_cache } from 'next/cache';
 import { and, desc, eq, isNull } from 'drizzle-orm';
+import { getOrderableCatalogue } from '@/features/catalogue/queries';
 import { getSwiverAdapter } from '@/integrations/swiver';
 import { requireClientPortalAccess } from './auth';
 import { resolveCurrentPortalSwiverIdentity } from './swiver-identity';
@@ -39,8 +40,9 @@ type Agg = {
 };
 
 const MS_DAY = 86_400_000;
-const INVOICE_SCAN_LIMIT = 18;
-const DOC_CONCURRENCY = 4;
+/** Fewer docs = fewer Swiver RTTs on cold habituels (was 18). */
+const INVOICE_SCAN_LIMIT = 8;
+const DOC_CONCURRENCY = 6;
 
 const getCachedHabituals = unstable_cache(
   async (customerId: string, contactSwiverId: string | null, limit: number) =>
@@ -137,23 +139,11 @@ async function buildHabituals(
     .sort((a, b) => b.score - a.score)
     .slice(0, limit);
 
-  const { db, schema } = await import('@/db/client');
-  const rows = await db
-    .select({
-      swiverId: schema.catalogueProduct.swiverId,
-      sku: schema.catalogueProduct.sku,
-      name: schema.catalogueProduct.name,
-      displayName: schema.catalogueProduct.displayName,
-      imageUrl: schema.catalogueProduct.imageUrl,
-      baseImageUrl: schema.catalogueProduct.baseImageUrl,
-      unitPrice: schema.catalogueProduct.unitPrice,
-    })
-    .from(schema.catalogueProduct)
-    .where(eq(schema.catalogueProduct.hidden, false));
-
-  const byKey = new Map<string, (typeof rows)[number]>();
-  for (const r of rows) {
-    if (r.swiverId) byKey.set(r.swiverId, r);
+  // Reuse the 5-min catalogue cache instead of a second uncached full SELECT.
+  const catalogue = await getOrderableCatalogue();
+  const byKey = new Map<string, (typeof catalogue)[number]>();
+  for (const r of catalogue) {
+    byKey.set(r.swiverId, r);
     if (r.sku) byKey.set(r.sku, r);
   }
 
@@ -163,7 +153,7 @@ async function buildHabituals(
       (item.swiverId ? byKey.get(item.swiverId) : undefined) ??
       (item.sku ? byKey.get(item.sku) : undefined) ??
       byKey.get(item.key);
-    if (!product?.swiverId && !product?.sku) continue;
+    if (!product) continue;
 
     const days = Math.max(0, Math.round(item.daysAgo));
     const hintParts: string[] = [];
@@ -185,11 +175,11 @@ async function buildHabituals(
 
     result.push({
       slug: product.sku || product.swiverId || item.key,
-      name: product.displayName || product.name || item.name,
+      name: product.name || item.name,
       sku: product.sku ?? item.sku,
       swiverId: product.swiverId ?? item.swiverId,
-      image: product.imageUrl || product.baseImageUrl || null,
-      unitPrice: product.unitPrice != null ? Number(product.unitPrice) : null,
+      image: product.image || null,
+      unitPrice: product.unitPrice,
       hint: hintParts.join(' · ') || 'Produit habituel',
       score: item.score,
       invoiceCount: item.invoiceAppearances,
