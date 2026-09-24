@@ -165,22 +165,20 @@ export async function getPortalSwiverIdentity(input: {
  * Never throws (Swiver/auth failures degrade to "not linked").
  * Request-deduped via React cache() so layout + habituals share one resolve.
  */
-export const resolveCurrentPortalSwiverIdentity = cache(
-  async (): Promise<PortalSwiverIdentity> => {
-    const demoMode = process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
-    try {
-      const { requireClientPortalAccess } = await import('./auth');
-      const access = await requireClientPortalAccess();
-      return await getPortalSwiverIdentity({
-        swiverId: access.customer.swiverId,
-        name: access.customer.displayName || access.customer.name,
-        email: access.customer.email,
-        phone: access.customer.phone,
-        demoMode,
-      });
-    } catch {
-      if (demoMode) return getPortalSwiverIdentity({ demoMode: true });
-      return { matched: false, demoFallback: false, customer: null };
-    }
-  },
-);
+export const resolveCurrentPortalSwiverIdentity = cache(async (): Promise<PortalSwiverIdentity> => {
+  const demoMode = process.env.NODE_ENV !== 'production' && process.env.PORTAL_DEMO_MODE === '1';
+  try {
+    const { requireClientPortalAccess } = await import('./auth');
+    const access = await requireClientPortalAccess();
+    return await getPortalSwiverIdentity({
+      swiverId: access.customer.swiverId,
+      name: access.customer.displayName || access.customer.name,
+      email: access.customer.email,
+      phone: access.customer.phone,
+      demoMode,
+    });
+  } catch {
+    if (demoMode) return getPortalSwiverIdentity({ demoMode: true });
+    return { matched: false, demoFallback: false, customer: null };
+  }
+});

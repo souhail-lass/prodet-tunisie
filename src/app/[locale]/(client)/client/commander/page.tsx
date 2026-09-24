@@ -146,8 +146,7 @@ async function CommanderLoaded({
 
   const frequent: PortalProductRef[] = habituals.map((f) => {
     const p =
-      (f.sku ? bySku.get(f.sku) : undefined) ??
-      (f.swiverId ? bySwiver.get(f.swiverId) : undefined);
+      (f.sku ? bySku.get(f.sku) : undefined) ?? (f.swiverId ? bySwiver.get(f.swiverId) : undefined);
     return {
       slug: p ? p.sku || p.swiverId : f.slug,
       name: f.name,
