@@ -22,8 +22,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const SWIVER_IDENTITY_TIMEOUT_MS = 1200;
-
 function initialsFrom(name: string): string {
   return (
     name
@@ -103,28 +101,10 @@ export default async function ClientLayout({
     }
   }
 
-  // Enrich the rail with the real Swiver establishment when the portal
-  // customer matches a Swiver contact (degrades silently if unavailable).
-  // Bounded: a cold or slow Swiver API must never delay portal navigation —
-  // past the deadline we render the base account and let the in-flight fetch
-  // warm the cache for the next request.
-  try {
-    const identity = await Promise.race([
-      resolveCurrentPortalSwiverIdentity(),
-      new Promise<null>((resolve) => {
-        setTimeout(() => resolve(null), SWIVER_IDENTITY_TIMEOUT_MS);
-      }),
-    ]);
-    if (identity?.customer) {
-      shellAccount = {
-        name: identity.customer.legalName,
-        contact: identity.customer.city ?? identity.customer.externalCode ?? shellAccount.contact,
-        initials: initialsFrom(identity.customer.legalName),
-      };
-    }
-  } catch {
-    // Keep the base account if Swiver is unreachable.
-  }
+  // Do NOT await Swiver identity here — it was blocking the whole portal shell
+  // for up to 1.2s. Warm the cache in the background so habituals / next nav
+  // benefit; the rail keeps the authenticated customer name.
+  void resolveCurrentPortalSwiverIdentity().catch(() => null);
 
   return <PortalShell account={shellAccount}>{children}</PortalShell>;
 }

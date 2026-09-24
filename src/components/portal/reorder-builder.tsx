@@ -35,6 +35,7 @@ export function ReorderBuilder({
   initialExtra,
   noticeFrom,
   initialQuery,
+  habitualsPending = false,
 }: {
   catalogue: PortalProductRef[];
   frequent: PortalProductRef[];
@@ -42,6 +43,8 @@ export function ReorderBuilder({
   initialExtra: PortalProductRef[];
   noticeFrom?: string;
   initialQuery?: string;
+  /** True while Mes habituels is still streaming from Swiver. */
+  habitualsPending?: boolean;
 }) {
   const t = useTranslations('portal');
 
@@ -371,7 +374,7 @@ export function ReorderBuilder({
           {shown.length > 0 ? (
             <>
               <div className="desk__products">
-                {shown.map((product) => (
+                {shown.map((product, index) => (
                   <ProductTile
                     key={product.slug}
                     name={product.name}
@@ -382,6 +385,7 @@ export function ReorderBuilder({
                         : (product.sku ?? ''))
                     }
                     image={product.image}
+                    priority={index < 8}
                     addLabel={t('reorder.add')}
                     quantity={qty[product.slug] ?? 0}
                     onQuantityChange={(n) => changeQty(product, n)}
@@ -400,7 +404,9 @@ export function ReorderBuilder({
                 {searching
                   ? t('reorder.noMatch', { query: query.trim() })
                   : filter === FREQUENT
-                    ? t('reorder.emptyFrequent')
+                    ? habitualsPending
+                      ? t('reorder.loadingFrequent')
+                      : t('reorder.emptyFrequent')
                     : t('reorder.emptyCatalogue')}
               </p>
             </div>

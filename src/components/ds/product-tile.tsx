@@ -21,6 +21,8 @@ export type ProductTileProps = {
   onOpen?: () => void;
   /** Fired on pointer enter — used to prefetch the detail route. */
   onHover?: () => void;
+  /** LCP hint for above-the-fold tiles (portal Commander grid). */
+  priority?: boolean;
   className?: string;
 };
 
@@ -38,6 +40,7 @@ export function ProductTile({
   href,
   onOpen,
   onHover,
+  priority = false,
   className = '',
 }: ProductTileProps) {
   const stageInner: ReactNode = (
@@ -49,6 +52,7 @@ export function ProductTile({
             src={image}
             alt={name}
             fill
+            priority={priority}
             sizes="(max-width: 1080px) 33vw, 220px"
             style={{ objectFit: 'contain' }}
           />

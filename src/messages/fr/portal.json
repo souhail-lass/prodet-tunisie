@@ -145,6 +145,7 @@
     "filterFrequent": "Mes habituels",
     "filterAll": "Tout le catalogue",
     "emptyFrequent": "Pas encore d’habituels — dès que vos factures Prodet sont liées, vos produits récurrents apparaissent ici. En attendant, choisissez une catégorie ou cherchez.",
+    "loadingFrequent": "Chargement de vos habituels…",
     "buckets": {
       "cuisine": "Cuisine",
       "etage": "Étage",

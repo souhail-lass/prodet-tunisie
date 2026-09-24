@@ -145,6 +145,7 @@
     "filterFrequent": "My usual items",
     "filterAll": "Full catalogue",
     "emptyFrequent": "No usual items yet — once your Prodet invoices are linked, recurring products show up here. Until then, pick a category or search.",
+    "loadingFrequent": "Loading your usual products…",
     "buckets": {
       "cuisine": "Kitchen",
       "etage": "Floors",
