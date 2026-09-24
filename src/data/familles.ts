@@ -499,22 +499,36 @@ const otherSousCats: SousCategorie[] = [
     displayOrder: 20,
     keywords: ['SAC POUB', 'SACS POUB', 'SAC BRETELLE', 'SACHET', 'SAC DE CONG'],
   },
-  // parfums d'ambiance
+  // parfums d'ambiance — DeoFresh (marque Prodet) vs sprays / air fresh commercialisés
   {
     slug: 'sprays-desodorisants',
     familleId: 'parfums-ambiance',
     image: CAT_IMG('sprays-desodorisants'),
-    packshot: FAM_PACK('parfums-ambiance.png'),
+    packshot: FAM_PACK('deofresh-750ml.png'),
     displayOrder: 10,
-    keywords: ['AIR FRESH', 'SPRAY', 'BOMBE', 'DIPTOX', 'DESODOR', 'FATEK'],
+    // Prodet DeoFresh only (LINGE stays in produits-nettoyage via isParfumAmbiance).
+    keywords: ['DEOFRESH'],
   },
   {
     slug: 'diffuseurs',
     familleId: 'parfums-ambiance',
     image: CAT_IMG('diffuseurs'),
-    packshot: '',
+    packshot: FAM_PACK('air-fresh-fleur-de-printemps-500ml.jpeg'),
     displayOrder: 20,
-    keywords: ['DIFFUSEUR', 'DIFFISEUR', 'DEOFRESH', 'MECHE', 'TIGE'],
+    keywords: [
+      'AIR FRESH',
+      'SPRAY',
+      'BOMBE',
+      'DIPTOX',
+      'DESODOR',
+      'FATEK',
+      'DIFFUSEUR',
+      'DIFFISEUR',
+      'MECHE',
+      'TIGE',
+      'GLADE',
+      'NASSIM',
+    ],
   },
 ];
 

@@ -167,6 +167,28 @@ describe('produitPath', () => {
   });
 });
 
+describe('parfums-ambiance sous-catégories', () => {
+  it('puts DeoFresh in désodorisants and Air Fresh in sprays & senteurs', () => {
+    expect(classifySousCategorie('parfums-ambiance', 'DEOFRESH 750ML')).toBe(
+      'sprays-desodorisants',
+    );
+    expect(classifySousCategorie('parfums-ambiance', 'AIR FRESH FLEUR DE PRINTEMPS 500ML')).toBe(
+      'diffuseurs',
+    );
+  });
+
+  it('uses DeoFresh 750ML and Air Fresh packshots on the tiles', () => {
+    const desodorisants = getSousCategoriesForFamille('parfums-ambiance').find(
+      (s) => s.slug === 'sprays-desodorisants',
+    );
+    const sprays = getSousCategoriesForFamille('parfums-ambiance').find(
+      (s) => s.slug === 'diffuseurs',
+    );
+    expect(desodorisants?.packshot).toContain('deofresh-750ml');
+    expect(sprays?.packshot).toContain('air-fresh-fleur-de-printemps-500ml');
+  });
+});
+
 describe('catalogueSearchPath', () => {
   it('puts the typed query on the search page URL', () => {
     expect(catalogueSearchPath('deofresh')).toBe('/produits/recherche?q=deofresh');

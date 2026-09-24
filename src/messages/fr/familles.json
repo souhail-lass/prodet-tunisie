@@ -51,8 +51,8 @@
     },
     "parfums-ambiance": {
       "label": "Parfums d'ambiance",
-      "tagline": "Désodorisants & diffuseurs",
-      "description": "Désodorisants, sprays et diffuseurs pour parfumer durablement vos espaces d'accueil et sanitaires."
+      "tagline": "Désodorisants DeoFresh & sprays",
+      "description": "Désodorisants DeoFresh Prodet, sprays et senteurs pour parfumer durablement vos espaces d'accueil et sanitaires."
     }
   },
   "souscats": {
@@ -71,8 +71,8 @@
     "protections-jetables": "Protections jetables",
     "poubelles": "Poubelles & conteneurs",
     "sacs-poubelle": "Sacs poubelle & sachets",
-    "sprays-desodorisants": "Sprays & désodorisants",
-    "diffuseurs": "Diffuseurs & senteurs",
+    "sprays-desodorisants": "Désodorisants",
+    "diffuseurs": "Sprays & senteurs",
     "autres": "Autres articles"
   }
 }

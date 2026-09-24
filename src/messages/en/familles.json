@@ -51,8 +51,8 @@
     },
     "parfums-ambiance": {
       "label": "Air fresheners",
-      "tagline": "Deodorisers & diffusers",
-      "description": "Deodorisers, sprays and diffusers to keep your reception areas and restrooms fresh."
+      "tagline": "DeoFresh deodorisers & sprays",
+      "description": "Prodet DeoFresh deodorisers, sprays and scents to keep your reception areas and restrooms fresh."
     }
   },
   "souscats": {
@@ -71,8 +71,8 @@
     "protections-jetables": "Disposable protection",
     "poubelles": "Bins & containers",
     "sacs-poubelle": "Bin bags & sacks",
-    "sprays-desodorisants": "Sprays & deodorisers",
-    "diffuseurs": "Diffusers & scents",
+    "sprays-desodorisants": "Deodorisers",
+    "diffuseurs": "Sprays & scents",
     "autres": "Other articles"
   }
 }
