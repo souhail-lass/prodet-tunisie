@@ -38,7 +38,7 @@ The repository is in active development. Read [AGENTS.md](mdc:AGENTS.md) and [do
 
 ## Workflow
 
-- Run `pnpm typecheck`, `pnpm lint`, `pnpm test` before declaring work done.
+- Run `pnpm format:check`, `pnpm typecheck`, `pnpm lint`, `pnpm test` before declaring work done or pushing. Prefer `pnpm ci:local` before any push to `main` (mirrors GitHub CI). Never push knowing format/lint/typecheck is red.
 - Drizzle migrations: forward-only. Generate via `pnpm db:generate`, apply via `pnpm db:migrate`.
 - Commit messages follow conventional commits style (`feat(scope): ...`, `fix(scope): ...`, `chore(scope): ...`, `docs(scope): ...`).
 - Souhail commits and pushes. Agents may stage when explicitly asked.

@@ -17,6 +17,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "ci:local": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm db:check && pnpm test && pnpm build",
+    "prepare": "git config core.hooksPath .githooks",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",

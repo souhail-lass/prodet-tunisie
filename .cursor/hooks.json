@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": ".cursor/hooks/format-edited-file.sh"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/guard-git-push.sh",
+        "matcher": "git\\s+push",
+        "failClosed": true,
+        "timeout": 180
+      }
+    ]
+  }
+}

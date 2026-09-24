@@ -27,7 +27,7 @@ Souhail approved implementation before spike gates ([AGENTS.md](AGENTS.md) execu
 
 1. Read [docs/00-overview/developer-guide.md](docs/00-overview/developer-guide.md) for architecture, routes, algorithms.
 2. Read [docs/05-ops/claude-code-handoff.md](docs/05-ops/claude-code-handoff.md) for setup, key files, and blockers.
-3. Run `pnpm typecheck && pnpm lint && pnpm test` before declaring work done.
+3. Run `pnpm format:check && pnpm typecheck && pnpm lint && pnpm test` before declaring work done. Prefer `pnpm ci:local` before pushing to `main`.
 4. New dependencies require an ADR under `docs/02-architecture/adr/`.
 
 ## Architecture invariants (do not redesign)
@@ -47,7 +47,8 @@ pnpm install
 cp .env.example .env.local   # fill secrets — see docs/05-ops/secrets-checklist.md
 pnpm db:migrate
 pnpm dev                     # http://localhost:3004
-pnpm typecheck && pnpm lint && pnpm test && pnpm build
+pnpm format:check && pnpm typecheck && pnpm lint && pnpm test && pnpm build
+# or: pnpm ci:local
 pnpm db:seed:demo-portal     # optional portal demo data
 ```
 

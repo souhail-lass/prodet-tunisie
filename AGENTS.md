@@ -70,7 +70,7 @@ These are decided. Changing them requires a new ADR superseding the relevant one
 
 - Add tests for any feature you modify.
 - Use the existing stack and patterns. Do not introduce GraphQL, Zustand, SWR, Prisma, or any other excluded library without an ADR.
-- Run `pnpm typecheck`, `pnpm lint`, `pnpm test` before declaring work done.
+- Run `pnpm format:check`, `pnpm typecheck`, `pnpm lint`, `pnpm test` before declaring work done or pushing. Prefer `pnpm ci:local` before any push to `main` (mirrors GitHub CI). Never push with a red format/lint/typecheck gate.
 - Write [`audit_log`](docs/02-architecture/data-model.md#audit_log) entries for any state-changing admin action.
 - Honor RLS — never leak service-role-key paths into client bundles.
 
