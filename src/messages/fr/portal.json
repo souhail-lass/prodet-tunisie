@@ -218,7 +218,8 @@
   },
   "spending": {
     "greeting": "Bonjour",
-    "heroTitle": "Vos dépenses {year}",
+    "heroTitle": "Votre espace Prodet",
+    "heroLead": "Commandes, factures et suivi — tout au même endroit.",
     "vsLastMonth": "vs mois dernier",
     "invoiceCount": "{count, plural, one {# facture émise} other {# factures émises}}",
     "viewInvoices": "Voir mes factures",
