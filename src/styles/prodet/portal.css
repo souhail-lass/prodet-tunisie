@@ -1659,7 +1659,9 @@
   background: #fff;
   border-radius: var(--radius-button);
   padding: 11px 18px;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 8px 20px rgba(8, 40, 90, 0.22);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.4) inset,
+    0 8px 20px rgba(8, 40, 90, 0.22);
   transition:
     background var(--dur-base) var(--ease-out),
     transform var(--dur-base) var(--ease-out);
