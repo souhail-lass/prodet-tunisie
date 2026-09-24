@@ -89,21 +89,16 @@ export default async function ClientInvoicesPage({
     );
   }
 
-  const year = String(new Date().getFullYear());
-
   return (
     <div className="dash">
       {spending.linked && spending.invoiceCount > 0 ? (
         <div className="dash__stats dash__stats--3">
           <div className="stat-card">
             <span className="stat-card__icon stat-card__icon--blue">
-              <Wallet size={20} />
+              <FileText size={20} />
             </span>
-            <div className="stat-card__value">
-              <CountUp value={spending.thisYear} />{' '}
-              <small className="stat-card__unit">{spending.currency}</small>
-            </div>
-            <div className="stat-card__label">{t('spending.yearTotal', { year })}</div>
+            <div className="stat-card__value">{spending.invoiceCount}</div>
+            <div className="stat-card__label">{t('spending.invoices')}</div>
           </div>
           <div className="stat-card">
             <span
@@ -112,8 +107,14 @@ export default async function ClientInvoicesPage({
               <ReceiptText size={20} />
             </span>
             <div className="stat-card__value">
-              <CountUp value={spending.outstanding} />{' '}
-              <small className="stat-card__unit">{spending.currency}</small>
+              {spending.outstanding > 0 ? (
+                <>
+                  <CountUp value={spending.outstanding} />{' '}
+                  <small className="stat-card__unit">{spending.currency}</small>
+                </>
+              ) : (
+                '—'
+              )}
             </div>
             <div className="stat-card__label">
               {spending.outstanding > 0
@@ -123,10 +124,12 @@ export default async function ClientInvoicesPage({
           </div>
           <div className="stat-card">
             <span className="stat-card__icon stat-card__icon--blue">
-              <FileText size={20} />
+              <Wallet size={20} />
             </span>
-            <div className="stat-card__value">{spending.invoiceCount}</div>
-            <div className="stat-card__label">{t('spending.invoices')}</div>
+            <div className="stat-card__value">
+              {spending.nextDueISO ? dateFmt.format(new Date(spending.nextDueISO)) : '—'}
+            </div>
+            <div className="stat-card__label">{t('invoices.due')}</div>
           </div>
         </div>
       ) : null}

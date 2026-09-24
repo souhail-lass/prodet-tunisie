@@ -218,7 +218,8 @@
   },
   "spending": {
     "greeting": "Hello",
-    "heroTitle": "Your {year} spending",
+    "heroTitle": "Your Prodet space",
+    "heroLead": "Orders, invoices and follow-up — all in one place.",
     "vsLastMonth": "vs last month",
     "invoiceCount": "{count, plural, one {# invoice issued} other {# invoices issued}}",
     "viewInvoices": "View my invoices",

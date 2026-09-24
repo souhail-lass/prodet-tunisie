@@ -8,15 +8,11 @@ import {
   PackageCheck,
   Plus,
   ReceiptText,
-  TrendingDown,
-  TrendingUp,
   Truck,
-  Wallet,
 } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/routing';
 import { CountUp } from '@/components/portal/count-up';
-import { SpendingChart } from '@/components/portal/spending-chart';
 import {
   listMyFrequentProducts,
   listMyOrders,
@@ -78,74 +74,35 @@ export default async function ClientDashboardPage({
   }
   const spending = await spendingPromise;
   const showFinances = spending.linked && spending.invoiceCount > 0;
-  // String, not number: ICU would group-format 2026 as "2 026".
-  const year = String(new Date().getFullYear());
 
   const active = orders.filter((o) => o.status === 'review');
   const confirmed = orders.filter((o) => o.status === 'approved' || o.status === 'exported');
   const lastOrder = orders[0] ?? null;
   const recent = orders.slice(0, 5);
 
-  const deltaChip =
-    spending.momDeltaPct != null ? (
-      <span
-        className={`fin-delta ${spending.momDeltaPct >= 0 ? 'fin-delta--up' : 'fin-delta--down'}`}
-      >
-        {spending.momDeltaPct >= 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
-        {spending.momDeltaPct >= 0 ? '+' : ''}
-        {spending.momDeltaPct}% {t('spending.vsLastMonth')}
-      </span>
-    ) : null;
-
   return (
     <div className="dash">
       {showFinances ? (
-        <section className="fin-hero">
+        <section className="fin-hero fin-hero--welcome">
           <div className="fin-hero__main">
             <p className="fin-hero__greet">
-              {t('spending.greeting')} 👋 <span>· {heroDateFmt(locale).format(new Date())}</span>
+              {t('spending.greeting')} <span>· {heroDateFmt(locale).format(new Date())}</span>
             </p>
-            <h2 className="fin-hero__title">{t('spending.heroTitle', { year })}</h2>
-            <p className="fin-hero__value">
-              <CountUp value={spending.thisYear} />
-              <span className="fin-hero__currency">{spending.currency}</span>
-            </p>
+            <h2 className="fin-hero__title">{t('spending.heroTitle')}</h2>
+            <p className="fin-hero__lead">{t('spending.heroLead')}</p>
             <div className="fin-hero__meta">
               {spending.tier?.label ? (
                 <span className={`fin-tier fin-tier--${spending.tier.id}`}>
                   <Crown size={13} /> Partenaire {spending.tier.label}
                 </span>
               ) : null}
-              {deltaChip}
               <span className="fin-hero__count">
                 {t('spending.invoiceCount', { count: spending.invoiceCount })}
               </span>
             </div>
-            {spending.tier?.nextLabel && spending.tier.remainingToNext > 0 ? (
-              <div
-                className="fin-tier-progress"
-                title={`Progression vers ${spending.tier.nextLabel}`}
-              >
-                <div className="fin-tier-progress__bar">
-                  <span style={{ width: `${spending.tier.progressPct}%` }} />
-                </div>
-                <span className="fin-tier-progress__label">
-                  Plus que {moneyFmt.format(spending.tier.remainingToNext)} {spending.currency}{' '}
-                  avant le statut {spending.tier.nextLabel}
-                </span>
-              </div>
-            ) : null}
             <Link href="/client/factures" className="fin-hero__link">
               {t('spending.viewInvoices')} <ArrowRight size={15} />
             </Link>
-          </div>
-          <div className="fin-hero__chart">
-            <SpendingChart
-              monthly={spending.monthly}
-              currency={spending.currency}
-              locale={locale}
-              title={t('spending.chartTitle')}
-            />
           </div>
         </section>
       ) : null}
@@ -174,24 +131,20 @@ export default async function ClientDashboardPage({
         {showFinances ? (
           <>
             <div className="stat-card">
-              <span className="stat-card__icon stat-card__icon--blue">
-                <Wallet size={20} />
-              </span>
-              <div className="stat-card__value">
-                <CountUp value={spending.thisMonth} />{' '}
-                <small className="stat-card__unit">{spending.currency}</small>
-              </div>
-              <div className="stat-card__label">{t('spending.thisMonth')}</div>
-            </div>
-            <div className="stat-card">
               <span
                 className={`stat-card__icon ${spending.outstanding > 0 ? 'stat-card__icon--amber' : 'stat-card__icon--green'}`}
               >
                 <ReceiptText size={20} />
               </span>
               <div className="stat-card__value">
-                <CountUp value={spending.outstanding} />{' '}
-                <small className="stat-card__unit">{spending.currency}</small>
+                {spending.outstanding > 0 ? (
+                  <>
+                    <CountUp value={spending.outstanding} />{' '}
+                    <small className="stat-card__unit">{spending.currency}</small>
+                  </>
+                ) : (
+                  '—'
+                )}
               </div>
               <div className="stat-card__label">
                 {spending.outstanding > 0
@@ -205,6 +158,13 @@ export default async function ClientDashboardPage({
               </span>
               <div className="stat-card__value">{active.length}</div>
               <div className="stat-card__label">{t('stats.active')}</div>
+            </div>
+            <div className="stat-card">
+              <span className="stat-card__icon stat-card__icon--green">
+                <CheckCircle2 size={20} />
+              </span>
+              <div className="stat-card__value">{confirmed.length}</div>
+              <div className="stat-card__label">{t('stats.confirmed')}</div>
             </div>
             <div className="stat-card">
               <span className="stat-card__icon stat-card__icon--blue">
@@ -345,8 +305,7 @@ export default async function ClientDashboardPage({
               </span>
               {spending.lastInvoice ? (
                 <div className="next-delivery__order" style={{ marginTop: 2 }}>
-                  {t('spending.lastInvoice', { ref: spending.lastInvoice.reference })} ·{' '}
-                  {moneyFmt.format(spending.lastInvoice.total)} {spending.currency}
+                  {t('spending.lastInvoice', { ref: spending.lastInvoice.reference })}
                 </div>
               ) : null}
               <Link

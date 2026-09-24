@@ -1614,6 +1614,16 @@
   color: var(--text-on-dark);
   box-shadow: var(--shadow-panel);
 }
+.fin-hero--welcome {
+  grid-template-columns: 1fr;
+}
+.fin-hero__lead {
+  margin-top: 8px;
+  max-width: 42ch;
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--text-on-dark-soft);
+}
 .fin-hero::before {
   content: '';
   position: absolute;
