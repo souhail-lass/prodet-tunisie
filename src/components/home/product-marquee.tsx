@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from '@/i18n/routing';
 import type { Product } from '@/types/product';
+import { wrapLoopScroll } from '@/components/home/marquee-scroll';
 
 function initials(name = ''): string {
   return name
@@ -16,57 +17,116 @@ function initials(name = ''): string {
 }
 
 const SPEED = 38; // px / second — slow, continuous drift
+/** Ignore layout until the duplicated track has a real width (images/fonts). */
+const MIN_LOOP_WIDTH = 80;
 
 /**
  * Continuous product carousel. The track holds the products twice; a
- * requestAnimationFrame loop drifts the content to the right and wraps
- * seamlessly at the halfway point. Hover / focus pauses it, the arrows nudge
- * it (and briefly pause the drift), and reduced-motion leaves a plain scroller.
+ * requestAnimationFrame loop drifts the content and wraps at the halfway
+ * point. Hover / focus pauses it; arrows nudge without smooth-scroll (that
+ * fought the RAF loop and could freeze the strip).
  */
 export function ProductMarquee({ products }: { products: Product[] }) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
+  const loopingRef = useRef(true);
   const resumeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const el = viewportRef.current;
     if (!el) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    loopingRef.current = !reduceMotion;
+    if (reduceMotion) return;
+
+    let cancelled = false;
+    let raf = 0;
+    let last = performance.now();
+    let primed = false;
 
     const half = () => el.scrollWidth / 2;
-    el.scrollLeft = half(); // start mid so we can drift right into the duplicate
-    let last = performance.now();
-    let raf = 0;
+
+    const ensurePrimed = () => {
+      const h = half();
+      if (h < MIN_LOOP_WIDTH) return false;
+      if (!primed) {
+        el.scrollLeft = h;
+        primed = true;
+        last = performance.now();
+      }
+      return true;
+    };
+
     const tick = (now: number) => {
+      if (cancelled) return;
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      if (!pausedRef.current) {
-        el.scrollLeft -= SPEED * dt; // content drifts to the right
-        if (el.scrollLeft <= 0) el.scrollLeft += half();
-        else if (el.scrollLeft >= half()) el.scrollLeft -= half();
+
+      if (ensurePrimed() && !pausedRef.current) {
+        const h = half();
+        el.scrollLeft = wrapLoopScroll(el.scrollLeft - SPEED * dt, h);
       }
+
       raf = requestAnimationFrame(tick);
     };
+
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+
+    // Images loading later change scrollWidth — re-clamp so we never sit past half.
+    const ro = new ResizeObserver(() => {
+      if (!primed || cancelled) return;
+      const h = half();
+      if (h < MIN_LOOP_WIDTH) return;
+      el.scrollLeft = wrapLoopScroll(el.scrollLeft, h);
+    });
+    ro.observe(el);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      if (resumeRef.current) {
+        clearTimeout(resumeRef.current);
+        resumeRef.current = null;
+      }
+    };
   }, [products.length]);
 
   const pause = useCallback(() => {
     pausedRef.current = true;
   }, []);
+
   const resume = useCallback(() => {
+    // A nudge holds the pause until its own timeout clears.
+    if (resumeRef.current) return;
     pausedRef.current = false;
   }, []);
 
   const nudge = useCallback((dir: 1 | -1) => {
     const el = viewportRef.current;
     if (!el) return;
+
     pausedRef.current = true;
-    el.scrollBy({ left: dir * Math.min(el.clientWidth * 0.8, 560), behavior: 'smooth' });
     if (resumeRef.current) clearTimeout(resumeRef.current);
+
+    // Instant scroll only — `behavior: 'smooth'` raced the RAF wrap and left
+    // the strip looking frozen mid-animation.
+    const delta = dir * Math.min(el.clientWidth * 0.8, 560);
+    let next = el.scrollLeft + delta;
+    if (loopingRef.current) {
+      const h = el.scrollWidth / 2;
+      if (h >= MIN_LOOP_WIDTH) next = wrapLoopScroll(next, h);
+    } else {
+      const max = Math.max(0, el.scrollWidth - el.clientWidth);
+      next = Math.min(max, Math.max(0, next));
+    }
+    el.scrollLeft = next;
+
     resumeRef.current = setTimeout(() => {
+      resumeRef.current = null;
       pausedRef.current = false;
-    }, 1600);
+    }, 1200);
   }, []);
 
   if (products.length === 0) return null;
