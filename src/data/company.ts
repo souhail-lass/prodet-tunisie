@@ -54,9 +54,12 @@ export const companyInfo = {
       href: '/downloads/company/homologation-ma.pdf',
     },
   ],
-  /** Official Google Maps place pin (Prodet, L'Aouina). */
+  /**
+   * Official Google Maps business listing (not a bare lat/lng drop-pin).
+   * Short link and place id both resolve to the same Prodet fiche.
+   */
   mapHref: 'https://maps.app.goo.gl/tPg8ShuEjGD9C6BH8',
-  /** Embed centred on the same pin — address text alone was resolving to nearby POIs. */
+  /** Embed of the Prodet place — coordinate-only embeds open a generic pin on click. */
   mapEmbedSrc:
-    'https://www.google.com/maps?q=36.8573115,10.2610844&z=17&hl=fr&output=embed',
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3192.4!2d10.2610844!3d36.8573115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12e2b586ac6a195d%3A0xaf858455ee5262a!2sProdet!5e0!3m2!1sfr!2stn',
 } as const;
