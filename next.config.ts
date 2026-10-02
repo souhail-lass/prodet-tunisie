@@ -82,10 +82,10 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    // Restrict the optimizer to known asset hosts. Unsplash powers the home
-    // category / sector imagery; we want Next.js to resize and serve modern
-    // formats (AVIF/WebP) instead of falling back to `unoptimized` (which
-    // would ship the full 600w originals to every viewport).
+    // Vercel free tier caps both ISR writes and image optimizations. Past the
+    // image cap, `/_next/image` fails and product photos fall back to alt text.
+    // Serve the original Supabase / R2 files until the optimizer can be paid for.
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -105,7 +105,6 @@ const nextConfig: NextConfig = {
         pathname: '/storage/v1/object/public/**',
       },
     ],
-    formats: ['image/avif', 'image/webp'],
   },
   async headers() {
     return [
