@@ -7,6 +7,7 @@ import { consumeRateLimit, formatRetryAfterFr } from '@/lib/rate-limit';
 import { publicInboxEmail } from '@/lib/email';
 import { getSwiverAdapter } from '@/integrations/swiver';
 import { getSwiverLinesForProductIds } from '@/features/catalogue/queries';
+import { PASSAGER_CONTACT_NAME, resolvePassagerContactId } from './passager-contact';
 import { QuoteRequestSchema, type QuoteRequestInput } from './schema';
 
 /** Swiver numeric document type for a quote. 4 = sale order, 6 = devis. */
@@ -158,10 +159,9 @@ export async function submitPublicDevisRequest(
     receivedAt: new Date().toISOString(),
   });
 
-  // Mirror the request into Swiver as a draft devis, client left empty for an
-  // operator to attach. Runs after the response: a slow or down ERP must never
-  // delay (or fail) a visitor's form submit, and the email above already
-  // carries everything needed to key the devis in by hand.
+  // Mirror the request into Swiver as a draft devis on CLIENT_PASSAGER — same
+  // auto-push path as the client portal, but always that catch-all contact.
+  // Runs after the response so a slow ERP never delays the visitor.
   after(() => pushPublicDevisToSwiver(referenceCode, parsed.data));
 
   if (!delivery.ok) {
@@ -284,7 +284,7 @@ function buildPublicDevisHtml(
     }
 
     <hr style="border:none;border-top:1px solid #e6e8ec;margin:8px 0 12px" />
-    <p style="font-size:12px;color:#7a869a;margin:0">Demande envoyée depuis le site prodet.com.tn · Répondez à cet email pour contacter directement le demandeur.</p>
+    <p style="font-size:12px;color:#7a869a;margin:0">Demande envoyée depuis le site prodet.com.tn · Un brouillon Swiver est créé sur ${escapeHtml(PASSAGER_CONTACT_NAME)} · Répondez à cet email pour contacter le demandeur.</p>
   </div>`;
 }
 
@@ -369,12 +369,11 @@ function escapeHtml(value: string): string {
 }
 
 /**
- * Create a draft devis in Swiver from a public request.
+ * Create a draft devis in Swiver from a public request, attached to
+ * CLIENT_PASSAGER (same auto-push as the portal, fixed catch-all contact).
  *
- * The requester is a prospect, not a Swiver contact, so the document's client
- * is deliberately left empty — Prodet creates the customer by hand and
- * attaches it. Only lines whose catalogue product carries a `swiver_id` can be
- * pushed; anything else stays in the notification email only.
+ * Only lines whose catalogue product carries a `swiver_id` can be pushed;
+ * anything else stays in the notification email only.
  *
  * Best-effort throughout: every failure is logged and swallowed. On a partial
  * failure the empty draft is cancelled so it does not clutter Swiver.
@@ -406,16 +405,40 @@ async function pushPublicDevisToSwiver(
       return;
     }
 
+    const passagerContactId = await resolvePassagerContactId(swiver);
+    if (!passagerContactId) {
+      console.error('[public-devis:swiver-skipped]', {
+        referenceCode,
+        reason: 'passager-contact-unresolved',
+        hint: `Set SWIVER_PASSAGER_CONTACT_ID or ensure a Swiver contact named ${PASSAGER_CONTACT_NAME} exists.`,
+      });
+      return;
+    }
+
     const bySwiver = await getSwiverLinesForProductIds(input.lines.map((l) => l.productId));
+    const prospectHint = [
+      referenceCode,
+      input.company?.trim() || input.fullName?.trim() || null,
+      input.phone?.trim() || input.email?.trim() || null,
+    ]
+      .filter(Boolean)
+      .join(' · ');
+
+    let stampedProspect = false;
     const lines = input.lines.flatMap((line) => {
       const match = bySwiver.get(line.productId);
       if (!match) return [];
+      const base = line.format ? `${line.productName} — ${line.format}` : line.productName;
+      // Stamp the website reference + prospect on the first pushable line so
+      // the draft is identifiable inside Swiver's CLIENT_PASSAGER pile.
+      const label = !stampedProspect && prospectHint ? `${base} [${prospectHint}]` : base;
+      stampedProspect = true;
       return [
         {
           productSwiverId: match.swiverId,
           quantity: line.quantity,
           unitPrice: match.unitPrice,
-          label: line.format ? `${line.productName} — ${line.format}` : line.productName,
+          label,
         },
       ];
     });
@@ -436,7 +459,7 @@ async function pushPublicDevisToSwiver(
     }
 
     const ok = await swiver.documents.updateDocument(created.swiverId, {
-      // No contact on purpose — operator attaches the client manually.
+      contactSwiverId: passagerContactId,
       version: created.version,
       warehouseId: created.warehouseId,
       type: SWIVER_DEVIS_TYPE,
@@ -447,6 +470,7 @@ async function pushPublicDevisToSwiver(
       console.error('[public-devis:swiver-update-failed]', {
         referenceCode,
         swiverId: created.swiverId,
+        contactSwiverId: passagerContactId,
       });
       try {
         await swiver.documents.setDocumentState(created.swiverId, 'to_canceled');
@@ -459,6 +483,8 @@ async function pushPublicDevisToSwiver(
     console.info('[public-devis:swiver-pushed]', {
       referenceCode,
       swiverId: created.swiverId,
+      contactSwiverId: passagerContactId,
+      contactName: PASSAGER_CONTACT_NAME,
       pushedLines: lines.length,
       totalLines: input.lines.length,
     });

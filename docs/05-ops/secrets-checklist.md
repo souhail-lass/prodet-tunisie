@@ -53,6 +53,7 @@ If `RESEND_API_KEY` is unset, admin UI shows a dev activation link instead of se
 | `SWIVER_API_BASE_URL` | — | e.g. `https://sandbox.swiver.io` |
 | `SWIVER_API_KEY` | — | Bearer token from Swiver integration panel |
 | `SWIVER_WEBHOOK_SECRET` | — | Future HMAC verification |
+| `SWIVER_PASSAGER_CONTACT_ID` | lookup by name | Swiver id of `CLIENT_PASSAGER` (public devis drafts). Prodet tenant: `855233` |
 
 ## Optional — future features (not wired yet)
 
