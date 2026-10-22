@@ -27,23 +27,38 @@ export function draftsMailboxFromList(lines: string[]): string | null {
   return null;
 }
 
+/** Keep "Re:" once so Gmail files the draft in the same conversation. */
+export function replySubject(subject: string): string {
+  const clean = subject.replace(/[\r\n]+/g, ' ').trim();
+  if (/^re:/i.test(clean)) return clean;
+  return `Re: ${clean}`;
+}
+
+export function messageIdFromImapFetch(lines: string[]): string | null {
+  const match = lines.join('\n').match(/Message-ID:\s*(<[^>\s]+>)/i);
+  return match?.[1] ?? null;
+}
+
 export function buildMimeMessage(input: {
   from: string;
   to?: string | null;
   subject: string;
   text: string;
   html: string;
+  inReplyTo?: string | null;
   attachments?: { filename: string; contentType: string; data: Uint8Array }[];
 }): string {
   const mixed = boundary('mix');
   const alt = boundary('alt');
   const to = safeHeader(input.to);
+  const inReplyTo = safeHeader(input.inReplyTo);
   const chunks: string[] = [
     'MIME-Version: 1.0',
     `Date: ${new Date().toUTCString()}`,
     `From: ${input.from}`,
     to ? `To: ${to}` : 'To:',
     `Subject: ${encodeSubject(input.subject)}`,
+    ...(inReplyTo ? [`In-Reply-To: ${inReplyTo}`, `References: ${inReplyTo}`] : []),
     `Content-Type: multipart/mixed; boundary="${mixed}"`,
     '',
     `--${mixed}`,
@@ -86,23 +101,18 @@ export async function createGmailDraft(input: {
   subject: string;
   text: string;
   html: string;
+  /** Subject of the inbox notification this draft should answer. */
+  replyToSubject?: string | null;
+  /** Reference code used to find that notification in the inbox. */
+  replyToToken?: string | null;
   attachments?: { filename: string; contentType: string; data: Uint8Array }[];
 }): Promise<'created' | 'skipped' | 'failed'> {
   const user = gmailUser();
   const password = gmailAppPassword();
   if (!user || !password) return 'skipped';
 
-  const mime = buildMimeMessage({
-    from: `Prodet Tunisie <${user}>`,
-    to: input.to,
-    subject: input.subject,
-    text: input.text,
-    html: input.html,
-    attachments: input.attachments,
-  });
-
   try {
-    await appendToDrafts(user, password, mime);
+    await appendToDrafts(user, password, input);
     return 'created';
   } catch (error) {
     console.error('[gmail-draft:failed]', error instanceof Error ? error.message : error);
@@ -151,7 +161,54 @@ function quoteImap(value: string): string {
   return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 }
 
-async function appendToDrafts(user: string, password: string, mime: string): Promise<void> {
+/**
+ * The notification is sent just before this draft. Gmail may take a few
+ * seconds to file it, so the lookup retries instead of leaving an orphan draft.
+ */
+async function findInboxMessageId(reader: LineReader, token: string): Promise<string | null> {
+  const safe = token.replace(/[^\w-]/g, '');
+  if (!safe) return null;
+  const selected = await reader.tagged('A3', 'SELECT INBOX');
+  if (!selected.ok) return null;
+
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    if (attempt > 0) await delay(3000);
+    const search = await reader.tagged('A4', `UID SEARCH SUBJECT ${quoteImap(safe)}`);
+    const uid = search.lines
+      .filter((line) => line.startsWith('* SEARCH'))
+      .flatMap((line) => line.slice('* SEARCH'.length).trim().split(/\s+/))
+      .filter((part) => /^\d+$/.test(part))
+      .at(-1);
+    if (!uid) continue;
+    const fetched = await reader.tagged(
+      'A5',
+      `UID FETCH ${uid} (BODY.PEEK[HEADER.FIELDS (MESSAGE-ID)])`,
+    );
+    const messageId = messageIdFromImapFetch(fetched.lines);
+    if (messageId) return messageId;
+  }
+  return null;
+}
+
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+async function appendToDrafts(
+  user: string,
+  password: string,
+  input: {
+    to?: string | null;
+    subject: string;
+    text: string;
+    html: string;
+    replyToSubject?: string | null;
+    replyToToken?: string | null;
+    attachments?: { filename: string; contentType: string; data: Uint8Array }[];
+  },
+): Promise<void> {
   const socket = tls.connect({ host: IMAP_HOST, port: IMAP_PORT, servername: IMAP_HOST });
   const reader = new LineReader(socket);
   try {
@@ -163,9 +220,25 @@ async function appendToDrafts(user: string, password: string, mime: string): Pro
 
     const list = await reader.tagged('A2', 'LIST "" "[Gmail]/*"');
     const mailbox = draftsMailboxFromList(list.lines) ?? '[Gmail]/Drafts';
+    const inReplyTo = input.replyToToken
+      ? await findInboxMessageId(reader, input.replyToToken)
+      : null;
+    const subject = input.replyToSubject?.trim()
+      ? replySubject(input.replyToSubject)
+      : input.subject;
+    const mime = buildMimeMessage({
+      from: `Prodet Tunisie <${user}>`,
+      to: input.to,
+      subject,
+      text: input.text,
+      html: input.html,
+      inReplyTo,
+      attachments: input.attachments,
+    });
+    console.info('[gmail-draft:thread]', { threaded: Boolean(inReplyTo) });
     const payload = Buffer.from(mime, 'utf8');
     const appended = await reader.tagged(
-      'A3',
+      'A6',
       `APPEND ${quoteImap(mailbox)} (\\Draft) {${payload.length}}`,
       payload,
     );

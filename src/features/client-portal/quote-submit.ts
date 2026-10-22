@@ -171,11 +171,13 @@ export async function submitPortalQuoteRequest(input: {
   if (kind === 'devis' && swiverDocumentId) {
     const swiverId = swiverDocumentId;
     const to = access.appUser.email;
+    const replyToSubject = `Demande de devis ${referenceCode} — ${access.customer.name}`;
     after(async () => {
       await leaveCustomerDevisDraft({
         swiverId,
         referenceCode,
         to,
+        replyToSubject,
       });
     });
   }

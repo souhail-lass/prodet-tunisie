@@ -1,6 +1,5 @@
 import 'server-only';
 
-import { companyInfo } from '@/data/company';
 import { getSwiverAdapter } from '@/integrations/swiver';
 import { createGmailDraft, gmailDraftConfigured } from '@/lib/gmail-draft';
 
@@ -11,6 +10,8 @@ export interface CustomerDevisDraftInput {
   to?: string | null;
   /** Shown only in an operator note when `to` is missing. */
   phoneHint?: string | null;
+  /** Subject of the inbox mail this draft answers, so it stays on that thread. */
+  replyToSubject?: string | null;
 }
 
 /**
@@ -47,6 +48,8 @@ export async function leaveCustomerDevisDraft(input: CustomerDevisDraftInput): P
       subject: copy.subject,
       text: copy.text,
       html: copy.html,
+      replyToSubject: input.replyToSubject,
+      replyToToken: input.referenceCode,
       attachments:
         pdf && pdf.byteLength > 0
           ? [{ filename, contentType: 'application/pdf', data: pdf }]
@@ -101,10 +104,6 @@ export function buildCustomerDevisCopy(input: {
     '',
     'Vous le trouverez en pièce jointe. Nous restons à votre disposition pour toute question.',
     '',
-    'Cordialement,',
-    companyInfo.name,
-    `Tél. ${companyInfo.phoneDisplay}`,
-    companyInfo.email,
   ]
     .filter((line) => line !== null)
     .join('\n');
@@ -115,7 +114,6 @@ export function buildCustomerDevisCopy(input: {
     <p style="margin:0 0 12px">Voici votre devis.</p>
     <p style="margin:0 0 12px">Référence : <strong>${escapeHtml(label)}</strong></p>
     <p style="margin:0 0 12px">Vous le trouverez en pièce jointe. Nous restons à votre disposition pour toute question.</p>
-    <p style="margin:18px 0 0">Cordialement,<br />${escapeHtml(companyInfo.name)}<br />Tél. ${escapeHtml(companyInfo.phoneDisplay)}<br />${escapeHtml(companyInfo.email)}</p>
   </div>`;
 
   return { subject, text, html };

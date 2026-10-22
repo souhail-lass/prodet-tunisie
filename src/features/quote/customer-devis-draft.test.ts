@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildMimeMessage, draftsMailboxFromList } from '@/lib/gmail-draft';
+import {
+  buildMimeMessage,
+  draftsMailboxFromList,
+  messageIdFromImapFetch,
+  replySubject,
+} from '@/lib/gmail-draft';
 import { buildCustomerDevisCopy } from './customer-devis-draft';
 
 describe('draftsMailboxFromList', () => {
@@ -30,6 +35,8 @@ describe('buildCustomerDevisCopy', () => {
     expect(copy.text).toContain('Bonjour,');
     expect(copy.text).toContain('Voici votre devis.');
     expect(copy.text).not.toContain("Avant d'envoyer");
+    expect(copy.text).not.toContain('Cordialement');
+    expect(copy.html).not.toContain('contact@prodet.com.tn');
   });
 
   it('flags a missing address and a missing PDF for the operator', () => {
@@ -79,5 +86,31 @@ describe('buildMimeMessage', () => {
     });
     expect(mime).toContain('To:\r\n');
     expect(mime).not.toContain('filename=');
+  });
+
+  it('threads the draft onto the inbox notification', () => {
+    const messageId = '<abc123@mail.resend.com>';
+    const mime = buildMimeMessage({
+      from: 'Prodet Tunisie <prodet.tunisie@gmail.com>',
+      to: 'client@example.com',
+      subject: replySubject('Demande de devis QUO-2026-PZ3V - souhail test'),
+      text: 'Bonjour,',
+      html: '<p>Bonjour,</p>',
+      inReplyTo: messageId,
+    });
+    expect(mime).toContain('Subject: Re: Demande de devis QUO-2026-PZ3V - souhail test');
+    expect(mime).toContain(`In-Reply-To: ${messageId}`);
+    expect(mime).toContain(`References: ${messageId}`);
+    expect(replySubject('Re: Demande de devis QUO-2026-PZ3V')).toBe(
+      'Re: Demande de devis QUO-2026-PZ3V',
+    );
+    expect(
+      messageIdFromImapFetch([
+        '* 4 FETCH (UID 9 BODY[HEADER.FIELDS (MESSAGE-ID)] {40}',
+        `Message-ID: ${messageId}`,
+        ')',
+        'A5 OK Success',
+      ]),
+    ).toBe(messageId);
   });
 });

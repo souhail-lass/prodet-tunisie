@@ -163,7 +163,7 @@ export async function submitPublicDevisRequest(
   // Mirror the request into Swiver as a draft devis on CLIENT_PASSAGER — same
   // auto-push path as the client portal, but always that catch-all contact.
   // Runs after the response so a slow ERP never delays the visitor.
-  after(() => pushPublicDevisToSwiver(referenceCode, parsed.data));
+  after(() => pushPublicDevisToSwiver(referenceCode, parsed.data, emailPayload.subject));
 
   if (!delivery.ok) {
     return {
@@ -382,6 +382,7 @@ function escapeHtml(value: string): string {
 async function pushPublicDevisToSwiver(
   referenceCode: string,
   input: z.output<typeof PublicDevisRequestSchema>,
+  inboxSubject: string,
 ): Promise<void> {
   try {
     const swiver = getSwiverAdapter();
@@ -495,6 +496,7 @@ async function pushPublicDevisToSwiver(
       referenceCode,
       to: input.email?.trim() || null,
       phoneHint: input.phone?.trim() || null,
+      replyToSubject: inboxSubject,
     });
   } catch (error) {
     console.error(
