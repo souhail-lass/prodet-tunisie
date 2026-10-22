@@ -132,6 +132,16 @@ export async function submitPortalQuoteRequest(input: {
         if (ok) {
           swiverPushed = true;
           swiverDocumentId = created.swiverId;
+          if (kind === 'devis') {
+            // Issues the devis (number + no "Brouillon" watermark). Not to_accepted.
+            const issued = await swiver.documents.setDocumentState(created.swiverId, 'to_created');
+            if (!issued) {
+              console.error('[portal-devis:swiver-issue-failed]', {
+                referenceCode,
+                swiverId: created.swiverId,
+              });
+            }
+          }
           await db
             .update(schema.orderDraft)
             .set({

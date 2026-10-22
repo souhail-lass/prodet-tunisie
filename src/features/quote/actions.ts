@@ -285,7 +285,7 @@ function buildPublicDevisHtml(
     }
 
     <hr style="border:none;border-top:1px solid #e6e8ec;margin:8px 0 12px" />
-    <p style="font-size:12px;color:#7a869a;margin:0">Demande envoyée depuis le site prodet.com.tn · Un brouillon Swiver est créé sur ${escapeHtml(PASSAGER_CONTACT_NAME)} · Répondez à cet email pour contacter le demandeur.</p>
+    <p style="font-size:12px;color:#7a869a;margin:0">Demande envoyée depuis le site prodet.com.tn · Le devis est créé dans Swiver sur ${escapeHtml(PASSAGER_CONTACT_NAME)} · Répondez à cet email pour contacter le demandeur.</p>
   </div>`;
 }
 
@@ -490,6 +490,17 @@ async function pushPublicDevisToSwiver(
       pushedLines: lines.length,
       totalLines: input.lines.length,
     });
+
+    // Draft PDFs are watermarked "Brouillon" and have no number. to_created
+    // is the Swiver transition that issues the devis (DEV-…, no watermark).
+    // to_accepted would mean the client already agreed, which they have not.
+    const issued = await swiver.documents.setDocumentState(created.swiverId, 'to_created');
+    if (!issued) {
+      console.error('[public-devis:swiver-issue-failed]', {
+        referenceCode,
+        swiverId: created.swiverId,
+      });
+    }
 
     await leaveCustomerDevisDraft({
       swiverId: created.swiverId,
