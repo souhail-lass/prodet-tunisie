@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { generateReferenceCode } from '@/lib/reference-code';
 import { consumeRateLimit } from '@/lib/rate-limit';
 import { getSwiverAdapter } from '@/integrations/swiver';
+import { leaveCustomerDevisDraft } from '@/features/quote/customer-devis-draft';
 import { brandedHtml, prodetNotificationEmail, sendEmail } from '@/lib/email';
 import { requireClientPortalAccess } from './auth';
 
@@ -109,6 +110,7 @@ export async function submitPortalQuoteRequest(input: {
 
   // 2) Auto-push to Swiver (best-effort).
   let swiverPushed = false;
+  let swiverDocumentId: string | null = null;
   const pushableLines = lines.filter((l) => l.swiverId);
   if (access.customer.swiverId && pushableLines.length > 0) {
     try {
@@ -129,6 +131,7 @@ export async function submitPortalQuoteRequest(input: {
         });
         if (ok) {
           swiverPushed = true;
+          swiverDocumentId = created.swiverId;
           await db
             .update(schema.orderDraft)
             .set({
@@ -162,6 +165,20 @@ export async function submitPortalQuoteRequest(input: {
     diff: { lineCount: lines.length, swiverPushed, kind },
     metadata: {},
   });
+
+  // Customer-facing Gmail draft (devis only). Left unsent — the operator
+  // reviews the PDF and presses Send. After the response, same as the notice.
+  if (kind === 'devis' && swiverDocumentId) {
+    const swiverId = swiverDocumentId;
+    const to = access.appUser.email;
+    after(async () => {
+      await leaveCustomerDevisDraft({
+        swiverId,
+        referenceCode,
+        to,
+      });
+    });
+  }
 
   // Notify Prodet of the new order — after the response, never blocking it.
   const notify = prodetNotificationEmail();

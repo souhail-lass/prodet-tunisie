@@ -42,8 +42,19 @@ Without Supabase vars, `/client/*` and `/admin/*` redirect to login with `?error
 | `RESEND_FROM_EMAIL` | Sender address |
 | `QUOTE_NOTIFICATION_EMAIL` | Admin notification on devis |
 | `POSTMARK_INBOUND_TOKEN` | Future inbound order email |
+| `GMAIL_USER` | Gmail that should hold customer devis drafts (`prodet.tunisie@gmail.com`) |
+| `GMAIL_APP_PASSWORD` | Google app password (IMAP). Creates a draft only — nothing is sent |
 
 If `RESEND_API_KEY` is unset, admin UI shows a dev activation link instead of sending email.
+
+If `GMAIL_USER` / `GMAIL_APP_PASSWORD` are unset, Swiver devis still get created and the operator notice still sends. The customer draft is skipped.
+
+One-time Gmail setup (the account that owns the drafts):
+
+1. Google account → Security → 2-Step Verification on.
+2. [App passwords](https://myaccount.google.com/apppasswords) → create one named `Prodet devis`.
+3. Gmail → Settings → Forwarding and POP/IMAP → Enable IMAP.
+4. Put the address and the 16-character password in Vercel env (`GMAIL_USER`, `GMAIL_APP_PASSWORD`) for Production. Redeploy.
 
 ## Optional — Swiver
 

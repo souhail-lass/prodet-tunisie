@@ -7,6 +7,7 @@ import { consumeRateLimit, formatRetryAfterFr } from '@/lib/rate-limit';
 import { publicInboxEmail } from '@/lib/email';
 import { getSwiverAdapter } from '@/integrations/swiver';
 import { getSwiverLinesForProductIds } from '@/features/catalogue/queries';
+import { leaveCustomerDevisDraft } from './customer-devis-draft';
 import { PASSAGER_CONTACT_NAME, resolvePassagerContactId } from './passager-contact';
 import { QuoteRequestSchema, type QuoteRequestInput } from './schema';
 
@@ -487,6 +488,13 @@ async function pushPublicDevisToSwiver(
       contactName: PASSAGER_CONTACT_NAME,
       pushedLines: lines.length,
       totalLines: input.lines.length,
+    });
+
+    await leaveCustomerDevisDraft({
+      swiverId: created.swiverId,
+      referenceCode,
+      to: input.email?.trim() || null,
+      phoneHint: input.phone?.trim() || null,
     });
   } catch (error) {
     console.error(
